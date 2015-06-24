@@ -1,7 +1,7 @@
 language: android
 android:
 components:
- build-tools-23.0.0_rc2
+ -build-tools-23.0.0_rc2
  - android-24
  - extra
  - sys-img-armeabi-v7a-android-19
