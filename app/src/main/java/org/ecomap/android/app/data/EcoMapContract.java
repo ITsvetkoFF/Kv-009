@@ -39,6 +39,7 @@ public class EcoMapContract {
         public static final String TABLE_NAME = "problems";
 
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_NOTHING = "nothing";
 
         public static final String COLUMN_COORD_LAT = "coord_lat";
         public static final String COLUMN_COORD_LONG = "coord_long";
