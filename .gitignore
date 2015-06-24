@@ -35,3 +35,6 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+/build
+/build/intemediates/gradle_project_sync_data.bin
