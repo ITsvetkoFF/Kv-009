@@ -1,10 +1,15 @@
 <resources>
 
+    <color name="polygon">#2196F3</color>
+    <color name="polygonEdges">#0D47A1</color>
+    <color name="textRed">#D50000</color>
+
     <!-- Base application theme. -->
     <!--style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar"-->
     <!--style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light"-->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
             <!-- Customize your theme here. -->
+
     </style>
 
 </resources>
