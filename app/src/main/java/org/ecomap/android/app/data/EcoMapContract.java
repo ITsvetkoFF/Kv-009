@@ -114,6 +114,7 @@ public class EcoMapContract {
 
         //TABLE NAME
         public static final String TABLE_NAME = "resources";
+
         //title of resource, String
         public static final String COLUMN_TITLE = "title";
         //description, String
