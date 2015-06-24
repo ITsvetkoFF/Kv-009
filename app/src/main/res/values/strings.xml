@@ -9,17 +9,23 @@
         <item>Profile</item>
         <item>Resources</item>
     </string-array>
-    <string name="problem_types">Hello</string>
-    <string-array name="problem_types">
-        <item>Severe floods</item>
-        <item>Wildfires</item>
+
+    <string-array name="problem_details_tabs">
+        <item>Details</item>
+        <item>Comments</item>
+        <item>Activity</item>
     </string-array>
 
+    <string name="problem_types">Hello</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
+    <string name="action_details">Details</string>
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_problem_details">ProblemDetailsActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>

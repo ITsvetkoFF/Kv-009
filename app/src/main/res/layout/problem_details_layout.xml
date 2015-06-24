@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="100"
-    tools:context=".AddProblemFragment"
-    >
+    android:layout_height="match_parent">
 
+    <RatingBar
+        android:id="@+id/problemRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="0.1"
+        android:isIndicator="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -14,10 +18,10 @@
         android:text="Problem title:"
         android:id="@+id/textView" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText" />
+        android:id="@+id/problemTitle" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,12 +29,10 @@
         android:text="Problem type:"
         android:id="@+id/textView3" />
 
-    <Spinner
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-
-        />
+        android:id="@+id/problemType"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,12 +40,10 @@
         android:text="Description:"
         android:id="@+id/textView2" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText3"
+        android:id="@+id/problemDescription"
         android:layout_weight="13" />
 
     <TextView
@@ -52,32 +52,11 @@
         android:text="Suggested solution"
         android:id="@+id/textView4" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_weight="25" />
+        android:id="@+id/suggestedSolution"
+        android:layout_weight="13" />
 
-    <RatingBar
-        android:id="@+id/rating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/ratingBarStyleSmall"
-        android:numStars="5"
-        android:stepSize="0.1"
-        android:isIndicator="true" />
-
-    <!--
-    http://stackoverflow.com/questions/13796382/android-viewpager-as-image-slide-gallery?rq=1
-    -->
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/gallery_item"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="45"
-        />
 
 </LinearLayout>
