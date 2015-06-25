@@ -18,7 +18,6 @@ public class EcoMapProvider extends ContentProvider {
     private EcoMapDBHelper mOpenHelper;
 
     static final int PROBLEMS = 100;
-    static final int PHOTOS = 101;
     static final int PHOTOS_WITH_PROBLEMS = 102;
     static final int RESOURCES = 103;
 
@@ -140,14 +139,6 @@ public class EcoMapProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-            case PHOTOS: {
-                long _id = db.insert(EcoMapContract.PhotosEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
-                    returnUri = EcoMapContract.PhotosEntry.buildPhotosUri(_id);
-                else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
-                break;
-            }
             case RESOURCES: {
                 long _id = db.insert(EcoMapContract.ResourcesEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
@@ -174,10 +165,6 @@ public class EcoMapProvider extends ContentProvider {
             case PROBLEMS:
                 rowsDeleted = db.delete(
                         EcoMapContract.ProblemsEntry.TABLE_NAME, selection, selectionArgs);
-                break;
-            case PHOTOS:
-                rowsDeleted = db.delete(
-                        EcoMapContract.PhotosEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case RESOURCES:
                 rowsDeleted = db.delete(
@@ -211,10 +198,6 @@ public class EcoMapProvider extends ContentProvider {
             case PROBLEMS:
                 normalizeDate(values);
                 rowsUpdated = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
-                break;
-            case PHOTOS:
-                rowsUpdated = db.update(EcoMapContract.PhotosEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             case RESOURCES:
