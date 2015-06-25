@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class EcoMapProvider extends ContentProvider {
@@ -17,10 +18,24 @@ public class EcoMapProvider extends ContentProvider {
     private EcoMapDBHelper mOpenHelper;
 
     static final int PROBLEMS = 100;
-    static final int PHOTOS = 101;
+    static final int PHOTOS_WITH_PROBLEMS = 101;
     static final int RESOURCES = 102;
 
+    private static final SQLiteQueryBuilder sPhotoByProblemQueryBuilder;
 
+    static{
+        sPhotoByProblemQueryBuilder = new SQLiteQueryBuilder();
+
+        //This is an inner join which looks like
+        //weather INNER JOIN location ON weather.location_id = location._id
+        sPhotoByProblemQueryBuilder.setTables(
+                EcoMapContract.PhotosEntry.TABLE_NAME + " INNER JOIN " +
+                        EcoMapContract.ProblemsEntry.TABLE_NAME +
+                        " ON " + EcoMapContract.PhotosEntry.TABLE_NAME +
+                        "." + EcoMapContract.PhotosEntry.COLUMN_PROBLEM_ID +
+                        " = " + EcoMapContract.ProblemsEntry.TABLE_NAME +
+                        "." + EcoMapContract.ProblemsEntry._ID);
+    }
 
     static UriMatcher buildUriMatcher() {
 
@@ -29,7 +44,7 @@ public class EcoMapProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, EcoMapContract.PATH_PROBLEMS, PROBLEMS);
-        matcher.addURI(authority, EcoMapContract.PATH_PHOTOS, PHOTOS);
+        matcher.addURI(authority, EcoMapContract.PATH_PHOTOS, PHOTOS_WITH_PROBLEMS);
         matcher.addURI(authority, EcoMapContract.PATH_RESOURCES, RESOURCES);
         return matcher;
     }
@@ -58,7 +73,7 @@ public class EcoMapProvider extends ContentProvider {
                 break;
             }
             // "location"
-            case PHOTOS: {
+            case PHOTOS_WITH_PROBLEMS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         EcoMapContract.PhotosEntry.TABLE_NAME,
                         projection,
@@ -98,7 +113,7 @@ public class EcoMapProvider extends ContentProvider {
         switch (match) {
             case PROBLEMS:
                 return EcoMapContract.ProblemsEntry.CONTENT_TYPE;
-            case PHOTOS:
+            case PHOTOS_WITH_PROBLEMS:
                 return EcoMapContract.PhotosEntry.CONTENT_TYPE;
             case RESOURCES:
                 return EcoMapContract.ResourcesEntry.CONTENT_TYPE;
@@ -124,7 +139,7 @@ public class EcoMapProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-            case PHOTOS: {
+            case PHOTOS_WITH_PROBLEMS: {
                 long _id = db.insert(EcoMapContract.PhotosEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = EcoMapContract.PhotosEntry.buildPhotosUri(_id);
@@ -159,7 +174,7 @@ public class EcoMapProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         EcoMapContract.ProblemsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case PHOTOS:
+            case PHOTOS_WITH_PROBLEMS:
                 rowsDeleted = db.delete(
                         EcoMapContract.PhotosEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -197,7 +212,7 @@ public class EcoMapProvider extends ContentProvider {
                 rowsUpdated = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
-            case PHOTOS:
+            case PHOTOS_WITH_PROBLEMS:
                 rowsUpdated = db.update(EcoMapContract.PhotosEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
