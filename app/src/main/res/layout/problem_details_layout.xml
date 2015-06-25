@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:fillViewport="false"
+    android:measureAllChildren="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:layout_gravity="top"
+            android:layout_marginTop="8dp">
+
+            <RatingBar
+                android:id="@+id/problemRating"
+                style="?android:attr/ratingBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:layout_gravity="left"
+                android:rating="3"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="3"
+                android:gravity="right"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+
+                android:textSize="20sp"
+                android:id="@+id/textView5" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:id="@+id/imageView"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/textView5"
+                android:layout_toStartOf="@+id/textView5"
+                android:src="@drawable/heart_icon"
+                android:contentDescription="heart"
+                android:layout_marginRight="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/textRed"
+                android:text="unsolved"
+                android:id="@+id/textView6"
+
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Problem title:" />
+
+        <TextView
+            android:id="@+id/problemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Забруднення водойм" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Problem type:" />
+
+        <TextView
+            android:id="@+id/problemType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="27.92" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Description:" />
+
+        <TextView
+            android:id="@+id/problemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="13"
+            android:text="Міське озеро забруднюється сміттям, що призводить до його пересихання, хоча воно є місцем існування багатьох водоплаваючих птахів" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Suggested solution" />
+
+        <TextView
+            android:id="@+id/suggestedSolution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="13"
+
+            android:text="Очищення озера від сміття, просвітницька робота серед населення" />
+
+        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher"
+
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher"
+
+                />
+        </android.support.v4.view.ViewPager>
+
+
+    </LinearLayout>
+</ScrollView>
