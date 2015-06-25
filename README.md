@@ -11,3 +11,5 @@ old api documentation https://github.com/ITsvetkoFF/Kv-007.ecomap-backend
 old backend http://176.36.11.25:8090/#/map
 
 new backend http://176.36.11.25:8000/api/v1/allproblems
+
+pictures  https://github.com/ITsvetkoFF/KV006/tree/develop/ecomap/ecomap/SupportingFiles/Images.xcassets
