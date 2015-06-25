@@ -17,6 +17,7 @@
 package org.ecomap.android.app;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
+    public static final int NAV_RESOURCES = 3;
+
 
 
     @Override
@@ -178,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
             case NAV_MAP:
                 fragment = new EcoMapFragment();
                 break;
+            case NAV_RESOURCES:
+                fragment = new FiltersFragment();
+                break;
             case NAV_DETAILS:
                 fragment = AddProblemFragment.newInstance("title", "description");
                 break;
@@ -252,6 +259,65 @@ public class MainActivity extends AppCompatActivity {
             return rootView;
         }
     }
+
+    public static class FiltersFragment extends Fragment {
+        public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
+
+        public FiltersFragment() {
+            // Empty constructor required for fragment subclasses
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.map_filters_layout, container, false);
+
+            //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
+            String[] planet = getResources().getStringArray(R.array.navigation_array);
+            ListView mListView = (ListView)rootView.findViewById(R.id.filter_list_view);
+            FiltersAdapter mFiltersAdapter = new FiltersAdapter(getActivity(), planet);
+            mListView.setAdapter(mFiltersAdapter);
+
+//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
+//                            "drawable", getActivity().getPackageName());
+//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
+            getActivity().setTitle("Filters");
+
+            return rootView;
+        }
+    }
+
+    public static class FiltersAdapter extends ArrayAdapter<String>{
+
+        Context mContext;
+
+        FiltersAdapter(Context context, String[] objects) {
+            super(context, R.layout.filter_listview_item, 0, objects);
+            this.mContext = context;
+
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            View view;
+            if (convertView == null) {
+                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            TextView txtListItem = (TextView)view.findViewById(R.id.txtCaption);
+            String text = getItem(position);
+            txtListItem.setText(text);
+
+            return view;
+            //super.getView(position, convertView, parent);
+        }
+    }
+
+
 }
 
 
