@@ -18,8 +18,9 @@ public class EcoMapProvider extends ContentProvider {
     private EcoMapDBHelper mOpenHelper;
 
     static final int PROBLEMS = 100;
-    static final int PHOTOS_WITH_PROBLEMS = 101;
-    static final int RESOURCES = 102;
+    static final int PHOTOS = 101;
+    static final int PHOTOS_WITH_PROBLEMS = 102;
+    static final int RESOURCES = 103;
 
     private static final SQLiteQueryBuilder sPhotoByProblemQueryBuilder;
 
@@ -139,7 +140,7 @@ public class EcoMapProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
-            case PHOTOS_WITH_PROBLEMS: {
+            case PHOTOS: {
                 long _id = db.insert(EcoMapContract.PhotosEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = EcoMapContract.PhotosEntry.buildPhotosUri(_id);
@@ -174,7 +175,7 @@ public class EcoMapProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         EcoMapContract.ProblemsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
-            case PHOTOS_WITH_PROBLEMS:
+            case PHOTOS:
                 rowsDeleted = db.delete(
                         EcoMapContract.PhotosEntry.TABLE_NAME, selection, selectionArgs);
                 break;
@@ -212,7 +213,7 @@ public class EcoMapProvider extends ContentProvider {
                 rowsUpdated = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
-            case PHOTOS_WITH_PROBLEMS:
+            case PHOTOS:
                 rowsUpdated = db.update(EcoMapContract.PhotosEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
