@@ -200,6 +200,7 @@ public class EcoMapProvider extends ContentProvider {
                 rowsUpdated = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
+
             case RESOURCES:
                 rowsUpdated = db.update(EcoMapContract.ResourcesEntry.TABLE_NAME, values, selection,
                         selectionArgs);
