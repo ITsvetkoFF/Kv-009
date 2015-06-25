@@ -5,8 +5,8 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.example.srv.ecomap"
-        minSdkVersion 10
+        applicationId "org.ecomap.android.app"
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
