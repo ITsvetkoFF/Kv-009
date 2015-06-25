@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
  * Defines table and column names for the weather database.
  */
 public class EcoMapContract {
-    //TODO: db-man! please fill this class with db structure :-)
 
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
@@ -114,6 +113,7 @@ public class EcoMapContract {
 
         //TABLE NAME
         public static final String TABLE_NAME = "resources";
+
         //title of resource, String
         public static final String COLUMN_TITLE = "title";
         //description, String
