@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles;
+    private String[] mScreenTitles;
     private ActionBar actionBar;
 
     public static final int NAV_MAP = 0;
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar = getSupportActionBar();
 
         mTitle = mDrawerTitle = getTitle();
-        mPlanetTitles = getResources().getStringArray(R.array.navigation_array);
+        mScreenTitles = getResources().getStringArray(R.array.navigation_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+                R.layout.drawer_list_item, mScreenTitles));
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -129,9 +129,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
-
-
-
 
     }
 
@@ -171,6 +168,9 @@ public class MainActivity extends AppCompatActivity {
 //                Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
 //            }
             return true;
+            case R.id.action_add_polygon:
+                ProblemsTask.setMarkerClickType(1);
+                return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         switch(position) {
             case NAV_MAP:
                 //fragment = fragmentManager.findFragmentById(R.id.map);
-                fragment = AddProblemFragment.newInstance("title", "description");
+                fragment = new EcoMapFragment();
                 break;
             case NAV_DETAILS:
                 fragment = AddProblemFragment.newInstance("title", "description");
@@ -199,14 +199,13 @@ public class MainActivity extends AppCompatActivity {
         fragment.setArguments(args);
 
 
-
         fragmentManager.beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.content_frame, fragment).commit();
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
+        setTitle(mScreenTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
