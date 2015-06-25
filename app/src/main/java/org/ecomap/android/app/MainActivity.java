@@ -110,10 +110,9 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
-                //R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
-                ) {
+        ) {
             public void onDrawerClosed(View view) {
                 actionBar.setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -150,29 +149,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         // The action bar home/up action should open or close the drawer.
-         // ActionBarDrawerToggle will take care of this.
+        // The action bar home/up action should open or close the drawer.
+        // ActionBarDrawerToggle will take care of this.
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         // Handle action buttons
-        switch(item.getItemId()) {
-        case R.id.action_details:
-            // create intent to perform web search for this planet
-            Intent intent = new Intent(this, ProblemDetailsActivity.class);
-            //intent.putExtra(, actionBar.getTitle());
-            // catch event that there's no activity to handle intent
-            //if (intent.resolveActivity(getPackageManager()) != null) {
+        switch (item.getItemId()) {
+            case R.id.action_details:
+                // create intent to perform web search for this planet
+                Intent intent = new Intent(this, ProblemDetailsActivity.class);
                 startActivity(intent);
-//            } else {
-//                Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-//            }
-            return true;
+                return true;
             case R.id.action_add_polygon:
                 ProblemsTask.setMarkerClickType(1);
                 return true;
-        default:
-            return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -181,24 +174,23 @@ public class MainActivity extends AppCompatActivity {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
-        switch(position) {
+        switch (position) {
             case NAV_MAP:
-                //fragment = fragmentManager.findFragmentById(R.id.map);
                 fragment = new EcoMapFragment();
                 break;
             case NAV_DETAILS:
                 fragment = AddProblemFragment.newInstance("title", "description");
                 break;
             default:
-                fragment = new PlanetFragment();
+                fragment = new MockFragment();
                 break;
         }
 
         Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_NAV_ITEM_NUMBER, position);
+        args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
         fragment.setArguments(args);
 
-
+        //Main magic happens here
         fragmentManager.beginTransaction()
                 .addToBackStack(null)
                 .replace(R.id.content_frame, fragment).commit();
@@ -237,18 +229,18 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
-    public static class PlanetFragment extends Fragment {
+    public static class MockFragment extends Fragment {
         public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
 
-        public PlanetFragment() {
+        public MockFragment() {
             // Empty constructor required for fragment subclasses
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_planet, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_empty, container, false);
             int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String planet = getResources().getStringArray(R.array.navigation_array)[i];
 
