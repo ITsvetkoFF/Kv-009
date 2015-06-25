@@ -22,9 +22,8 @@
 
             <RatingBar
                 android:id="@+id/problemRating"
-                style="?android:attr/ratingBarStyleSmall"
+                style="?android:attr/ratingBarStyle"
                 android:layout_width="wrap_content"
-
                 android:layout_height="wrap_content"
                 android:isIndicator="true"
                 android:numStars="5"
