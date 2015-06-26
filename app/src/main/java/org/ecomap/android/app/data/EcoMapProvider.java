@@ -24,6 +24,9 @@ public class EcoMapProvider extends ContentProvider {
 
     private static final SQLiteQueryBuilder getPhotosByProblem;
 
+    private static final String sPhotosFromProblemsSelection = EcoMapContract.ProblemsEntry.TABLE_NAME
+            + EcoMapContract.ProblemsEntry._ID + " = ?";
+
     static{
         getPhotosByProblem = new SQLiteQueryBuilder();
 
@@ -234,12 +237,12 @@ public class EcoMapProvider extends ContentProvider {
     private Cursor getPhotosByProblem(
             Uri uri, String[] projection, String sortOrder) {
 
-        String getProblemsUri = EcoMapContract.ProblemsEntry.getProblemsUri(uri);
-        String selection = "_ID = " + getProblemsUri;
+        String getProblemsId = EcoMapContract.ProblemsEntry.getProblemsId(uri);
+        String selection = sPhotosFromProblemsSelection;
         return getPhotosByProblem.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
-                null,
+                new String[] {getProblemsId},
                 null,
                 null,
                 sortOrder

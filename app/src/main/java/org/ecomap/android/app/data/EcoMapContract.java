@@ -80,7 +80,7 @@ public class EcoMapContract {
         public static Uri buildProblemsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-        public static String getProblemsUri(Uri uri) {
+        public static String getProblemsId(Uri uri) {
             return uri.getPathSegments().get(2);
         }
 
