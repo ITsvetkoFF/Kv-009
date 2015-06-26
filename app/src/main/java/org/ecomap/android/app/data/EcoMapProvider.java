@@ -234,9 +234,11 @@ public class EcoMapProvider extends ContentProvider {
     private Cursor getPhotosByProblem(
             Uri uri, String[] projection, String sortOrder) {
 
+        String getProblemsUri = EcoMapContract.ProblemsEntry.getProblemsUri(uri);
+        String selection = "_ID = " + getProblemsUri;
         return getPhotosByProblem.query(mOpenHelper.getReadableDatabase(),
                 projection,
-                null,
+                selection,
                 null,
                 null,
                 null,

@@ -80,6 +80,10 @@ public class EcoMapContract {
         public static Uri buildProblemsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+        public static String getProblemsUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
     }
 
     public static final class PhotosEntry implements BaseColumns{
