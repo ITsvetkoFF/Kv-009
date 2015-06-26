@@ -38,7 +38,6 @@ public class EcoMapContract {
     /* Inner class that defines the table contents of the problems table */
     public static final class ProblemsEntry implements BaseColumns{
 
-
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_PROBLEMS).build();
 
