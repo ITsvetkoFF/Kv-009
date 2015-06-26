@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.text.format.Time;
 import android.widget.BaseAdapter;
 
 /**
@@ -25,6 +26,14 @@ public class EcoMapContract {
     public static final String PATH_PROBLEMS = "problems";
     public static final String PATH_PHOTOS = "photos";
     public static final String PATH_RESOURCES = "resources";
+
+    public static long normalizeDate(long startDate) {
+        // normalize the start date to the beginning of the (UTC) day
+        Time time = new Time();
+        time.set(startDate);
+        int julianDay = Time.getJulianDay(startDate, time.gmtoff);
+        return time.setJulianDay(julianDay);
+    }
 
     /* Inner class that defines the table contents of the problems table */
     public static final class ProblemsEntry implements BaseColumns{
