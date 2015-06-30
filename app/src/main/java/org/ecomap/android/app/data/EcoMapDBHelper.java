@@ -14,8 +14,6 @@ import org.ecomap.android.app.data.EcoMapContract.ResourcesEntry;
  */
 public class EcoMapDBHelper extends SQLiteOpenHelper {
 
-    //TODO: db-man! please write here a creation of db
-
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
 
@@ -29,7 +27,7 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
 
         // Create a table to hold problems.
         final String SQL_CREATE_PROBLEMS_TABLE = "CREATE TABLE " + ProblemsEntry.TABLE_NAME + " (" +
-                ProblemsEntry._ID + " INTEGER PRIMARY KEY," + //TODO DO WE NEED AUTOINCREMENT?
+                ProblemsEntry._ID + " INTEGER PRIMARY KEY," +
                 ProblemsEntry.COLUMN_STATUS + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_USER_NAME + " TEXT NOT NULL, " +
