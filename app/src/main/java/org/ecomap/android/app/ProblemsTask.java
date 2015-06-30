@@ -3,7 +3,6 @@ package org.ecomap.android.app;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -145,6 +144,7 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
         mMap.setOnCameraChangeListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setMyLocationEnabled(true);
+        mMap.setOnMarkerClickListener(mClusterManager);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -180,13 +180,6 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
             public boolean onClusterClick(Cluster cluster) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(),
                         mMap.getCameraPosition().zoom + 2));
-                return false;
-            }
-        });
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Problem>() {
-            @Override
-            public boolean onClusterItemClick(Problem problem) {
-                Toast.makeText(mContext, problem.getTitle(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
