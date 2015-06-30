@@ -1,7 +1,6 @@
 package org.ecomap.android.app;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -39,6 +38,7 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
     private ClusterManager<Problem> mClusterManager;
     private Context mContext;
     private static int markerClickType;
+    private Problem clickedProblem;
 
     ProblemsTask(GoogleMap mMap, Context mContext){
         this.mMap = mMap;
@@ -48,10 +48,6 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
         this.JSONStr = null;
         this.mContext = mContext;
         this.markerClickType = 0;
-    }
-
-    public ArrayList<Problem> getProblems(){
-        return values;
     }
 
     @Override
@@ -114,19 +110,22 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
         final String TITLE = "Title";
         final String LATITUDE = "Latitude";
         final String LONGITUDE = "Longtitude";
+        final String PROBLEMS_TYPES_ID = "ProblemTypes_Id";
 
         try{
             JSONArray jArr = new JSONArray(JSONStr);
             for (int i = 0; i < jArr.length(); i++){
                 String title;
                 double latitude, longitude;
+                int type_id;
 
                 JSONObject obj = jArr.getJSONObject(i);
                 title = obj.getString(TITLE);
                 latitude = obj.getDouble(LATITUDE);
                 longitude = obj.getDouble(LONGITUDE);
+                type_id = obj.getInt(PROBLEMS_TYPES_ID);
 
-                Problem p = new Problem(latitude, longitude, title);
+                Problem p = new Problem(latitude, longitude, title, type_id, mContext);
 
                 values.add(p);
             }
@@ -145,6 +144,7 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
         //Point the map's listeners at the listeners implemented by the cluster.
         mMap.setOnCameraChangeListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setMyLocationEnabled(true);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -186,10 +186,11 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Problem>() {
             @Override
             public boolean onClusterItemClick(Problem problem) {
-                Toast.makeText(mContext, problem.getTitle(), Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, problem.getTitle(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
+        mClusterManager.setRenderer(new MyIconRendered(mContext, mMap, mClusterManager));
     }
 
     private void countPolygonPoints() {
