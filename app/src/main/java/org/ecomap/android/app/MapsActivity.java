@@ -1,16 +1,17 @@
 package org.ecomap.android.app;
 
 import android.database.Cursor;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import org.ecomap.android.app.data.EcoMapContract;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.ecomap.android.app.data.EcoMapContract;
 
 public class MapsActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
@@ -66,8 +67,8 @@ public class MapsActivity extends FragmentActivity implements LoaderManager.Load
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(org.ecomap.android.app.R.id.map))
-                    .getMap();
+            //mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(org.ecomap.android.app.R.id.map))
+                    //.getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
