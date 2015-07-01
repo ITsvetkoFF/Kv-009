@@ -13,7 +13,7 @@ import org.ecomap.android.app.data.EcoMapContract.ResourcesEntry;
  * Manages a local database for weather data.
  */
 public class EcoMapDBHelper extends SQLiteOpenHelper {
-
+    //
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
 

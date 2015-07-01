@@ -17,18 +17,22 @@ public class EcoMapProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private EcoMapDBHelper mOpenHelper;
 
-    static final int PROBLEMS = 100;
-    static final int PHOTOS_WITH_PROBLEMS = 102;
-    static final int RESOURCES = 103;
+    static final int PROBLEMS = 1;
+    static final int PHOTOS = 2;
+    static final int PHOTOS_BY_PROBLEM = 3;
+    static final int RESOURCES = 4;
 
-    private static final SQLiteQueryBuilder sPhotoByProblemQueryBuilder;
+    private static final SQLiteQueryBuilder getPhotosByProblem;
+
+    private static final String sPhotosFromProblemsSelection = EcoMapContract.ProblemsEntry.TABLE_NAME
+            + EcoMapContract.ProblemsEntry._ID + " = ?";
 
     static{
-        sPhotoByProblemQueryBuilder = new SQLiteQueryBuilder();
+        getPhotosByProblem = new SQLiteQueryBuilder();
 
         //This is an inner join which looks like
         //weather INNER JOIN location ON weather.location_id = location._id
-        sPhotoByProblemQueryBuilder.setTables(
+        getPhotosByProblem.setTables(
                 EcoMapContract.PhotosEntry.TABLE_NAME + " INNER JOIN " +
                         EcoMapContract.ProblemsEntry.TABLE_NAME +
                         " ON " + EcoMapContract.PhotosEntry.TABLE_NAME +
@@ -36,7 +40,6 @@ public class EcoMapProvider extends ContentProvider {
                         " = " + EcoMapContract.ProblemsEntry.TABLE_NAME +
                         "." + EcoMapContract.ProblemsEntry._ID);
     }
-
     static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -44,7 +47,8 @@ public class EcoMapProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, EcoMapContract.PATH_PROBLEMS, PROBLEMS);
-        matcher.addURI(authority, EcoMapContract.PATH_PHOTOS, PHOTOS_WITH_PROBLEMS);
+        matcher.addURI(authority, EcoMapContract.PATH_PHOTOS, PHOTOS);
+        matcher.addURI(authority, EcoMapContract.PATH_PHOTOS + "/#", PHOTOS_BY_PROBLEM);
         matcher.addURI(authority, EcoMapContract.PATH_RESOURCES, RESOURCES);
         return matcher;
     }
@@ -73,7 +77,7 @@ public class EcoMapProvider extends ContentProvider {
                 break;
             }
             // "location"
-            case PHOTOS_WITH_PROBLEMS: {
+            case PHOTOS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         EcoMapContract.PhotosEntry.TABLE_NAME,
                         projection,
@@ -83,6 +87,10 @@ public class EcoMapProvider extends ContentProvider {
                         null,
                         sortOrder
                 );
+                break;
+            }
+            case PHOTOS_BY_PROBLEM: {
+                retCursor = getPhotosByProblem(uri, projection, sortOrder);
                 break;
             }
             case RESOURCES: {
@@ -113,7 +121,9 @@ public class EcoMapProvider extends ContentProvider {
         switch (match) {
             case PROBLEMS:
                 return EcoMapContract.ProblemsEntry.CONTENT_TYPE;
-            case PHOTOS_WITH_PROBLEMS:
+            case PHOTOS:
+                return EcoMapContract.PhotosEntry.CONTENT_TYPE;
+            case PHOTOS_BY_PROBLEM:
                 return EcoMapContract.PhotosEntry.CONTENT_TYPE;
             case RESOURCES:
                 return EcoMapContract.ResourcesEntry.CONTENT_TYPE;
@@ -135,6 +145,14 @@ public class EcoMapProvider extends ContentProvider {
                 long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, values);
                 if ( _id > 0 )
                     returnUri = EcoMapContract.ProblemsEntry.buildProblemsUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case PHOTOS: {
+                long _id = db.insert(EcoMapContract.PhotosEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = EcoMapContract.PhotosEntry.buildPhotosUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -184,7 +202,7 @@ public class EcoMapProvider extends ContentProvider {
         // normalize the date value
         if (values.containsKey(EcoMapContract.ProblemsEntry.COLUMN_DATE)) {
             long dateValue = values.getAsLong(EcoMapContract.ProblemsEntry.COLUMN_DATE);
-         //TODO    values.put(EcoMapContract.ProblemsEntry.COLUMN_DATE, EcoMapContract.normalizeDate(dateValue));
+            values.put(EcoMapContract.ProblemsEntry.COLUMN_DATE, EcoMapContract.normalizeDate(dateValue));
         }
     }
 
@@ -200,7 +218,10 @@ public class EcoMapProvider extends ContentProvider {
                 rowsUpdated = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
-
+            case PHOTOS:
+                rowsUpdated = db.update(EcoMapContract.PhotosEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
             case RESOURCES:
                 rowsUpdated = db.update(EcoMapContract.ResourcesEntry.TABLE_NAME, values, selection,
                         selectionArgs);
@@ -213,7 +234,20 @@ public class EcoMapProvider extends ContentProvider {
         }
         return rowsUpdated;
     }
+    private Cursor getPhotosByProblem(
+            Uri uri, String[] projection, String sortOrder) {
 
+        String getProblemsId = EcoMapContract.ProblemsEntry.getProblemsId(uri);
+        String selection = sPhotosFromProblemsSelection;
+        return getPhotosByProblem.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                new String[] {getProblemsId},
+                null,
+                null,
+                sortOrder
+        );
+    }
     @Override
     @TargetApi(11)
     public void shutdown() {
