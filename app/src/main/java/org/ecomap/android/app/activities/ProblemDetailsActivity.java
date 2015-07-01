@@ -1,4 +1,4 @@
-package org.ecomap.android.app;
+package org.ecomap.android.app.activities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.ecomap.android.app.fragments.ProblemDetailsFragment;
+import org.ecomap.android.app.R;
 
 public class ProblemDetailsActivity extends AppCompatActivity implements ActionBar.TabListener {
     /**

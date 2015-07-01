@@ -1,4 +1,4 @@
-package org.ecomap.android.app;
+package org.ecomap.android.app.activities;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.ecomap.android.app.data.EcoMapContract;
 
-public class MapsActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MapsActivityToDelete extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     //TODO: map-man! please fill it
 
