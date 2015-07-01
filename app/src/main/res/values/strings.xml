@@ -1,4 +1,28 @@
 <resources>
     <string name="app_name">EcoMap</string>
     <string name="title_activity_maps">Eco map</string>
+
+    <string-array name="navigation_array">
+        <item>Map</item>
+        <item>Statistics</item>
+        <item>TOP 10</item>
+        <item>Profile</item>
+        <item>Resources</item>
+    </string-array>
+
+    <string-array name="problem_details_tabs">
+        <item>Details</item>
+        <item>Comments</item>
+        <item>Activity</item>
+    </string-array>
+
+    <string name="action_add_polygon">Add polygon</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_details">Details</string>
+    <string name="title_activity_problem_details">ProblemDetailsActivity</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+
+
 </resources>
