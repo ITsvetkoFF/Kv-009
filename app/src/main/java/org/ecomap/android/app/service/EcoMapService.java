@@ -39,6 +39,7 @@ public class EcoMapService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         HttpURLConnection urlConnection = null;
+
         BufferedReader reader = null;
 
         try {
