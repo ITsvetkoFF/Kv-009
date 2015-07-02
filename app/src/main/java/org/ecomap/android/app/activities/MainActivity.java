@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.ecomap.android.app;
+package org.ecomap.android.app.activities;
 
 
 import android.content.Context;
@@ -38,6 +38,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.ecomap.android.app.ProblemsTask;
+import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.AddProblemFragment;
+import org.ecomap.android.app.fragments.EcoMapFragment;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
