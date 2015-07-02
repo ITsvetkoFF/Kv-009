@@ -35,11 +35,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.MapsActivityToDelete"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".activities.MainActivity" >
-        </activity>
-        <activity
             android:name=".activities.ProblemDetailsActivity"
             android:label="@string/title_activity_problem_details"
             android:parentActivityName=".activities.MainActivity" >
