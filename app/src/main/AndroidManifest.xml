@@ -26,7 +26,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="Ecomap" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,17 +35,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:parentActivityName=".MainActivity" >
-        </activity>
-        <activity
-            android:name=".ProblemDetailsActivity"
+            android:name=".activities.ProblemDetailsActivity"
             android:label="@string/title_activity_problem_details"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.ecomap.android.app.MainActivity" />
+                android:value=".activities.MainActivity" />
         </activity>
     </application>
 

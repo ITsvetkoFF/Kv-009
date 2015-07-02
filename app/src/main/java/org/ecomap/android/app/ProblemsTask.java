@@ -39,7 +39,7 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
     private static int markerClickType;
     private Problem clickedProblem;
 
-    ProblemsTask(GoogleMap mMap, Context mContext){
+    public ProblemsTask(GoogleMap mMap, Context mContext){
         this.mMap = mMap;
         this.values = new ArrayList<>();
         this.markers = new ArrayList<>();
