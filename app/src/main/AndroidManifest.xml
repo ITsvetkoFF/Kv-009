@@ -47,6 +47,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.ecomap.android.app.MainActivity" />
         </activity>
+        <provider android:name="org.ecomap.android.app.data.EcoMapProvider"
+            android:authorities="org.ecomap.android.app">
+        </provider>
+        <service android:enabled="true" android:name=".service.EcoMapService" />
     </application>
 
 </manifest>

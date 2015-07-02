@@ -204,4 +204,3 @@ public class ProblemsTask extends AsyncTask<Void, Void, Void> {
         markerClickType = type;
     }
 }
-

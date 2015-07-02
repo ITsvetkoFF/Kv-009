@@ -31,8 +31,8 @@ public class MapsActivity extends FragmentActivity implements LoaderManager.Load
             // So the convenience is worth it.
             EcoMapContract.ProblemsEntry.TABLE_NAME + "." + EcoMapContract.ProblemsEntry._ID
             /*,
-            WeatherContract.WeatherEntry.COLUMN_DATE,
-            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC*/
+            EcoMapContract.ProblemsEntry.COLUMN_DATE,
+            EcoMapContract.ProblemsEntry.COLUMN_SHORT_DESC*/
     };
 
     @Override

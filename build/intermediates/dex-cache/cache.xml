@@ -2,172 +2,200 @@
 <items version="2" >
 
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="e35fae1b377c23aa5fd2d309a190c2d0f73d54ec">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-2cd8794bdf4c1fd220792583e5c55a36842ca18f.jar" />
+        sha1="8d736fefa22d896e84a268354b3ed48a42663150">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-d7b7f312815a7fc26cf1ee71591f674e9c513eca.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/libs/internal_impl-22.2.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="e5bf453b070c1e39297986144960e45afa0fdfad">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-4481cc7c195f79b538f57ef0879539ba6ddc2973.jar" />
+        sha1="57f2ab85c164ff1676ec64dee787981c046fab79">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/internal_impl-22.2.0-31e485a7e65093e02bf7b24dea18ebf9db8935af.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="59652857a825fff0de62166fca1bc9553cc01abb">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-2cab8f7939fdfa42992b96e6d2415f8ab2ba2805.jar" />
+        sha1="1a6411087ab88ce5542f593e63a2752b6b0d6f1a">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-64b9cccc516e2366fb7694b7ea74803f1a885b64.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="4f4fe3c23776540625f3c2844152a7510fddf9f1">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-02a356bb6b607de7a261230b5dff04a4a5ed0cc9.jar" />
+        sha1="63ec6e9f4fe5482a7447d0f3091b8e543a02554c">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-310c379802be73feff112e504f1db57c088773fd.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="3988694bf9d8186ff97ad5cdfa4ed88b5010fe08">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-6c6a6bf9fec91e1f893f5f27cfd3ee14c36d751c.jar" />
+        sha1="6836d188602ec5382d1967c58b00960eb8ff8773">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-0e3a0fc19a106d2aa3f7ec8ec794f83b35cfb607.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.9.1/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="bb36004beb02b69562cbec9aa7d6a3cf16bf5d1b">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-55c4f264c8fc0bca287bba84d9814f4f321661da.jar" />
+        sha1="d4b681a6084ef53d2825520fc77fcaddde351f64">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-a478c1b974c954ad1dd9fe93aae96afe6442ea66.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="6046e5cdaf799120b7c56a5a061d80e8854c4d34">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-db26b2225a9f03bd3ea8df9584c4d1b53197f217.jar" />
+        sha1="1e98ef3f124bb7a11f8575f9ff5dfea330b61b6f">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-a21d0f2ee2e7cf1dd2ff309654b54f4b50b467e1.jar" />
     </item>
     <item
-        jar="C:\Users\SRV\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.1.1\support-annotations-22.1.1.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="01d051a6bfb1218b1db2d3a5af0480ac2c25c42a">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\support-annotations-22.1.1-d36013fd602ce3330d9f17a53228241f29b50333.jar" />
+        sha1="02bac2dc792d78241077861566f2c82da955e7fa">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-977880b405cc1b9d3c3c9dfb852404edf45572b5.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="a0ce76dfaccbfbd6c551ed2174280aaabe60fe47">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-6ff88f3847b25a73275e8d75aa785413583681d2.jar" />
+        sha1="68c140702c7242d914655bcb3164d9e8c45b84cb">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-ccc4b12887c4502c8124a88e4bcbb84620c70d63.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="b48d5c51a9a9e329005106b4667f54948de4d4d8">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-5c192d6e2da90a948c5a8838d1904eb3c870f874.jar" />
+        sha1="ba207be21987c11b37d9f8faa08ed6e722569f30">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-9f77b7a31453bb33748b7bf407cd2b5569802511.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.1.1\jars\libs\internal_impl-22.1.1.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="9e070ad32b2700b0343e8e0cccc437733d91ba3a">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\internal_impl-22.1.1-00c13e9ddafbd7d85867fca8c9d59d6049469d48.jar" />
+        sha1="06a42becc33232ec0ee125161da68c1829c9f8fd">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-7b9f0278327ce74900e0782b715a56f998cfab69.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.1.1\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="a3ff3c506644c820eb2bdf06e8339f72be578551">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-093e98d28f2fd7c33bfbde500e0e257949581754.jar" />
+        sha1="f44d03c138cb6488fdbaa65e3a7e5878861a56d8">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-638e4bac629215bd090d6716fe47bcbd68f52be5.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\7.3.0\jars\classes.jar"
+        jar="/home/yura/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/22.2.0/support-annotations-22.2.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="9c9dea9e85aceb09d95df5e6f7bc8a43fc286068">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-7760c6582d2375d4cfbfe4149b96d3a5fe6ed371.jar" />
+        sha1="66b42a1f3eb7676070b7ef7f14b603483aecbee1">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/support-annotations-22.2.0-a3a140ae655ad4b7c24fa9a0f1dcdad740a289aa.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.maps.android/android-maps-utils/0.3.4/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="7215ac1f2fca947b9415a6ee2a1bf991364aab24">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-e36c69b995785fdb242c93fbff4277a8f0153862.jar" />
+        sha1="cf251baf39f5c5138224b67b4106eb6331abbd13">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-6746c549b954b7d292a575193c1ecae0df2b2511.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/22.2.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="e5b9f5b0aa8dee788beb63d23832cb29ce771343">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-360637a34ee45bff26372a621bfc259e6d0159c2.jar" />
+        sha1="73753982da6bde518f3a4c6b372749981d14d1a0">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-01ab577d7c9dcd373cf9bec84154456b6f9737bb.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.1.1\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="c95ba8152923e4872e86a82cfcba9a51c0214328">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-4018b7c00d552f8ec89b9c4c54787dc7e52de36a.jar" />
+        sha1="e7b35244f50663b3f8d150714bca9ecd7a290da1">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-fa6bab0ae66603bdbe0d677f60136c1f7de9a4de.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/jars/libs/internal_impl-22.0.0.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="3b4ff5c39dace8f3b4ab4cab8191785547a0815f">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-a699cfda988ef2cc1bd6e531ceb14da35b8bf0cd.jar" />
+        sha1="ba3df4eb0a630d7de294f0e48d3f9267d279b784">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-5b9e53d16f5e50887f53a46ace53adb19b27c967.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="0708ef60917bf94913fe9ef972a655b99462dca7">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-d82eda11def0cba889113d27aa93c8d580508f30.jar" />
+        sha1="a172852a35ff919e85b9b7f14bbc15c5bee25520">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-dc2c098f2942606a7b7ae205b98a161fc5333de1.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/22.0.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="fe3e0c6de7cceed888b277487238b6af9a1cc299">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-54f0dbd286114a8332c708a429f5f13705e59de6.jar" />
+        sha1="a1372c17fccacca753d3951d3ad820571cbce075">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-203470426763d9744887c240edfb68eb2fa23f24.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appstate\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="0180d031a7b54dabb93b4af3869468b55dc938bd">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-7beb74d522f720e67d8747b03a1782d197030390.jar" />
+        sha1="6440e5e5cfe368f9bff3c537fb8988048069cb33">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-07a763db7213531882dd707a088c190bdea18d29.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="5ea948d825957be6c4358c48422bee60eef2d487">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-b90de51b57dc91b1669403a5eadb91ba647db179.jar" />
+        sha1="272bc5d7063f24bc3a33ea1d318cde8f31f5ec4c">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-8abdc6ee80037b2dd1acc11f454d15a2747bb84c.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="f2f7ec211ce4d244ee97a57523eeb4526dc3cf8a">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-3e6243d05d795bc8c456a845782ad7dc7f0742e0.jar" />
+        sha1="d405025c600055237c171a0bbabaa49d69696573">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-fecd900663154eaf257cb43186af83d2f3c88742.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="b2c07cdb814fe988ad05f7b4d767a841514a5991">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-2942690777925130aefa253088bf9bfec615719e.jar" />
+        sha1="1ee588ff2c4daf7b97c1cbf922a6c7f027285c2f">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-91594d6b445d1bf2398c0faefabacdf73efe65d9.jar" />
     </item>
     <item
-        jar="D:\Projects\EcoMap\EcoMap\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\7.3.0\jars\classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.5.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="565a01f90f1529f73362707c4c185d0623a68782">
-        <dex dex="D:\Projects\EcoMap\EcoMap\app\build\intermediates\pre-dexed\debug\classes-342b0caa51447e9103a409ffcf935b1327ec7dc7.jar" />
+        sha1="29ebc7e04d877062317c8cc0e68b20f0c1fcda66">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-1a7f88c08e585118807252f5f3d788adcdca5c3c.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.5.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f02127a85abd52a2cd526d4c2409f21969f80ee8">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-e75b1ff38b899cee9afc27e161c12a63fd2549b3.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.5.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="69dd177337ead693c408c8dddc9546bb6f1244fa">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-79aa718d82e8647732929364509adc6c2839b877.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.5.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="8e3a972f28b8bae817e382257ba177a31bcadbbc">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-ba2b7bd556b8ef02f5a2b17c751e2f82c076a7fc.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.5.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a78183f30e769a98ab4820794f597763088d3065">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-8f875bbaaa10a916723107e371f3ff1f1d6070f7.jar" />
     </item>
 
 </items>

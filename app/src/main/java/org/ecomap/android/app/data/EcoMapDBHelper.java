@@ -52,7 +52,7 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
 
                 //setting up PROBLEM_ID as foreign key
                 " FOREIGN KEY (" + PhotosEntry.COLUMN_PROBLEM_ID + ") REFERENCES " +
-                ProblemsEntry.TABLE_NAME + " (" + ProblemsEntry._ID + " );";
+                ProblemsEntry.TABLE_NAME + " (" + ProblemsEntry._ID + ")) ;";
 
         final String SQL_CREATE_RESOURCES_TABLE = "CREATE TABLE " + ResourcesEntry.TABLE_NAME + " (" +
                 ResourcesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

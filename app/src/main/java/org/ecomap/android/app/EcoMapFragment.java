@@ -1,5 +1,7 @@
 package org.ecomap.android.app;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.ecomap.android.app.data.EcoMapProvider;
+import org.ecomap.android.app.service.EcoMapService;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -46,6 +51,8 @@ public class EcoMapFragment extends SupportMapFragment{
         ProblemsTask p = new ProblemsTask(mMap, getActivity());
         p.execute();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
+        Intent intent = new Intent(getActivity(), EcoMapService.class);
+        getActivity().startService(intent);
     }
 }
 
