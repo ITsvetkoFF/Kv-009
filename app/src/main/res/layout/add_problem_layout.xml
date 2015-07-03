@@ -25,7 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Problem title:" />
+            android:text="Problem title:"
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <EditText
             android:id="@+id/editText"
@@ -37,7 +39,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Problem type:" />
+            android:text="Problem type:"
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -49,7 +53,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Description:" />
+            android:text="Description:"
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <EditText
             android:id="@+id/editText3"
@@ -64,7 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Suggested solution" />
+            android:text="Suggested solution"
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <EditText
             android:id="@+id/editText2"
@@ -75,35 +83,40 @@
             android:inputType="textMultiLine" />
 
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/gallery_item"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="45" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/custom_button"
-                android:text="Add" />
 
             <Button
+                android:id="@+id/add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancel" />
+                android:text="Add"
+                android:textColor="#000000"
+                />
 
-
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel"
+                android:textColor="#000000"
+                android:layout_gravity="center_horizontal"
+                />
         </LinearLayout>
 
         <!--
         http://stackoverflow.com/questions/13796382/android-viewpager-as-image-slide-gallery?rq=1
         -->
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/gallery_item"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="45" />
 
     </LinearLayout>
 </ScrollView>
