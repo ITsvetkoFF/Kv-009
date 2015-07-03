@@ -43,6 +43,7 @@ import org.ecomap.android.app.ProblemsTask;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.fragments.LoginFragment;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
+    public static final int NAV_LOGIN = 5;
 
 
 
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
+        boolean stop = false;
         switch (position) {
             case NAV_MAP:
                 fragment = new EcoMapFragment();
@@ -192,6 +195,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case NAV_DETAILS:
                 fragment = AddProblemFragment.newInstance("title", "description");
+                break;
+            case NAV_LOGIN:
+                fragment = new LoginFragment();
                 break;
             default:
                 fragment = new MockFragment();
