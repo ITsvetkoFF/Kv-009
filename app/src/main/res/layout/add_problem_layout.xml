@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Problem title:"
-            android:paddingBottom="5dp"/>
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <EditText
             android:id="@+id/editText"
@@ -40,7 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Problem type:"
-            android:paddingBottom="5dp"/>
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <Spinner
             android:id="@+id/spinner"
@@ -53,7 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Description:"
-            android:paddingBottom="5dp"/>
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <EditText
             android:id="@+id/editText3"
@@ -70,7 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Suggested solution"
-            android:paddingBottom="5dp"/>
+            android:paddingBottom="5dp"
+            android:textColor="@color/blue2" />
 
         <EditText
             android:id="@+id/editText2"
