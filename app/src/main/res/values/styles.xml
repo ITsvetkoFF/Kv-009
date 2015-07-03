@@ -14,6 +14,8 @@
     <color name="blue3">#2196F3</color>
     <color name="green1">#008E00</color>
     <color name="green2">#1E541E</color>
+    <color name="white2">#FCFCFC</color>
+    <color name="white3">#E2E2E2</color>
 
     <!-- Base application theme. -->
     <!--style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar"-->
