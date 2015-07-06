@@ -1,6 +1,8 @@
 package org.ecomap.android.app.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.ecomap.android.app.FloatingButton;
 import org.ecomap.android.app.ProblemsTask;
 
 /**
@@ -23,6 +26,12 @@ public class EcoMapFragment extends SupportMapFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUpMapIfNeeded();
+        FloatingButton fabButton = new FloatingButton.Builder(getActivity())
+
+                .withButtonColor(Color.WHITE)
+                .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
+                .withMargins(0, 0, 16, 16)
+                .create();
         return rootView;
     }
 
