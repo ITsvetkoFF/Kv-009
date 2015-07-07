@@ -4,6 +4,10 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
+    lintOptions{
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "org.ecomap.android.app"
         minSdkVersion 16
