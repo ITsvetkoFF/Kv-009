@@ -18,24 +18,7 @@ public class EcoMapProvider extends ContentProvider {
     private EcoMapDBHelper mOpenHelper;
 
     static final int PROBLEMS = 100;
-    static final int PHOTOS_WITH_PROBLEMS = 102;
     static final int RESOURCES = 103;
-
-    private static final SQLiteQueryBuilder sPhotoByProblemQueryBuilder;
-
-    static{
-        sPhotoByProblemQueryBuilder = new SQLiteQueryBuilder();
-
-        //This is an inner join which looks like
-        //weather INNER JOIN location ON weather.location_id = location._id
-        sPhotoByProblemQueryBuilder.setTables(
-                EcoMapContract.PhotosEntry.TABLE_NAME + " INNER JOIN " +
-                        EcoMapContract.ProblemsEntry.TABLE_NAME +
-                        " ON " + EcoMapContract.PhotosEntry.TABLE_NAME +
-                        "." + EcoMapContract.PhotosEntry.COLUMN_PROBLEM_ID +
-                        " = " + EcoMapContract.ProblemsEntry.TABLE_NAME +
-                        "." + EcoMapContract.ProblemsEntry._ID);
-    }
 
     static UriMatcher buildUriMatcher() {
 
@@ -44,7 +27,6 @@ public class EcoMapProvider extends ContentProvider {
 
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, EcoMapContract.PATH_PROBLEMS, PROBLEMS);
-        matcher.addURI(authority, EcoMapContract.PATH_PHOTOS, PHOTOS_WITH_PROBLEMS);
         matcher.addURI(authority, EcoMapContract.PATH_RESOURCES, RESOURCES);
         return matcher;
     }
@@ -63,19 +45,6 @@ public class EcoMapProvider extends ContentProvider {
             case PROBLEMS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         EcoMapContract.ProblemsEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            }
-            // "photos"
-            case PHOTOS_WITH_PROBLEMS: {
-                retCursor = mOpenHelper.getReadableDatabase().query(
-                        EcoMapContract.PhotosEntry.TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -113,8 +82,6 @@ public class EcoMapProvider extends ContentProvider {
         switch (match) {
             case PROBLEMS:
                 return EcoMapContract.ProblemsEntry.CONTENT_TYPE;
-            case PHOTOS_WITH_PROBLEMS:
-                return EcoMapContract.PhotosEntry.CONTENT_TYPE;
             case RESOURCES:
                 return EcoMapContract.ResourcesEntry.CONTENT_TYPE;
             default:

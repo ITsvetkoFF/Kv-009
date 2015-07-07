@@ -23,7 +23,6 @@ public class EcoMapContract {
 
     // Possible paths (appended to base content URI for possible URI's)
     public static final String PATH_PROBLEMS = "problems";
-    public static final String PATH_PHOTOS = "photos";
     public static final String PATH_RESOURCES = "resources";
 
     /* Inner class that defines the table contents of the problems table */
@@ -71,34 +70,6 @@ public class EcoMapContract {
         public static Uri buildProblemsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-    }
-
-    public static final class PhotosEntry implements BaseColumns{
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_PHOTOS).build();
-
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PHOTOS;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PHOTOS;
-
-        //table_name
-        public static final String TABLE_NAME = "photos";
-
-        //id of a problem, foreign key, int
-        public static final String COLUMN_PROBLEM_ID = "problem_id";
-        //link to full image, String
-        public static final String COLUMN_LINK = "link";
-        //description of photo, String
-        public static final String COLUMN_CONTENT = "content";
-        //array of bytes for preview, BLOB type
-        public static final String COLUMN_BLOB = "blob";
-
-        public static Uri buildPhotosUri(long id){
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
-
     }
 
     public static final class ResourcesEntry implements BaseColumns{
