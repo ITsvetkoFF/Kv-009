@@ -45,8 +45,8 @@ public class EcoMapFragment extends SupportMapFragment{
     }
 
     private void setUpMap() {
-        ProblemsTask p = new ProblemsTask(mMap, getActivity());
-        p.execute();
+    //    ProblemsTask p = new ProblemsTask(mMap, getActivity());
+    //    p.execute();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
     }
 }

@@ -82,11 +82,16 @@ public class MainActivity extends AppCompatActivity {
     private String[] mScreenTitles;
     private ActionBar actionBar;
 
+    public static final String API_URL = "http://176.36.11.25:8000/api/";
+
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
     public static final int NAV_LOGIN = 5;
 
+    private static String userFirstName;
+    private static String userSecondName;
+    private static String userId;
 
 
     @Override
@@ -326,6 +331,30 @@ public class MainActivity extends AppCompatActivity {
             return view;
             //super.getView(position, convertView, parent);
         }
+    }
+
+    public static String getUserFirstName() {
+        return userFirstName;
+    }
+
+    public static void setUserFirstName(String userFirstName) {
+        MainActivity.userFirstName = userFirstName;
+    }
+
+    public static String getUserSecondName() {
+        return userSecondName;
+    }
+
+    public static void setUserSecondName(String userSecondName) {
+        MainActivity.userSecondName = userSecondName;
+    }
+
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        MainActivity.userId = userId;
     }
 
 
