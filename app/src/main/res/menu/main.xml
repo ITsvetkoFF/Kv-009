@@ -23,6 +23,12 @@
 
     <item android:id="@+id/action_add_polygon"
         android:title="@string/action_add_polygon"
+        android:orderInCategory="1"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_update"
+        android:title="@string/action_update"
+        android:orderInCategory="2"
         app:showAsAction="never" />
 
 </menu>
