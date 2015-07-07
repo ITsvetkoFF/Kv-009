@@ -38,3 +38,4 @@ Thumbs.db
 
 /build
 /build/intemediates/gradle_project_sync_data.bin
+/build/intermediates/dex-cache/cache.xml
