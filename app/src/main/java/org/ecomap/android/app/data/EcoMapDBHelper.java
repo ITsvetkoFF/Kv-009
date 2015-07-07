@@ -16,7 +16,7 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 1;
 
-    static final String DATABASE_NAME = "ecomap.db";
+    public static final String DATABASE_NAME = "ecomap.db";
 
     public EcoMapDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
