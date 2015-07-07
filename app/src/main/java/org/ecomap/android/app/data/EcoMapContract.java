@@ -51,7 +51,7 @@ public class EcoMapContract {
         //severuty - can be init by administrator, int
         public static final String COLUMN_SEVERITY = "severity";
         //number of "likes, int
-        public static final String COLUMN_VOTES_NUMBER = "votes_number";
+        public static final String COLUMN_NUMBER_OF_VOTES = "number_of_votes";
         //date of adding problem, String
         public static final String COLUMN_DATE = "date";
         //description of a problem, String
