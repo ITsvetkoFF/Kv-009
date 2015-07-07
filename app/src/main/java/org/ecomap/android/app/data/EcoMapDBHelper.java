@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import org.ecomap.android.app.data.EcoMapContract.PhotosEntry;
 import org.ecomap.android.app.data.EcoMapContract.ProblemsEntry;
 import org.ecomap.android.app.data.EcoMapContract.ResourcesEntry;
 
@@ -43,16 +42,6 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
                 ProblemsEntry.COLUMN_COMMENTS_NUMBER + " INTEGER NOT NULL " +
                 " );";
 
-        final String SQL_CREATE_PHOTOS_TABLE = "CREATE TABLE " + PhotosEntry.TABLE_NAME + " (" +
-                PhotosEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                PhotosEntry.COLUMN_PROBLEM_ID + " INTEGER NOT NULL, " +
-                PhotosEntry.COLUMN_LINK + " TEXT NOT NULL, " +
-                PhotosEntry.COLUMN_CONTENT + " TEXT NOT NULL, " +
-                PhotosEntry.COLUMN_BLOB + " BLOB NOT NULL, " +
-
-                //setting up PROBLEM_ID as foreign key
-                " FOREIGN KEY (" + PhotosEntry.COLUMN_PROBLEM_ID + ") REFERENCES " +
-                ProblemsEntry.TABLE_NAME + " (" + ProblemsEntry._ID + " ));";
 
         final String SQL_CREATE_RESOURCES_TABLE = "CREATE TABLE " + ResourcesEntry.TABLE_NAME + " (" +
                 ResourcesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -61,7 +50,6 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_PROBLEMS_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_PHOTOS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_RESOURCES_TABLE);
     }
 
