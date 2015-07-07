@@ -120,6 +120,7 @@ public class EcoMapService extends IntentService {
         final String ACTION = "action";
         final String ACTION_DELETE = "DELETED";
         final String ACTION_VOTE = "VOTE";
+        final String ID = "id";
 
         try {
             JSONObject data = new JSONObject(JSONStr);
@@ -141,6 +142,7 @@ public class EcoMapService extends IntentService {
                 String title;
                 double latitude, longitude;
                 int type_id;
+                int id;
                 String action;
 
                 JSONObject obj = jArr.getJSONObject(i);
@@ -151,6 +153,8 @@ public class EcoMapService extends IntentService {
 
                     if (ACTION_DELETE.equals(action)) {
                         //ACTION DELETE
+                        id = obj.getInt(ID);
+                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, "_id = " + id, null);
 
                     } else if (ACTION_VOTE.equals(action)) {
                         //ACTION VOTE
@@ -162,9 +166,11 @@ public class EcoMapService extends IntentService {
                     latitude = obj.getDouble(LATITUDE);
                     longitude = obj.getDouble(LONGITUDE);
                     type_id = obj.getInt(PROBLEMS_TYPES_ID);
+                    id = obj.getInt(ID);
 
                     ContentValues mapValues = new ContentValues();
 
+                    mapValues.put(EcoMapContract.ProblemsEntry._ID, id);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_TITLE, title);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE, latitude);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE, longitude);

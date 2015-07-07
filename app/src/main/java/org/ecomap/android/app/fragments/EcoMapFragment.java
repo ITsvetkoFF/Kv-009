@@ -103,6 +103,9 @@ public class EcoMapFragment extends SupportMapFragment {
         String title;
         int type_id;
 
+        values.clear();
+        mMap.clear();
+
         cursor = getActivity().getContentResolver()
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
 
