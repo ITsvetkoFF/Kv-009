@@ -38,11 +38,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.ecomap.android.app.ProblemsTask;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.fragments.LoginFragment;
 
 /**
@@ -86,8 +85,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
     public static final int NAV_LOGIN = 5;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +170,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_add_polygon:
-                ProblemsTask.setMarkerClickType(1);
+                EcoMapFragment.setMarkerClickType(1);
+                return true;
+            case R.id.action_update:
+                Intent intentService = new Intent(this, EcoMapService.class);
+                startService(intentService);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

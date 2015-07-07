@@ -59,7 +59,7 @@ public class EcoMapProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
-            // "weather"
+            // "problems"
             case PROBLEMS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         EcoMapContract.ProblemsEntry.TABLE_NAME,
@@ -72,7 +72,7 @@ public class EcoMapProvider extends ContentProvider {
                 );
                 break;
             }
-            // "location"
+            // "photos"
             case PHOTOS_WITH_PROBLEMS: {
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         EcoMapContract.PhotosEntry.TABLE_NAME,

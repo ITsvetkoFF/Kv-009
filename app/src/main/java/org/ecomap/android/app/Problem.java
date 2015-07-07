@@ -14,7 +14,7 @@ public class Problem implements ClusterItem {
     int type_id, res_id;
     Context mContext;
 
-    Problem(double latitude, double longitude, String title, int type_id, Context mContext){
+    public Problem(double latitude, double longitude, String title, int type_id, Context mContext){
         this.mPos = new LatLng(latitude, longitude);
         this.mTitle = title;
         this.type_id = type_id;
