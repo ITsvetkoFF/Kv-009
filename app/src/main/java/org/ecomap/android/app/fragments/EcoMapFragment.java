@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.software.shell.fab.ActionButton;
+import com.wunderlist.slidinglayer.SlidingLayer;
 
 import org.ecomap.android.app.MyIconRendered;
 import org.ecomap.android.app.Problem;
@@ -55,6 +57,9 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<Marker> markers;
     Cursor cursor;
     EcoMapReceiver receiver;
+    ActionButton actionButton;
+    SlidingLayer slidingLayer;
+    Button cancelButton;
     
     MapView mapView;
     // Might be null if Google Play services APK is not available.
@@ -66,10 +71,10 @@ public class EcoMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.map_layout_main, container, false);
 
-
         mapView = (MapView) v.findViewById(R.id.mapview);
         mapView.onCreate(savedInstanceState);
         mMap = mapView.getMap();
+
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMyLocationEnabled(true);
 
@@ -77,22 +82,34 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(this.getActivity());
 
-        /*CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(43.1, -87.9), 10);
-        map.animateCamera(cameraUpdate); */
+        slidingLayer= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
+        slidingLayer.setSlidingEnabled(false);
+        cancelButton=(Button)v.findViewById(R.id.button_cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                slidingLayer.closeLayer(true);
+                actionButton.show();
+            }
+        });
 
 
-       /* FloatingButton fabButton = new FloatingButton.Builder(getActivity())
 
-                .withButtonColor(Color.WHITE)
-                .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
-                .withMargins(0, 0, 16, 16)
-                .withDrawable(getResources().getDrawable(R.drawable.plusic_blue))
-                .create(); */
-        ActionButton actionButton = (ActionButton) v.findViewById(R.id.action_button);
+
+        actionButton = (ActionButton) v.findViewById(R.id.action_button);
         actionButton.show();
         actionButton.setType(ActionButton.Type.DEFAULT);
         actionButton.setButtonColor(getResources().getColor(R.color.fab_material_lime_500));
         actionButton.setImageResource(R.drawable.fab_plus_icon);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionButton.hide();
+                slidingLayer.openLayer(true);
+                //call the wunderlist
+            }
+        });
+        setRetainInstance(true);
         return v;
     }
 
