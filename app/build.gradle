@@ -29,5 +29,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.google.maps.android:android-maps-utils:0.3.+'
     compile 'com.getbase:floatingactionbutton:1.9.1'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
+    compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
     compile 'com.github.shell-software:fab:1.1.2'
 }

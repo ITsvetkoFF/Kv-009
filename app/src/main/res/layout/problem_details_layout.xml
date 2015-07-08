@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/details_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:measureAllChildren="true"
     >
 
     <LinearLayout
@@ -128,12 +130,19 @@
             android:layout_marginTop="6dp"
             android:text="Очищення озера від сміття, просвітницька робота серед населення" />
 
-        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/pager"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp">
+      <org.ecomap.android.app.ui.components.ExpandableHeightGridView
+          android:id="@+id/gridview"
+          android:columnWidth="100dp"
+          android:numColumns="auto_fit"
+          android:verticalSpacing="10dp"
+          android:horizontalSpacing="10dp"
+          android:stretchMode="columnWidth"
+          android:gravity="center"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="25dp">
 
-        </android.support.v4.view.ViewPager>
+      </org.ecomap.android.app.ui.components.ExpandableHeightGridView>
 
 
     </LinearLayout>

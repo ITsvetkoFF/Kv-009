@@ -19,6 +19,7 @@
         android:required="true" />
 
     <application
+        android:name=".EcomapApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -47,6 +48,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.ViewPhotosActivity"
+            android:label="@string/title_activity_view_photos"
+            android:theme="@style/AppThemeTransparentActionBar"
+            android:parentActivityName=".activities.ProblemDetailsActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ProblemDetailsActivity" />
+        </activity>
+
+
 
         <provider
             android:name=".data.EcoMapProvider"

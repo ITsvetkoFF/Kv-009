@@ -11,8 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.ecomap.android.app.fragments.ProblemDetailsFragment;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.ProblemDetailsFragment;
 
 public class ProblemDetailsActivity extends AppCompatActivity implements ActionBar.TabListener {
     /**
@@ -51,7 +51,7 @@ public class ProblemDetailsActivity extends AppCompatActivity implements ActionB
         // user swipes between sections.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mAppSectionsPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 // When swiping between different app sections, select the corresponding tab.
@@ -111,6 +111,7 @@ public class ProblemDetailsActivity extends AppCompatActivity implements ActionB
     }
 
 
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
      * sections of the app.
@@ -153,4 +154,9 @@ public class ProblemDetailsActivity extends AppCompatActivity implements ActionB
             return sTabsTitles[position];
         }
     }
+
+
+
+
+
 }
