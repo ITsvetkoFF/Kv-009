@@ -134,7 +134,7 @@ public class LoginFragment extends Fragment {
                     }
 
                 } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
-                    resMessage = "Please fill all the fields";
+                    resMessage = "Please fill all the fields for autorization";
 
                 } else if (! MainActivity.isEmailValid(email.getText())){
                     resMessage = "Please enter correct email";

@@ -2,53 +2,53 @@
 <items version="2" >
 
     <item
-        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/it.sephiroth.android.library.imagezoom/imagezoom/2.2.2/jars/classes.jar"
+        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/it.sephiroth.android.library.imagezoom/imagezoom/2.2.2/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="0ae6b077aa2e6de9fa3e754e5d55a5efcb43db52">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-9e8b17649828d9962e409135f6e904d08f10c305.jar" />
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-805ac9792d49f446fbd8aff8bb95ebf3938e64fa.jar" />
     </item>
     <item
-        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.4/dd9eeb557650c4ad7394df23f0f5cf27a7cfc697/universal-image-loader-1.9.4.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="dd9eeb557650c4ad7394df23f0f5cf27a7cfc697">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.4-84b50163b47ab8e3f13f0fb8a5b67b052ebc4cea.jar" />
-    </item>
-    <item
-        jar="/home/yura/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.9/872ec63b41181e29ad5a3723f1417356e2d2c0f2/slf4j-api-1.7.9.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="872ec63b41181e29ad5a3723f1417356e2d2c0f2">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/slf4j-api-1.7.9-2e4f13c172b40ccc21700cd3c39447bb0439b839.jar" />
-    </item>
-    <item
-        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.shell-software/fab/1.1.2/jars/classes.jar"
+        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.shell-software/fab/1.1.2/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="48bbecbdd3ed42e9df1b94a945480838e3bb208b">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-d18e558d91a1dfeed933ffe181a270b64c01cc94.jar" />
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-d1b076e69c8109c267821f0ec4c7a07c277ed36d.jar" />
     </item>
     <item
-        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.shell-software/uitools/1.1.0/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="418307d960be5f7c5fe13794b7283f5fd09d0c17">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-b529978bcedc5dd3eeb81ffbbeeab82f9822d213.jar" />
-    </item>
-    <item
-        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/library-2.4.0-56626a9241d75dec7648b983ee86304daea41137.jar" />
-    </item>
-    <item
-        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.shell-software/viewmover/1.1.0/jars/classes.jar"
+        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.shell-software/viewmover/1.1.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="3d6dc28c575755c91be7f6a69803e4ebe98c7c7d">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-837d99a7a010aa4016006cf83b364c4d42dd77e7.jar" />
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-67f67db0eae036259ddeede7291ad1e8678b6207.jar" />
+    </item>
+    <item
+        jar="/Users/Tatiana/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.9/872ec63b41181e29ad5a3723f1417356e2d2c0f2/slf4j-api-1.7.9.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="872ec63b41181e29ad5a3723f1417356e2d2c0f2">
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/slf4j-api-1.7.9-c5a8aee647db0033c53da6e9612464192d5f2a5a.jar" />
+    </item>
+    <item
+        jar="/Users/Tatiana/.gradle/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.4/dd9eeb557650c4ad7394df23f0f5cf27a7cfc697/universal-image-loader-1.9.4.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="dd9eeb557650c4ad7394df23f0f5cf27a7cfc697">
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/universal-image-loader-1.9.4-bb30559afc7c2569b3e661acc34e0248a82e9fcb.jar" />
+    </item>
+    <item
+        jar="/Users/Tatiana/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/library-2.4.0-1c5134d9c2de78050773d9db6d335900e28f0e81.jar" />
+    </item>
+    <item
+        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.shell-software/uitools/1.1.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="418307d960be5f7c5fe13794b7283f5fd09d0c17">
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-ed15ce332198b45659f08c9ea32a5c55f5869884.jar" />
     </item>
 
 </items>
