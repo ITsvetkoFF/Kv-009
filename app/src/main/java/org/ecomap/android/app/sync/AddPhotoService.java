@@ -13,7 +13,7 @@ import android.widget.Toast;
 /**
  * Created by yridk_000 on 03.07.2015.
  */
-public class MyService extends Service {
+public class AddPhotoService extends Service {
     NotificationManager notificationManager;
     NotificationCompat.Builder mBuilder;
     Callbacks activity;
@@ -44,8 +44,8 @@ public class MyService extends Service {
     }
     //returns the instance of the service
     public class LocalBinder extends Binder {
-        public MyService getServiceInstance(){
-            return MyService.this;
+        public AddPhotoService getServiceInstance(){
+            return AddPhotoService.this;
         }
     }
 

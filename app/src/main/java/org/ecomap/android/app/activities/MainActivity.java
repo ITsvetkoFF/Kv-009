@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.map_filters_layout, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_map_filters, container, false);
 
             //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String[] planet = getResources().getStringArray(R.array.navigation_array);
