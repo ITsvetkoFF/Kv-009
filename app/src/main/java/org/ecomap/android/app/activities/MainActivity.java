@@ -28,6 +28,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -87,10 +89,17 @@ public class MainActivity extends AppCompatActivity {
     private String[] mScreenTitles;
     private ActionBar actionBar;
 
+    public static final String API_URL = "http://176.36.11.25:8000/api/";
+
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
     public static final int NAV_LOGIN = 5;
+
+    private static String userFirstName;
+    private static String userSecondName;
+    private static String userId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -368,7 +377,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public static String getUserFirstName() {
+        return userFirstName;
+    }
 
+    public static void setUserFirstName(String userFirstName) {
+        MainActivity.userFirstName = userFirstName;
+    }
+
+    public static String getUserSecondName() {
+        return userSecondName;
+    }
+
+    public static void setUserSecondName(String userSecondName) {
+        MainActivity.userSecondName = userSecondName;
+    }
+
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        MainActivity.userId = userId;
+    }
+
+    public static boolean isEmailValid(CharSequence email){
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        
+    }
 }
 
 

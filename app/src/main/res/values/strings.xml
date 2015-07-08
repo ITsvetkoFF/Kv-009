@@ -8,6 +8,7 @@
         <item>TOP 10</item>
         <item>Filters</item>
         <item>Resources</item>
+        <item>Login</item>
     </string-array>
 
     <string-array name="problem_details_tabs">
