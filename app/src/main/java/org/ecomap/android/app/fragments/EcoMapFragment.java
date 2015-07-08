@@ -1,5 +1,7 @@
 package org.ecomap.android.app.fragments;
 
+import android.support.v4.app.Fragment;
+import android.graphics.Color;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,14 +9,19 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.software.shell.fab.ActionButton;
 
 import org.ecomap.android.app.MyIconRendered;
 import org.ecomap.android.app.Problem;
@@ -30,36 +38,69 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
+import org.ecomap.android.app.R;
+
 import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class EcoMapFragment extends SupportMapFragment {
+public class EcoMapFragment extends Fragment {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ClusterManager<Problem> mClusterManager;
-    private Context mContext;
+    Context mContext;
     private ArrayList<Problem> values;
     private ArrayList<LatLng> points;
     private ArrayList<Marker> markers;
-    private Cursor cursor;
-    private EcoMapReceiver receiver;
+    Cursor cursor;
+    EcoMapReceiver receiver;
+    
+    MapView mapView;
+    // Might be null if Google Play services APK is not available.
 
 
     private static int markerClickType;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        View v = inflater.inflate(R.layout.map_layout_main, container, false);
 
-        return rootView;
+
+        mapView = (MapView) v.findViewById(R.id.mapview);
+        mapView.onCreate(savedInstanceState);
+        mMap = mapView.getMap();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.setMyLocationEnabled(true);
+
+
+
+        MapsInitializer.initialize(this.getActivity());
+
+        /*CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(43.1, -87.9), 10);
+        map.animateCamera(cameraUpdate); */
+
+
+       /* FloatingButton fabButton = new FloatingButton.Builder(getActivity())
+
+                .withButtonColor(Color.WHITE)
+                .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
+                .withMargins(0, 0, 16, 16)
+                .withDrawable(getResources().getDrawable(R.drawable.plusic_blue))
+                .create(); */
+        ActionButton actionButton = (ActionButton) v.findViewById(R.id.action_button);
+        actionButton.show();
+        actionButton.setType(ActionButton.Type.DEFAULT);
+        actionButton.setButtonColor(getResources().getColor(R.color.fab_material_lime_500));
+        actionButton.setImageResource(R.drawable.fab_plus_icon);
+        return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
+        mapView.onResume();
         values = new ArrayList<>();
         points = new ArrayList<>();
         markers = new ArrayList<>();
@@ -69,20 +110,19 @@ public class EcoMapFragment extends SupportMapFragment {
         receiver = new EcoMapReceiver();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
 
-        setUpMapIfNeeded();
-
+        setUpMap();
     }
 
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            mMap = getMap();
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                setUpMap();
-            }
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     private void setUpMap() {
