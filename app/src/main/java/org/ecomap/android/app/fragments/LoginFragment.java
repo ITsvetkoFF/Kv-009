@@ -3,9 +3,6 @@ package org.ecomap.android.app.fragments;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.util.Patterns;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,30 +11,19 @@ import android.support.v4.app.Fragment;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 public class LoginFragment extends Fragment {
 
@@ -103,7 +89,7 @@ public class LoginFragment extends Fragment {
                 connection.setDoOutput(true);
                 connection.connect();
 
-                //creating JSONObject for reqiest
+                //creating JSONObject for request
                 JSONObject request = new JSONObject();
                 request.put("email", email.getText());
                 request.put("password", password.getText());
@@ -134,7 +120,6 @@ public class LoginFragment extends Fragment {
 
                     } else if (! (connection.getResponseCode() == HttpURLConnection.HTTP_OK)) {
 
-                        //TODO try to get Error message from reponse body
                         StringBuilder responseBody = new StringBuilder();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
@@ -146,7 +131,6 @@ public class LoginFragment extends Fragment {
 
                         JSONObject data = new JSONObject(responseBody.toString());
                         resMessage = data.get("message").toString();
-                        //resMessage = "Error! Please check your data and try again";
                     }
 
                 } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
