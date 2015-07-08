@@ -1,9 +1,7 @@
 package org.ecomap.android.app.sync;
 
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -27,8 +25,6 @@ import java.util.Vector;
 public class EcoMapService extends IntentService {
 
     private final String LOG_TAG = EcoMapService.class.getSimpleName();
-
-    private String JSONStr = null;
     private SharedPreferences sPref;
     private int numCurrentRevision;
 
@@ -50,12 +46,9 @@ public class EcoMapService extends IntentService {
 
             Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
-            // Getting input stream from URL
-            final String ECOMAP_BASE_URL = "http://176.36.11.25:8000/api/problems?";
-
             final String REVISION_PARAM = "rev";
 
-            Uri builtUri = Uri.parse(ECOMAP_BASE_URL).buildUpon()
+            Uri builtUri = Uri.parse(EcoMapAPIContract.ECOMAP_BASE_URL).buildUpon()
                     .appendQueryParameter(REVISION_PARAM, String.valueOf(numCurrentRevision)).build();
 
             URL url = new URL(builtUri.toString());
@@ -81,10 +74,10 @@ public class EcoMapService extends IntentService {
                 return;
             }
 
-            JSONStr = buffer.toString();
+            String JSONStr = buffer.toString();
 
             // Starting method for parsing data from JSON and writing them to database
-            boolean dataUpdated = getProblemsFromJSON();
+            boolean dataUpdated = getProblemsFromJSON(JSONStr);
 
             if (dataUpdated) {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
@@ -112,17 +105,7 @@ public class EcoMapService extends IntentService {
     // parsing data from JSON and writing them to database
     //return true, if data was added
     //false, if no data updated
-    private boolean getProblemsFromJSON() {
-        final String TITLE = "title";
-        final String LATITUDE = "latitude";
-        final String LONGITUDE = "longitude";
-        final String PROBLEMS_TYPES_ID = "problem_type_id";
-        final String ACTION = "action";
-        final String ACTION_DELETE = "DELETED";
-        final String ACTION_VOTE = "VOTE";
-        final String ID = "id";
-        final String NUMBER_OF_VOTES = "number_of_votes";
-        final String NUMBER_OF_VOTES_INJSON = "count";
+    private boolean getProblemsFromJSON(String JSONStr) {
 
         try {
             JSONObject data = new JSONObject(JSONStr);
@@ -141,57 +124,78 @@ public class EcoMapService extends IntentService {
             Vector<ContentValues> cVVector = new Vector<ContentValues>(JSONStr.length());
 
             for (int i = 0; i < jArr.length(); i++) {
+                int problem_id;
                 String title;
                 double latitude, longitude;
                 int type_id;
-                int id;
+                String status;
+                String first_name;
+                String last_name;
+                String severity;
                 int number_of_votes;
+                String date;
+                String content;
+                String proposal;
+                int region_id;
+                int number_of_comments;
+
                 String action;
 
                 JSONObject obj = jArr.getJSONObject(i);
 
-                if (obj.has(ACTION)) {
+                if (obj.has(EcoMapAPIContract.ACTION)) {
                     //ACTION
-                    action = obj.getString(ACTION);
+                    action = obj.getString(EcoMapAPIContract.ACTION);
 
-                    if (ACTION_DELETE.equals(action)) {
+                    if (EcoMapAPIContract.ACTION_DELETE.equals(action)) {
                         //ACTION DELETE
-                        id = obj.getInt(ID);
-                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, "_id = " + id, null);
+                        problem_id = obj.getInt(EcoMapAPIContract.ID);
+                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, "_id = " + problem_id, null);
 
-                    } else if (ACTION_VOTE.equals(action)) {
+                    } else if (EcoMapAPIContract.ACTION_VOTE.equals(action)) {
                         //ACTION VOTE
-                        id = obj.getInt(ID);
-                        number_of_votes = obj.getInt(NUMBER_OF_VOTES_INJSON);
+                        problem_id = obj.getInt(EcoMapAPIContract.ID);
+                        number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES_UPDATE);
                         ContentValues cv = new ContentValues();
-                        cv.put(NUMBER_OF_VOTES,number_of_votes);
-                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI,cv,"_id = " + id, null);
+                        cv.put(EcoMapAPIContract.NUMBER_OF_VOTES,number_of_votes);
+                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI,cv,"_id = " + problem_id, null);
                     }
 
                 } else {
                     //NEW PROBLEM
-                    title = obj.getString(TITLE);
-                    latitude = obj.getDouble(LATITUDE);
-                    longitude = obj.getDouble(LONGITUDE);
-                    type_id = obj.getInt(PROBLEMS_TYPES_ID);
-                    id = obj.getInt(ID);
+                    problem_id         = obj.getInt(EcoMapAPIContract.ID);
+                    title              = obj.getString(EcoMapAPIContract.TITLE);
+                    latitude           = obj.getDouble(EcoMapAPIContract.LATITUDE);
+                    longitude          = obj.getDouble(EcoMapAPIContract.LONGITUDE);
+                    type_id            = obj.getInt(EcoMapAPIContract.PROBLEMS_TYPES_ID);
+                    status             = obj.getString(EcoMapAPIContract.STATUS);
+                    first_name         = obj.getString(EcoMapAPIContract.FIRST_NAME);
+                    last_name          = obj.getString(EcoMapAPIContract.LAST_NAME);
+                    severity           = obj.getString(EcoMapAPIContract.SEVERITY);
+                    number_of_votes    = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES);
+                    date               = obj.getString(EcoMapAPIContract.DATE);
+                    content            = obj.getString(EcoMapAPIContract.CONTENT);
+                    proposal           = obj.getString(EcoMapAPIContract.PROPOSAL);
+                    region_id          = obj.getInt(EcoMapAPIContract.REGION_ID);
+                    number_of_comments = obj.getInt(EcoMapAPIContract.NUMBER_OF_COMMENTS);
 
                     ContentValues mapValues = new ContentValues();
 
-                    mapValues.put(EcoMapContract.ProblemsEntry._ID, id);
+                    mapValues.put(EcoMapContract.ProblemsEntry._ID, problem_id);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_TITLE, title);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE, latitude);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE, longitude);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID, type_id);
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_STATUS, "STATUS");
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_USER_NAME, "USER_NAME");
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY, 1);
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES, 1);
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_DATE, "DATE");
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_CONTENT, "CONTENT");
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_PROPOSAL, "PROPOSAL");
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID, 1);
-                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER, 1);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_STATUS, status);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_USER_FIRST_NAME, first_name);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_USER_LAST_NAME, last_name);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY, severity);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES, number_of_votes);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_DATE, date);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_CONTENT, content);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_PROPOSAL, proposal);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID, region_id);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER, number_of_comments);
 
                     cVVector.add(mapValues);
                 }

@@ -39,12 +39,12 @@ public class EcoMapFragment extends SupportMapFragment {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private ClusterManager<Problem> mClusterManager;
-    Context mContext;
+    private Context mContext;
     private ArrayList<Problem> values;
     private ArrayList<LatLng> points;
     private ArrayList<Marker> markers;
-    Cursor cursor;
-    EcoMapReceiver receiver;
+    private Cursor cursor;
+    private EcoMapReceiver receiver;
 
 
     private static int markerClickType;
@@ -110,15 +110,7 @@ public class EcoMapFragment extends SupportMapFragment {
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            latitude = cursor.getDouble(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));
-            longitude = cursor.getDouble(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE));
-            title = cursor.getString(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-            type_id = cursor.getInt(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID));
-            Problem p = new Problem(latitude, longitude, title, type_id, getActivity());
+            Problem p = new Problem(cursor, getActivity());
             values.add(p);
         }
 
