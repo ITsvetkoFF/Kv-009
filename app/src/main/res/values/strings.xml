@@ -23,6 +23,8 @@
     <string name="title_activity_problem_details">ProblemDetailsActivity</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="gridview_img_description">Image</string>
+    <string name="title_activity_view_photos">Problem\'s photos</string>
 
     <string name="hello_world">Hello world!</string>
 

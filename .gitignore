@@ -37,5 +37,6 @@ ehthumbs.db
 Thumbs.db
 
 /build
+/build/intemediates/gradle_project_sync_data.binThumbs.db
 /build/intemediates/gradle_project_sync_data.bin
 /build/intermediates/dex-cache/cache.xml

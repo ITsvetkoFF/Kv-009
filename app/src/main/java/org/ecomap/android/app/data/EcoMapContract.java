@@ -4,12 +4,13 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.widget.BaseAdapter;
 
 /**
  * Defines table and column names for the weather database.
  */
 public class EcoMapContract {
+
+    public static final String HTTP_ECOMAP_BASE_URL = "http://176.36.11.25:8000";
 
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
