@@ -12,4 +12,7 @@ old backend http://176.36.11.25:8090/#/map
 
 new backend http://176.36.11.25:8000/api/v1/allproblems
 
+######Photos API:
+    http://176.36.11.25:8000/static/thumbnails/mslofn.thumbnail.jpeg
+    http://176.36.11.25:8000/static/photos/mslofn.jpeg
 pictures  https://github.com/ITsvetkoFF/KV006/tree/develop/ecomap/ecomap/SupportingFiles/Images.xcassets

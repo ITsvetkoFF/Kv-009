@@ -23,7 +23,7 @@ import android.widget.FrameLayout;
  */
 
 
-/**FloatingActionButton fabButton = new FloatingActionButton.Builder(this)
+/**FloatingButton fabButton = new FloatingButton.Builder(this)
  .withDrawable(getResources().getDrawable(R.drawable.ic_action_add))
  .withButtonColor(Color.WHITE)
  .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
@@ -31,7 +31,7 @@ import android.widget.FrameLayout;
  .create();
 
  Add this code to the class where google map is created. It will make a floating button.
- Probably need to add that without withDrawable method(becouse don't have any drawable).
+ Probably need to add that without withDrawable method(because don't have any drawable).
 */
 
 
