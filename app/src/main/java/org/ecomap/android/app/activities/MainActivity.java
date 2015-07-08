@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 tag = AddProblemFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if(fragment == null) {
-                    fragment = AddProblemFragment.newInstance("title", "description");
+                    fragment = new MockFragment();
                 }
                 break;
             case NAV_LOGIN:                
