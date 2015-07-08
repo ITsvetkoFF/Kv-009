@@ -43,8 +43,10 @@ public class EcoMapContract {
         public static final String COLUMN_STATUS = "status";
         //title, String
         public static final String COLUMN_TITLE = "title";
-        //name of user who added problem, String
-        public static final String COLUMN_USER_NAME = "user_name";
+        //first name of user who added problem, String
+        public static final String COLUMN_USER_FIRST_NAME = "first_name";
+        //last name of user who added problem, String
+        public static final String COLUMN_USER_LAST_NAME = "last_name";
         //type if a problem (1-6), int
         public static final String COLUMN_PROBLEM_TYPE_ID = "problem_type_id";
         //severuty - can be init by administrator, int

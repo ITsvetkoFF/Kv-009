@@ -150,15 +150,7 @@ public class EcoMapFragment extends Fragment {
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-            latitude = cursor.getDouble(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));
-            longitude = cursor.getDouble(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE));
-            title = cursor.getString(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-            type_id = cursor.getInt(cursor
-                    .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID));
-            Problem p = new Problem(latitude, longitude, title, type_id, getActivity());
+            Problem p = new Problem(cursor, getActivity());
             values.add(p);
         }
 

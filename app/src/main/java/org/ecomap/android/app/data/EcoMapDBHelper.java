@@ -29,9 +29,10 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
                 ProblemsEntry._ID + " INTEGER PRIMARY KEY," +
                 ProblemsEntry.COLUMN_STATUS + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                ProblemsEntry.COLUMN_USER_NAME + " TEXT NOT NULL, " +
+                ProblemsEntry.COLUMN_USER_FIRST_NAME + " TEXT NOT NULL, " +
+                ProblemsEntry.COLUMN_USER_LAST_NAME + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " INTEGER NOT NULL, " +
-                ProblemsEntry.COLUMN_SEVERITY + " INTEGER NOT NULL, " +
+                ProblemsEntry.COLUMN_SEVERITY + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_NUMBER_OF_VOTES + " INTEGER NOT NULL, " +
                 ProblemsEntry.COLUMN_DATE + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_CONTENT + " TEXT NOT NULL, " +
