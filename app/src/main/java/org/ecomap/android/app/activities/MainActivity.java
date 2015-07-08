@@ -28,6 +28,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -357,7 +359,10 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.userId = userId;
     }
 
-
+    public static boolean isEmailValid(CharSequence email){
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        
+    }
 }
 
 

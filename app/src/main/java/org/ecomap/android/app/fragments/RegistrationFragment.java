@@ -94,12 +94,14 @@ public class RegistrationFragment extends Fragment {
                 request.put("email", email.getText());
                 request.put("password", password.getText());
 
-                if(password.getText().equals(confirmPassword.getText())){
+                if(!firstName.getText().toString().isEmpty() && !secondName.getText().toString().isEmpty() && !password.getText().toString().isEmpty() &&
+                        password.getText().toString().equals(confirmPassword.getText().toString()) && MainActivity.isEmailValid(email.getText().toString())){
+
                     connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         StringBuilder responseBody = new StringBuilder();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
                         String line = null;
                         while ((line = reader.readLine()) != null) {
@@ -111,14 +113,29 @@ public class RegistrationFragment extends Fragment {
                         MainActivity.setUserSecondName(secondName.getText().toString());
                         MainActivity.setUserId(cookieManager.getCookieStore().getCookies().toString());
 
-                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
+                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "! \nWelcome to EcoMap Application.";
 
                     } else {
-                        resMessage = "Something is wrong! Try again";//TODO response codes for registration
+                        StringBuilder responseBody = new StringBuilder();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            responseBody.append(line + "\n");
+                        }
+                        reader.close();
+
+                        JSONObject data = new JSONObject(responseBody.toString());
+                        resMessage = data.get("message").toString();
                     }
-                } else {
+                } else if(firstName.getText().toString().isEmpty() || secondName.getText().toString().isEmpty() || password.getText().toString().isEmpty() || email.getText().toString().isEmpty()){
+                    resMessage = "Please fill all the fields for registration";
+                } else if (! password.getText().toString().equals(confirmPassword.getText().toString())){
                     resMessage = "Password does not match";
+                } else if(! MainActivity.isEmailValid(email.getText().toString())) {
+                    resMessage = "Please enter correct email";
                 }
+
                 return null;
 
             }

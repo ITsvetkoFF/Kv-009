@@ -1,10 +1,11 @@
 package org.ecomap.android.app.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.util.Patterns;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -108,35 +109,59 @@ public class LoginFragment extends Fragment {
                 request.put("password", password.getText());
 
                 //sending request
-                connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
 
-                //handling result from server
-                if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    StringBuilder responseBody = new StringBuilder();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                if (MainActivity.isEmailValid(email.getText().toString()) && (! password.getText().toString().isEmpty())) {
 
-                    String line = null;
-                    while ((line = reader.readLine()) != null) {
-                        responseBody.append(line + "\n");
+                    connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
+
+                    //handling result from server
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        StringBuilder responseBody = new StringBuilder();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            responseBody.append(line + "\n");
+                        }
+                        reader.close();
+
+                        JSONObject data = new JSONObject(responseBody.toString());
+                        MainActivity.setUserFirstName(data.get("first_name").toString());
+                        MainActivity.setUserSecondName(data.get("last_name").toString());
+                        MainActivity.setUserId(cookieManager.getCookieStore().getCookies().toString());
+
+                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!\nGreat to see you again in Ecomap Application.";
+
+                    } else if (! (connection.getResponseCode() == HttpURLConnection.HTTP_OK)) {
+
+                        //TODO try to get Error message from reponse body
+                        StringBuilder responseBody = new StringBuilder();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            responseBody.append(line + "\n");
+                        }
+                        reader.close();
+
+                        JSONObject data = new JSONObject(responseBody.toString());
+                        resMessage = data.get("message").toString();
+                        //resMessage = "Error! Please check your data and try again";
                     }
-                    reader.close();
 
-                    JSONObject data = new JSONObject(responseBody.toString());
-                    MainActivity.setUserFirstName(data.get("first_name").toString());
-                    MainActivity.setUserSecondName(data.get("last_name").toString());
-                    MainActivity.setUserId(cookieManager.getCookieStore().getCookies().toString());
+                } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
+                    resMessage = "Please fill all the fields";
 
-                    resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
-
-                } else {
-                    resMessage = "Error! Please check your data and try again";
+                } else if (! MainActivity.isEmailValid(email.getText())){
+                    resMessage = "Please enter correct email";
                 }
 
                 return null;
 
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
+            }
+            finally {
                 connection.disconnect();
             }
             return null;
@@ -145,7 +170,7 @@ public class LoginFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            new Toast(mContext.getApplicationContext()).makeText(getActivity().getApplicationContext(), resMessage, Toast.LENGTH_SHORT).show();
+            new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
         }
     }
 }
