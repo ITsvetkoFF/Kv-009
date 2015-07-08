@@ -38,13 +38,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.ecomap.android.app.ProblemsTask;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.fragments.LoginFragment;
 
 /**
@@ -180,7 +185,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.action_add_polygon:
-                ProblemsTask.setMarkerClickType(1);
+                EcoMapFragment.setMarkerClickType(1);
+                return true;
+            case R.id.action_update:
+                Intent intentService = new Intent(this, EcoMapService.class);
+                startService(intentService);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -193,21 +202,42 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
         boolean stop = false;
+        String tag;
         switch (position) {
             case NAV_MAP:
-                fragment = new EcoMapFragment();
+                tag = EcoMapFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new EcoMapFragment();
+                }
                 break;
             case NAV_RESOURCES:
-                fragment = new FiltersFragment();
+                tag = FiltersFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new FiltersFragment();
+                }
                 break;
             case NAV_DETAILS:
-                fragment = AddProblemFragment.newInstance("title", "description");
+                tag = AddProblemFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new MockFragment();
+                }
                 break;
-            case NAV_LOGIN:
-                fragment = new LoginFragment();
+            case NAV_LOGIN:                
+                tag = LoginFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new LoginFragment();
+                }                
                 break;
             default:
-                fragment = new MockFragment();
+                tag = MockFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new MockFragment();
+                }
                 break;
         }
 
@@ -242,6 +272,12 @@ public class MainActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onBackPressed() {
+        ImageLoader.getInstance().stop();
+        super.onBackPressed();
     }
 
     @Override
@@ -289,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.map_filters_layout, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_map_filters, container, false);
 
             //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String[] planet = getResources().getStringArray(R.array.navigation_array);
@@ -317,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             View view;
             if (convertView == null) {
@@ -329,7 +365,13 @@ public class MainActivity extends AppCompatActivity {
             TextView txtListItem = (TextView)view.findViewById(R.id.txtCaption);
             String text = getItem(position);
             txtListItem.setText(text);
-
+            CheckBox chkBox = (CheckBox)view.findViewById(R.id.checkBox);
+            chkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Toast.makeText(mContext, "You select: " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
             return view;
             //super.getView(position, convertView, parent);
         }

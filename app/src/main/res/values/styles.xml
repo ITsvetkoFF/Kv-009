@@ -18,12 +18,26 @@
     <color name="white3">#E2E2E2</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- Base application theme. -->
-    <!--style name="AppTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar"-->
-    <!--style name="AppTheme" parent="@android:style/Theme.DeviceDefault.Light"-->
+    <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-            <!-- Customize your theme here. -->
-
     </style>
+
+
+    <!-- View photos activity theme -->
+    <style name="AppThemeTransparentActionBar" parent="AppTheme">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/ThemeActionBar</item>
+    </style>
+
+    <style name="ThemeActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@null</item>
+        <!-- Support library compatibility -->
+        <item name="background">@null</item>
+    </style>
+
+
+    <style name="ProgressBarStyle" parent="android:Widget.ProgressBar.Small" />
+
 
 </resources>
