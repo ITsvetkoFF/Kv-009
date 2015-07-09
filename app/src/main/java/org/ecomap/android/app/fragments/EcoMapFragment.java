@@ -1,21 +1,28 @@
 package org.ecomap.android.app.fragments;
 
+import android.support.v4.app.Fragment;
+import android.graphics.Color;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -37,6 +44,8 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
+import org.ecomap.android.app.R;
+
 import java.util.ArrayList;
 
 /**
@@ -54,14 +63,18 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<Marker> markers;
     Cursor cursor;
     EcoMapReceiver receiver;
-    
+
+
+
+    Button cancelButton;
     MapView mapView;
+    // Might be null if Google Play services APK is not available.
+
 
     private static int markerClickType;
-
     private View v;
-
     private SlidingLayer slidingLayer;
+    private SlidingLayer addProblemSliding;
     private ImageView showType, showLike;
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private RelativeLayout showHead;
@@ -75,8 +88,8 @@ public class EcoMapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
-
         v = inflater.inflate(R.layout.map_layout_main, container, false);
+
 
         mapView = (MapView) v.findViewById(R.id.mapview);
 
@@ -84,14 +97,17 @@ public class EcoMapFragment extends Fragment {
         mapView.onCreate(null);
 
         mMap = mapView.getMap();
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         mMap.setMyLocationEnabled(true);
-
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
         UISettings.setCompassEnabled(true);
         UISettings.setMyLocationButtonEnabled(true);
 
+
         MapsInitializer.initialize(this.getActivity());
+
+
 
         return v;
     }
@@ -105,14 +121,40 @@ public class EcoMapFragment extends Fragment {
         points = new ArrayList<>();
         markers = new ArrayList<>();
         mContext = getActivity();
+        addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
+        addProblemSliding.setSlidingEnabled(false);
+        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
         actionButton = (ActionButton) v.findViewById(R.id.action_button);
         actionButton.show();
         actionButton.setType(ActionButton.Type.DEFAULT);
-        actionButton.setButtonColor(getResources().getColor(R.color.lime_500));
+        actionButton.setButtonColor(getResources().getColor(R.color.fab_material_lime_500));
         actionButton.setImageResource(R.drawable.fab_plus_icon);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionButton.hide();
+                addProblemSliding.openLayer(true);
+                //call the wunderlist
+            }
+        });
 
-        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+
+
+        cancelButton=(Button)v.findViewById(R.id.button_cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProblemSliding.closeLayer(true);
+                actionButton.show();
+            }
+        });
+
+
+
+
+
+
 
         showType = (ImageView) v.findViewById(R.id.show_type);
         showLike = (ImageView) v.findViewById(R.id.show_like);
@@ -124,11 +166,20 @@ public class EcoMapFragment extends Fragment {
         showHead = (RelativeLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
 
+
+
+
+
+
+
+
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
 
         setUpMap();
+
+
     }
 
     @Override
@@ -157,6 +208,9 @@ public class EcoMapFragment extends Fragment {
     }
 
     public void fillMap() {
+        double latitude, longitude;
+        String title;
+        int type_id;
 
         values.clear();
         mMap.clear();
@@ -165,6 +219,7 @@ public class EcoMapFragment extends Fragment {
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
+
             Problem p = new Problem(cursor, getActivity());
             values.add(p);
         }
@@ -242,7 +297,7 @@ public class EcoMapFragment extends Fragment {
                 showNumOfLikes.setText(problem.getNumberOfLikes());
 
                 //Check problem status and choose color fo text
-                if (problem.getStatus().equalsIgnoreCase("UNSOLVED")){
+                if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
                     showStatus.setText(problem.getStatus());
                     showStatus.setTextColor(Color.RED);
                 } else {
@@ -254,11 +309,10 @@ public class EcoMapFragment extends Fragment {
                 showLike.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!problem.isLiked()){
+                        if (!problem.isLiked()) {
                             problem.setNumberOfLikes(1);
                             problem.setLiked(true);
-                        }
-                        else if (problem.isLiked()){
+                        } else if (problem.isLiked()) {
                             problem.setNumberOfLikes(-1);
                             problem.setLiked(false);
                         }
@@ -298,6 +352,7 @@ public class EcoMapFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
 
             fillMap();
+
 
         }
     }

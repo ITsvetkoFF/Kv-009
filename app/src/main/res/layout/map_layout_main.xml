@@ -13,7 +13,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin"
+        />
+    <com.wunderlist.slidinglayer.SlidingLayer
+        xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/slidingLayer1"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        slidingLayer:offsetDistance="0dp"
+        slidingLayer:previewOffsetDistance="0dp"
+        slidingLayer:stickTo="bottom"
+        slidingLayer:changeStateOnTap="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="choose a location to add new problem"
+            android:layout_gravity="center_horizontal">
+        </TextView>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/button_proceed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/proceed"
+                android:layout_weight="1">
+            </Button>
+            <Button
+                 android:id="@+id/button_cancel"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:text="@string/cancel"
+                android:layout_weight="1">
+
+            </Button>
+
+        </LinearLayout>
+        </LinearLayout>
+
+
+    </com.wunderlist.slidinglayer.SlidingLayer>
+
+
 
     <com.wunderlist.slidinglayer.SlidingLayer
         xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"

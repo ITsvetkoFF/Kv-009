@@ -51,5 +51,7 @@
 
     <string name="fileNamePreferences">EcoMapPref</string>
     <string name="prefNumRevision">numRevision</string>
+    <string name="proceed">Proceed</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
