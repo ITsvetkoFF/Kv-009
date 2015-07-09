@@ -12,10 +12,8 @@ import org.ecomap.android.app.data.EcoMapContract;
  * Created by Stanislav on 23.06.2015.
  */
 public class Problem implements ClusterItem {
-    //position
     LatLng mPos;
 
-    int problem_id;
     String mTitle;
     int type_id;
     int res_id;
@@ -30,9 +28,13 @@ public class Problem implements ClusterItem {
     int region_id;
     int number_of_comments;
 
+    boolean liked;
+
     Context mContext;
 
     public Problem(Cursor cursor, Context mContext) {
+
+        this.liked = false;
 
         double latitude = cursor.getDouble(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));
@@ -73,6 +75,10 @@ public class Problem implements ClusterItem {
         return mTitle;
     }
 
+    public String getProposal(){
+        return proposal;
+    }
+
     public void chooseIcon() {
         switch (type_id) {
             case 1:
@@ -99,6 +105,38 @@ public class Problem implements ClusterItem {
             default:
                 break;
         }
+    }
+
+    public int getRes_id(){
+        return res_id;
+    }
+
+    public String getByTime(){
+        return ("Added by:" + first_name + " " + last_name + "\n" + date);
+    }
+
+    public String getContent(){
+        return content;
+    }
+
+    public String getNumberOfLikes(){
+        return String.valueOf(number_of_votes);
+    }
+
+    public void setNumberOfLikes(int numb){
+        number_of_votes += numb;
+    }
+
+    public void setLiked(boolean liked){
+        this.liked = liked;
+    }
+
+    public boolean isLiked(){
+        return liked;
+    }
+
+    public String getStatus(){
+        return status;
     }
 
     @Override

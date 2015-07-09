@@ -50,15 +50,15 @@
                 android:layout_centerVertical="true"
 
                 android:textSize="20sp"
-                android:id="@+id/textView5" />
+                android:id="@+id/show_numOfLikes" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:id="@+id/imageView"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/textView5"
-                android:layout_toStartOf="@+id/textView5"
+                android:layout_toLeftOf="@+id/show_numOfLikes"
+                android:layout_toStartOf="@+id/show_numOfLikes"
                 android:src="@drawable/heart_icon"
                 android:contentDescription="heart"
                 android:layout_marginRight="10dp" />

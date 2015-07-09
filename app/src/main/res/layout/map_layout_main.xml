@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:slidingLayer="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.gms.maps.MapView android:id="@+id/mapview"
         android:layout_width="fill_parent"
@@ -11,10 +13,191 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        />
+        android:layout_alignParentRight="true" />
 
+    <com.wunderlist.slidinglayer.SlidingLayer
+        xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/show_problem_sliding_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        slidingLayer:stickTo="bottom">
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/details_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:measureAllChildren="true">
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/show_head"
+                    android:background="#EEEEEE">
+
+                    <TextView
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:id="@+id/show_title"
+                        android:textSize="24dp"
+                        android:paddingBottom="16dp"
+                        android:layout_alignParentTop="false"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="1dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/show_type"
+                        android:src="@drawable/type_1"
+                        android:layout_alignTop="@+id/show_title"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text=""
+                        android:id="@+id/show_by_time"
+                        android:textSize="12dp"
+                        android:layout_below="@+id/show_title"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="16dp"
+                    android:orientation="vertical"
+                    android:background="#F5F5F5">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_gravity="top"
+                        >
+
+                        <RatingBar
+                            android:id="@+id/problemRating"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:numStars="5"
+                            android:stepSize="0.1"
+                            android:layout_gravity="left"
+                            android:rating="3"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentLeft="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:text="3"
+                            android:gravity="right"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+
+                            android:textSize="20sp"
+                            android:id="@+id/show_numOfLikes"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentRight="true" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
+                            android:id="@+id/show_like"
+                            android:src="@drawable/heart_icon"
+                            android:contentDescription="heart"
+                            android:layout_alignParentTop="true"
+                            android:layout_toLeftOf="@+id/show_numOfLikes"
+                            android:layout_toStartOf="@+id/show_numOfLikes"
+                            android:clickable="true" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="@color/textRed"
+                            android:text="unsolved"
+                            android:id="@+id/show_status"
+
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Description:"
+                        android:layout_marginTop="32dp" />
+
+                    <TextView
+                        android:id="@+id/show_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Міське озеро забруднюється сміттям, що призводить до його пересихання, хоча воно є місцем існування багатьох водоплаваючих птахів" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:text="Suggested solution:" />
+
+                    <TextView
+                        android:id="@+id/show_proposal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Очищення озера від сміття, просвітницька робота серед населення" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView3"
+                            android:src="@drawable/logo" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView4"
+                            android:src="@drawable/logo" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView5"
+                            android:src="@drawable/logo" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </com.wunderlist.slidinglayer.SlidingLayer>
 
 </RelativeLayout>
