@@ -73,7 +73,8 @@ public class TestDb extends AndroidTestCase {
         problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID);
         problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY);
         problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_STATUS);
-        problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_USER_NAME);
+        problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_USER_FIRST_NAME);
+        problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_USER_LAST_NAME);
         problemsColumnHashSet.add(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES);
 
 
