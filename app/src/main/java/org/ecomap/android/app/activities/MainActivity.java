@@ -49,8 +49,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.sync.EcoMapService;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
-
     }
 
     @Override
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_details).setVisible(!drawerOpen);
+        //menu.findItem(R.id.action_details).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -179,11 +178,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            case R.id.action_details:
+            /*case R.id.action_details:
                 // create intent to perform web search for this planet
                 Intent intent = new Intent(this, ProblemDetailsActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
             case R.id.action_add_polygon:
                 EcoMapFragment.setMarkerClickType(1);
                 return true;
@@ -195,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
@@ -212,10 +210,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case NAV_RESOURCES:
-                tag = FiltersFragment.class.getSimpleName();
+                /*tag = FiltersFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if(fragment == null) {
                     fragment = new FiltersFragment();
+                }*/
+                tag = AddProblemFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new MockFragment();
                 }
                 break;
             case NAV_DETAILS:
