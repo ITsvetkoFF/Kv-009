@@ -20,8 +20,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.CookieHandler;
-import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -31,8 +29,6 @@ public class LoginFragment extends Fragment {
     EditText password;
     Button signIn;
     TextView signUpLink;
-
-    CookieManager cookieManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,9 +45,6 @@ public class LoginFragment extends Fragment {
         signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
         signUpLink = (TextView) getView().findViewById(R.id.link_to_register);
 
-        cookieManager = new CookieManager();
-        CookieHandler.setDefault(cookieManager);
-
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +60,7 @@ public class LoginFragment extends Fragment {
             }
         });
     }
+
     private class LoginTask extends AsyncTask {
         String resMessage;
         Context mContext;
@@ -82,7 +76,7 @@ public class LoginFragment extends Fragment {
             HttpURLConnection connection = null;
 
             try {
-                url = new URL("http://176.36.11.25:8000/api/login");
+                url = new URL(MainActivity.API_URL + "/login");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -95,7 +89,6 @@ public class LoginFragment extends Fragment {
                 request.put("password", password.getText());
 
                 //sending request
-
                 if (MainActivity.isEmailValid(email.getText().toString()) && (! password.getText().toString().isEmpty())) {
 
                     connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
@@ -114,9 +107,10 @@ public class LoginFragment extends Fragment {
                         JSONObject data = new JSONObject(responseBody.toString());
                         MainActivity.setUserFirstName(data.get("first_name").toString());
                         MainActivity.setUserSecondName(data.get("last_name").toString());
-                        MainActivity.setUserId(cookieManager.getCookieStore().getCookies().toString());
+                        MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
+                        MainActivity.setUserIsAuthorized(true);
 
-                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!\nGreat to see you again in Ecomap Application.";
+                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
 
                     } else if (! (connection.getResponseCode() == HttpURLConnection.HTTP_OK)) {
 
@@ -134,7 +128,7 @@ public class LoginFragment extends Fragment {
                     }
 
                 } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
-                    resMessage = "Please fill all the fields for autorization";
+                    resMessage = "Please fill all the fields for authorization";
 
                 } else if (! MainActivity.isEmailValid(email.getText())){
                     resMessage = "Please enter correct email";
@@ -155,6 +149,10 @@ public class LoginFragment extends Fragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+
+            if (MainActivity.isUserIsAuthorized()){
+                getFragmentManager().beginTransaction().replace(R.id.content_frame, new EcoMapFragment()).commit();
+            }
         }
     }
 }

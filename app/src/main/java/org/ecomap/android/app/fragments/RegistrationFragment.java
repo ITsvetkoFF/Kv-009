@@ -18,8 +18,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.CookieHandler;
-import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -32,7 +30,6 @@ public class RegistrationFragment extends Fragment {
     EditText password;
     EditText confirmPassword;
     Button signUp;
-    CookieManager cookieManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,9 +47,6 @@ public class RegistrationFragment extends Fragment {
         password = (EditText) getView().findViewById(R.id.password);
         confirmPassword = (EditText) getView().findViewById(R.id.confirm_password);
         signUp = (Button) getView().findViewById(R.id.email_sign_up_button);
-
-        cookieManager = new CookieManager();
-        CookieHandler.setDefault(cookieManager);
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +72,7 @@ public class RegistrationFragment extends Fragment {
             HttpURLConnection connection = null;
 
             try{
-                url = new URL("http://176.36.11.25:8000/api/register");
+                url = new URL(MainActivity.API_URL + "/register");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -98,7 +92,7 @@ public class RegistrationFragment extends Fragment {
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         StringBuilder responseBody = new StringBuilder();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                         String line = null;
                         while ((line = reader.readLine()) != null) {
@@ -106,11 +100,13 @@ public class RegistrationFragment extends Fragment {
                         }
                         reader.close();
 
-                        MainActivity.setUserFirstName(firstName.getText().toString());
-                        MainActivity.setUserSecondName(secondName.getText().toString());
-                        MainActivity.setUserId(cookieManager.getCookieStore().getCookies().toString());
+                        JSONObject data = new JSONObject(responseBody.toString());
+                        MainActivity.setUserFirstName(data.get("first_name").toString());
+                        MainActivity.setUserSecondName(data.get("last_name").toString());
+                        MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
+                        MainActivity.setUserIsAuthorized(true);
 
-                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "! \nWelcome to EcoMap Application.";
+                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
 
                     } else {
                         StringBuilder responseBody = new StringBuilder();
@@ -149,6 +145,10 @@ public class RegistrationFragment extends Fragment {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+
+            if (MainActivity.isUserIsAuthorized()){
+                getFragmentManager().beginTransaction().replace(R.id.content_frame, new EcoMapFragment()).commit();
+            }
         }
     }
 }

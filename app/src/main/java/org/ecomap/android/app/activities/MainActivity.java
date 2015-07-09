@@ -52,6 +52,9 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.fragments.LoginFragment;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+
 /**
  * This example illustrates a common usage of the DrawerLayout widget
  * in the Android support library.
@@ -89,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     private String[] mScreenTitles;
     private ActionBar actionBar;
 
-    public static final String API_URL = "http://176.36.11.25:8000/api/";
+    public static final String API_URL = "http://176.36.11.25:8000/api";
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
@@ -99,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
     private static String userFirstName;
     private static String userSecondName;
     private static String userId;
+    private static boolean userIsAuthorized = false;
 
+    public static CookieManager cookieManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         mScreenTitles = getResources().getStringArray(R.array.navigation_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        cookieManager = new CookieManager();
+        CookieHandler.setDefault(cookieManager);
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -405,6 +413,15 @@ public class MainActivity extends AppCompatActivity {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
         
     }
+
+    public static boolean isUserIsAuthorized() {
+        return userIsAuthorized;
+    }
+
+    public static void setUserIsAuthorized(boolean userIsAuthorized) {
+        MainActivity.userIsAuthorized = userIsAuthorized;
+    }
+
 }
 
 
