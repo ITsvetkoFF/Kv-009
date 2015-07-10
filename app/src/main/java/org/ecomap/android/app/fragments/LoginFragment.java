@@ -1,8 +1,10 @@
 package org.ecomap.android.app.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends DialogFragment {
 
     AutoCompleteTextView email;
     EditText password;
@@ -32,8 +34,10 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.login_layout, container, false);
+        getDialog().setTitle("Sign In");
 
-        return inflater.inflate(R.layout.login_layout, container, false);
+        return view;
     }
 
     @Override
@@ -56,7 +60,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //switch to Registration Fragment
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, new RegistrationFragment()).commit();
+                new RegistrationFragment().show(getFragmentManager(), "registration_layout");
+                dismiss();
             }
         });
     }
@@ -64,10 +69,22 @@ public class LoginFragment extends Fragment {
     private class LoginTask extends AsyncTask {
         String resMessage;
         Context mContext;
+        ProgressDialog progressBar;
 
         public LoginTask(Context context) {
             this.mContext = context;
             resMessage = null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressBar = new ProgressDialog(mContext);
+            progressBar.setMessage("Connecting to Ecomap Server");
+            progressBar.setIndeterminate(true);
+            progressBar.setCancelable(true);
+            progressBar.show();
         }
 
         @Override
@@ -83,14 +100,15 @@ public class LoginFragment extends Fragment {
                 connection.setDoOutput(true);
                 connection.connect();
 
-                //creating JSONObject for request
-                JSONObject request = new JSONObject();
-                request.put("email", email.getText());
-                request.put("password", password.getText());
-
-                //sending request
+                //validation
                 if (MainActivity.isEmailValid(email.getText().toString()) && (! password.getText().toString().isEmpty())) {
 
+                    //creating JSONObject for request
+                    JSONObject request = new JSONObject();
+                    request.put("email", email.getText());
+                    request.put("password", password.getText());
+
+                    //sending request
                     connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
 
                     //handling result from server
@@ -112,7 +130,7 @@ public class LoginFragment extends Fragment {
 
                         resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
 
-                    } else if (! (connection.getResponseCode() == HttpURLConnection.HTTP_OK)) {
+                    } else {
 
                         StringBuilder responseBody = new StringBuilder();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
@@ -148,10 +166,11 @@ public class LoginFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            progressBar.dismiss();
             new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
 
             if (MainActivity.isUserIsAuthorized()){
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, new EcoMapFragment()).commit();
+                dismiss();
             }
         }
     }

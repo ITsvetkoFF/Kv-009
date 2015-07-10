@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -209,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment;
         boolean stop = false;
         String tag;
+
         switch (position) {
             case NAV_MAP:
                 tag = EcoMapFragment.class.getSimpleName();
@@ -240,7 +242,9 @@ public class MainActivity extends AppCompatActivity {
                 tag = LoginFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if(fragment == null) {
-                    fragment = new LoginFragment();
+
+                    new LoginFragment().show(fragmentManager, "login_layout");
+                    stop = true;
                 }                
                 break;
             default:
@@ -252,15 +256,17 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        Bundle args = new Bundle();
-        args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
-        fragment.setArguments(args);
+        if (!stop) {
+            Bundle args = new Bundle();
+            args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
+            fragment.setArguments(args);
 
-        //Main magic happens here
-        fragmentManager.beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.content_frame, fragment).commit();
+            //Main magic happens here
+            fragmentManager.beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.content_frame, fragment).commit();
 
+        }
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mScreenTitles[position]);
