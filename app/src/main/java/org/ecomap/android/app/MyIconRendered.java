@@ -19,6 +19,6 @@ public class MyIconRendered extends DefaultClusterRenderer<Problem> {
     @Override
     protected void onBeforeClusterItemRendered(Problem problem,
                                                MarkerOptions markerOptions) {
-        markerOptions.icon(BitmapDescriptorFactory.fromResource(problem.res_id));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource((problem.res_id == 0)? R.drawable.type_1 : problem.res_id));
     }
 }
