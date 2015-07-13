@@ -1,8 +1,10 @@
 package org.ecomap.android.app.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class RegistrationFragment extends Fragment {
+public class RegistrationFragment extends DialogFragment {
 
     EditText firstName;
     EditText secondName;
@@ -33,8 +35,10 @@ public class RegistrationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.registration_layout, container, false);
+        getDialog().setTitle("Sign Up");
 
-        return inflater.inflate(R.layout.registration_layout, container, false);
+        return view;
     }
 
     @Override
@@ -60,10 +64,22 @@ public class RegistrationFragment extends Fragment {
 
         Context mContext;
         String resMessage;
+        ProgressDialog progressBar;
 
         public RegisterTask(Context context){
             this.mContext = context;
             resMessage = null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressBar = new ProgressDialog(mContext);
+            progressBar.setMessage("Connecting to Ecomap Server");
+            progressBar.setIndeterminate(true);
+            progressBar.setCancelable(true);
+            progressBar.show();
         }
 
         @Override
@@ -79,17 +95,20 @@ public class RegistrationFragment extends Fragment {
                 connection.setDoOutput(true);
                 connection.connect();
 
-                JSONObject request = new JSONObject();
-                request.put("first_name", firstName.getText());
-                request.put("last_name", secondName.getText());
-                request.put("email", email.getText());
-                request.put("password", password.getText());
-
+                //validation step
                 if(!firstName.getText().toString().isEmpty() && !secondName.getText().toString().isEmpty() && !password.getText().toString().isEmpty() &&
                         password.getText().toString().equals(confirmPassword.getText().toString()) && MainActivity.isEmailValid(email.getText().toString())){
 
+                    JSONObject request = new JSONObject();
+                    request.put("first_name", firstName.getText());
+                    request.put("last_name", secondName.getText());
+                    request.put("email", email.getText());
+                    request.put("password", password.getText());
+
+                    //sending request to server
                     connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
 
+                    //handling response
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         StringBuilder responseBody = new StringBuilder();
                         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -144,10 +163,12 @@ public class RegistrationFragment extends Fragment {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
+            progressBar.dismiss();
+
             new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
 
             if (MainActivity.isUserIsAuthorized()){
-                getFragmentManager().beginTransaction().replace(R.id.content_frame, new EcoMapFragment()).commit();
+                dismiss();
             }
         }
     }
