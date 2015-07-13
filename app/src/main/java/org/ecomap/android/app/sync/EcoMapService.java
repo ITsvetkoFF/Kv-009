@@ -117,7 +117,7 @@ public class EcoMapService extends IntentService {
 
             if (numCurrentRevision == numNewRevision) {
                 Log.i(LOG_TAG, "revisions are equals!");
-                return false;
+                return true;
             }
 
             JSONArray jArr = data.getJSONArray("data");
