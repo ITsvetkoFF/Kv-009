@@ -1,5 +1,6 @@
 package org.ecomap.android.app.fragments;
 
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +57,10 @@ public class EcoMapFragment extends Fragment {
     Cursor cursor;
     EcoMapReceiver receiver;
 
+    // initializing static variables of position for map saving after rotation and backstack
+    private static double longitude = 30.417397;
+    private static double latitude = 50.461166;
+    private static float zoomlevel = 5;
 
 
     Button cancelButton;
@@ -77,9 +83,8 @@ public class EcoMapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setRetainInstance(true);
-        v = inflater.inflate(R.layout.map_layout_main, container, false);
 
+        v = inflater.inflate(R.layout.map_layout_main, container, false);
 
         mapView = (MapView) v.findViewById(R.id.mapview);
 
@@ -97,16 +102,6 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(this.getActivity());
 
-
-
-        return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        mapView.onResume();
         values = new ArrayList<>();
         points = new ArrayList<>();
         markers = new ArrayList<>();
@@ -142,6 +137,17 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
         showHead = (RelativeLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
+
+
+
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
@@ -149,10 +155,41 @@ public class EcoMapFragment extends Fragment {
         setUpMap();
     }
 
+    // saving map position for restoring after rotation or backstack
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putDouble("longitude", mMap.getCameraPosition().target.longitude);
+        outState.putDouble("latitude", mMap.getCameraPosition().target.latitude);
+        outState.putFloat("zoomlevel", mMap.getCameraPosition().zoom);
+    }
+
+    // restoring saved map position after rotation or backstack
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null){
+            latitude = savedInstanceState.getDouble("latitude");
+            longitude = savedInstanceState.getDouble("longitude");
+            zoomlevel = savedInstanceState.getFloat("zoomlevel");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // unregistering receiver after pausing fragment
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        // if current map fragment is last in backstack - kill activity
+        if (getFragmentManager().getBackStackEntryCount() == 0){
+            getActivity().finish();
+        }
     }
 
     @Override
@@ -187,8 +224,8 @@ public class EcoMapFragment extends Fragment {
     }
 
     public void setUpClusterer() {
-        //Position the map
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
+        //Position the map from static variables
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
 
         //Initialize the manager with the mContext and the map.
         mClusterManager = new ClusterManager<>(mContext, mMap);
