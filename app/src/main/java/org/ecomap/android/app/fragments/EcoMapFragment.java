@@ -1,18 +1,14 @@
 package org.ecomap.android.app.fragments;
 
-import android.support.v4.app.Fragment;
-import android.graphics.Color;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -35,7 +29,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
-import com.software.shell.fab.ActionButton;
 import com.wunderlist.slidinglayer.SlidingLayer;
 
 import org.ecomap.android.app.MyIconRendered;
@@ -43,8 +36,6 @@ import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.sync.EcoMapService;
-
-import org.ecomap.android.app.R;
 
 import java.util.ArrayList;
 
@@ -78,7 +69,6 @@ public class EcoMapFragment extends Fragment {
     private ImageView showType, showLike;
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private RelativeLayout showHead;
-    private ActionButton actionButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,19 +115,13 @@ public class EcoMapFragment extends Fragment {
         addProblemSliding.setSlidingEnabled(false);
         slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
-        actionButton = (ActionButton) v.findViewById(R.id.action_button);
-        actionButton.show();
-        actionButton.setType(ActionButton.Type.DEFAULT);
-        actionButton.setButtonColor(getResources().getColor(R.color.fab_material_lime_500));
-        actionButton.setImageResource(R.drawable.fab_plus_icon);
-        actionButton.setOnClickListener(new View.OnClickListener() {
+        /*actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionButton.hide();
                 addProblemSliding.openLayer(true);
                 //call the wunderlist
             }
-        });
+        });*/
 
 
 
@@ -146,15 +130,8 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 addProblemSliding.closeLayer(true);
-                actionButton.show();
             }
         });
-
-
-
-
-
-
 
         showType = (ImageView) v.findViewById(R.id.show_type);
         showLike = (ImageView) v.findViewById(R.id.show_like);
@@ -165,21 +142,11 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
         showHead = (RelativeLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
-
-
-
-
-
-
-
-
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
 
         setUpMap();
-
-
     }
 
     @Override
@@ -208,9 +175,6 @@ public class EcoMapFragment extends Fragment {
     }
 
     public void fillMap() {
-        double latitude, longitude;
-        String title;
-        int type_id;
 
         values.clear();
         mMap.clear();
@@ -219,7 +183,6 @@ public class EcoMapFragment extends Fragment {
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
 
         while (cursor.moveToNext()) {
-
             Problem p = new Problem(cursor, getActivity());
             values.add(p);
         }
