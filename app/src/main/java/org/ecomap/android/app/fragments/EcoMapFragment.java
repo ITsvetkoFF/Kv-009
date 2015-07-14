@@ -196,14 +196,9 @@ public class EcoMapFragment extends Fragment {
 
     private void setUpMap() {
 
-        cursor = getActivity().getContentResolver()
-                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
-
         //Start service to get a new number of revision and new data
         Intent intent = new Intent(this.getActivity(), EcoMapService.class);
         getActivity().startService(intent);
-
-        fillMap();
 
     }
 
