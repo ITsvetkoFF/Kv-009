@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
@@ -29,6 +30,7 @@ public class LoginFragment extends DialogFragment {
     EditText password;
     Button signIn;
     TextView signUpLink;
+    TextInputLayout tilEmail, tilPass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +48,51 @@ public class LoginFragment extends DialogFragment {
         password = (EditText) getView().findViewById(R.id.password);
         signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
         signUpLink = (TextView) getView().findViewById(R.id.link_to_register);
+
+        tilEmail = (TextInputLayout) getView().findViewById(R.id.til_email);
+        tilEmail.setErrorEnabled(true);
+        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (!email.getText().toString().isEmpty()) {
+                        if (!MainActivity.isEmailValid(email.getText().toString())) {
+                            tilEmail.setError("Please enter correct email");
+                            signIn.setClickable(false);
+                            Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        } else {
+                            tilEmail.setErrorEnabled(false);
+                            signIn.setClickable(true);
+                        }
+                    } else if (email.getText().toString().isEmpty()) {
+                        tilEmail.setError("Email cannot be blank");
+                        signIn.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilEmail.setErrorEnabled(false);
+                        signIn.setClickable(true);
+                    }
+                }
+            }
+        });
+
+        tilPass = (TextInputLayout) getView().findViewById(R.id.til_password);
+        tilPass.setErrorEnabled(true);
+        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus){
+                    if (password.getText().toString().isEmpty()){
+                        tilPass.setError("Password cannot be blank");
+                        signIn.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilPass.setErrorEnabled(false);
+                        signIn.setClickable(true);
+                    }
+                }
+            }
+        });
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,11 +191,6 @@ public class LoginFragment extends DialogFragment {
                         resMessage = data.get("message").toString();
                     }
 
-                } else if (params[0].isEmpty() || params[1].toString().isEmpty()){
-                    resMessage = "Please fill all the fields for authorization";
-
-                } else if (! MainActivity.isEmailValid(params[0])){
-                    resMessage = "Please enter correct email";
                 }
 
                 return null;
@@ -166,7 +208,7 @@ public class LoginFragment extends DialogFragment {
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
             progressBar.dismiss();
-            new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+            Snackbar.make(getView(), resMessage, Snackbar.LENGTH_LONG).show();
 
             if (MainActivity.isUserIsAuthorized()){
                 dismiss();
