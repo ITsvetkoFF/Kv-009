@@ -20,6 +20,7 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -272,7 +273,10 @@ public class MainActivity extends AppCompatActivity {
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (isUserIdSet()) {
                     stop = true;
-                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackbar.show();
                 } else {
                     if (fragment == null) {
                         new LoginFragment().show(fragmentManager, "login_layout");
