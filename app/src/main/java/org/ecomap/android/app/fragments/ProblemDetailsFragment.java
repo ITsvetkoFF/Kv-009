@@ -26,7 +26,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.ViewPhotosActivity;
-import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.ui.components.ExpandableHeightGridView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +39,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -168,7 +167,7 @@ public class ProblemDetailsFragment extends Fragment {
 
                 //holder.txtImgCaption.setText(problemPhotoEntry.getCaption());
                 String[] imgName = problemPhotoEntry.getImgURL().split("\\.");
-                final String imgURL = EcoMapContract.HTTP_ECOMAP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
 
                 ImageLoader
                         .getInstance()
@@ -255,7 +254,7 @@ public class ProblemDetailsFragment extends Fragment {
 
     private class AsyncGetPhotos extends AsyncTask<Void, Void, List<ProblemPhotoEntry>> {
 
-        private static final String ECOMAP_PHOTOS_URL = EcoMapContract.HTTP_ECOMAP_BASE_URL + "/api/problems/" + 1 + "/photos";
+        private static final String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + 1 + "/photos";
         private final String LOG_TAG = AsyncGetPhotos.class.getSimpleName();
 
         String JSONStr = null;

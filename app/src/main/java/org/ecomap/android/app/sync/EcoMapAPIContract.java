@@ -5,8 +5,14 @@ package org.ecomap.android.app.sync;
  */
 public class EcoMapAPIContract {
 
-    // Getting input stream from URL
-    public static final String ECOMAP_BASE_URL = "http://176.36.11.25:8000/api/problems?";
+    public static final String APP_PACKAGE_NAME = "org.ecomap.android.app";
+
+    public static final String ECOMAP_SERVER_URL = "http://176.36.11.25";
+    public static final String ECOMAP_HTTP_BASE_URL = ECOMAP_SERVER_URL + ":8000";
+    public static final String ECOMAP_API_URL = ECOMAP_HTTP_BASE_URL + "/api";
+    public static final String ECOMAP_BASE_URL = ECOMAP_SERVER_URL + ECOMAP_API_URL + "/problems?";
+
+    public static final String COOKIE_USER_ID = "user_id";
 
     public static final String ID = "id";
     public static final String TITLE = "title";

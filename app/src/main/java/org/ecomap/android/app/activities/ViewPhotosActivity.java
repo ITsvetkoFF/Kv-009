@@ -11,12 +11,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -31,16 +29,13 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.data.EcoMapContract;
-import org.ecomap.android.app.fragments.ProblemDetailsFragment;
 import org.ecomap.android.app.fragments.ProblemDetailsFragment.ProblemPhotoEntry;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.ui.components.ZoomableImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class ViewPhotosActivity extends AppCompatActivity {
 
@@ -241,7 +236,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
             if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
                 final ProblemPhotoEntry problemPhotoEntry = (ProblemPhotoEntry)mImagesURLArray.get(position);
-                final String imgURL = EcoMapContract.HTTP_ECOMAP_BASE_URL + "/static/photos/" + problemPhotoEntry.getImgURL();
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/photos/" + problemPhotoEntry.getImgURL();
                 txtImgCaption.setText(problemPhotoEntry.getCaption());
                 ImageLoader.getInstance().loadImage(imgURL, options, MyImageLoadingListener);
             }
