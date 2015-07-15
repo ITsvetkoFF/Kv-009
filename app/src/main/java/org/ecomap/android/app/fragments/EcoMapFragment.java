@@ -3,6 +3,7 @@ package org.ecomap.android.app.fragments;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -267,6 +269,8 @@ public class EcoMapFragment extends Fragment {
                         }
                     });
 
+                    //ADDING PROBLEM VIA FLOATING ACTION BUTTON
+
                 } else if (markerClickType == 2){
                     //TODO check if user is authorized
                     if (MainActivity.isUserIdSet()) {
@@ -277,10 +281,29 @@ public class EcoMapFragment extends Fragment {
                         marker.setTitle("Houston we have a problem here!");
                         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                     } else {
-                        Snackbar snackbar = Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.action_sign_in), Snackbar.LENGTH_SHORT);
-                        View snackBarView = snackbar.getView();
-                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                        snackbar.show();
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                        alert.setMessage(R.string.action_sign_in);
+                        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new LoginFragment().show(getFragmentManager(), "login_layout");
+                            }
+                        });
+                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //dialog.cancel();
+                            }
+                        });
+                        //alert.setCancelable(true);
+                       /* alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                dialog.cancel();
+                            }
+                        });*/
+                        alert.show();
                     }
                 }
             }
