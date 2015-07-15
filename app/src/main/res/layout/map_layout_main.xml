@@ -236,7 +236,6 @@
                             android:src="@drawable/logo" />
                     </LinearLayout>
 
-
                 </LinearLayout>
 
             </LinearLayout>
