@@ -128,15 +128,6 @@
             android:layout_marginTop="6dp"
             android:text="Очищення озера від сміття, просвітницька робота серед населення" />
 
-        <FrameLayout
-            android:id="@+id/fragment_comments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_comments">
-
-        </FrameLayout>
-
-
         <org.ecomap.android.app.ui.components.ExpandableHeightGridView
             android:id="@+id/gridview"
             android:layout_width="match_parent"
@@ -150,6 +141,14 @@
             android:verticalSpacing="10dp">
 
         </org.ecomap.android.app.ui.components.ExpandableHeightGridView>
+
+        <FrameLayout
+            android:id="@+id/fragment_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_comments">
+
+        </FrameLayout>
 
 
     </LinearLayout>

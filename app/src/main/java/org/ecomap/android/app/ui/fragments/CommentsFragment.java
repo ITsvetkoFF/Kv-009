@@ -54,7 +54,7 @@ public class CommentsFragment extends Fragment {
     private PlusOneButton mPlusOneButton;
 
     private OnFragmentInteractionListener mListener;
-    private CommentsAdapter mCommentsAdapter;
+    private CommentsAdapter<CommentEntry> mCommentsAdapter;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -98,7 +98,8 @@ public class CommentsFragment extends Fragment {
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
 
         ListView lstComments = (ListView) view.findViewById(R.id.lstComments);
-        lstComments.setAdapter(new CommentsAdapter(getActivity(), new ArrayList<CommentEntry>()));
+        mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
+        lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute();
 
         return view;
@@ -155,12 +156,12 @@ public class CommentsFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    private static class CommentsAdapter extends BaseAdapter {
+    private static class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
 
-        private List<CommentEntry> mCommentsArray;
+        private List<T> mCommentsArray;
         private final Context mContext;
 
-        public CommentsAdapter(Context mContext, List<CommentEntry> commentsArray) {
+        public CommentsAdapter(Context mContext, List<T> commentsArray) {
             this.mContext = mContext;
             this.mCommentsArray = commentsArray;
         }
@@ -171,7 +172,7 @@ public class CommentsFragment extends Fragment {
         }
 
         @Override
-        public Object getItem(int position) {
+        public T getItem(int position) {
             return mCommentsArray.get(position);
         }
 
@@ -199,7 +200,7 @@ public class CommentsFragment extends Fragment {
         /**
          * Update adapter data set
          */
-        public void updateDataSet(List<CommentEntry> data) {
+        public void updateDataSet(List<T> data) {
             mCommentsArray = data;
             notifyDataSetChanged();
 
@@ -272,7 +273,9 @@ public class CommentsFragment extends Fragment {
         private List<CommentEntry> getCommentsFromJSON() {
 
             try {
-                JSONArray jArr = new JSONArray(JSONStr);
+
+                JSONObject root = new JSONObject(JSONStr);
+                JSONArray jArr = root.getJSONArray("data");
 
                 List<CommentEntry> syncedList = Collections.synchronizedList(new ArrayList<CommentEntry>(JSONStr.length()));
 
@@ -287,7 +290,7 @@ public class CommentsFragment extends Fragment {
                 return syncedList;
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(LOG_TAG, e.getMessage(), e);
             }
 
             return new ArrayList<CommentEntry>();
