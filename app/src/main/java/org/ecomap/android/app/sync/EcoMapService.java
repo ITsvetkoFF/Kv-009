@@ -28,6 +28,9 @@ public class EcoMapService extends IntentService {
     private SharedPreferences sPref;
     private int numCurrentRevision;
 
+    // is this a first start of app and service?
+    private static boolean firstStart = true;
+
     public EcoMapService() {
         super("EcoMapService");
     }
@@ -35,70 +38,76 @@ public class EcoMapService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        HttpURLConnection urlConnection = null;
+        // if it's first start of app we're need to check revision and fetch data @see line 107
+        if(firstStart){
+            HttpURLConnection urlConnection = null;
 
-        BufferedReader reader = null;
+            BufferedReader reader = null;
 
-        try {
+            try {
 
-            sPref = getSharedPreferences(getString(R.string.fileNamePreferences), MODE_PRIVATE);
-            numCurrentRevision = sPref.getInt(getString(R.string.prefNumRevision), 0);
+                sPref = getSharedPreferences(getString(R.string.fileNamePreferences), MODE_PRIVATE);
+                numCurrentRevision = sPref.getInt(getString(R.string.prefNumRevision), 0);
 
-            Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
+                Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
-            final String REVISION_PARAM = "rev";
+                final String REVISION_PARAM = "rev";
 
-            Uri builtUri = Uri.parse(EcoMapAPIContract.ECOMAP_BASE_URL).buildUpon()
-                    .appendQueryParameter(REVISION_PARAM, String.valueOf(numCurrentRevision)).build();
+                Uri builtUri = Uri.parse(EcoMapAPIContract.ECOMAP_BASE_URL).buildUpon()
+                        .appendQueryParameter(REVISION_PARAM, String.valueOf(numCurrentRevision)).build();
 
-            URL url = new URL(builtUri.toString());
+                URL url = new URL(builtUri.toString());
 
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
 
-            // Read the input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
-            if (inputStream == null) {
-                return;
-            }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuilder buffer = new StringBuilder();
+                if (inputStream == null) {
+                    return;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
-            }
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
 
-            if (buffer.length() == 0) {
-                return;
-            }
+                if (buffer.length() == 0) {
+                    return;
+                }
 
-            String JSONStr = buffer.toString();
+                String JSONStr = buffer.toString();
 
-            // Starting method for parsing data from JSON and writing them to database
-            boolean dataUpdated = getProblemsFromJSON(JSONStr);
+                // Starting method for parsing data from JSON and writing them to database
+                boolean dataUpdated = getProblemsFromJSON(JSONStr);
 
-            if (dataUpdated) {
-                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
-            }
+                if (dataUpdated) {
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
+                    firstStart = false;
+                }
 
-        } catch (IOException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    }
                 }
             }
         }
-
-        return;
+        // if we're just rotated a device - app can start to draw map without checking revision
+        else {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
+        }
     }
 
 

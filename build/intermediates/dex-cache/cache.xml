@@ -225,5 +225,12 @@
         sha1="8e3a972f28b8bae817e382257ba177a31bcadbbc">
         <dex dex="E:\Android\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-3199b2b580146f62be769b87cf808bf4d19df388.jar" />
     </item>
+    <item
+        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
+        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-f16c354880fc658a7eee44725881f2d937169eec.jar" />
+    </item>
 
 </items>
