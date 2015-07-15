@@ -4,16 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.support.v4.app.Fragment;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
@@ -112,7 +113,7 @@ public class LoginFragment extends DialogFragment {
         });
     }
 
-    private class LoginTask extends AsyncTask<String, Void, Void> {
+    private class LoginTask extends AsyncTask {
         String resMessage;
         Context mContext;
         ProgressDialog progressBar;
@@ -134,12 +135,12 @@ public class LoginFragment extends DialogFragment {
         }
 
         @Override
-        protected Void doInBackground(String[] params) {
+        protected Void doInBackground(Object[] params) {
             URL url = null;
             HttpURLConnection connection = null;
 
             try {
-                url = new URL(MainActivity.API_URL + "/login");
+                url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/login");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -191,6 +192,11 @@ public class LoginFragment extends DialogFragment {
                         resMessage = data.get("message").toString();
                     }
 
+                } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
+                    resMessage = "Please fill all the fields for authorization";
+
+                } else if (! MainActivity.isEmailValid(email.getText())){
+                    resMessage = "Please enter correct email";
                 }
 
                 return null;

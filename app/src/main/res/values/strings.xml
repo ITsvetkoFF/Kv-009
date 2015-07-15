@@ -53,5 +53,6 @@
     <string name="prefNumRevision">numRevision</string>
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
+    <string name="message_you_are_loged">You are already logged in</string>
 
 </resources>

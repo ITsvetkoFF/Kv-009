@@ -20,7 +20,9 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -29,6 +31,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,14 +49,22 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * This example illustrates a common usage of the DrawerLayout widget
@@ -83,6 +94,9 @@ import java.net.CookieManager;
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
 public class MainActivity extends AppCompatActivity {
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -91,8 +105,6 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mTitle;
     private String[] mScreenTitles;
     private ActionBar actionBar;
-
-    public static final String API_URL = "http://176.36.11.25:8000/api";
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
@@ -117,8 +129,9 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        cookieManager = new CookieManager();
+        cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
+        initUserIdFromCookies();
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -158,6 +171,24 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             selectItem(0);
+        }
+    }
+
+    public boolean isUserIdSet() {
+        return userId != null;
+    }
+
+    private void initUserIdFromCookies() {
+        CookieStore cookieStore = cookieManager.getCookieStore();
+        try {
+            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
+            for (HttpCookie cookie : cookies) {
+                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
+                    setUserId(cookie.getValue());
+                }
+            }
+        } catch (URISyntaxException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
         }
     }
 
@@ -214,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
             case NAV_MAP:
                 tag = EcoMapFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
+                if (fragment == null) {
                     fragment = new EcoMapFragment();
                 }
                 break;
@@ -226,30 +257,37 @@ public class MainActivity extends AppCompatActivity {
                 }*/
                 tag = AddProblemFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
+                if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
             case NAV_DETAILS:
                 tag = AddProblemFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
+                if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
-            case NAV_LOGIN:                
+            case NAV_LOGIN:
                 tag = LoginFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
-
-                    new LoginFragment().show(fragmentManager, "login_layout");
+                if (isUserIdSet()) {
                     stop = true;
-                }                
+                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackbar.show();
+                } else {
+                    if (fragment == null) {
+                        new LoginFragment().show(fragmentManager, "login_layout");
+                        stop = true;
+                    }
+                }
                 break;
             default:
                 tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
+                if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
@@ -345,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
 
             //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String[] planet = getResources().getStringArray(R.array.navigation_array);
-            ListView mListView = (ListView)rootView.findViewById(R.id.filter_list_view);
+            ListView mListView = (ListView) rootView.findViewById(R.id.filter_list_view);
             FiltersAdapter mFiltersAdapter = new FiltersAdapter(getActivity(), planet);
             mListView.setAdapter(mFiltersAdapter);
 
@@ -358,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class FiltersAdapter extends ArrayAdapter<String>{
+    public static class FiltersAdapter extends ArrayAdapter<String> {
 
         Context mContext;
 
@@ -378,10 +416,10 @@ public class MainActivity extends AppCompatActivity {
                 view = convertView;
             }
 
-            TextView txtListItem = (TextView)view.findViewById(R.id.txtCaption);
+            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
             String text = getItem(position);
             txtListItem.setText(text);
-            CheckBox chkBox = (CheckBox)view.findViewById(R.id.checkBox);
+            CheckBox chkBox = (CheckBox) view.findViewById(R.id.checkBox);
             chkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -417,9 +455,9 @@ public class MainActivity extends AppCompatActivity {
         MainActivity.userId = userId;
     }
 
-    public static boolean isEmailValid(CharSequence email){
+    public static boolean isEmailValid(CharSequence email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-        
+
     }
 
     public static boolean isUserIsAuthorized() {

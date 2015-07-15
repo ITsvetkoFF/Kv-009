@@ -10,8 +10,6 @@ import android.provider.BaseColumns;
  */
 public class EcoMapContract {
 
-    public static final String HTTP_ECOMAP_BASE_URL = "http://176.36.11.25:8000";
-
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
     // content authority is the package name for the app, which is guaranteed to be unique on the
