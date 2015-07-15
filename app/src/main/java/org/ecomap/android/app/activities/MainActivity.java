@@ -20,7 +20,6 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -217,11 +216,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            /*case R.id.action_details:
+            case R.id.action_details:
                 // create intent to perform web search for this planet
                 Intent intent = new Intent(this, ProblemDetailsActivity.class);
                 startActivity(intent);
-                return true;*/
+                return true;
             case R.id.action_add_polygon:
                 EcoMapFragment.setMarkerClickType(1);
                 return true;

@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -51,21 +50,18 @@
         <activity
             android:name=".activities.ViewPhotosActivity"
             android:label="@string/title_activity_view_photos"
-            android:theme="@style/AppThemeTransparentActionBar"
-            android:parentActivityName=".activities.ProblemDetailsActivity" >
+            android:parentActivityName=".activities.ProblemDetailsActivity"
+            android:theme="@style/AppThemeTransparentActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ProblemDetailsActivity" />
         </activity>
-
-
 
         <provider
             android:name=".data.EcoMapProvider"
             android:authorities="org.ecomap.android.app.data" />
 
         <service android:name=".sync.EcoMapService" />
-
     </application>
 
 </manifest>

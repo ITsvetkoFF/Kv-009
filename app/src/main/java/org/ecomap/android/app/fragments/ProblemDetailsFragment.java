@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,8 +25,10 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.ViewPhotosActivity;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.ui.components.ExpandableHeightGridView;
+import org.ecomap.android.app.ui.fragments.CommentsFragment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +62,13 @@ public class ProblemDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.problem_details_layout, container, false);
+
+        FragmentManager chFm = getChildFragmentManager();
+        Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
+        if (f == null){
+            f = CommentsFragment.newInstance();
+        }
+        chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) rootView.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -203,53 +211,6 @@ public class ProblemDetailsFragment extends Fragment {
             //TextView txtImgCaption;
         }
 
-    }
-
-    public static class ProblemPhotoEntry implements Parcelable {
-        private final String title;
-        private final String imgURL;
-
-        public ProblemPhotoEntry(String title, String imgURL) {
-            this.title = title;
-            this.imgURL = imgURL;
-        }
-
-        public String getCaption() {
-            return title;
-        }
-
-        public String getImgURL() {
-            return imgURL;
-        }
-
-        protected ProblemPhotoEntry(Parcel in) {
-            title = in.readString();
-            imgURL = in.readString();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(title);
-            dest.writeString(imgURL);
-        }
-
-        @SuppressWarnings("unused")
-        public static final Parcelable.Creator<ProblemPhotoEntry> CREATOR = new Parcelable.Creator<ProblemPhotoEntry>() {
-            @Override
-            public ProblemPhotoEntry createFromParcel(Parcel in) {
-                return new ProblemPhotoEntry(in);
-            }
-
-            @Override
-            public ProblemPhotoEntry[] newArray(int size) {
-                return new ProblemPhotoEntry[size];
-            }
-        };
     }
 
     private class AsyncGetPhotos extends AsyncTask<Void, Void, List<ProblemPhotoEntry>> {

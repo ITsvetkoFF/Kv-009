@@ -119,10 +119,12 @@ public class ProblemDetailsActivity extends AppCompatActivity implements ActionB
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
         private final Context context;
+        private final FragmentManager fm;
 
         public AppSectionsPagerAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
+            this.fm = fm;
         }
 
         @Override
