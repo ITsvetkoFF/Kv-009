@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.wunderlist.slidinglayer.SlidingLayer;
 import org.ecomap.android.app.MyIconRendered;
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
@@ -76,6 +79,9 @@ public class EcoMapFragment extends Fragment {
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private RelativeLayout showHead;
 
+    private FloatingActionButton floatingActionButton;
+    private Marker marker;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,14 +115,16 @@ public class EcoMapFragment extends Fragment {
         addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
         addProblemSliding.setSlidingEnabled(false);
         slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+        floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
 
-        /*actionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addProblemSliding.openLayer(true);
                 //call the wunderlist
+                setMarkerClickType(2);
             }
-        });*/
+        });
 
 
 
@@ -258,6 +266,22 @@ public class EcoMapFragment extends Fragment {
                             return false;
                         }
                     });
+
+                } else if (markerClickType == 2){
+                    //TODO check if user is authorized
+                    if (MainActivity.isUserIdSet()) {
+                        if (marker != null){
+                            marker.remove();
+                        }
+                        marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                        marker.setTitle("Houston we have a problem here!");
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    } else {
+                        Snackbar snackbar = Snackbar.make(getActivity().getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.action_sign_in), Snackbar.LENGTH_SHORT);
+                        View snackBarView = snackbar.getView();
+                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                        snackbar.show();
+                    }
                 }
             }
         });

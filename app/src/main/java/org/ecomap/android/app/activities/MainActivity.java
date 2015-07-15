@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isUserIdSet() {
+    static public boolean isUserIdSet() {
         return userId != null;
     }
 
