@@ -103,6 +103,7 @@ public class Problem implements ClusterItem {
                 res_id = R.drawable.type_7;
                 break;
             default:
+                res_id = R.drawable.type_7;
                 break;
         }
     }

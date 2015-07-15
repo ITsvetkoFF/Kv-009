@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -88,7 +88,7 @@ public class RegistrationFragment extends DialogFragment {
             HttpURLConnection connection = null;
 
             try{
-                url = new URL(MainActivity.API_URL + "/register");
+                url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/register");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
