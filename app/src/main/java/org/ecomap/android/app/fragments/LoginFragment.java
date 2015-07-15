@@ -8,8 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.support.v4.app.Fragment;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,7 +50,8 @@ public class LoginFragment extends DialogFragment {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new LoginTask(getActivity()).execute();
+                new LoginTask(getActivity()).execute(email.getText().toString()
+                        , password.getText().toString());
             }
         });
 
@@ -66,7 +65,7 @@ public class LoginFragment extends DialogFragment {
         });
     }
 
-    private class LoginTask extends AsyncTask {
+    private class LoginTask extends AsyncTask<String, Void, Void> {
         String resMessage;
         Context mContext;
         ProgressDialog progressBar;
@@ -88,7 +87,7 @@ public class LoginFragment extends DialogFragment {
         }
 
         @Override
-        protected Void doInBackground(Object[] params) {
+        protected Void doInBackground(String[] params) {
             URL url = null;
             HttpURLConnection connection = null;
 
@@ -101,12 +100,12 @@ public class LoginFragment extends DialogFragment {
                 connection.connect();
 
                 //validation
-                if (MainActivity.isEmailValid(email.getText().toString()) && (! password.getText().toString().isEmpty())) {
+                if (MainActivity.isEmailValid(params[0]) && (! params[1].isEmpty())) {
 
                     //creating JSONObject for request
                     JSONObject request = new JSONObject();
-                    request.put("email", email.getText());
-                    request.put("password", password.getText());
+                    request.put("email", params[0]);
+                    request.put("password", params[1]);
 
                     //sending request
                     connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
@@ -145,10 +144,10 @@ public class LoginFragment extends DialogFragment {
                         resMessage = data.get("message").toString();
                     }
 
-                } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
+                } else if (params[0].isEmpty() || params[1].toString().isEmpty()){
                     resMessage = "Please fill all the fields for authorization";
 
-                } else if (! MainActivity.isEmailValid(email.getText())){
+                } else if (! MainActivity.isEmailValid(params[0])){
                     resMessage = "Please enter correct email";
                 }
 
@@ -164,8 +163,8 @@ public class LoginFragment extends DialogFragment {
         }
 
         @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
             progressBar.dismiss();
             new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
 

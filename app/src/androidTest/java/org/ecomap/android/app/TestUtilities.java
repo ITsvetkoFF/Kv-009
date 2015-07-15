@@ -70,7 +70,7 @@ public class TestUtilities extends AndroidTestCase{
         weatherValues.put(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID, TEST_REGION_ID);
         weatherValues.put(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY, TEST_SEVERITY);
         weatherValues.put(EcoMapContract.ProblemsEntry.COLUMN_STATUS, TEST_STATUS);
-        weatherValues.put(EcoMapContract.ProblemsEntry.COLUMN_USER_NAME, TEST_USER_NAME);
+        //weatherValues.put(EcoMapContract.ProblemsEntry.COLUMN_USER_NAME, TEST_USER_NAME);
         weatherValues.put(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES, TEST_VOTES_NUMBER);
         return weatherValues;
     }

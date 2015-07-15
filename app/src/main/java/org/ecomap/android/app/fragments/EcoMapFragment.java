@@ -94,10 +94,7 @@ public class EcoMapFragment extends Fragment {
         UISettings.setCompassEnabled(true);
         UISettings.setMyLocationButtonEnabled(true);
 
-
         MapsInitializer.initialize(this.getActivity());
-
-
 
         return v;
     }
