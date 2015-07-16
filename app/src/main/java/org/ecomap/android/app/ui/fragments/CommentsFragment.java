@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.plus.PlusOneButton;
@@ -23,6 +23,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.ui.components.ExpandableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +51,7 @@ public class CommentsFragment extends Fragment {
     public static final String TAG = "CommentsFragment";
 
     private static final String ARG_PROBLEM = "problem";
+    private static final int PROBLEM_NUMBER = 185;
 
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
@@ -63,6 +65,8 @@ public class CommentsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private CommentsAdapter<CommentEntry> mCommentsAdapter;
 
+    private ViewGroup mRootView;
+    private EditText mTxtComment;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -99,32 +103,44 @@ public class CommentsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_comments, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        try {
+            // Inflate the layout for this fragment
+            mRootView = (ViewGroup)inflater.inflate(R.layout.fragment_comments, container, false);
+        }catch (Exception e){
+            Log.e(getClass().getName(), e.getMessage(), e);
+            return null;
+        }
+
+
+        ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        lstComments.setLayoutParams(layoutParams);
+        mRootView.addView(lstComments);
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
+        mTxtComment = (EditText) mRootView.findViewById(R.id.editComment);
+        final Button addButton = (Button) mRootView.findViewById(R.id.addCommentButton);
 
-        EditText txtComment = (EditText) view.findViewById(R.id.editComment);
-        final String comment = txtComment.getText().toString();
-
-        final Button addButton = (Button) view.findViewById(R.id.addCommentButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AsyncSendComment().execute(comment);
+                //small validation
+                String comment = mTxtComment.getText().toString();
+                if (!comment.isEmpty() && MainActivity.isUserIsAuthorized()) {
+                    new AsyncSendComment().execute(comment);
+                }
             }
         });
 
-        ListView lstComments = (ListView) view.findViewById(R.id.lstComments);
+        //lstComments = (ExpandableListView) mRootView.findViewById(R.id.lstComments);
         mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
 
         lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute();
 
-        return view;
+        return mRootView;
     }
 
     @Override
@@ -162,6 +178,8 @@ public class CommentsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -230,7 +248,7 @@ public class CommentsFragment extends Fragment {
 
     private class AsyncRequestComments extends AsyncTask<Void, Void, List<CommentEntry>> {
 
-        private static final String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + 1 + "/comments";
+        private static final String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments";
         private final String LOG_TAG = AsyncRequestComments.class.getSimpleName();
 
         String JSONStr = null;
@@ -324,91 +342,64 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    private class AsyncSendComment extends AsyncTask<String, Void, Void> {
+    private class AsyncSendComment extends AsyncTask<String, Void, Boolean> {
+
+        private final String LOG_TAG = AsyncSendComment.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Boolean doInBackground(String... params) {
             URL url = null;
-            HttpURLConnection connection = null;
+            Boolean result = Boolean.FALSE;
 
+            //validation
             if (MainActivity.isUserIsAuthorized()) {
+                if (params.length > 0 && params[0] != null && !params[0].isEmpty()) {
 
-                //validation
-                if (params.length > 0 && params[0] != null && !params[0].isEmpty() ) {}
+                    HttpURLConnection connection = null;
 
-                try {
-                    url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + 1 + "/comments");
-                    connection = (HttpURLConnection) url.openConnection();
-                    //connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                    connection.setDoOutput(true);
-                    connection.connect();
-
+                    try {
 
                         //creating JSONObject for request
                         JSONObject request = new JSONObject();
-                        request.put("email", email.getText());
-                        request.put("password", password.getText());
+                        request.put("content", params[0]);
+
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments");
+
+                        connection = (HttpURLConnection) url.openConnection();
+                        //connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        connection.setDoOutput(true);
+                        connection.connect();
 
                         //sending request
                         connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
 
                         //handling result from server
                         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                            StringBuilder responseBody = new StringBuilder();
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                            String line = null;
-                            while ((line = reader.readLine()) != null) {
-                                responseBody.append(line + "\n");
-                            }
-                            reader.close();
-
-                            JSONObject data = new JSONObject(responseBody.toString());
-                            MainActivity.setUserFirstName(data.get("first_name").toString());
-                            MainActivity.setUserSecondName(data.get("last_name").toString());
-                            MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
-                            MainActivity.setUserIsAuthorized(true);
-
-                            resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
-
-                        } else {
-
-                            StringBuilder responseBody = new StringBuilder();
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-
-                            String line = null;
-                            while ((line = reader.readLine()) != null) {
-                                responseBody.append(line + "\n");
-                            }
-                            reader.close();
-
-                            JSONObject data = new JSONObject(responseBody.toString());
-                            resMessage = data.get("message").toString();
+                            result = Boolean.TRUE;
                         }
 
-                    } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
-                        resMessage = "Please fill all the fields for authorization";
-
-                    } else if (!MainActivity.isEmailValid(email.getText())) {
-                        resMessage = "Please enter correct email";
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    } finally {
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
                     }
-
-                    return null;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    connection.disconnect();
                 }
             }
-            return null;
+
+            return result;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            new AsyncRequestComments().execute();
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                new AsyncRequestComments().execute();
+                mTxtComment.setText("");
+            }
         }
+
     }
 
 

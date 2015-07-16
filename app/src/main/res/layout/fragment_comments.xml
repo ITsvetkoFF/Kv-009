@@ -29,7 +29,8 @@
         android:text="Send" />
 
 
-    <ListView
+<!--
+    <org.ecomap.android.app.ui.components.ExpandableListView
         android:id="@+id/lstComments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +38,8 @@
         android:layout_below="@+id/editComment"
       >
 
-    </ListView>
+    </org.ecomap.android.app.ui.components.ExpandableListView>
+-->
 
 
     <!--<com.google.android.gms.plus.PlusOneButton -->

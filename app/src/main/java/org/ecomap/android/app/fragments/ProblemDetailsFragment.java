@@ -44,13 +44,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by yridk_000 on 24.06.2015.
+ * Created by y.ridkous@gmail.com on 24.06.2015.
  */
 public class ProblemDetailsFragment extends Fragment {
 
     public static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
-    private List<String> mImagesURLArray;
+    private static final int PROBLEM_NUMBER = 185;
+
     public ImageAdapter imgAdapter;
+    private List<String> mImagesURLArray;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,11 +74,11 @@ public class ProblemDetailsFragment extends Fragment {
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) rootView.findViewById(R.id.gridview);
         gridview.setExpanded(true);
+
         imgAdapter = new ImageAdapter(getActivity(), new ArrayList<ProblemPhotoEntry>());
         gridview.setAdapter(imgAdapter);
 
         final ScrollView mScrollView = (ScrollView) rootView.findViewById(R.id.details_scrollview);
-
         mScrollView.post(new Runnable() {
             public void run() {
                 mScrollView.scrollTo(0, 0);
@@ -148,6 +150,7 @@ public class ProblemDetailsFragment extends Fragment {
         public View getView(final int position, View convertView, ViewGroup parent) {
             final ViewHolder holder;
             View view = convertView;
+
             if (view == null) {
                 view = inflater.inflate(R.layout.item_image_grid, parent, false);
                 holder = new ViewHolder();
@@ -173,9 +176,9 @@ public class ProblemDetailsFragment extends Fragment {
                     }
                 });
 
-                //holder.txtImgCaption.setText(problemPhotoEntry.getCaption());
                 String[] imgName = problemPhotoEntry.getImgURL().split("\\.");
-                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
+//                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + imgName[1];
 
                 ImageLoader
                         .getInstance()
@@ -208,14 +211,13 @@ public class ProblemDetailsFragment extends Fragment {
         static class ViewHolder {
             ImageView imageView;
             ProgressBar progressBar;
-            //TextView txtImgCaption;
         }
 
     }
 
     private class AsyncGetPhotos extends AsyncTask<Void, Void, List<ProblemPhotoEntry>> {
 
-        private static final String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + 1 + "/photos";
+        private static final String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + PROBLEM_NUMBER + "/photos";
         private final String LOG_TAG = AsyncGetPhotos.class.getSimpleName();
 
         String JSONStr = null;
@@ -307,15 +309,7 @@ public class ProblemDetailsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<ProblemPhotoEntry> imgagesArray) {
-            //super.onPostExecute(aVoid);
-//            final String[] IMAGE_URLS = {
-//                    "http://ecomap.org/photos/large/3d9ea5059b037de3f5ad962b11d5d3a9.JPG",
-//                    "http://ecomap.org/photos/large/e6540e335f4e74eb605bcc2ca9f6f8a5.JPG",
-//                    "http://ecomap.org/photos/large/ec8392de123deac7c17be81f976d1ee8.jpg",
-//                    "http://176.36.11.25:8000/static/thumbnails/mslofn.thumbnail.jpeg"};
-
             imgAdapter.updateDataSet(imgagesArray);
-
         }
     }
 
