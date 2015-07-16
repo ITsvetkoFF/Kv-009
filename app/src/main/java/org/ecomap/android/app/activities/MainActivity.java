@@ -220,11 +220,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            /*case R.id.action_details:
+            case R.id.action_details:
                 // create intent to perform web search for this planet
                 Intent intent = new Intent(this, ProblemDetailsActivity.class);
                 startActivity(intent);
-                return true;*/
+                return true;
             case R.id.action_add_polygon:
                 EcoMapFragment.setMarkerClickType(1);
                 return true;
@@ -278,7 +278,9 @@ public class MainActivity extends AppCompatActivity {
                     stop = true;
                     Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
+                    TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);//change Snackbar's text color;
                     snackbar.show();
                 } else {
                     if (fragment == null) {
