@@ -105,19 +105,19 @@ public class CommentsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
-            // Inflate the layout for this fragment
-            mRootView = (ViewGroup)inflater.inflate(R.layout.fragment_comments, container, false);
-        }catch (Exception e){
-            Log.e(getClass().getName(), e.getMessage(), e);
-            return null;
-        }
-
-
+        // Inflate the layout for this fragment
+        mRootView = (ViewGroup)inflater.inflate(R.layout.fragment_comments, container, false);
         ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
+
+        lstComments.setId(R.id.email);
+        lstComments.setExpanded(true);
+        lstComments.setClickable(false);
+
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        lstComments.setLayoutParams(layoutParams);
-        mRootView.addView(lstComments);
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.editComment);
+
+        mRootView.addView(lstComments, layoutParams);
+
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         mTxtComment = (EditText) mRootView.findViewById(R.id.editComment);
@@ -224,11 +224,12 @@ public class CommentsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             if (convertView == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_comments_listview, parent, false);
             } else {
                 view = convertView;
             }
 
+            view.setClickable(false);
             TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
             String text = ((CommentEntry) getItem(position)).getContent();
             txtListItem.setText(text);
