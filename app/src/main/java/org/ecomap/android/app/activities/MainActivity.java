@@ -20,7 +20,6 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -54,6 +53,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.fragments.LogoutFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
     public static final int NAV_LOGIN = 5;
+    public static final int NAV_LOGOUT = 6;
 
     private static String userFirstName;
     private static String userSecondName;
@@ -282,6 +283,14 @@ public class MainActivity extends AppCompatActivity {
                         new LoginFragment().show(fragmentManager, "login_layout");
                         stop = true;
                     }
+                }
+                break;
+            case NAV_LOGOUT:
+                tag = LogoutFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if (fragment == null) {
+                    new LogoutFragment().show(fragmentManager, "logout_layout");
+                    stop = true;
                 }
                 break;
             default:

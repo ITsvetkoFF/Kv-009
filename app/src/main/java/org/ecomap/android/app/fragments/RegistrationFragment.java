@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,12 +28,14 @@ import java.net.URL;
 
 public class RegistrationFragment extends DialogFragment {
 
-    EditText firstName;
-    EditText secondName;
-    AutoCompleteTextView email;
-    EditText password;
-    EditText confirmPassword;
-    Button signUp;
+    private EditText firstName;
+    private EditText secondName;
+    private AutoCompleteTextView email;
+    private EditText password;
+    private EditText confirmPassword;
+    private Button signUp;
+
+    private TextInputLayout tilFirstName, tilSecondName, tilEmail, tilPassword, tilConfirmPassword;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +55,105 @@ public class RegistrationFragment extends DialogFragment {
         password = (EditText) getView().findViewById(R.id.password);
         confirmPassword = (EditText) getView().findViewById(R.id.confirm_password);
         signUp = (Button) getView().findViewById(R.id.email_sign_up_button);
+
+        tilFirstName = (TextInputLayout) getView().findViewById(R.id.til_first_name_reg);
+        tilFirstName.setErrorEnabled(true);
+        firstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (firstName.getText().toString().isEmpty()){
+                        tilFirstName.setError("First name cannot be blank");
+                        signUp.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilFirstName.setErrorEnabled(false);
+                        signUp.setClickable(true);
+                    }
+                }
+            }
+        });
+
+        tilSecondName = (TextInputLayout) getView().findViewById(R.id.til_second_name_reg);
+        tilSecondName.setErrorEnabled(true);
+        secondName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (secondName.getText().toString().isEmpty()){
+                        tilSecondName.setError("Second name cannot be blank");
+                        signUp.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilSecondName.setErrorEnabled(false);
+                        signUp.setClickable(true);
+                    }
+                }
+            }
+        });
+
+        tilEmail = (TextInputLayout) getView().findViewById(R.id.til_email_reg);
+        tilEmail.setErrorEnabled(true);
+        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (!email.getText().toString().isEmpty()) {
+                        if (!MainActivity.isEmailValid(email.getText().toString())) {
+                            tilEmail.setError("Please enter correct email");
+                            signUp.setClickable(false);
+                            Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        } else {
+                            tilEmail.setErrorEnabled(false);
+                            signUp.setClickable(true);
+                        }
+                    } else if (email.getText().toString().isEmpty()) {
+                        tilEmail.setError("Email cannot be blank");
+                        signUp.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilEmail.setErrorEnabled(false);
+                        signUp.setClickable(true);
+                    }
+                }
+            }
+        });
+
+        tilPassword = (TextInputLayout) getView().findViewById(R.id.til_password_reg);
+        tilPassword.setErrorEnabled(true);
+        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (password.getText().toString().isEmpty()){
+                        tilPassword.setError("Password cannot be blank");
+                        signUp.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilPassword.setErrorEnabled(false);
+                        signUp.setClickable(true);
+                    }
+                }
+            }
+        });
+
+        tilConfirmPassword = (TextInputLayout) getView().findViewById(R.id.til_confirm_password_reg);
+        tilConfirmPassword.setErrorEnabled(true);
+        confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (confirmPassword.getText().toString().isEmpty()){
+                        tilConfirmPassword.setError("Password cannot be blank");
+                        signUp.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilConfirmPassword.setErrorEnabled(false);
+                        confirmPassword.setClickable(true);
+                    }
+                }
+            }
+        });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override

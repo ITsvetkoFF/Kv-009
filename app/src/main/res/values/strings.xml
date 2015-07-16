@@ -9,6 +9,7 @@
         <item>Filters</item>
         <item>Resources</item>
         <item>Login</item>
+        <item>Logout</item>
     </string-array>
 
     <string-array name="problem_details_tabs">
