@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mScreenTitles));
+
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -174,23 +175,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isUserIdSet() {
-        return userId != null;
-    }
-
-    private void initUserIdFromCookies() {
-        CookieStore cookieStore = cookieManager.getCookieStore();
-        try {
-            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
-            for (HttpCookie cookie : cookies) {
-                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
-                    setUserId(cookie.getValue());
-                }
-            }
-        } catch (URISyntaxException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -343,6 +327,28 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+
+    public boolean isUserIdSet() {
+        return userId != null;
+    }
+
+    /**
+     * Sets logged in user id from COOKIE_USER_ID if cookieStore has it
+     */
+    private void initUserIdFromCookies() {
+        CookieStore cookieStore = cookieManager.getCookieStore();
+        try {
+            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
+            for (HttpCookie cookie : cookies) {
+                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
+                    setUserId(cookie.getValue());
+                }
+            }
+        } catch (URISyntaxException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
+    }
+
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
@@ -463,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static boolean isUserIsAuthorized() {
-        return userIsAuthorized;
+        return userIsAuthorized || getUserId() != null;
     }
 
     public static void setUserIsAuthorized(boolean userIsAuthorized) {

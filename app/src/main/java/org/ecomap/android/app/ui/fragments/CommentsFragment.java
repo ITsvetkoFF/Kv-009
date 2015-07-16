@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import com.google.android.gms.plus.PlusOneButton;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.json.JSONArray;
@@ -103,6 +106,18 @@ public class CommentsFragment extends Fragment {
 
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
+
+        EditText txtComment = (EditText) view.findViewById(R.id.editComment);
+        final String comment = txtComment.getText().toString();
+
+        final Button addButton = (Button) view.findViewById(R.id.addCommentButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AsyncSendComment().execute(comment);
+            }
+        });
+
         ListView lstComments = (ListView) view.findViewById(R.id.lstComments);
         mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
 
@@ -159,14 +174,13 @@ public class CommentsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // T O D O: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }
 
     private static class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
 
-        private List<T> mCommentsArray;
         private final Context mContext;
+        private List<T> mCommentsArray;
 
         public CommentsAdapter(Context mContext, List<T> commentsArray) {
             this.mContext = mContext;
@@ -307,6 +321,93 @@ public class CommentsFragment extends Fragment {
         @Override
         protected void onPostExecute(List<CommentEntry> commentsArray) {
             mCommentsAdapter.updateDataSet(commentsArray);
+        }
+    }
+
+    private class AsyncSendComment extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            URL url = null;
+            HttpURLConnection connection = null;
+
+            if (MainActivity.isUserIsAuthorized()) {
+
+                //validation
+                if (params.length > 0 && params[0] != null && !params[0].isEmpty() ) {}
+
+                try {
+                    url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + 1 + "/comments");
+                    connection = (HttpURLConnection) url.openConnection();
+                    //connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    connection.setDoOutput(true);
+                    connection.connect();
+
+
+                        //creating JSONObject for request
+                        JSONObject request = new JSONObject();
+                        request.put("email", email.getText());
+                        request.put("password", password.getText());
+
+                        //sending request
+                        connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
+
+                        //handling result from server
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            StringBuilder responseBody = new StringBuilder();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                            String line = null;
+                            while ((line = reader.readLine()) != null) {
+                                responseBody.append(line + "\n");
+                            }
+                            reader.close();
+
+                            JSONObject data = new JSONObject(responseBody.toString());
+                            MainActivity.setUserFirstName(data.get("first_name").toString());
+                            MainActivity.setUserSecondName(data.get("last_name").toString());
+                            MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
+                            MainActivity.setUserIsAuthorized(true);
+
+                            resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
+
+                        } else {
+
+                            StringBuilder responseBody = new StringBuilder();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+
+                            String line = null;
+                            while ((line = reader.readLine()) != null) {
+                                responseBody.append(line + "\n");
+                            }
+                            reader.close();
+
+                            JSONObject data = new JSONObject(responseBody.toString());
+                            resMessage = data.get("message").toString();
+                        }
+
+                    } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
+                        resMessage = "Please fill all the fields for authorization";
+
+                    } else if (!MainActivity.isEmailValid(email.getText())) {
+                        resMessage = "Please enter correct email";
+                    }
+
+                    return null;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    connection.disconnect();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            new AsyncRequestComments().execute();
         }
     }
 

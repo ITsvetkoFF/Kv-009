@@ -15,11 +15,11 @@
         android:layout_alignParentRight="false"
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/AddCommentButton"
+        android:layout_toLeftOf="@+id/addCommentButton"
         android:hint="My comment" />
 
     <Button
-        android:id="@+id/AddCommentButton"
+        android:id="@+id/addCommentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
@@ -33,8 +33,6 @@
         android:id="@+id/lstComments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
         android:layout_alignParentTop="false"
         android:layout_below="@+id/editComment"
       >
