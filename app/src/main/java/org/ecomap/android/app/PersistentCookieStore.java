@@ -31,11 +31,10 @@ public class PersistentCookieStore implements CookieStore {
 
     private static final String LOG_TAG = PersistentCookieStore.class.getSimpleName();
     private static final String COOKIE_PREFS = EcoMapAPIContract.APP_PACKAGE_NAME + ".CookiePrefsFile";
-
     private static final String COOKIE_NAME_STORE = "names";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
-    private boolean omitNonPersistentCookies = false;
 
+    private boolean omitNonPersistentCookies = false;
     private final SharedPreferences cookiePrefs;
 
     public PersistentCookieStore(Context context) {
@@ -61,6 +60,11 @@ public class PersistentCookieStore implements CookieStore {
 
     }
 
+    /**
+     * Add a cookie to persistent store
+     * @param uri - cookie URI
+     * @param cookie
+     */
     public void	add(URI uri, HttpCookie cookie) {
         store.add(uri, cookie);
 
@@ -100,6 +104,19 @@ public class PersistentCookieStore implements CookieStore {
     }
 
     public boolean removeAll()  {
+
+        // Clear cookies from persistent store
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        List<HttpCookie> cookies = getCookies();
+
+        for (HttpCookie cookie : cookies) {
+            String name = cookie.getName() + cookie.getDomain();
+            prefsWriter.remove(COOKIE_NAME_PREFIX + name);
+        }
+
+        prefsWriter.remove(COOKIE_NAME_STORE);
+        prefsWriter.commit();
+
         return store.removeAll();
     }
 

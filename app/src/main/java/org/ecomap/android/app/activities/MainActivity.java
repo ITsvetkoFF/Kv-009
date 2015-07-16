@@ -20,6 +20,7 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -274,7 +275,9 @@ public class MainActivity extends AppCompatActivity {
                     stop = true;
                     Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
+                    TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);//change Snackbar's text color;
                     snackbar.show();
                 } else {
                     if (fragment == null) {

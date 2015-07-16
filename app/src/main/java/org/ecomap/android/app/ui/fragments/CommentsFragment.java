@@ -43,18 +43,23 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class CommentsFragment extends Fragment {
+
     public static final String TAG = "CommentsFragment";
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PROBLEM = "problem";
+
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
+
     // The URL to +1.  Must be a valid URL.
     private final String PLUS_ONE_URL = "http://developer.android.com";
+
     private Problem mProblem;
     private PlusOneButton mPlusOneButton;
 
     private OnFragmentInteractionListener mListener;
     private CommentsAdapter<CommentEntry> mCommentsAdapter;
+
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -70,8 +75,10 @@ public class CommentsFragment extends Fragment {
     public static CommentsFragment newInstance(Problem problem) {
         CommentsFragment fragment = new CommentsFragment();
         Bundle args = new Bundle();
+
         args.putParcelable(ARG_PROBLEM, problem);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -96,9 +103,9 @@ public class CommentsFragment extends Fragment {
 
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
-
         ListView lstComments = (ListView) view.findViewById(R.id.lstComments);
         mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
+
         lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute();
 
