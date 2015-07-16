@@ -178,10 +178,27 @@ public class EcoMapService extends IntentService {
                     longitude          = obj.getDouble(EcoMapAPIContract.LONGITUDE);
                     type_id            = obj.getInt(EcoMapAPIContract.PROBLEMS_TYPES_ID);
                     status             = obj.getString(EcoMapAPIContract.STATUS);
-                    first_name         = obj.getString(EcoMapAPIContract.FIRST_NAME);
-                    last_name          = obj.getString(EcoMapAPIContract.LAST_NAME);
-                    severity           = obj.getString(EcoMapAPIContract.SEVERITY);
-                    number_of_votes    = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES);
+
+                    if (obj.isNull(EcoMapAPIContract.FIRST_NAME)) {
+                        first_name = "no name";
+                    } else {
+                        first_name = obj.getString(EcoMapAPIContract.FIRST_NAME);
+                    }
+
+                    if (obj.isNull(EcoMapAPIContract.LAST_NAME)) {
+                        last_name = "";
+                    } else {
+                        last_name = obj.getString(EcoMapAPIContract.LAST_NAME);
+                    }
+
+                    severity = obj.getString(EcoMapAPIContract.SEVERITY);
+
+                    if (obj.isNull(EcoMapAPIContract.NUMBER_OF_VOTES)) {
+                        number_of_votes = 0;
+                    } else {
+                        number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES);
+                    }
+
                     date               = obj.getString(EcoMapAPIContract.DATE);
                     content            = obj.getString(EcoMapAPIContract.CONTENT);
                     proposal           = obj.getString(EcoMapAPIContract.PROPOSAL);
