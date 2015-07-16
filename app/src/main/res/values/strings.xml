@@ -55,6 +55,6 @@
     <string name="cancel">Cancel</string>
     <string name="message_you_are_loged">You are already logged in</string>
 
-    <string name="login_logout">Login</string>
+    <string name="facebook_app_id">428789340644097</string>
 
 </resources>

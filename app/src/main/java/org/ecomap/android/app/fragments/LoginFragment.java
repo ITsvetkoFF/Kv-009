@@ -29,11 +29,11 @@ import java.net.URL;
 
 public class LoginFragment extends DialogFragment {
 
-    AutoCompleteTextView email;
-    EditText password;
-    Button signIn;
-    TextView signUpLink;
-    TextInputLayout tilEmail, tilPass;
+    private AutoCompleteTextView email;
+    private EditText password;
+    private Button signIn;
+    private TextView signUpLink;
+    private TextInputLayout tilEmail, tilPass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -33,4 +33,5 @@ dependencies {
     compile 'com.wunderlist:sliding-layer:1.1.1'
     compile 'com.android.support:design:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
 }

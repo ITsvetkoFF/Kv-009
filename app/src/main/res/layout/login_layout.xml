@@ -34,18 +34,7 @@
             android:orientation="vertical"
             android:id="@+id/header"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dip"
-            android:paddingBottom="5dip">
-
-            <!-- LOGO start -->
-           <ImageView
-                android:src="@drawable/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"/>
-
-             <!-- LOGO end -->
+            android:layout_height="wrap_content">
 
         </LinearLayout>
         <!-- HEADER end -->

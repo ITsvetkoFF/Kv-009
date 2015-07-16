@@ -169,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        changeAuthorizationState();
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -289,32 +291,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 break;
-                /*
-                tag = LoginFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (isUserIdSet()) {
-                    stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
-                    View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
-                    TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-                    textView.setTextColor(Color.WHITE);//change Snackbar's text color;
-                    snackbar.show();
-                } else {
-                    if (fragment == null) {
-                        new LoginFragment().show(fragmentManager, "login_layout");
-                        stop = true;
-                    }
-                }
-                break;
-            case NAV_LOGOUT:
-                tag = LogoutFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment == null) {
-                    new LogoutFragment().show(fragmentManager, "logout_layout");
-                    stop = true;
-                }
-                break;*/
             default:
                 tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
