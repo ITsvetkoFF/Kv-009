@@ -3,13 +3,17 @@ package org.ecomap.android.app.fragments;
 import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +40,7 @@ import com.wunderlist.slidinglayer.SlidingLayer;
 import org.ecomap.android.app.MyIconRendered;
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
@@ -76,6 +81,9 @@ public class EcoMapFragment extends Fragment {
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private RelativeLayout showHead;
 
+    private FloatingActionButton floatingActionButton;
+    private Marker marker;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,14 +117,16 @@ public class EcoMapFragment extends Fragment {
         addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
         addProblemSliding.setSlidingEnabled(false);
         slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+        floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
 
-        /*actionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addProblemSliding.openLayer(true);
                 //call the wunderlist
+                setMarkerClickType(2);
             }
-        });*/
+        });
 
 
 
@@ -258,6 +268,43 @@ public class EcoMapFragment extends Fragment {
                             return false;
                         }
                     });
+
+                    //ADDING PROBLEM VIA FLOATING ACTION BUTTON
+
+                } else if (markerClickType == 2){
+                    //TODO check if user is authorized
+                    if (MainActivity.isUserIdSet()) {
+                        if (marker != null){
+                            marker.remove();
+                        }
+                        marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                        marker.setTitle("Houston we have a problem here!");
+                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                    } else {
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                        alert.setMessage(R.string.action_sign_in);
+                        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new LoginFragment().show(getFragmentManager(), "login_layout");
+                            }
+                        });
+                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //dialog.cancel();
+                            }
+                        });
+                        //alert.setCancelable(true);
+                       /* alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                dialog.cancel();
+                            }
+                        });*/
+                        alert.show();
+                    }
                 }
             }
         });
