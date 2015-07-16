@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 
 public class LogoutFragment extends DialogFragment {
 
@@ -28,7 +29,9 @@ public class LogoutFragment extends DialogFragment {
         yesB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                MainActivity.cookieManager.getCookieStore().removeAll();
+                MainActivity.setUserId(null);
+                MainActivity.changeAuthorizationState();
                 dismiss();
             }
         });

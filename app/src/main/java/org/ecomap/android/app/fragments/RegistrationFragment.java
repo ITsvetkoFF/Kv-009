@@ -2,6 +2,8 @@ package org.ecomap.android.app.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -158,9 +160,13 @@ public class RegistrationFragment extends DialogFragment {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RegisterTask(getActivity()).execute(firstName.getText().toString()
-                        , secondName.getText().toString(), email.getText().toString()
-                        , password.getText().toString(), confirmPassword.getText().toString());
+                if (isNetworkAvailable()) {
+                    new RegisterTask(getActivity()).execute(firstName.getText().toString()
+                            , secondName.getText().toString(), email.getText().toString()
+                            , password.getText().toString(), confirmPassword.getText().toString());
+                } else {
+                    Snackbar.make(v, "Check internet connection please", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -232,7 +238,7 @@ public class RegistrationFragment extends DialogFragment {
                         MainActivity.setUserSecondName(data.get("last_name").toString());
                         MainActivity.setUserId(MainActivity.cookieManager.getCookieStore()
                                 .getCookies().toString());
-                        MainActivity.setUserIsAuthorized(true);
+                        MainActivity.changeAuthorizationState();
 
                         resMessage = "Hello " + MainActivity.getUserFirstName() + " "
                                 + MainActivity.getUserSecondName() + "!";
@@ -278,5 +284,12 @@ public class RegistrationFragment extends DialogFragment {
                 dismiss();
             }
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

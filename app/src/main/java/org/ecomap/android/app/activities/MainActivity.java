@@ -21,12 +21,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -99,19 +97,18 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private static ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mScreenTitles;
+    private static String[] mScreenTitles;
     private Toolbar toolbar;
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
-    public static final int NAV_LOGIN = 5;
-    public static final int NAV_LOGOUT = 6;
+    public static final int NAV_LOGIN_LOGOUT = 5;
 
     private static String userFirstName;
     private static String userSecondName;
@@ -271,7 +268,28 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MockFragment();
                 }
                 break;
-            case NAV_LOGIN:
+            case NAV_LOGIN_LOGOUT:
+                if (isUserIdSet()){
+                    tag = LogoutFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+
+                    if (fragment == null) {
+                        new LogoutFragment().show(fragmentManager, "logout_layout");
+                        stop = true;
+                    }
+                    break;
+                } else {
+                    tag = LoginFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+
+                    if (fragment == null) {
+                        new LoginFragment().show(fragmentManager, "login_layout");
+                        stop = true;
+                    }
+                }
+
+                break;
+                /*
                 tag = LoginFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (isUserIdSet()) {
@@ -296,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                     new LogoutFragment().show(fragmentManager, "logout_layout");
                     stop = true;
                 }
-                break;
+                break;*/
             default:
                 tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
@@ -479,6 +497,20 @@ public class MainActivity extends AppCompatActivity {
 
     public static void setUserIsAuthorized(boolean userIsAuthorized) {
         MainActivity.userIsAuthorized = userIsAuthorized;
+    }
+
+    public static void changeAuthorizationState(){
+        if (isUserIdSet()){
+            mScreenTitles[5] = "Logout";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            mScreenTitles[5] = "Login";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        }
     }
 
 }
