@@ -54,5 +54,12 @@
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
     <string name="message_you_are_loged">You are already logged in</string>
+    <string name="problem_type_string_1">Проблемы лесов</string>
+    <string name="problem_type_string_2">Свалка</string>
+    <string name="problem_type_string_3">Незаконное строительство</string>
+    <string name="problem_type_string_4">Проблемы водойомов</string>
+    <string name="problem_type_string_5">Угроза биоразнообразию</string>
+    <string name="problem_type_string_6">Браконьерство</string>
+    <string name="problem_type_string_7">Прочие проблемы</string>
 
 </resources>

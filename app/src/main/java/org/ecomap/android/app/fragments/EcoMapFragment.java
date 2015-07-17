@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -77,9 +78,9 @@ public class EcoMapFragment extends Fragment {
     private View v;
     private SlidingLayer slidingLayer;
     private SlidingLayer addProblemSliding;
-    private ImageView showType, showLike;
-    private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
-    private RelativeLayout showHead;
+    private ImageView showTypeImage, showLike;
+    private TextView showTitle, showType, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
+    private LinearLayout showHead;
 
     private FloatingActionButton floatingActionButton;
     private Marker marker;
@@ -116,7 +117,7 @@ public class EcoMapFragment extends Fragment {
         mContext = getActivity();
         addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
         addProblemSliding.setSlidingEnabled(false);
-        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+
         floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +129,43 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
+        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
+        slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
+            @Override
+            public void onOpen() {
+
+            }
+
+            @Override
+            public void onShowPreview() {
+
+                floatingActionButton.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onClose() {
+
+                floatingActionButton.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onOpened() {
+
+            }
+
+            @Override
+            public void onPreviewShowed() {
+
+            }
+
+            @Override
+            public void onClosed() {
+
+            }
+        });
 
         cancelButton=(Button)v.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -138,17 +175,16 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        showType = (ImageView) v.findViewById(R.id.show_type);
+        showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
         showTitle = (TextView) v.findViewById(R.id.show_title);
-        showByTime = (TextView) v.findViewById(R.id.show_by_time);
+        showType = (TextView) v.findViewById(R.id.show_type);
+        //showByTime = (TextView) v.findViewById(R.id.show_by_time);
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
-        showHead = (RelativeLayout) v.findViewById(R.id.show_head);
+        showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
-
-
 
         return v;
     }
@@ -331,9 +367,10 @@ public class EcoMapFragment extends Fragment {
                         mMap.getCameraPosition().zoom));
 
                 //Set Problem object parameters to a view at show problem fragment
-                showType.setImageResource(problem.getRes_id());
+                showTypeImage.setImageResource(problem.getResBigImage());
+                showType.setText(problem.getTypeString());
                 showTitle.setText(problem.getTitle());
-                showByTime.setText(problem.getByTime());
+                //showByTime.setText(problem.getByTime());
                 showContent.setText(problem.getContent());
                 showProposal.setText(problem.getProposal());
                 showNumOfLikes.setText(problem.getNumberOfLikes());
