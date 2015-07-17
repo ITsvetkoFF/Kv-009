@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -372,8 +373,15 @@ public class CommentsFragment extends Fragment {
                         connection.setDoOutput(true);
                         connection.connect();
 
-                        //sending request
-                        connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
+                        /**
+                         * sending request
+                         * request.toString() - translate our object into appropriate JSON text
+                         * {
+                         *      "content": "your comment"
+                         * }
+                         */
+                        OutputStream outputStream = connection.getOutputStream();
+                        outputStream.write(request.toString().getBytes("UTF-8"));
 
                         //handling result from server
                         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {

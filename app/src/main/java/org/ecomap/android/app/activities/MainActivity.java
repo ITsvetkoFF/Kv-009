@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -51,7 +52,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
@@ -221,9 +221,9 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment;
+        Fragment fragment = null;
         boolean stop = false;
-        String tag;
+        String tag = null;
 
         switch (position) {
             case NAV_MAP:
@@ -239,14 +239,14 @@ public class MainActivity extends AppCompatActivity {
                 if(fragment == null) {
                     fragment = new FiltersFragment();
                 }*/
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
             case NAV_DETAILS:
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
                     fragment = new MockFragment();
@@ -280,14 +280,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!stop) {
-            Bundle args = new Bundle();
-            args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
-            fragment.setArguments(args);
+
+            if(fragment.getClass() == MockFragment.class && fragment.getArguments() == null) {
+                Bundle args = new Bundle();
+                args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
+                fragment.setArguments(args);
+            }
 
             //Main magic happens here
-            fragmentManager.beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.content_frame, fragment).commit();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.content_frame, fragment, tag).commit();
 
         }
         // update selected item and title, then close the drawer
