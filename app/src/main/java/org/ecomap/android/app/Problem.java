@@ -2,6 +2,8 @@ package org.ecomap.android.app;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
@@ -11,7 +13,7 @@ import org.ecomap.android.app.data.EcoMapContract;
 /**
  * Created by Stanislav on 23.06.2015.
  */
-public class Problem implements ClusterItem {
+public class Problem implements ClusterItem, Parcelable {
     LatLng mPos;
 
     String mTitle;
@@ -186,4 +188,59 @@ public class Problem implements ClusterItem {
     public LatLng getPosition() {
         return mPos;
     }
+
+    protected Problem(Parcel in) {
+        mPos = (LatLng) in.readValue(LatLng.class.getClassLoader());
+        mTitle = in.readString();
+        type_id = in.readInt();
+        res_id = in.readInt();
+        status = in.readString();
+        first_name = in.readString();
+        last_name = in.readString();
+        severity = in.readString();
+        number_of_votes = in.readInt();
+        date = in.readString();
+        content = in.readString();
+        proposal = in.readString();
+        region_id = in.readInt();
+        number_of_comments = in.readInt();
+        liked = in.readByte() != 0x00;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(mPos);
+        dest.writeString(mTitle);
+        dest.writeInt(type_id);
+        dest.writeInt(res_id);
+        dest.writeString(status);
+        dest.writeString(first_name);
+        dest.writeString(last_name);
+        dest.writeString(severity);
+        dest.writeInt(number_of_votes);
+        dest.writeString(date);
+        dest.writeString(content);
+        dest.writeString(proposal);
+        dest.writeInt(region_id);
+        dest.writeInt(number_of_comments);
+        dest.writeByte((byte) (liked ? 0x01 : 0x00));
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Problem> CREATOR = new Parcelable.Creator<Problem>() {
+        @Override
+        public Problem createFromParcel(Parcel in) {
+            return new Problem(in);
+        }
+
+        @Override
+        public Problem[] newArray(int size) {
+            return new Problem[size];
+        }
+    };
 }

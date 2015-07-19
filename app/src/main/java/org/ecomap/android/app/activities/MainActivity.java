@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mScreenTitles));
+
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -239,9 +241,9 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment;
+        Fragment fragment = null;
         boolean stop = false;
-        String tag;
+        String tag = null;
 
         switch (position) {
             case NAV_MAP:
@@ -257,14 +259,14 @@ public class MainActivity extends AppCompatActivity {
                 if(fragment == null) {
                     fragment = new FiltersFragment();
                 }*/
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
             case NAV_DETAILS:
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
                     fragment = new MockFragment();
@@ -275,9 +277,11 @@ public class MainActivity extends AppCompatActivity {
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (isUserIdSet()) {
                     stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
+                    TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);//change Snackbar's text color;
                     snackbar.show();
                 } else {
                     if (fragment == null) {
@@ -296,14 +300,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!stop) {
-            Bundle args = new Bundle();
-            args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
-            fragment.setArguments(args);
+            
+            if(fragment.getClass() == MockFragment.class && fragment.getArguments() == null) {
+                Bundle args = new Bundle();
+                args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
+                fragment.setArguments(args);
+            }
 
             //Main magic happens here
-            fragmentManager.beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.content_frame, fragment).commit();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.content_frame, fragment, tag).commit();
 
         }
         // update selected item and title, then close the drawer
@@ -463,11 +470,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static boolean isUserIsAuthorized() {
-        return userIsAuthorized;
+        return userIsAuthorized || getUserId() != null;
     }
 
     public static void setUserIsAuthorized(boolean userIsAuthorized) {
         MainActivity.userIsAuthorized = userIsAuthorized;
+    }
+
+    public static void showInfoSnackBar(Context context, View view, int messageResourse, int duration){
+        showInfoSnackBar(context, view, context.getString(messageResourse), duration);
+    }
+    public static void showInfoSnackBar(Context context, View view, String message, int duration){
+        Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.primary));
+        TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+
     }
 
 }

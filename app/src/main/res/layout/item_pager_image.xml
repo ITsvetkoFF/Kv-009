@@ -41,9 +41,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/photoDescription"
-        android:gravity="center"
         android:textColor="@android:color/white"
-        android:text="Міське озеро забруднюється сміттям, що призводить до його пересихання, хоча воно є місцем існування багатьох водоплаваючих птахів"
+
         android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="true" />
 

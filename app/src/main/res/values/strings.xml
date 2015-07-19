@@ -27,6 +27,8 @@
     <string name="gridview_img_description">Image</string>
     <string name="title_activity_view_photos">Problem\'s photos</string>
 
+    <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
+
     <string name="hello_world">Hello world!</string>
 
 <!-- TODO: Remove or change this placeholder text -->
@@ -48,12 +50,13 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
+    <string name="message_you_are_logged">You are already logged in</string>
+    <!---->
 
     <string name="fileNamePreferences">EcoMapPref</string>
     <string name="prefNumRevision">numRevision</string>
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
-    <string name="message_you_are_loged">You are already logged in</string>
     <string name="problem_type_string_1">Проблемы лесов</string>
     <string name="problem_type_string_2">Свалка</string>
     <string name="problem_type_string_3">Незаконное строительство</string>
@@ -61,5 +64,14 @@
     <string name="problem_type_string_5">Угроза биоразнообразию</string>
     <string name="problem_type_string_6">Браконьерство</string>
     <string name="problem_type_string_7">Прочие проблемы</string>
+
+
+
+    <!-- Accessibility content descriptions block-->
+    <string name="user_avatar">User avatar</string>
+    <string name="write_comment">Write a comment...</string>
+    <string name="button_send_comment_caption">Post</string>
+    <string name="message_write_something_to_post">Write something to post</string>
+    <!---->
 
 </resources>

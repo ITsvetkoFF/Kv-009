@@ -29,7 +29,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.ProblemDetailsFragment.ProblemPhotoEntry;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.ui.components.ZoomableImageView;
 
@@ -41,12 +41,11 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
     public static final String IMAGE_POSITION = "IMAGE_POSITION";
     public static final String PHOTO_ENTRY = "PHOTO_ENTRY";
-    //private List<ProblemPhotoEntry> mImagesURLArray;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_problem_details);
 
         Intent intent = getIntent();
         int position = intent.getIntExtra(IMAGE_POSITION, 0);
@@ -119,7 +118,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
             ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
             pager.setAdapter(new ImageAdapter(getActivity(), this, mImagesURLArray));
             pager.setCurrentItem(getArguments().getInt(IMAGE_POSITION, 0));
-            pager.setPageMargin(55); ///---------- replace with dimension
+            pager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.space_between_photos)); ///---------- replace with dimension
             return rootView;
         }
 
@@ -235,9 +234,13 @@ public class ViewPhotosActivity extends AppCompatActivity {
             };
 
             if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
+
                 final ProblemPhotoEntry problemPhotoEntry = (ProblemPhotoEntry)mImagesURLArray.get(position);
                 final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/photos/" + problemPhotoEntry.getImgURL();
-                txtImgCaption.setText(problemPhotoEntry.getCaption());
+
+                final String caption = problemPhotoEntry.getCaption() == null ? "" : problemPhotoEntry.getCaption();
+                txtImgCaption.setText(caption);
+
                 ImageLoader.getInstance().loadImage(imgURL, options, MyImageLoadingListener);
             }
 
