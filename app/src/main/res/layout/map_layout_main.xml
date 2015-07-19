@@ -57,22 +57,14 @@
 
     </com.wunderlist.slidinglayer.SlidingLayer>
 
-
-
     <com.wunderlist.slidinglayer.SlidingLayer
         xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
         android:id="@+id/show_problem_sliding_layer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        slidingLayer:stickTo="bottom">
-
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/details_scrollview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:measureAllChildren="true">
+        slidingLayer:stickTo="bottom"
+        slidingLayer:shadowDrawable="@drawable/sidebar_shadow"
+        slidingLayer:shadowSize="@dimen/shadow_size">
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:orientation="vertical"
@@ -127,6 +119,28 @@
                 </LinearLayout>
 
                 <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF">
+
+                    <View
+                        android:id="@+id/separator1"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="#90909090" />
+
+                </LinearLayout>
+
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/details_scrollview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    android:measureAllChildren="true">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="16dp"
@@ -135,13 +149,6 @@
                     android:paddingBottom="16dp"
                     android:orientation="vertical"
                     android:background="#FFFFFF">
-
-                    <View
-                        android:id="@+id/separator1"
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_marginBottom="5dp"
-                        android:background="#90909090" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -254,8 +261,10 @@
 
                 </LinearLayout>
 
+                </ScrollView>
+
             </LinearLayout>
-        </ScrollView>
+
 
     </com.wunderlist.slidinglayer.SlidingLayer>
 
