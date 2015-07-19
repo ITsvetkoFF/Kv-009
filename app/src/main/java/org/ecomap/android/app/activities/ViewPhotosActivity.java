@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,7 +74,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
         // Specify that the Home/Up button should not be enabled, since there is no hierarchical
         // parent.
-        actionBar.setHomeButtonEnabled(false);
+        //actionBar.setHomeButtonEnabled(false);
 
     }
 
