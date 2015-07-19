@@ -67,7 +67,7 @@ public class ProblemDetailsFragment extends Fragment {
 
         FragmentManager chFm = getChildFragmentManager();
         Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
-        if (f == null){
+        if (f == null) {
             f = CommentsFragment.newInstance();
         }
         chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
@@ -114,7 +114,7 @@ public class ProblemDetailsFragment extends Fragment {
             this.options = new DisplayImageOptions.Builder()
                     //.showImageOnLoading(R.drawable.ic_stub)
                     .showImageForEmptyUri(R.drawable.ic_empty)
-                    //.showImageOnFail(R.drawable.ic_action_refresh)
+                            //.showImageOnFail(R.drawable.ic_action_refresh)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)
@@ -148,16 +148,22 @@ public class ProblemDetailsFragment extends Fragment {
         // create a new ImageView for each item referenced by the Adapter
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+
             final ViewHolder holder;
             View view = convertView;
 
             if (view == null) {
+
                 view = inflater.inflate(R.layout.item_image_grid, parent, false);
                 holder = new ViewHolder();
+
                 assert view != null;
+
                 holder.imageView = (ImageView) view.findViewById(R.id.image);
                 holder.progressBar = (ProgressBar) view.findViewById(R.id.progress);
+
                 view.setTag(holder);
+
             } else {
                 holder = (ViewHolder) view.getTag();
             }
@@ -171,18 +177,24 @@ public class ProblemDetailsFragment extends Fragment {
                         Intent intent = new Intent(mContext, ViewPhotosActivity.class);
                         intent.putExtra(ViewPhotosActivity.IMAGE_POSITION, position);
                         intent.putExtra(ViewPhotosActivity.PHOTO_ENTRY, mImagesURLArray.toArray(new ProblemPhotoEntry[mImagesURLArray.size()]));
-
                         mContext.startActivity(intent);
                     }
                 });
 
-                String[] imgName = problemPhotoEntry.getImgURL().split("\\.");
-//                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
-                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + imgName[1];
 
-                ImageLoader
-                        .getInstance()
-                        .displayImage(imgURL, holder.imageView, options, new SimpleImageLoadingListener() {
+                /* On case they will change naming logic again
+                String[] imgName = problemPhotoEntry.getImgURL().split("\\.");
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
+                */
+
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + problemPhotoEntry.getImgURL();
+
+                ImageLoader imageLoader = ImageLoader.getInstance();
+                imageLoader.displayImage(
+                        imgURL,
+                        holder.imageView,
+                        options,
+                        new SimpleImageLoadingListener() {
                             @Override
                             public void onLoadingStarted(String imageUri, View view) {
                                 holder.progressBar.setProgress(0);
@@ -198,7 +210,8 @@ public class ProblemDetailsFragment extends Fragment {
                             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                                 holder.progressBar.setVisibility(View.GONE);
                             }
-                        }, new ImageLoadingProgressListener() {
+                        },
+                        new ImageLoadingProgressListener() {
                             @Override
                             public void onProgressUpdate(String imageUri, View view, int current, int total) {
                                 holder.progressBar.setProgress(Math.round(100.0f * current / total));

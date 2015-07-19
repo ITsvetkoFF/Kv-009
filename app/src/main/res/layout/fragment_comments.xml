@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="16dp"
     tools:context=".CommentsFragment">
 
 
@@ -16,7 +17,7 @@
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/addCommentButton"
-        android:hint="My comment" />
+        android:hint="@string/write_comment" />
 
     <Button
         android:id="@+id/addCommentButton"
@@ -25,8 +26,8 @@
         android:layout_alignParentBottom="false"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:hint="Add"
-        android:text="Send" />
+        android:hint="Post comment"
+        android:text="@string/button_send_comment_caption" />
 
 
 <!--

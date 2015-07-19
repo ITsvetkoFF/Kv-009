@@ -234,9 +234,13 @@ public class ViewPhotosActivity extends AppCompatActivity {
             };
 
             if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
+
                 final ProblemPhotoEntry problemPhotoEntry = (ProblemPhotoEntry)mImagesURLArray.get(position);
                 final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/photos/" + problemPhotoEntry.getImgURL();
-                txtImgCaption.setText(problemPhotoEntry.getCaption());
+
+                final String caption = problemPhotoEntry.getCaption() == null ? "" : problemPhotoEntry.getCaption();
+                txtImgCaption.setText(caption);
+
                 ImageLoader.getInstance().loadImage(imgURL, options, MyImageLoadingListener);
             }
 

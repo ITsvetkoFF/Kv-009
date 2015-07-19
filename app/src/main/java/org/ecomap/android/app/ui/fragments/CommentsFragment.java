@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -107,7 +108,7 @@ public class CommentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        mRootView = (ViewGroup)inflater.inflate(R.layout.fragment_comments, container, false);
+        mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_comments, container, false);
         ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
 
         lstComments.setId(R.id.email);
@@ -132,10 +133,15 @@ public class CommentsFragment extends Fragment {
                 if (!comment.isEmpty() && MainActivity.isUserIsAuthorized()) {
                     new AsyncSendComment().execute(comment);
                 }
+
+                if(!MainActivity.isUserIsAuthorized()){
+                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
+                }else if(comment.isEmpty()){
+                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_write_something_to_post, Snackbar.LENGTH_SHORT);
+                }
             }
         });
 
-        //lstComments = (ExpandableListView) mRootView.findViewById(R.id.lstComments);
         mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
 
         lstComments.setAdapter(mCommentsAdapter);
@@ -179,7 +185,6 @@ public class CommentsFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-
 
 
     /**
@@ -231,9 +236,15 @@ public class CommentsFragment extends Fragment {
             }
 
             view.setClickable(false);
-            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
-            String text = ((CommentEntry) getItem(position)).getContent();
-            txtListItem.setText(text);
+            final CommentEntry currentItem = (CommentEntry) getItem(position);
+            if (currentItem != null) {
+
+                final TextView txtUserName = (TextView) view.findViewById(R.id.textUserName);
+                txtUserName.setText(currentItem.getCreatedBy());
+
+                final TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
+                txtListItem.setText(currentItem.getContent());
+            }
 
             return view;
         }
@@ -260,7 +271,14 @@ public class CommentsFragment extends Fragment {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            List<CommentEntry> ret = new ArrayList<>();
+            List<CommentEntry> ret = new ArrayList<CommentEntry>() {
+                {
+                    add(new CommentEntry("", "", "", "My comment here asdsdas My comment here asdsdas " +
+                            "My comment here asdsdas My comment here asdsdas My comment here asdsdas " +
+                            "My comment here asdsdas My comment here asdsdas My comment here asdsdas " +
+                            "My comment here asdsdas ", "", 0));
+                }
+            };
 
             try {
                 // Getting input stream from URL

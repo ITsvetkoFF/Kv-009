@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (isUserIdSet()) {
                     stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
+                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
                     TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
@@ -477,6 +477,19 @@ public class MainActivity extends AppCompatActivity {
 
     public static void setUserIsAuthorized(boolean userIsAuthorized) {
         MainActivity.userIsAuthorized = userIsAuthorized;
+    }
+
+    public static void showInfoSnackBar(Context context, View view, int messageResourse, int duration){
+        showInfoSnackBar(context, view, context.getString(messageResourse), duration);
+    }
+    public static void showInfoSnackBar(Context context, View view, String message, int duration){
+        Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.primary));
+        TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+
     }
 
 }
