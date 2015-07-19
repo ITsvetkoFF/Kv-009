@@ -7,7 +7,6 @@ android {
     lintOptions{
         abortOnError false
     }
-
     defaultConfig {
         applicationId "org.ecomap.android.app"
         minSdkVersion 16

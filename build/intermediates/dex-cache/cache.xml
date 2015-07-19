@@ -2,18 +2,74 @@
 <items version="2" >
 
     <item
-        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.wunderlist/sliding-layer/1.1.1/jars/classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.3.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="877eb87056bfe08b8589ab9ee3ded4e70aef343b">
-        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-6f2291dfb48d945755a7e6c9c2f34e292a991277.jar" />
+        sha1="8c6ebb7d087d1a30bf84356bd2aecf85309fc024">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-353c465993648d38b4405759665ce1e4116da52e.jar" />
     </item>
     <item
-        jar="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/design/22.2.0/jars/classes.jar"
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-io/1.3.2/b6dde38349ba9bb5e6ea6320531eae969985dae5/commons-io-1.3.2.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="fc63b820d54c8a27a3a614bdd93920e0076581c2">
-        <dex dex="/Users/Tatiana/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-f16c354880fc658a7eee44725881f2d937169eec.jar" />
+        sha1="b6dde38349ba9bb5e6ea6320531eae969985dae5">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/commons-io-1.3.2-21f45b4b8a66e5283b6a8cae56e05e26227ad811.jar" />
+    </item>
+    <item
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.octo.android.robospice/robospice-cache/1.4.14/1a13bea0b3ae105c44cb6be7fc76b6d36098faf5/robospice-cache-1.4.14.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="1a13bea0b3ae105c44cb6be7fc76b6d36098faf5">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/robospice-cache-1.4.14-5a0ddca98c1a1bd8623beeea89ade59ebdd65731.jar" />
+    </item>
+    <item
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.octo.android.robospice/robospice/1.4.14/fffe1563473feb2f956608554d3e97ad805914a7/robospice-1.4.14.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="fffe1563473feb2f956608554d3e97ad805914a7">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/robospice-1.4.14-95caaa7e31a0d463173c0c9dae90bafbab31bd31.jar" />
+    </item>
+    <item
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/de.greenrobot/eventbus/2.4.0/ddd166d01b3158d1c00576d29f7ed15c030df719/eventbus-2.4.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="ddd166d01b3158d1c00576d29f7ed15c030df719">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/eventbus-2.4.0-602525200e2a83f327c57460326d98da9d7b161c.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.chrisbanes.photoview/library/1.2.3/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="81aa0e8e77d948204aa6754019c6f3c04dd922e3">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-35ed69771d6f7275e661edd9a280ed5654068a1f.jar" />
+    </item>
+    <item
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.3.2/90a3822c38ec8c996e84c16a3477ef632cbc87a3/commons-lang3-3.3.2.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="90a3822c38ec8c996e84c16a3477ef632cbc87a3">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/commons-lang3-3.3.2-1cd9ff1cd5641108dc80950ecbd71e1a315582d9.jar" />
+    </item>
+    <item
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.6.0/a7537446a030da8eb0da4c71424d16c2589f6c4a/glide-3.6.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a7537446a030da8eb0da4c71424d16c2589f6c4a">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/glide-3.6.0-c93c4171e627bd523ab53cd459bb7fd821e4aabd.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-0ab5e039b2aedbff0413389aac91a7db1a0d3632.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/net.yazeed44.imagepicker/imagepicker/1.1.1/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="14a245f0283e06299d10165af5b5cfd6cb61db44">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-0926ef857277028ff8e3544d204c4f80d76ceb3f.jar" />
     </item>
 
 </items>

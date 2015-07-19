@@ -20,14 +20,12 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +50,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.AddPhotoFragment;
+import org.ecomap.android.app.fragments.AddPhotoLibFragment;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
@@ -264,10 +264,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case NAV_DETAILS:
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = AddPhotoLibFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
-                    fragment = new MockFragment();
+                    fragment = new AddPhotoLibFragment();
                 }
                 break;
             case NAV_LOGIN:
@@ -287,10 +287,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             default:
-                tag = MockFragment.class.getSimpleName();
+                tag = AddPhotoFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
-                    fragment = new MockFragment();
+                    fragment = new AddPhotoFragment();
                 }
                 break;
         }

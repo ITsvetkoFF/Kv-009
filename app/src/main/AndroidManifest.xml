@@ -57,9 +57,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ProblemDetailsActivity" />
         </activity>
-
-
-
         <provider
             android:name=".data.EcoMapProvider"
             android:authorities="org.ecomap.android.app.data" />
