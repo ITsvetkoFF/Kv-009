@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by yridk_000 on 15.07.2015.
+ * Created by y.ridkous@gmail.com on 15.07.2015.
  */
 public class ProblemPhotoEntry implements Parcelable {
     private final String title;

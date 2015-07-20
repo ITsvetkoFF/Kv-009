@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Created by yridk_000 on 15.07.2015.
+ * Created by y.ridkous@gmail.com on 15.07.2015.
  */
 public class CommentEntry {
 

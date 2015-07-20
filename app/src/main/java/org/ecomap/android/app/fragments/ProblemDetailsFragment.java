@@ -44,13 +44,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Created by yridk_000 on 24.06.2015.
+ * Created by y.ridkous@gmail.com on 24.06.2015.
  */
 public class ProblemDetailsFragment extends Fragment {
 
     public static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
-    private List<String> mImagesURLArray;
+    private static final int PROBLEM_NUMBER = 185;
+
     public ImageAdapter imgAdapter;
+    private List<String> mImagesURLArray;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,18 +67,18 @@ public class ProblemDetailsFragment extends Fragment {
 
         FragmentManager chFm = getChildFragmentManager();
         Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
-        if (f == null){
+        if (f == null) {
             f = CommentsFragment.newInstance();
         }
         chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) rootView.findViewById(R.id.gridview);
         gridview.setExpanded(true);
+
         imgAdapter = new ImageAdapter(getActivity(), new ArrayList<ProblemPhotoEntry>());
         gridview.setAdapter(imgAdapter);
 
         final ScrollView mScrollView = (ScrollView) rootView.findViewById(R.id.details_scrollview);
-
         mScrollView.post(new Runnable() {
             public void run() {
                 mScrollView.scrollTo(0, 0);
@@ -112,7 +114,7 @@ public class ProblemDetailsFragment extends Fragment {
             this.options = new DisplayImageOptions.Builder()
                     //.showImageOnLoading(R.drawable.ic_stub)
                     .showImageForEmptyUri(R.drawable.ic_empty)
-                    //.showImageOnFail(R.drawable.ic_action_refresh)
+                            //.showImageOnFail(R.drawable.ic_action_refresh)
                     .cacheInMemory(true)
                     .cacheOnDisk(true)
                     .considerExifParams(true)
@@ -146,15 +148,22 @@ public class ProblemDetailsFragment extends Fragment {
         // create a new ImageView for each item referenced by the Adapter
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+
             final ViewHolder holder;
             View view = convertView;
+
             if (view == null) {
+
                 view = inflater.inflate(R.layout.item_image_grid, parent, false);
                 holder = new ViewHolder();
+
                 assert view != null;
+
                 holder.imageView = (ImageView) view.findViewById(R.id.image);
                 holder.progressBar = (ProgressBar) view.findViewById(R.id.progress);
+
                 view.setTag(holder);
+
             } else {
                 holder = (ViewHolder) view.getTag();
             }
@@ -168,18 +177,24 @@ public class ProblemDetailsFragment extends Fragment {
                         Intent intent = new Intent(mContext, ViewPhotosActivity.class);
                         intent.putExtra(ViewPhotosActivity.IMAGE_POSITION, position);
                         intent.putExtra(ViewPhotosActivity.PHOTO_ENTRY, mImagesURLArray.toArray(new ProblemPhotoEntry[mImagesURLArray.size()]));
-
                         mContext.startActivity(intent);
                     }
                 });
 
-                //holder.txtImgCaption.setText(problemPhotoEntry.getCaption());
+
+                /* On case they will change naming logic again
                 String[] imgName = problemPhotoEntry.getImgURL().split("\\.");
                 final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
+                */
 
-                ImageLoader
-                        .getInstance()
-                        .displayImage(imgURL, holder.imageView, options, new SimpleImageLoadingListener() {
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + problemPhotoEntry.getImgURL();
+
+                ImageLoader imageLoader = ImageLoader.getInstance();
+                imageLoader.displayImage(
+                        imgURL,
+                        holder.imageView,
+                        options,
+                        new SimpleImageLoadingListener() {
                             @Override
                             public void onLoadingStarted(String imageUri, View view) {
                                 holder.progressBar.setProgress(0);
@@ -195,7 +210,8 @@ public class ProblemDetailsFragment extends Fragment {
                             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                                 holder.progressBar.setVisibility(View.GONE);
                             }
-                        }, new ImageLoadingProgressListener() {
+                        },
+                        new ImageLoadingProgressListener() {
                             @Override
                             public void onProgressUpdate(String imageUri, View view, int current, int total) {
                                 holder.progressBar.setProgress(Math.round(100.0f * current / total));
@@ -208,14 +224,13 @@ public class ProblemDetailsFragment extends Fragment {
         static class ViewHolder {
             ImageView imageView;
             ProgressBar progressBar;
-            //TextView txtImgCaption;
         }
 
     }
 
     private class AsyncGetPhotos extends AsyncTask<Void, Void, List<ProblemPhotoEntry>> {
 
-        private static final String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + 1 + "/photos";
+        private static final String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + PROBLEM_NUMBER + "/photos";
         private final String LOG_TAG = AsyncGetPhotos.class.getSimpleName();
 
         String JSONStr = null;
@@ -307,15 +322,7 @@ public class ProblemDetailsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<ProblemPhotoEntry> imgagesArray) {
-            //super.onPostExecute(aVoid);
-//            final String[] IMAGE_URLS = {
-//                    "http://ecomap.org/photos/large/3d9ea5059b037de3f5ad962b11d5d3a9.JPG",
-//                    "http://ecomap.org/photos/large/e6540e335f4e74eb605bcc2ca9f6f8a5.JPG",
-//                    "http://ecomap.org/photos/large/ec8392de123deac7c17be81f976d1ee8.jpg",
-//                    "http://176.36.11.25:8000/static/thumbnails/mslofn.thumbnail.jpeg"};
-
             imgAdapter.updateDataSet(imgagesArray);
-
         }
     }
 
