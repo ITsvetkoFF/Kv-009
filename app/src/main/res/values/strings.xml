@@ -22,10 +22,13 @@
     <string name="action_details">Details</string>
     <string name="action_update">Update</string>
     <string name="title_activity_problem_details">ProblemDetailsActivity</string>
+    <string name="title_activity_profile">Profile</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="gridview_img_description">Image</string>
     <string name="title_activity_view_photos">Problem\'s photos</string>
+
+    <string name="shared_preferences_title">ecomap</string>
 
     <string name="hello_world">Hello world!</string>
 
@@ -54,5 +57,7 @@
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
     <string name="message_you_are_loged">You are already logged in</string>
+
+    <string name="facebook_app_id">428789340644097</string>
 
 </resources>

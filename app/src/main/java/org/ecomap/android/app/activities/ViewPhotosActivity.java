@@ -29,7 +29,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.ProblemDetailsFragment.ProblemPhotoEntry;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.ui.components.ZoomableImageView;
 
