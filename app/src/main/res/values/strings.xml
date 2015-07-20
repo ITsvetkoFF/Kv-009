@@ -82,15 +82,6 @@
     <string name="string_unsolved">unsolved</string>
     <!---->
 
-
-
-    <!-- Accessibility content descriptions block-->
-    <string name="user_avatar">User avatar</string>
-    <string name="write_comment">Write a comment…</string>
-    <string name="button_send_comment_caption">Post</string>
-    <string name="message_write_something_to_post">Write something to post</string>
-    <!---->
-
     <string name="facebook_app_id">428789340644097</string>
 
 </resources>

@@ -148,10 +148,6 @@ public class CommentsFragment extends Fragment {
         lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute(mProblem.getId());
 
-        lstComments.setAdapter(mCommentsAdapter);
-        new AsyncRequestComments().execute();
->>>>>>> master
-
         return mRootView;
     }
 
@@ -280,11 +276,6 @@ public class CommentsFragment extends Fragment {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             List<CommentEntry> ret = new ArrayList<CommentEntry>();
-
-            HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
-            List<CommentEntry> ret = new ArrayList<>();
->>>>>>> master
 
             try {
                 // Getting input stream from URL

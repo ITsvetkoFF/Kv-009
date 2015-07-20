@@ -360,10 +360,10 @@ public class EcoMapFragment extends Fragment {
 
                     //ADDING PROBLEM VIA FLOATING ACTION BUTTON
 
-                } else if (markerClickType == 2){
+                } else if (markerClickType == 2) {
                     //TODO check if user is authorized
                     if (MainActivity.isUserIdSet()) {
-                        if (marker != null){
+                        if (marker != null) {
                             marker.remove();
                         }
                         marker = mMap.addMarker(new MarkerOptions().position(latLng));
@@ -417,7 +417,7 @@ public class EcoMapFragment extends Fragment {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                        /*mMap.getCameraPosition().zoom*/21.0f));
+                        /*mMap.getCameraPosition().zoom*/15.0f));
 
                 //Set Problem object parameters to a view at show problem fragment
                 showTypeImage.setImageResource(problem.getResBigImage());
@@ -462,7 +462,7 @@ public class EcoMapFragment extends Fragment {
                 FragmentManager chFm = getChildFragmentManager();
                 Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
                 //if (f == null) {
-                    f = CommentsFragment.newInstance(problem);
+                f = CommentsFragment.newInstance(problem);
                 //}
                 chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
 
@@ -494,6 +494,13 @@ public class EcoMapFragment extends Fragment {
 
     public static void setMarkerClickType(int type) {
         markerClickType = type;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private class EcoMapReceiver extends BroadcastReceiver {
@@ -529,13 +536,6 @@ public class EcoMapFragment extends Fragment {
                     .bitmapConfig(Bitmap.Config.RGB_565)
                     .build();
         }
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
         /**
          * Update adapter data set
