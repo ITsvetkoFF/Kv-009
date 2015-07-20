@@ -60,14 +60,26 @@
     <string name="prefNumRevision">numRevision</string>
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
+    <string name="problem_type_string_1">Проблемы лесов</string>
+    <string name="problem_type_string_2">Свалка</string>
+    <string name="problem_type_string_3">Незаконное строительство</string>
+    <string name="problem_type_string_4">Проблемы водойомов</string>
+    <string name="problem_type_string_5">Угроза биоразнообразию</string>
+    <string name="problem_type_string_6">Браконьерство</string>
+    <string name="problem_type_string_7">Прочие проблемы</string>
 
 
 
     <!-- Accessibility content descriptions block-->
     <string name="user_avatar">User avatar</string>
-    <string name="write_comment">Write a comment…</string>
+    <string name="write_comment">Write a comment...</string>
     <string name="button_send_comment_caption">Post</string>
     <string name="message_write_something_to_post">Write something to post</string>
+    <string name="message_isLiked">Голос добавлен</string>
+    <string name="message_isAlreadyLiked">Вы уже голосовали за эту проблему</string>
+    <string name="string_suggested_solution">Suggested solution:</string>
+    <string name="string_description">Description:</string>
+    <string name="string_unsolved">unsolved</string>
     <!---->
 
     <string name="facebook_app_id">428789340644097</string>
