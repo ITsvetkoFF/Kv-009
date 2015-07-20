@@ -5,21 +5,26 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.plus.PlusOneButton;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.ui.components.ExpandableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,6 +53,7 @@ public class CommentsFragment extends Fragment {
     public static final String TAG = "CommentsFragment";
 
     private static final String ARG_PROBLEM = "problem";
+    private static final int PROBLEM_NUMBER = 185;
 
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
@@ -60,6 +67,8 @@ public class CommentsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private CommentsAdapter<CommentEntry> mCommentsAdapter;
 
+    private ViewGroup mRootView;
+    private EditText mTxtComment;
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -96,20 +105,49 @@ public class CommentsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_comments, container, false);
+        mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_comments, container, false);
+        ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
+
+        lstComments.setId(R.id.email);
+        lstComments.setExpanded(true);
+        lstComments.setClickable(false);
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.editComment);
+
+        mRootView.addView(lstComments, layoutParams);
 
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
-        ListView lstComments = (ListView) view.findViewById(R.id.lstComments);
-        mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
+        mTxtComment = (EditText) mRootView.findViewById(R.id.editComment);
+        final Button addButton = (Button) mRootView.findViewById(R.id.addCommentButton);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //small validation
+                String comment = mTxtComment.getText().toString();
+                if (!comment.isEmpty() && MainActivity.isUserIsAuthorized()) {
+                    new AsyncSendComment().execute(comment);
+                }
+
+                if(!MainActivity.isUserIsAuthorized()){
+                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
+                }else if(comment.isEmpty()){
+                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_write_something_to_post, Snackbar.LENGTH_SHORT);
+                }
+            }
+        });
+
+        mCommentsAdapter = new CommentsAdapter<CommentEntry>(getActivity(), new ArrayList<CommentEntry>());
 
         lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute();
 
-        return view;
+        return mRootView;
     }
 
     @Override
@@ -148,6 +186,7 @@ public class CommentsFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -159,14 +198,13 @@ public class CommentsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // T O D O: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     private static class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
 
-        private List<T> mCommentsArray;
         private final Context mContext;
+        private List<T> mCommentsArray;
 
         public CommentsAdapter(Context mContext, List<T> commentsArray) {
             this.mContext = mContext;
@@ -192,14 +230,21 @@ public class CommentsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
             if (convertView == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
+                view = LayoutInflater.from(mContext).inflate(R.layout.item_comments_listview, parent, false);
             } else {
                 view = convertView;
             }
 
-            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
-            String text = ((CommentEntry) getItem(position)).getContent();
-            txtListItem.setText(text);
+            view.setClickable(false);
+            final CommentEntry currentItem = getItem(position);
+            if (currentItem != null) {
+
+                final TextView txtUserName = (TextView) view.findViewById(R.id.textUserName);
+                txtUserName.setText(currentItem.getCreatedBy());
+
+                final TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
+                txtListItem.setText(currentItem.getContent());
+            }
 
             return view;
         }
@@ -216,7 +261,7 @@ public class CommentsFragment extends Fragment {
 
     private class AsyncRequestComments extends AsyncTask<Void, Void, List<CommentEntry>> {
 
-        private static final String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + 1 + "/comments";
+        private static final String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments";
         private final String LOG_TAG = AsyncRequestComments.class.getSimpleName();
 
         String JSONStr = null;
@@ -246,7 +291,7 @@ public class CommentsFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
@@ -300,7 +345,7 @@ public class CommentsFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
-            return new ArrayList<CommentEntry>();
+            return new ArrayList<>();
         }
 
 
@@ -308,6 +353,73 @@ public class CommentsFragment extends Fragment {
         protected void onPostExecute(List<CommentEntry> commentsArray) {
             mCommentsAdapter.updateDataSet(commentsArray);
         }
+    }
+
+    private class AsyncSendComment extends AsyncTask<String, Void, Boolean> {
+
+        private final String LOG_TAG = AsyncSendComment.class.getSimpleName();
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            URL url;
+            Boolean result = Boolean.FALSE;
+
+            //validation
+            if (MainActivity.isUserIsAuthorized()) {
+                if (params.length > 0 && params[0] != null && !params[0].isEmpty()) {
+
+                    HttpURLConnection connection = null;
+
+                    try {
+
+                        //creating JSONObject for request
+                        JSONObject request = new JSONObject();
+                        request.put("content", params[0]);
+
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments");
+
+                        connection = (HttpURLConnection) url.openConnection();
+                        //connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        connection.setDoOutput(true);
+                        connection.connect();
+
+                        /**
+                         * sending request
+                         * request.toString() - translate our object into appropriate JSON text
+                         * {
+                         *      "content": "your comment"
+                         * }
+                         */
+                        OutputStream outputStream = connection.getOutputStream();
+                        outputStream.write(request.toString().getBytes("UTF-8"));
+
+                        //handling result from server
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            result = Boolean.TRUE;
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    } finally {
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            if (result) {
+                new AsyncRequestComments().execute();
+                mTxtComment.setText("");
+            }
+        }
+
     }
 
 

@@ -10,7 +10,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 
 /**
- * Created by yridk_000 on 15.07.2015.
+ * Created by y.ridkous@gmail.com on 15.07.2015.
  */
 public class SerializableUriCookiePair implements Serializable {
 

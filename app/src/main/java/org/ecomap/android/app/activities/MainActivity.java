@@ -20,9 +20,12 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -49,7 +52,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
@@ -93,32 +95,113 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
-    private DrawerLayout mDrawerLayout;
-    private static ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private static String[] mScreenTitles;
-    private Toolbar toolbar;
-
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
     public static final int NAV_PROFILE = 5;
-
-    private static String userId;
-    private static boolean userIsAuthorized = false;
-
-    public static CookieManager cookieManager;
-
     public final static String FIRST_NAME_KEY = "firstName";
     public final static String LAST_NAME_KEY = "lastName";
     public final static String EMAIL_KEY = "email";
     public final static String ROLE_KEY = "role";
     public final static String PASSWORD_KEY = "password";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    public static CookieManager cookieManager;
+    private static ListView mDrawerList;
+    private static String[] mScreenTitles;
+    private static String userId;
+    private static boolean userIsAuthorized = false;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private Toolbar toolbar;
+
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        MainActivity.userId = userId;
+    }
+
+    public static boolean isUserIdSet() {
+        return userId != null;
+    }
+
+    public static boolean isEmailValid(CharSequence email) {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
+    }
+
+    public static boolean isUserIsAuthorized() {
+        return userIsAuthorized || getUserId() != null;
+    }
+
+    public static void setUserIsAuthorized(boolean userIsAuthorized) {
+        MainActivity.userIsAuthorized = userIsAuthorized;
+    }
+
+    public static void changeAuthorizationState() {
+        if (isUserIdSet()) {
+            mScreenTitles[5] = "Profile";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            mScreenTitles[5] = "Login";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * SnackBar stencils
+     *
+     * @param context
+     * @param view
+     * @param message
+     * @param duration
+     * @param backgroundColor
+     */
+    private static void showSnackBar(Context context, View view, String message, int duration, int backgroundColor) {
+        Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(backgroundColor));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+    }
+
+    /**
+     * Overrides showInfoSnackBar in order to use strings from xml
+     */
+    public static void showInfoSnackBar(Context context, View view, int messageResource, int duration) {
+        showInfoSnackBar(context, view, context.getString(messageResource), duration);
+    }
+
+    //Shows information snack bar
+    public static void showInfoSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarInfo);
+    }
+
+    public static void showWarningSnackBar(Context context, View view, int messageResource, int duration) {
+        showWarningSnackBar(context, view, context.getString(messageResource), duration);
+    }
+
+    //Shows warning snack bar
+    public static void showWarningSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarWarning);
+    }
+
+    public static void showSuccessSnackBar(Context context, View view, int messageResource, int duration) {
+        showSuccessSnackBar(context, view, context.getString(messageResource), duration);
+    }
+
+    //Shows success snack bar
+    public static void showSuccessSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarSuccess);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,24 +262,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static public boolean isUserIdSet() {
-        return userId != null;
-    }
-
-    private void initUserIdFromCookies() {
-        CookieStore cookieStore = cookieManager.getCookieStore();
-        try {
-            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
-            for (HttpCookie cookie : cookies) {
-                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
-                    setUserId(cookie.getValue());
-                }
-            }
-        } catch (URISyntaxException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -224,8 +289,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_details:
                 // create intent to perform web search for this planet
-                Intent intent = new Intent(this, ProblemDetailsActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(this, ProblemDetailsActivity.class);
+//                startActivity(intent);
                 return true;
             case R.id.action_add_polygon:
                 EcoMapFragment.setMarkerClickType(1);
@@ -242,9 +307,9 @@ public class MainActivity extends AppCompatActivity {
     private void selectItem(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment;
+        Fragment fragment = null;
         boolean stop = false;
-        String tag;
+        String tag = null;
 
         switch (position) {
             case NAV_MAP:
@@ -260,26 +325,32 @@ public class MainActivity extends AppCompatActivity {
                 if(fragment == null) {
                     fragment = new FiltersFragment();
                 }*/
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
             case NAV_DETAILS:
-                tag = AddProblemFragment.class.getSimpleName();
+                tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
                     fragment = new MockFragment();
                 }
                 break;
             case NAV_PROFILE:
-                if (isUserIdSet()){
+                if (isUserIdSet()) {
                     tag = LoginFragment.class.getSimpleName();
                     fragment = fragmentManager.findFragmentByTag(tag);
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
+                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
+                    TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);//change Snackbar's text color;
+                    snackbar.show();
 
                     break;
                 } else {
@@ -303,14 +374,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!stop) {
-            Bundle args = new Bundle();
-            args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
-            fragment.setArguments(args);
+
+            if (fragment.getClass() == MockFragment.class && fragment.getArguments() == null) {
+                Bundle args = new Bundle();
+                args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
+                fragment.setArguments(args);
+            }
 
             //Main magic happens here
-            fragmentManager.beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.content_frame, fragment).commit();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.content_frame, fragment, tag).commit();
 
         }
         // update selected item and title, then close the drawer
@@ -348,6 +422,24 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    /**
+     * Sets logged in user id from COOKIE_USER_ID if cookieStore has it
+     */
+    private void initUserIdFromCookies() {
+        CookieStore cookieStore = cookieManager.getCookieStore();
+        try {
+            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
+            for (HttpCookie cookie : cookies) {
+                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
+                    setUserId(cookie.getValue());
+                }
+            }
+        } catch (URISyntaxException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
     }
 
     /**
@@ -440,32 +532,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static void setUserId(String userId) {
-        MainActivity.userId = userId;
-    }
-
-    public static boolean isEmailValid(CharSequence email) {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-
-    }
-
-    public static boolean isUserIsAuthorized() {
-        return userIsAuthorized;
-    }
-
-    public static void changeAuthorizationState(){
-        if (isUserIdSet()){
-            mScreenTitles[5] = "Profile";
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
-        } else {
-            mScreenTitles[5] = "Login";
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
-        }
-    }
 }
 
 
