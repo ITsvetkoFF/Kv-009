@@ -20,14 +20,11 @@ package org.ecomap.android.app.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -99,25 +96,29 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
+    private static ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mScreenTitles;
+    private static String[] mScreenTitles;
     private Toolbar toolbar;
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
-    public static final int NAV_LOGIN = 5;
+    public static final int NAV_PROFILE = 5;
 
-    private static String userFirstName;
-    private static String userSecondName;
     private static String userId;
     private static boolean userIsAuthorized = false;
 
     public static CookieManager cookieManager;
+
+    public final static String FIRST_NAME_KEY = "firstName";
+    public final static String LAST_NAME_KEY = "lastName";
+    public final static String EMAIL_KEY = "email";
+    public final static String ROLE_KEY = "role";
+    public final static String PASSWORD_KEY = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        changeAuthorizationState();
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -219,11 +222,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            /*case R.id.action_details:
+            case R.id.action_details:
                 // create intent to perform web search for this planet
                 Intent intent = new Intent(this, ProblemDetailsActivity.class);
                 startActivity(intent);
-                return true;*/
+                return true;
             case R.id.action_add_polygon:
                 EcoMapFragment.setMarkerClickType(1);
                 return true;
@@ -270,21 +273,25 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MockFragment();
                 }
                 break;
-            case NAV_LOGIN:
-                tag = LoginFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (isUserIdSet()) {
+            case NAV_PROFILE:
+                if (isUserIdSet()){
+                    tag = LoginFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+
+                    startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_loged), Snackbar.LENGTH_SHORT);
-                    View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                    snackbar.show();
+
+                    break;
                 } else {
+                    tag = LoginFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+
                     if (fragment == null) {
                         new LoginFragment().show(fragmentManager, "login_layout");
                         stop = true;
                     }
                 }
+
                 break;
             default:
                 tag = MockFragment.class.getSimpleName();
@@ -433,26 +440,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static String getUserFirstName() {
-        return userFirstName;
-    }
-
-    public static void setUserFirstName(String userFirstName) {
-        MainActivity.userFirstName = userFirstName;
-    }
-
-    public static String getUserSecondName() {
-        return userSecondName;
-    }
-
-    public static void setUserSecondName(String userSecondName) {
-        MainActivity.userSecondName = userSecondName;
-    }
-
-    public static String getUserId() {
-        return userId;
-    }
-
     public static void setUserId(String userId) {
         MainActivity.userId = userId;
     }
@@ -466,10 +453,19 @@ public class MainActivity extends AppCompatActivity {
         return userIsAuthorized;
     }
 
-    public static void setUserIsAuthorized(boolean userIsAuthorized) {
-        MainActivity.userIsAuthorized = userIsAuthorized;
-    }
+    public static void changeAuthorizationState(){
+        if (isUserIdSet()){
+            mScreenTitles[5] = "Profile";
 
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            mScreenTitles[5] = "Login";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        }
+    }
 }
 
 
