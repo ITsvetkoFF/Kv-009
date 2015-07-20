@@ -57,7 +57,7 @@ public class Profile extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder alert = new AlertDialog.Builder(Profile.this);
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
