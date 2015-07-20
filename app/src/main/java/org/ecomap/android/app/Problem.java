@@ -196,6 +196,7 @@ public class Problem implements ClusterItem, Parcelable {
         return mPos;
     }
 
+    
     protected Problem(Parcel in) {
         mPos = (LatLng) in.readValue(LatLng.class.getClassLoader());
         mTitle = in.readString();

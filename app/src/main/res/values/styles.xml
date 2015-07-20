@@ -27,6 +27,10 @@
     <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
 
+    <color name="snackBarInfo">#2196F3</color>
+    <color name="snackBarSuccess">@color/primary</color>
+    <color name="snackBarWarning">@color/accent</color>
+
     <!-- Base application theme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorAccent">@color/accent</item>

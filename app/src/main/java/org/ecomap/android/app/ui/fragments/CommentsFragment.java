@@ -53,6 +53,7 @@ public class CommentsFragment extends Fragment {
     public static final String TAG = "CommentsFragment";
 
     private static final String ARG_PROBLEM = "problem";
+
     private static int PROBLEM_NUMBER = 185;
 
     // The request code must be 0 or greater.
@@ -147,6 +148,10 @@ public class CommentsFragment extends Fragment {
         lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute(mProblem.getId());
 
+        lstComments.setAdapter(mCommentsAdapter);
+        new AsyncRequestComments().execute();
+>>>>>>> master
+
         return mRootView;
     }
 
@@ -236,7 +241,9 @@ public class CommentsFragment extends Fragment {
             }
 
             view.setClickable(false);
+
             final CommentEntry currentItem = (CommentEntry) getItem(position);
+
             if (currentItem != null) {
 
                 final TextView txtUserName = (TextView) view.findViewById(R.id.textUserName);
@@ -274,6 +281,11 @@ public class CommentsFragment extends Fragment {
             BufferedReader reader = null;
             List<CommentEntry> ret = new ArrayList<CommentEntry>();
 
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            List<CommentEntry> ret = new ArrayList<>();
+>>>>>>> master
+
             try {
                 // Getting input stream from URL
 
@@ -292,7 +304,7 @@ public class CommentsFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {

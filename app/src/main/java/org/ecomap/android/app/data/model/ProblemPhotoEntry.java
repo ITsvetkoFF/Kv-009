@@ -3,9 +3,7 @@ package org.ecomap.android.app.data.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by yridk_000 on 15.07.2015.
- */
+
 public class ProblemPhotoEntry implements Parcelable {
     private final String title;
     private final String imgURL;

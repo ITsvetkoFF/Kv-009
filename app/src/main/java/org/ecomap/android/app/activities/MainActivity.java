@@ -97,28 +97,113 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private String[] mScreenTitles;
-    private Toolbar toolbar;
-
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
-    public static final int NAV_LOGIN = 5;
-
-    private static String userFirstName;
-    private static String userSecondName;
+    public static final int NAV_PROFILE = 5;
+    public final static String FIRST_NAME_KEY = "firstName";
+    public final static String LAST_NAME_KEY = "lastName";
+    public final static String EMAIL_KEY = "email";
+    public final static String ROLE_KEY = "role";
+    public final static String PASSWORD_KEY = "password";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    public static CookieManager cookieManager;
+    private static ListView mDrawerList;
+    private static String[] mScreenTitles;
     private static String userId;
     private static boolean userIsAuthorized = false;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private Toolbar toolbar;
 
-    public static CookieManager cookieManager;
+    public static String getUserId() {
+        return userId;
+    }
+
+    public static void setUserId(String userId) {
+        MainActivity.userId = userId;
+    }
+
+    public static boolean isUserIdSet() {
+        return userId != null;
+    }
+
+    public static boolean isEmailValid(CharSequence email) {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
+    }
+
+    public static boolean isUserIsAuthorized() {
+        return userIsAuthorized || getUserId() != null;
+    }
+
+    public static void setUserIsAuthorized(boolean userIsAuthorized) {
+        MainActivity.userIsAuthorized = userIsAuthorized;
+    }
+
+    public static void changeAuthorizationState() {
+        if (isUserIdSet()) {
+            mScreenTitles[5] = "Profile";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            mScreenTitles[5] = "Login";
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * SnackBar stencils
+     *
+     * @param context
+     * @param view
+     * @param message
+     * @param duration
+     * @param backgroundColor
+     */
+    private static void showSnackBar(Context context, View view, String message, int duration, int backgroundColor) {
+        Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(backgroundColor));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        snackbar.show();
+    }
+
+    /**
+     * Overrides showInfoSnackBar in order to use strings from xml
+     */
+    public static void showInfoSnackBar(Context context, View view, int messageResource, int duration) {
+        showInfoSnackBar(context, view, context.getString(messageResource), duration);
+    }
+
+    //Shows information snack bar
+    public static void showInfoSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarInfo);
+    }
+
+    public static void showWarningSnackBar(Context context, View view, int messageResource, int duration) {
+        showWarningSnackBar(context, view, context.getString(messageResource), duration);
+    }
+
+    //Shows warning snack bar
+    public static void showWarningSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarWarning);
+    }
+
+    public static void showSuccessSnackBar(Context context, View view, int messageResource, int duration) {
+        showSuccessSnackBar(context, view, context.getString(messageResource), duration);
+    }
+
+    //Shows success snack bar
+    public static void showSuccessSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarSuccess);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mScreenTitles));
-
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -173,26 +257,10 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        changeAuthorizationState();
+
         if (savedInstanceState == null) {
             selectItem(0);
-        }
-    }
-
-    static public boolean isUserIdSet() {
-        return userId != null;
-    }
-
-    private void initUserIdFromCookies() {
-        CookieStore cookieStore = cookieManager.getCookieStore();
-        try {
-            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
-            for (HttpCookie cookie : cookies) {
-                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
-                    setUserId(cookie.getValue());
-                }
-            }
-        } catch (URISyntaxException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
         }
     }
 
@@ -221,11 +289,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            /*case R.id.action_details:
+            case R.id.action_details:
                 // create intent to perform web search for this planet
-                Intent intent = new Intent(this, ProblemDetailsActivity.class);
-                startActivity(intent);
-                return true;*/
+//                Intent intent = new Intent(this, ProblemDetailsActivity.class);
+//                startActivity(intent);
+                return true;
             case R.id.action_add_polygon:
                 EcoMapFragment.setMarkerClickType(1);
                 return true;
@@ -272,23 +340,31 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MockFragment();
                 }
                 break;
-            case NAV_LOGIN:
-                tag = LoginFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
+            case NAV_PROFILE:
                 if (isUserIdSet()) {
+                    tag = LoginFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+
+                    startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
                     Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
-                    TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setTextColor(Color.WHITE);//change Snackbar's text color;
                     snackbar.show();
+
+                    break;
                 } else {
+                    tag = LoginFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+
                     if (fragment == null) {
                         new LoginFragment().show(fragmentManager, "login_layout");
                         stop = true;
                     }
                 }
+
                 break;
             default:
                 tag = MockFragment.class.getSimpleName();
@@ -300,8 +376,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!stop) {
-            
-            if(fragment.getClass() == MockFragment.class && fragment.getArguments() == null) {
+
+            if (fragment.getClass() == MockFragment.class && fragment.getArguments() == null) {
                 Bundle args = new Bundle();
                 args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
                 fragment.setArguments(args);
@@ -348,6 +424,24 @@ public class MainActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    /**
+     * Sets logged in user id from COOKIE_USER_ID if cookieStore has it
+     */
+    private void initUserIdFromCookies() {
+        CookieStore cookieStore = cookieManager.getCookieStore();
+        try {
+            List<HttpCookie> cookies = cookieStore.get(new URI(EcoMapAPIContract.ECOMAP_SERVER_URL));
+            for (HttpCookie cookie : cookies) {
+                if (cookie.getName().equals(EcoMapAPIContract.COOKIE_USER_ID)) {
+                    setUserId(cookie.getValue());
+                }
+            }
+        } catch (URISyntaxException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
     }
 
     /**
@@ -438,56 +532,6 @@ public class MainActivity extends AppCompatActivity {
             return view;
             //super.getView(position, convertView, parent);
         }
-    }
-
-    public static String getUserFirstName() {
-        return userFirstName;
-    }
-
-    public static void setUserFirstName(String userFirstName) {
-        MainActivity.userFirstName = userFirstName;
-    }
-
-    public static String getUserSecondName() {
-        return userSecondName;
-    }
-
-    public static void setUserSecondName(String userSecondName) {
-        MainActivity.userSecondName = userSecondName;
-    }
-
-    public static String getUserId() {
-        return userId;
-    }
-
-    public static void setUserId(String userId) {
-        MainActivity.userId = userId;
-    }
-
-    public static boolean isEmailValid(CharSequence email) {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-
-    }
-
-    public static boolean isUserIsAuthorized() {
-        return userIsAuthorized || getUserId() != null;
-    }
-
-    public static void setUserIsAuthorized(boolean userIsAuthorized) {
-        MainActivity.userIsAuthorized = userIsAuthorized;
-    }
-
-    public static void showInfoSnackBar(Context context, View view, int messageResourse, int duration){
-        showInfoSnackBar(context, view, context.getString(messageResourse), duration);
-    }
-    public static void showInfoSnackBar(Context context, View view, String message, int duration){
-        Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.primary));
-        TextView textView = (TextView)snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE);
-        snackbar.show();
-
     }
 
 }

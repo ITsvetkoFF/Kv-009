@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -122,7 +124,6 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -294,9 +295,13 @@ public class EcoMapFragment extends Fragment {
 
     private void setUpMap() {
 
-        //Start service to get a new number of revision and new data
-        Intent intent = new Intent(this.getActivity(), EcoMapService.class);
-        getActivity().startService(intent);
+        if (isNetworkAvailable()) {
+            //Start service to get a new number of revision and new data
+            Intent intent = new Intent(this.getActivity(), EcoMapService.class);
+            getActivity().startService(intent);
+        } else {
+            fillMap();
+        }
 
     }
 
@@ -412,7 +417,7 @@ public class EcoMapFragment extends Fragment {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                        mMap.getCameraPosition().zoom));
+                        /*mMap.getCameraPosition().zoom*/21.0f));
 
                 //Set Problem object parameters to a view at show problem fragment
                 showTypeImage.setImageResource(problem.getResBigImage());
@@ -524,6 +529,13 @@ public class EcoMapFragment extends Fragment {
                     .bitmapConfig(Bitmap.Config.RGB_565)
                     .build();
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 
         /**
          * Update adapter data set

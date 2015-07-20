@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by y.ridkous@gmail.com on 14.07.2015.
+ * Created by yridktc on 14.07.2015.
  * based on
  * https://github.com/loopj/android-async-http/blob/master/library/src/main/java/com/loopj/android/http/PersistentCookieStore.java#L44
  */
@@ -63,7 +63,7 @@ public class PersistentCookieStore implements CookieStore {
     /**
      * Add a cookie to persistent store
      * @param uri - cookie URI
-     * @param cookie
+     * @param cookie - http cookie object
      */
     public void	add(URI uri, HttpCookie cookie) {
         store.add(uri, cookie);
@@ -74,7 +74,7 @@ public class PersistentCookieStore implements CookieStore {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(COOKIE_NAME_STORE, getInlineCookiesNames());
         prefsWriter.putString(COOKIE_NAME_PREFIX + name, encodeCookie(new SerializableUriCookiePair(uri, cookie)));
-        prefsWriter.commit();
+        prefsWriter.apply();
 
     }
 
@@ -98,7 +98,7 @@ public class PersistentCookieStore implements CookieStore {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.remove(COOKIE_NAME_PREFIX + name);
         prefsWriter.putString(COOKIE_NAME_STORE, getInlineCookiesNames());
-        prefsWriter.commit();
+        prefsWriter.apply();
 
         return b;
     }
@@ -115,7 +115,7 @@ public class PersistentCookieStore implements CookieStore {
         }
 
         prefsWriter.remove(COOKIE_NAME_STORE);
-        prefsWriter.commit();
+        prefsWriter.apply();
 
         return store.removeAll();
     }
@@ -145,7 +145,7 @@ public class PersistentCookieStore implements CookieStore {
      * Returns cookie decoded from cookie string
      *
      * @param cookieString string of cookie as returned from http request
-     * @return decoded cookie or null if exception occured
+     * @return decoded cookie or null if exception occurred
      */
     protected Pair<URI, HttpCookie> decodeCookie(String cookieString) {
         byte[] bytes = hexStringToByteArray(cookieString);
@@ -199,7 +199,7 @@ public class PersistentCookieStore implements CookieStore {
 
     /**
      * Using for
-     * @return comma separeted string with cookies names
+     * @return comma separated string with cookies names
      */
     private String getInlineCookiesNames(){
 
@@ -214,7 +214,7 @@ public class PersistentCookieStore implements CookieStore {
             } else {
                 sCookiesNames.append(",");
             }
-            sCookiesNames.append(token.getName() + token.getDomain());
+            sCookiesNames.append(token.getName()).append(token.getDomain());
         }
 
         return sCookiesNames.toString();

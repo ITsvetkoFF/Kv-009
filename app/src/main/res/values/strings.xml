@@ -22,12 +22,15 @@
     <string name="action_details">Details</string>
     <string name="action_update">Update</string>
     <string name="title_activity_problem_details">ProblemDetailsActivity</string>
+    <string name="title_activity_profile">Profile</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="gridview_img_description">Image</string>
     <string name="title_activity_view_photos">Problem\'s photos</string>
 
     <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
+
+    <string name="shared_preferences_title">ecomap</string>
 
     <string name="hello_world">Hello world!</string>
 
@@ -78,5 +81,16 @@
     <string name="string_description">Description:</string>
     <string name="string_unsolved">unsolved</string>
     <!---->
+
+
+
+    <!-- Accessibility content descriptions block-->
+    <string name="user_avatar">User avatar</string>
+    <string name="write_comment">Write a comment…</string>
+    <string name="button_send_comment_caption">Post</string>
+    <string name="message_write_something_to_post">Write something to post</string>
+    <!---->
+
+    <string name="facebook_app_id">428789340644097</string>
 
 </resources>
