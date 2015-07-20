@@ -72,6 +72,11 @@
     <string name="write_comment">Write a comment...</string>
     <string name="button_send_comment_caption">Post</string>
     <string name="message_write_something_to_post">Write something to post</string>
+    <string name="message_isLiked">Голос добавлен</string>
+    <string name="message_isAlreadyLiked">Вы уже голосовали за эту проблему</string>
+    <string name="string_suggested_solution">Suggested solution:</string>
+    <string name="string_description">Description:</string>
+    <string name="string_unsolved">unsolved</string>
     <!---->
 
 </resources>

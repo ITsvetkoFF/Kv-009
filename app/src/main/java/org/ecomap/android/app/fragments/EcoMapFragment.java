@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -68,6 +69,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -437,9 +439,15 @@ public class EcoMapFragment extends Fragment {
                         if (!problem.isLiked()) {
                             problem.setNumberOfLikes(1);
                             problem.setLiked(true);
+
+                            new AsyncAddVote().execute(problem.getId());
+
+                            Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+
                         } else if (problem.isLiked()) {
-                            problem.setNumberOfLikes(-1);
-                            problem.setLiked(false);
+                            //problem.setNumberOfLikes(-1);
+                            //problem.setLiked(false);
+                            Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
                         }
                         showNumOfLikes.setText(problem.getNumberOfLikes());
                     }
@@ -723,6 +731,67 @@ public class EcoMapFragment extends Fragment {
         }
     }
 
+    private class AsyncAddVote extends AsyncTask<Integer, Void, Boolean> {
+
+        private final String LOG_TAG = AsyncAddVote.class.getSimpleName();
+        private Integer problem_id;
+
+        @Override
+        protected Boolean doInBackground(Integer... params) {
+            URL url = null;
+            Boolean result = Boolean.FALSE;
+            problem_id = params[0];
+
+            //validation
+            if (MainActivity.isUserIsAuthorized()) {
+                if (params.length > 0 && params[0] != null) {
+
+                    HttpURLConnection connection = null;
+
+                    try {
+
+                        //creating JSONObject for request
+                        JSONObject request = new JSONObject();
+                        request.put("content", params[0]);
+
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problem_id + "/vote");
+
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        connection.setDoOutput(true);
+                        connection.connect();
+
+                        /**
+                         * sending request
+                         * request.toString() - translate our object into appropriate JSON text
+                         * {
+                         *      "content": "your comment"
+                         * }
+                         */
+                        //OutputStream outputStream = connection.getOutputStream();
+                        //outputStream.write(request.toString().getBytes("UTF-8"));
+
+                        //handling result from server
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            result = Boolean.TRUE;
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    } finally {
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+    }
 
 }
 

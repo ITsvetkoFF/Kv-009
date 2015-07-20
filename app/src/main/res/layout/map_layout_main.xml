@@ -202,7 +202,7 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/textRed"
-                            android:text="unsolved"
+                            android:text="@string/string_unsolved"
                             android:id="@+id/show_status"
 
                             android:layout_alignParentTop="true"
@@ -213,29 +213,27 @@
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Description:"
+                        android:text="@string/string_description"
                         android:layout_marginTop="32dp" />
 
                     <TextView
                         android:id="@+id/show_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Міське озеро забруднюється сміттям, що призводить до його пересихання, хоча воно є місцем існування багатьох водоплаваючих птахів" />
+                        android:layout_marginTop="6dp"/>
 
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="32dp"
-                        android:text="Suggested solution:" />
+                        android:text="@string/string_suggested_solution" />
 
                     <TextView
                         android:id="@+id/show_proposal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Очищення озера від сміття, просвітницька робота серед населення" />
+                        android:layout_marginTop="6dp" />
 
                     <org.ecomap.android.app.ui.components.ExpandableHeightGridView
                         android:id="@+id/gridview"
