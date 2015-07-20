@@ -113,7 +113,6 @@ public class EcoMapFragment extends Fragment {
     private Marker marker;
 
     public static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
-    private static final int PROBLEM_NUMBER = 185;
 
     public ImageAdapter imgAdapter;
     private List<String> mImagesURLArray;
@@ -121,8 +120,6 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        new AsyncGetPhotos().execute();
 
     }
 
@@ -203,7 +200,7 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        cancelButton=(Button)v.findViewById(R.id.button_cancel);
+        cancelButton = (Button)v.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,13 +218,6 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
         showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
-
-        FragmentManager chFm = getChildFragmentManager();
-        Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
-        if (f == null) {
-            f = CommentsFragment.newInstance();
-        }
-        chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -455,6 +445,17 @@ public class EcoMapFragment extends Fragment {
                     }
                 });
 
+                //comments
+                FragmentManager chFm = getChildFragmentManager();
+                Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
+                //if (f == null) {
+                    f = CommentsFragment.newInstance(problem);
+                //}
+                chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
+
+                //photos
+                new AsyncGetPhotos().execute(problem.getId());
+
                 //Set part of sliding layer visible
                 slidingLayer.setPreviewOffsetDistance(showHead.getHeight());
                 slidingLayer.openPreview(true);
@@ -622,16 +623,18 @@ public class EcoMapFragment extends Fragment {
 
     }
 
-    private class AsyncGetPhotos extends AsyncTask<Void, Void, List<ProblemPhotoEntry>> {
+    private class AsyncGetPhotos extends AsyncTask<Integer, Integer, List<ProblemPhotoEntry>> {
 
-        private static final String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + PROBLEM_NUMBER + "/photos";
         private final String LOG_TAG = AsyncGetPhotos.class.getSimpleName();
 
         String JSONStr = null;
 
         @Override
-        protected List<ProblemPhotoEntry> doInBackground(Void... params) {
+        protected List<ProblemPhotoEntry> doInBackground(Integer... params) {
 
+            Integer numProblem = params[0];
+
+            String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + numProblem + "/photos";
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             List<ProblemPhotoEntry> ret = new ArrayList<>();

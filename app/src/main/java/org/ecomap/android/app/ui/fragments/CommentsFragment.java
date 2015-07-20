@@ -53,7 +53,7 @@ public class CommentsFragment extends Fragment {
     public static final String TAG = "CommentsFragment";
 
     private static final String ARG_PROBLEM = "problem";
-    private static final int PROBLEM_NUMBER = 185;
+    private static int PROBLEM_NUMBER = 185;
 
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
@@ -131,7 +131,7 @@ public class CommentsFragment extends Fragment {
                 //small validation
                 String comment = mTxtComment.getText().toString();
                 if (!comment.isEmpty() && MainActivity.isUserIsAuthorized()) {
-                    new AsyncSendComment().execute(comment);
+                    new AsyncSendComment().execute(comment,String.valueOf(mProblem.getId()));
                 }
 
                 if(!MainActivity.isUserIsAuthorized()){
@@ -145,7 +145,7 @@ public class CommentsFragment extends Fragment {
         mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
 
         lstComments.setAdapter(mCommentsAdapter);
-        new AsyncRequestComments().execute();
+        new AsyncRequestComments().execute(mProblem.getId());
 
         return mRootView;
     }
@@ -259,26 +259,20 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    private class AsyncRequestComments extends AsyncTask<Void, Void, List<CommentEntry>> {
+    private class AsyncRequestComments extends AsyncTask<Integer, Integer, List<CommentEntry>> {
 
-        private static final String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments";
         private final String LOG_TAG = AsyncRequestComments.class.getSimpleName();
 
         String JSONStr = null;
 
         @Override
-        protected List<CommentEntry> doInBackground(Void... params) {
+        protected List<CommentEntry> doInBackground(Integer... params) {
 
+            Integer id = params[0];
+            String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + id + "/comments";
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            List<CommentEntry> ret = new ArrayList<CommentEntry>() {
-                {
-                    add(new CommentEntry("", "", "", "My comment here asdsdas My comment here asdsdas " +
-                            "My comment here asdsdas My comment here asdsdas My comment here asdsdas " +
-                            "My comment here asdsdas My comment here asdsdas My comment here asdsdas " +
-                            "My comment here asdsdas ", "", 0));
-                }
-            };
+            List<CommentEntry> ret = new ArrayList<CommentEntry>();
 
             try {
                 // Getting input stream from URL
@@ -365,11 +359,13 @@ public class CommentsFragment extends Fragment {
     private class AsyncSendComment extends AsyncTask<String, Void, Boolean> {
 
         private final String LOG_TAG = AsyncSendComment.class.getSimpleName();
+        private Integer problem_id;
 
         @Override
         protected Boolean doInBackground(String... params) {
             URL url = null;
             Boolean result = Boolean.FALSE;
+            problem_id = Integer.parseInt(params[1]);
 
             //validation
             if (MainActivity.isUserIsAuthorized()) {
@@ -383,7 +379,7 @@ public class CommentsFragment extends Fragment {
                         JSONObject request = new JSONObject();
                         request.put("content", params[0]);
 
-                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments");
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problem_id + "/comments");
 
                         connection = (HttpURLConnection) url.openConnection();
                         //connection.setRequestMethod("POST");
@@ -422,7 +418,7 @@ public class CommentsFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                new AsyncRequestComments().execute();
+                new AsyncRequestComments().execute(problem_id);
                 mTxtComment.setText("");
             }
         }

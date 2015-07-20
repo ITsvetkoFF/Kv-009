@@ -16,6 +16,7 @@ import org.ecomap.android.app.data.EcoMapContract;
 public class Problem implements ClusterItem, Parcelable {
     LatLng mPos;
 
+    int id;
     String mTitle;
     int type_id;
     int res_id;
@@ -37,6 +38,8 @@ public class Problem implements ClusterItem, Parcelable {
     public Problem(Cursor cursor, Context mContext) {
 
         this.liked = false;
+
+        this.id = cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry._ID));
 
         double latitude = cursor.getDouble(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));
@@ -71,6 +74,10 @@ public class Problem implements ClusterItem, Parcelable {
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER));
 
         chooseIcon();
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getTitle() {
