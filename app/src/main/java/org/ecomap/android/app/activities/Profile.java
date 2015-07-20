@@ -57,7 +57,7 @@ public class Profile extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder alert = new AlertDialog.Builder(Profile.this);
                 alert.setMessage("Do you really want to logout?");
                 alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -86,6 +86,8 @@ public class Profile extends AppCompatActivity {
                 alert.show();
             }
         });
+
+
 
         firstName.setText(sharedPreferences.getString(MainActivity.FIRST_NAME_KEY, ""));
         lastName.setText(sharedPreferences.getString(MainActivity.LAST_NAME_KEY, ""));
