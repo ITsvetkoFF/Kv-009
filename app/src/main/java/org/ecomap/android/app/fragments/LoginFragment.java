@@ -2,6 +2,7 @@ package org.ecomap.android.app.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -97,6 +98,9 @@ public class LoginFragment extends DialogFragment {
             }
         });
 
+
+
+        signIn.setClickable(false);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,11 +180,21 @@ public class LoginFragment extends DialogFragment {
                         reader.close();
 
                         JSONObject data = new JSONObject(responseBody.toString());
-                        MainActivity.setUserFirstName(data.get("first_name").toString());
-                        MainActivity.setUserSecondName(data.get("last_name").toString());
+
+                        SharedPreferences sharedPreferences = getActivity().
+                                getSharedPreferences(getResources().getString(R.string.shared_preferences_title),Context.MODE_PRIVATE);
+                        SharedPreferences.Editor edit = sharedPreferences.edit();
+                        edit.putString(MainActivity.FIRST_NAME_KEY, data.get("first_name").toString());
+                        edit.putString(MainActivity.LAST_NAME_KEY, data.get("last_name").toString());
+                        edit.putString(MainActivity.EMAIL_KEY, params[0]);
+                        edit.putString(MainActivity.PASSWORD_KEY, params[1]);
+                        edit.commit();
+
+
                         MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
 
-                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
+                        resMessage = "Hello " + sharedPreferences.getString(MainActivity.FIRST_NAME_KEY, "")
+                                + " " + sharedPreferences.getString(MainActivity.LAST_NAME_KEY, "") + "!";
 
                     } else {
 

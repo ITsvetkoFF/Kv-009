@@ -52,7 +52,6 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
-import org.ecomap.android.app.fragments.LogoutFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
 
@@ -108,14 +107,18 @@ public class MainActivity extends AppCompatActivity {
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
-    public static final int NAV_LOGIN_LOGOUT = 5;
+    public static final int NAV_PROFILE = 5;
 
-    private static String userFirstName;
-    private static String userSecondName;
     private static String userId;
     private static boolean userIsAuthorized = false;
 
     public static CookieManager cookieManager;
+
+    public final static String FIRST_NAME_KEY = "firstName";
+    public final static String LAST_NAME_KEY = "lastName";
+    public final static String EMAIL_KEY = "email";
+    public final static String ROLE_KEY = "role";
+    public final static String PASSWORD_KEY = "password";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,15 +273,14 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MockFragment();
                 }
                 break;
-            case NAV_LOGIN_LOGOUT:
+            case NAV_PROFILE:
                 if (isUserIdSet()){
-                    tag = LogoutFragment.class.getSimpleName();
+                    tag = LoginFragment.class.getSimpleName();
                     fragment = fragmentManager.findFragmentByTag(tag);
 
-                    if (fragment == null) {
-                        new LogoutFragment().show(fragmentManager, "logout_layout");
-                        stop = true;
-                    }
+                    startActivity(new Intent(getApplicationContext(), Profile.class));
+                    stop = true;
+
                     break;
                 } else {
                     tag = LoginFragment.class.getSimpleName();
@@ -438,26 +440,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static String getUserFirstName() {
-        return userFirstName;
-    }
-
-    public static void setUserFirstName(String userFirstName) {
-        MainActivity.userFirstName = userFirstName;
-    }
-
-    public static String getUserSecondName() {
-        return userSecondName;
-    }
-
-    public static void setUserSecondName(String userSecondName) {
-        MainActivity.userSecondName = userSecondName;
-    }
-
-    public static String getUserId() {
-        return userId;
-    }
-
     public static void setUserId(String userId) {
         MainActivity.userId = userId;
     }
@@ -471,13 +453,9 @@ public class MainActivity extends AppCompatActivity {
         return userIsAuthorized;
     }
 
-    public static void setUserIsAuthorized(boolean userIsAuthorized) {
-        MainActivity.userIsAuthorized = userIsAuthorized;
-    }
-
     public static void changeAuthorizationState(){
         if (isUserIdSet()){
-            mScreenTitles[5] = "Logout";
+            mScreenTitles[5] = "Profile";
 
             ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
             arrayAdapter.notifyDataSetChanged();
@@ -488,7 +466,6 @@ public class MainActivity extends AppCompatActivity {
             arrayAdapter.notifyDataSetChanged();
         }
     }
-
 }
 
 
