@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,9 +48,19 @@ public class ViewPhotosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_view_photo);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         int position = intent.getIntExtra(IMAGE_POSITION, 0);
-        Parcelable[] photoEntries = intent.getParcelableArrayExtra(PHOTO_ENTRY);
+        Parcelable[] photoEntries = (Parcelable[]) intent.getParcelableArrayExtra(PHOTO_ENTRY);
         ArrayList<Parcelable> mImagesURLArray = new ArrayList<Parcelable>(Arrays.asList(photoEntries));
 
         if (savedInstanceState == null) {
@@ -63,17 +74,10 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction()
-                    .add(android.R.id.content, fragment, ImagePagerFragment.class.getSimpleName())
+                    .add(R.id.content_frame, fragment, ImagePagerFragment.class.getSimpleName())
                     .commit();
 
         }
-
-
-        final ActionBar actionBar = getSupportActionBar();
-
-        // Specify that the Home/Up button should not be enabled, since there is no hierarchical
-        // parent.
-        actionBar.setHomeButtonEnabled(false);
 
     }
 
