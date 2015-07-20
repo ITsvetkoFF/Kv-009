@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="lime_500">#CDDC39</color>
+    <color name="profile_gray">#858585</color>
 </resources>

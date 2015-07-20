@@ -148,8 +148,6 @@ public class EcoMapFragment extends Fragment {
         showHead = (RelativeLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
 
-
-
         return v;
     }
 
@@ -328,7 +326,7 @@ public class EcoMapFragment extends Fragment {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                        mMap.getCameraPosition().zoom));
+                        /*mMap.getCameraPosition().zoom*/21.0f));
 
                 //Set Problem object parameters to a view at show problem fragment
                 showType.setImageResource(problem.getRes_id());
