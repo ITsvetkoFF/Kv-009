@@ -2,18 +2,21 @@ package org.ecomap.android.app.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
@@ -27,10 +30,11 @@ import java.net.URL;
 
 public class LoginFragment extends DialogFragment {
 
-    AutoCompleteTextView email;
-    EditText password;
-    Button signIn;
-    TextView signUpLink;
+    private AutoCompleteTextView email;
+    private EditText password;
+    private Button signIn;
+    private TextView signUpLink;
+    private TextInputLayout tilEmail, tilPass;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,10 +53,63 @@ public class LoginFragment extends DialogFragment {
         signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
         signUpLink = (TextView) getView().findViewById(R.id.link_to_register);
 
+        tilEmail = (TextInputLayout) getView().findViewById(R.id.til_email);
+        tilEmail.setErrorEnabled(true);
+        email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (!email.getText().toString().isEmpty()) {
+                        if (!MainActivity.isEmailValid(email.getText().toString())) {
+                            tilEmail.setError("Please enter correct email");
+                            signIn.setClickable(false);
+                            Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        } else {
+                            tilEmail.setErrorEnabled(false);
+                            signIn.setClickable(true);
+                        }
+                    } else if (email.getText().toString().isEmpty()) {
+                        tilEmail.setError("Email cannot be blank");
+                        signIn.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilEmail.setErrorEnabled(false);
+                        signIn.setClickable(true);
+                    }
+                }
+            }
+        });
+
+        tilPass = (TextInputLayout) getView().findViewById(R.id.til_password);
+        tilPass.setErrorEnabled(true);
+        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (password.getText().toString().isEmpty()) {
+                        tilPass.setError("Password cannot be blank");
+                        signIn.setClickable(false);
+                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                    } else {
+                        tilPass.setErrorEnabled(false);
+                        signIn.setClickable(true);
+                    }
+                }
+            }
+        });
+
+
+
+        signIn.setClickable(false);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new LoginTask(getActivity()).execute();
+                if (isNetworkAvailable()) {
+                    new LoginTask(getActivity()).execute(email.getText().toString()
+                            , password.getText().toString());
+                } else {
+                    Snackbar.make(v, "Check internet connection please", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -66,7 +123,7 @@ public class LoginFragment extends DialogFragment {
         });
     }
 
-    private class LoginTask extends AsyncTask {
+    private class LoginTask extends AsyncTask<String, Void, Void> {
         String resMessage;
         Context mContext;
         ProgressDialog progressBar;
@@ -88,7 +145,7 @@ public class LoginFragment extends DialogFragment {
         }
 
         @Override
-        protected Void doInBackground(Object[] params) {
+        protected Void doInBackground(String[] params) {
             URL url = null;
             HttpURLConnection connection = null;
 
@@ -101,12 +158,12 @@ public class LoginFragment extends DialogFragment {
                 connection.connect();
 
                 //validation
-                if (MainActivity.isEmailValid(email.getText().toString()) && (! password.getText().toString().isEmpty())) {
+                if (MainActivity.isEmailValid(params[0]) && (! params[1].isEmpty())) {
 
                     //creating JSONObject for request
                     JSONObject request = new JSONObject();
-                    request.put("email", email.getText());
-                    request.put("password", password.getText());
+                    request.put("email", params[0]);
+                    request.put("password", params[1]);
 
                     //sending request
                     connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
@@ -123,12 +180,21 @@ public class LoginFragment extends DialogFragment {
                         reader.close();
 
                         JSONObject data = new JSONObject(responseBody.toString());
-                        MainActivity.setUserFirstName(data.get("first_name").toString());
-                        MainActivity.setUserSecondName(data.get("last_name").toString());
-                        MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
-                        MainActivity.setUserIsAuthorized(true);
 
-                        resMessage = "Hello " + MainActivity.getUserFirstName() + " " + MainActivity.getUserSecondName() + "!";
+                        SharedPreferences sharedPreferences = getActivity().
+                                getSharedPreferences(getResources().getString(R.string.shared_preferences_title),Context.MODE_PRIVATE);
+                        SharedPreferences.Editor edit = sharedPreferences.edit();
+                        edit.putString(MainActivity.FIRST_NAME_KEY, data.get("first_name").toString());
+                        edit.putString(MainActivity.LAST_NAME_KEY, data.get("last_name").toString());
+                        edit.putString(MainActivity.EMAIL_KEY, params[0]);
+                        edit.putString(MainActivity.PASSWORD_KEY, params[1]);
+                        edit.commit();
+
+
+                        MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
+
+                        resMessage = "Hello " + sharedPreferences.getString(MainActivity.FIRST_NAME_KEY, "")
+                                + " " + sharedPreferences.getString(MainActivity.LAST_NAME_KEY, "") + "!";
 
                     } else {
 
@@ -145,11 +211,6 @@ public class LoginFragment extends DialogFragment {
                         resMessage = data.get("message").toString();
                     }
 
-                } else if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()){
-                    resMessage = "Please fill all the fields for authorization";
-
-                } else if (! MainActivity.isEmailValid(email.getText())){
-                    resMessage = "Please enter correct email";
                 }
 
                 return null;
@@ -164,14 +225,21 @@ public class LoginFragment extends DialogFragment {
         }
 
         @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            progressBar.dismiss();
-            new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
 
-            if (MainActivity.isUserIsAuthorized()){
-                dismiss();
-            }
+            MainActivity.changeAuthorizationState();
+
+            progressBar.dismiss();
+            dismiss();
+            Snackbar.make(getView(), resMessage, Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
