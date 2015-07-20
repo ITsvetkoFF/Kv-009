@@ -1,26 +1,37 @@
 package org.ecomap.android.app.fragments;
 
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,16 +45,38 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.wunderlist.slidinglayer.SlidingLayer;
 
 import org.ecomap.android.app.MyIconRendered;
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.activities.ViewPhotosActivity;
 import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
+import org.ecomap.android.app.ui.components.ExpandableHeightGridView;
+import org.ecomap.android.app.ui.fragments.CommentsFragment;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -76,12 +109,17 @@ public class EcoMapFragment extends Fragment {
     private View v;
     private SlidingLayer slidingLayer;
     private SlidingLayer addProblemSliding;
-    private ImageView showType, showLike;
-    private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
-    private RelativeLayout showHead;
+    private ImageView showTypeImage, showLike;
+    private TextView showTitle, showType, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
+    private LinearLayout showHead;
 
     private FloatingActionButton floatingActionButton;
     private Marker marker;
+
+    public static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
+
+    public ImageAdapter imgAdapter;
+    private List<String> mImagesURLArray;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +153,7 @@ public class EcoMapFragment extends Fragment {
         mContext = getActivity();
         addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
         addProblemSliding.setSlidingEnabled(false);
-        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+
         floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +165,45 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
+        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
+        slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
+            @Override
+            public void onOpen() {
 
-        cancelButton=(Button)v.findViewById(R.id.button_cancel);
+            }
+
+            @Override
+            public void onShowPreview() {
+
+                floatingActionButton.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onClose() {
+
+                floatingActionButton.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onOpened() {
+
+            }
+
+            @Override
+            public void onPreviewShowed() {
+
+            }
+
+            @Override
+            public void onClosed() {
+
+            }
+        });
+
+        cancelButton = (Button)v.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,15 +211,29 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        showType = (ImageView) v.findViewById(R.id.show_type);
+        showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
         showTitle = (TextView) v.findViewById(R.id.show_title);
-        showByTime = (TextView) v.findViewById(R.id.show_by_time);
+        showType = (TextView) v.findViewById(R.id.show_type);
+        //showByTime = (TextView) v.findViewById(R.id.show_by_time);
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
-        showHead = (RelativeLayout) v.findViewById(R.id.show_head);
+        showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
+
+        ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
+        gridview.setExpanded(true);
+
+        imgAdapter = new ImageAdapter(getActivity(), new ArrayList<ProblemPhotoEntry>());
+        gridview.setAdapter(imgAdapter);
+
+        final ScrollView mScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+        mScrollView.post(new Runnable() {
+            public void run() {
+                mScrollView.scrollTo(0, 0);
+            }
+        });
 
         return v;
     }
@@ -272,10 +360,10 @@ public class EcoMapFragment extends Fragment {
 
                     //ADDING PROBLEM VIA FLOATING ACTION BUTTON
 
-                } else if (markerClickType == 2){
+                } else if (markerClickType == 2) {
                     //TODO check if user is authorized
                     if (MainActivity.isUserIdSet()) {
-                        if (marker != null){
+                        if (marker != null) {
                             marker.remove();
                         }
                         marker = mMap.addMarker(new MarkerOptions().position(latLng));
@@ -329,12 +417,13 @@ public class EcoMapFragment extends Fragment {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                        /*mMap.getCameraPosition().zoom*/21.0f));
+                        /*mMap.getCameraPosition().zoom*/15.0f));
 
                 //Set Problem object parameters to a view at show problem fragment
-                showType.setImageResource(problem.getRes_id());
+                showTypeImage.setImageResource(problem.getResBigImage());
+                showType.setText(problem.getTypeString());
                 showTitle.setText(problem.getTitle());
-                showByTime.setText(problem.getByTime());
+                //showByTime.setText(problem.getByTime());
                 showContent.setText(problem.getContent());
                 showProposal.setText(problem.getProposal());
                 showNumOfLikes.setText(problem.getNumberOfLikes());
@@ -355,13 +444,30 @@ public class EcoMapFragment extends Fragment {
                         if (!problem.isLiked()) {
                             problem.setNumberOfLikes(1);
                             problem.setLiked(true);
+
+                            new AsyncAddVote().execute(problem.getId());
+
+                            Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+
                         } else if (problem.isLiked()) {
-                            problem.setNumberOfLikes(-1);
-                            problem.setLiked(false);
+                            //problem.setNumberOfLikes(-1);
+                            //problem.setLiked(false);
+                            Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
                         }
                         showNumOfLikes.setText(problem.getNumberOfLikes());
                     }
                 });
+
+                //comments
+                FragmentManager chFm = getChildFragmentManager();
+                Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
+                //if (f == null) {
+                f = CommentsFragment.newInstance(problem);
+                //}
+                chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
+
+                //photos
+                new AsyncGetPhotos().execute(problem.getId());
 
                 //Set part of sliding layer visible
                 slidingLayer.setPreviewOffsetDistance(showHead.getHeight());
@@ -390,16 +496,6 @@ public class EcoMapFragment extends Fragment {
         markerClickType = type;
     }
 
-    private class EcoMapReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            fillMap();
-
-
-        }
-    }
-
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -407,6 +503,307 @@ public class EcoMapFragment extends Fragment {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    private class EcoMapReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            fillMap();
+
+        }
+    }
+
+    private static class ImageAdapter extends BaseAdapter {
+
+        private final Context mContext;
+        private List<ProblemPhotoEntry> mImagesURLArray;
+        private LayoutInflater inflater;
+        private DisplayImageOptions options;
+
+
+        public ImageAdapter(Context c, List<ProblemPhotoEntry> titledPhotos) {
+            this.mImagesURLArray = titledPhotos;
+            this.mContext = c;
+
+            this.inflater = LayoutInflater.from(mContext);
+
+            this.options = new DisplayImageOptions.Builder()
+                    //.showImageOnLoading(R.drawable.ic_stub)
+                    .showImageForEmptyUri(R.drawable.ic_empty)
+                            //.showImageOnFail(R.drawable.ic_action_refresh)
+                    .cacheInMemory(true)
+                    .cacheOnDisk(true)
+                    .considerExifParams(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565)
+                    .build();
+        }
+
+        /**
+         * Update adapter data set
+         */
+        public void updateDataSet(List<ProblemPhotoEntry> data) {
+            mImagesURLArray = data;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mImagesURLArray.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        // create a new ImageView for each item referenced by the Adapter
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            final ViewHolder holder;
+            View view = convertView;
+
+            if (view == null) {
+
+                view = inflater.inflate(R.layout.item_image_grid, parent, false);
+                holder = new ViewHolder();
+
+                assert view != null;
+
+                holder.imageView = (ImageView) view.findViewById(R.id.image);
+                holder.progressBar = (ProgressBar) view.findViewById(R.id.progress);
+
+                view.setTag(holder);
+
+            } else {
+                holder = (ViewHolder) view.getTag();
+            }
+
+            if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
+                final ProblemPhotoEntry problemPhotoEntry = mImagesURLArray.get(position);
+
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, ViewPhotosActivity.class);
+                        intent.putExtra(ViewPhotosActivity.IMAGE_POSITION, position);
+                        intent.putExtra(ViewPhotosActivity.PHOTO_ENTRY, mImagesURLArray.toArray(new ProblemPhotoEntry[mImagesURLArray.size()]));
+                        mContext.startActivity(intent);
+                    }
+                });
+
+
+                /* On case they will change naming logic again
+                String[] imgName = problemPhotoEntry.getImgURL().split("\\.");
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + imgName[0] + "." + "thumbnail." + imgName[1];
+                */
+
+                final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/thumbnails/" + problemPhotoEntry.getImgURL();
+
+                ImageLoader imageLoader = ImageLoader.getInstance();
+                imageLoader.displayImage(
+                        imgURL,
+                        holder.imageView,
+                        options,
+                        new SimpleImageLoadingListener() {
+                            @Override
+                            public void onLoadingStarted(String imageUri, View view) {
+                                holder.progressBar.setProgress(0);
+                                holder.progressBar.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                                holder.progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                                holder.progressBar.setVisibility(View.GONE);
+                            }
+                        },
+                        new ImageLoadingProgressListener() {
+                            @Override
+                            public void onProgressUpdate(String imageUri, View view, int current, int total) {
+                                holder.progressBar.setProgress(Math.round(100.0f * current / total));
+                            }
+                        });
+            }
+            return view;
+        }
+
+        static class ViewHolder {
+            ImageView imageView;
+            ProgressBar progressBar;
+        }
+
+    }
+
+    private class AsyncGetPhotos extends AsyncTask<Integer, Integer, List<ProblemPhotoEntry>> {
+
+        private final String LOG_TAG = AsyncGetPhotos.class.getSimpleName();
+
+        String JSONStr = null;
+
+        @Override
+        protected List<ProblemPhotoEntry> doInBackground(Integer... params) {
+
+            Integer numProblem = params[0];
+
+            String ECOMAP_PHOTOS_URL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/api/problems/" + numProblem + "/photos";
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+            List<ProblemPhotoEntry> ret = new ArrayList<>();
+
+            try {
+                // Getting input stream from URL
+
+                URL url = new URL(ECOMAP_PHOTOS_URL);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuilder buffer = new StringBuilder();
+                if (inputStream == null) {
+                    return ret;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0) {
+                    return ret;
+                }
+
+                JSONStr = buffer.toString();
+
+                // Starting method for parsing data from JSON and writing them to database
+                ret = getPhotosFromJSON();
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        // parsing data from JSON and writing them to database
+        private List<ProblemPhotoEntry> getPhotosFromJSON() {
+            final String COMMENT = "comment";
+            final String PHOTO_NAME = "name";
+
+            try {
+                JSONArray jArr = new JSONArray(JSONStr);
+
+                List<ProblemPhotoEntry> syncedList = Collections.synchronizedList(new ArrayList<ProblemPhotoEntry>(JSONStr.length()));
+
+                for (int i = 0; i < jArr.length(); i++) {
+                    String title;
+                    String image_name;
+
+                    JSONObject obj = jArr.getJSONObject(i);
+                    title = obj.getString(COMMENT);
+                    image_name = obj.getString(PHOTO_NAME);
+                    syncedList.add(new ProblemPhotoEntry(title, image_name));
+                }
+
+                return syncedList;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return new ArrayList<ProblemPhotoEntry>();
+        }
+
+
+        @Override
+        protected void onPostExecute(List<ProblemPhotoEntry> imgagesArray) {
+            imgAdapter.updateDataSet(imgagesArray);
+        }
+    }
+
+    private class AsyncAddVote extends AsyncTask<Integer, Void, Boolean> {
+
+        private final String LOG_TAG = AsyncAddVote.class.getSimpleName();
+        private Integer problem_id;
+
+        @Override
+        protected Boolean doInBackground(Integer... params) {
+            URL url = null;
+            Boolean result = Boolean.FALSE;
+            problem_id = params[0];
+
+            //validation
+            if (MainActivity.isUserIsAuthorized()) {
+                if (params.length > 0 && params[0] != null) {
+
+                    HttpURLConnection connection = null;
+
+                    try {
+
+                        //creating JSONObject for request
+                        JSONObject request = new JSONObject();
+                        request.put("content", params[0]);
+
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problem_id + "/vote");
+
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        connection.setDoOutput(true);
+                        connection.connect();
+
+                        /**
+                         * sending request
+                         * request.toString() - translate our object into appropriate JSON text
+                         * {
+                         *      "content": "your comment"
+                         * }
+                         */
+                        //OutputStream outputStream = connection.getOutputStream();
+                        //outputStream.write(request.toString().getBytes("UTF-8"));
+
+                        //handling result from server
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            result = Boolean.TRUE;
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    } finally {
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+    }
 
 }
 

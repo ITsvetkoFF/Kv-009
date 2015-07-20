@@ -9,9 +9,7 @@ import java.io.Serializable;
 import java.net.HttpCookie;
 import java.net.URI;
 
-/**
- * Created by y.ridkous@gmail.com on 15.07.2015.
- */
+
 public class SerializableUriCookiePair implements Serializable {
 
     private static final long serialVersionUID = 8628587700329421486L;

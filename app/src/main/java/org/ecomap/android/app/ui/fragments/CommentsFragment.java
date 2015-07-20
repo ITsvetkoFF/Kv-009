@@ -53,7 +53,8 @@ public class CommentsFragment extends Fragment {
     public static final String TAG = "CommentsFragment";
 
     private static final String ARG_PROBLEM = "problem";
-    private static final int PROBLEM_NUMBER = 185;
+
+    private static int PROBLEM_NUMBER = 185;
 
     // The request code must be 0 or greater.
     private static final int PLUS_ONE_REQUEST_CODE = 0;
@@ -131,7 +132,7 @@ public class CommentsFragment extends Fragment {
                 //small validation
                 String comment = mTxtComment.getText().toString();
                 if (!comment.isEmpty() && MainActivity.isUserIsAuthorized()) {
-                    new AsyncSendComment().execute(comment);
+                    new AsyncSendComment().execute(comment,String.valueOf(mProblem.getId()));
                 }
 
                 if(!MainActivity.isUserIsAuthorized()){
@@ -142,10 +143,10 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-        mCommentsAdapter = new CommentsAdapter<CommentEntry>(getActivity(), new ArrayList<CommentEntry>());
+        mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
 
         lstComments.setAdapter(mCommentsAdapter);
-        new AsyncRequestComments().execute();
+        new AsyncRequestComments().execute(mProblem.getId());
 
         return mRootView;
     }
@@ -198,7 +199,7 @@ public class CommentsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        public void onFragmentInteraction(Uri uri);
     }
 
     private static class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
@@ -236,7 +237,9 @@ public class CommentsFragment extends Fragment {
             }
 
             view.setClickable(false);
-            final CommentEntry currentItem = getItem(position);
+
+            final CommentEntry currentItem = (CommentEntry) getItem(position);
+
             if (currentItem != null) {
 
                 final TextView txtUserName = (TextView) view.findViewById(R.id.textUserName);
@@ -259,19 +262,20 @@ public class CommentsFragment extends Fragment {
         }
     }
 
-    private class AsyncRequestComments extends AsyncTask<Void, Void, List<CommentEntry>> {
+    private class AsyncRequestComments extends AsyncTask<Integer, Integer, List<CommentEntry>> {
 
-        private static final String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments";
         private final String LOG_TAG = AsyncRequestComments.class.getSimpleName();
 
         String JSONStr = null;
 
         @Override
-        protected List<CommentEntry> doInBackground(Void... params) {
+        protected List<CommentEntry> doInBackground(Integer... params) {
 
+            Integer id = params[0];
+            String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + id + "/comments";
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            List<CommentEntry> ret = new ArrayList<>();
+            List<CommentEntry> ret = new ArrayList<CommentEntry>();
 
             try {
                 // Getting input stream from URL
@@ -345,7 +349,7 @@ public class CommentsFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
-            return new ArrayList<>();
+            return new ArrayList<CommentEntry>();
         }
 
 
@@ -358,11 +362,13 @@ public class CommentsFragment extends Fragment {
     private class AsyncSendComment extends AsyncTask<String, Void, Boolean> {
 
         private final String LOG_TAG = AsyncSendComment.class.getSimpleName();
+        private Integer problem_id;
 
         @Override
         protected Boolean doInBackground(String... params) {
-            URL url;
+            URL url = null;
             Boolean result = Boolean.FALSE;
+            problem_id = Integer.parseInt(params[1]);
 
             //validation
             if (MainActivity.isUserIsAuthorized()) {
@@ -376,7 +382,7 @@ public class CommentsFragment extends Fragment {
                         JSONObject request = new JSONObject();
                         request.put("content", params[0]);
 
-                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + PROBLEM_NUMBER + "/comments");
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problem_id + "/comments");
 
                         connection = (HttpURLConnection) url.openConnection();
                         //connection.setRequestMethod("POST");
@@ -415,7 +421,7 @@ public class CommentsFragment extends Fragment {
         @Override
         protected void onPostExecute(Boolean result) {
             if (result) {
-                new AsyncRequestComments().execute();
+                new AsyncRequestComments().execute(problem_id);
                 mTxtComment.setText("");
             }
         }
