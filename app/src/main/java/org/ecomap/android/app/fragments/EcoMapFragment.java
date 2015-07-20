@@ -1,6 +1,5 @@
 package org.ecomap.android.app.fragments;
 
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,13 +7,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -208,9 +207,13 @@ public class EcoMapFragment extends Fragment {
 
     private void setUpMap() {
 
-        //Start service to get a new number of revision and new data
-        Intent intent = new Intent(this.getActivity(), EcoMapService.class);
-        getActivity().startService(intent);
+        if (isNetworkAvailable()) {
+            //Start service to get a new number of revision and new data
+            Intent intent = new Intent(this.getActivity(), EcoMapService.class);
+            getActivity().startService(intent);
+        } else {
+            fillMap();
+        }
 
     }
 
@@ -395,6 +398,13 @@ public class EcoMapFragment extends Fragment {
 
 
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 

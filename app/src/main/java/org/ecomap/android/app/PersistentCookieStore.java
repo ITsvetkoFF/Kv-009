@@ -6,15 +6,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
+import org.ecomap.android.app.data.model.SerializableUriCookiePair;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutput;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.net.CookieManager;
 import java.net.CookieStore;
 import java.net.HttpCookie;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by yridktc on 14.07.2015.
+ * Created by y.ridkous@gmail.com on 14.07.2015.
  * based on
  * https://github.com/loopj/android-async-http/blob/master/library/src/main/java/com/loopj/android/http/PersistentCookieStore.java#L44
  */
@@ -32,11 +31,10 @@ public class PersistentCookieStore implements CookieStore {
 
     private static final String LOG_TAG = PersistentCookieStore.class.getSimpleName();
     private static final String COOKIE_PREFS = EcoMapAPIContract.APP_PACKAGE_NAME + ".CookiePrefsFile";
-
     private static final String COOKIE_NAME_STORE = "names";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
-    private boolean omitNonPersistentCookies = false;
 
+    private boolean omitNonPersistentCookies = false;
     private final SharedPreferences cookiePrefs;
 
     public PersistentCookieStore(Context context) {
@@ -62,6 +60,11 @@ public class PersistentCookieStore implements CookieStore {
 
     }
 
+    /**
+     * Add a cookie to persistent store
+     * @param uri - cookie URI
+     * @param cookie - http cookie object
+     */
     public void	add(URI uri, HttpCookie cookie) {
         store.add(uri, cookie);
 
@@ -71,7 +74,7 @@ public class PersistentCookieStore implements CookieStore {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(COOKIE_NAME_STORE, getInlineCookiesNames());
         prefsWriter.putString(COOKIE_NAME_PREFIX + name, encodeCookie(new SerializableUriCookiePair(uri, cookie)));
-        prefsWriter.commit();
+        prefsWriter.apply();
 
     }
 
@@ -95,12 +98,25 @@ public class PersistentCookieStore implements CookieStore {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.remove(COOKIE_NAME_PREFIX + name);
         prefsWriter.putString(COOKIE_NAME_STORE, getInlineCookiesNames());
-        prefsWriter.commit();
+        prefsWriter.apply();
 
         return b;
     }
 
     public boolean removeAll()  {
+
+        // Clear cookies from persistent store
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        List<HttpCookie> cookies = getCookies();
+
+        for (HttpCookie cookie : cookies) {
+            String name = cookie.getName() + cookie.getDomain();
+            prefsWriter.remove(COOKIE_NAME_PREFIX + name);
+        }
+
+        prefsWriter.remove(COOKIE_NAME_STORE);
+        prefsWriter.apply();
+
         return store.removeAll();
     }
 
@@ -129,7 +145,7 @@ public class PersistentCookieStore implements CookieStore {
      * Returns cookie decoded from cookie string
      *
      * @param cookieString string of cookie as returned from http request
-     * @return decoded cookie or null if exception occured
+     * @return decoded cookie or null if exception occurred
      */
     protected Pair<URI, HttpCookie> decodeCookie(String cookieString) {
         byte[] bytes = hexStringToByteArray(cookieString);
@@ -183,7 +199,7 @@ public class PersistentCookieStore implements CookieStore {
 
     /**
      * Using for
-     * @return comma separeted string with cookies names
+     * @return comma separated string with cookies names
      */
     private String getInlineCookiesNames(){
 
@@ -198,86 +214,12 @@ public class PersistentCookieStore implements CookieStore {
             } else {
                 sCookiesNames.append(",");
             }
-            sCookiesNames.append(token.getName() + token.getDomain());
+            sCookiesNames.append(token.getName()).append(token.getDomain());
         }
 
         return sCookiesNames.toString();
     }
-}
-
-class SerializableUriCookiePair implements Serializable{
-
-    private static final long serialVersionUID = 8628587700329421486L;
-
-    private String name;
-    private String value;
-    private String comment;
-    private String domain;
-    private long maxAge;
-    private String path;
-    private boolean secure;
-    private int version;
-    private URI uri;
-
-    /** Creates a cookie. */
-    public SerializableUriCookiePair(final URI uri, final HttpCookie cookie) {
-        this.name = cookie.getName();
-        this.value = cookie.getValue();
-        this.comment = cookie.getComment();
-        this.domain = cookie.getDomain();
-        this.maxAge = cookie.getMaxAge();
-        this.path = cookie.getPath();
-        this.secure = cookie.getSecure();
-        this.version = cookie.getVersion();
-        this.uri = uri;
-    }
-
-    /** Builds a Cookie object from this object. */
-    public Pair<URI, HttpCookie> toCookie() {
-        final HttpCookie cookie = new HttpCookie(name, value);
-        cookie.setComment(comment);
-        //Otherwise null pointer exception
-        if (domain != null) {
-            cookie.setDomain(domain);
-        }
-        cookie.setMaxAge(maxAge);
-        cookie.setPath(path);
-        cookie.setSecure(secure);
-        cookie.setVersion(version);
-        return new Pair<>(this.uri,cookie);
-    }
-
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        out.writeObject(uri);
-        out.writeUTF(defaultIfNull(name, ""));
-        out.writeUTF(defaultIfNull(value, ""));
-        out.writeUTF(defaultIfNull(comment, ""));
-        out.writeUTF(defaultIfNull(domain, ""));
-        out.writeLong(maxAge);
-        out.writeUTF(defaultIfNull(path, ""));
-        out.writeBoolean(secure);
-        out.writeInt(version);
-    }
-
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        this.uri = (URI) in.readObject();
-        name = in.readUTF();
-        value =  in.readUTF();
-        comment = in.readUTF();
-        domain = in.readUTF();
-        maxAge = in.readLong();
-        path = in.readUTF();
-        secure = in.readBoolean();
-        version = in.readInt();
-    }
-
-
-    private <T> T defaultIfNull(T value, T defaultValue){
-        if(value == null)
-            return defaultValue;
-        else
-            return value;
-    }
 
 
 }
+
