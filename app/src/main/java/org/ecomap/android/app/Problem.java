@@ -16,6 +16,7 @@ import org.ecomap.android.app.data.EcoMapContract;
 public class Problem implements ClusterItem, Parcelable {
     LatLng mPos;
 
+    int id;
     String mTitle;
     int type_id;
     int res_id;
@@ -37,6 +38,8 @@ public class Problem implements ClusterItem, Parcelable {
     public Problem(Cursor cursor, Context mContext) {
 
         this.liked = false;
+
+        this.id = cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry._ID));
 
         double latitude = cursor.getDouble(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));
@@ -71,6 +74,10 @@ public class Problem implements ClusterItem, Parcelable {
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER));
 
         chooseIcon();
+    }
+
+    public int getId(){
+        return id;
     }
 
     public String getTitle() {
@@ -114,6 +121,48 @@ public class Problem implements ClusterItem, Parcelable {
         return res_id;
     }
 
+    public int getResBigImage(){
+        switch (type_id) {
+            case 1:
+                return R.drawable.problem_type_1_3x;
+            case 2:
+                return R.drawable.problem_type_2_3x;
+            case 3:
+                return R.drawable.problem_type_3_3x;
+            case 4:
+                return R.drawable.problem_type_4_3x;
+            case 5:
+                return R.drawable.problem_type_5_3x;
+            case 6:
+                return R.drawable.problem_type_6_3x;
+            case 7:
+                return R.drawable.problem_type_7_3x;
+            default:
+                return R.drawable.problem_type_7_3x;
+        }
+    }
+
+    public String getTypeString(){
+        switch (type_id) {
+            case 1:
+                return mContext.getString(R.string.problem_type_string_1);
+            case 2:
+                return mContext.getString(R.string.problem_type_string_2);
+            case 3:
+                return mContext.getString(R.string.problem_type_string_3);
+            case 4:
+                return mContext.getString(R.string.problem_type_string_4);
+            case 5:
+                return mContext.getString(R.string.problem_type_string_5);
+            case 6:
+                return mContext.getString(R.string.problem_type_string_6);
+            case 7:
+                return mContext.getString(R.string.problem_type_string_7);
+            default:
+                return mContext.getString(R.string.problem_type_string_7);
+        }
+    }
+
     public String getByTime(){
         return ("Added by:" + first_name + " " + last_name + "\n" + date);
     }
@@ -147,6 +196,7 @@ public class Problem implements ClusterItem, Parcelable {
         return mPos;
     }
 
+    
     protected Problem(Parcel in) {
         mPos = (LatLng) in.readValue(LatLng.class.getClassLoader());
         mTitle = in.readString();
