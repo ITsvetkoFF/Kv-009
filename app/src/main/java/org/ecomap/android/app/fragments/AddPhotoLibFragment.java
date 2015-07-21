@@ -75,9 +75,7 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
         sendPhoto = (Button) view.findViewById(R.id.send_photo);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
-
         photoAdapter = new PhotoAdapter(mContext, selectedPhotos);
-
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, OrientationHelper.VERTICAL));
         recyclerView.setAdapter(photoAdapter);
 
@@ -97,16 +95,17 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
                     EditText editText;
                     String path;
                     String comment;
-                    for(int i = 0; i < selectedPhotos.size(); i++){
-                        view = recyclerView.getChildAt(i);
-                        editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
-                        comment = editText.getText().toString();
-                        path = selectedPhotos.get(i);
-                        new UploadPhotoTask(getActivity(), 363, path, comment).execute();
+                    if(!selectedPhotos.isEmpty()){
+                        for(int i = 0; i < selectedPhotos.size(); i++){
+                            view = recyclerView.getChildAt(i);
+                            editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
+                            comment = editText.getText().toString();
+                            path = selectedPhotos.get(i);
+                            new UploadPhotoTask(getActivity(), 362, path, comment).execute();
+                        }
                     }
             }
         });
-
         return view;
     }
 
@@ -176,6 +175,7 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
                     }
                 }
             });
+            holder.editText.setText("");
         }
 
         @Override public int getItemCount() {
@@ -184,10 +184,12 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
 
         class PhotoViewHolder extends RecyclerView.ViewHolder {
             private ImageView ivPhoto;
+            private EditText editText;
 
             public PhotoViewHolder(View itemView) {
                 super(itemView);
                 ivPhoto = (ImageView) itemView.findViewById(R.id.iv_photo);
+                editText = (EditText) itemView.findViewById(R.id.add_photo_edit_text);
             }
         }
     }
@@ -284,6 +286,9 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
                     if (serverResponseCode == 200) {
                         resMessage = "Photos uploaded";
                     }
+                    else {
+                        resMessage = "Upload error";
+                    }
                     // close the streams //
                     fileInputStream.close();
                     dos.flush();
@@ -317,7 +322,7 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             progressBar.dismiss();
-            new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), resMessage, Toast.LENGTH_SHORT).show();
         }
     }
 }

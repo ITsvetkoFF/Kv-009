@@ -126,8 +126,6 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-
-
         cancelButton=(Button)v.findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +144,6 @@ public class EcoMapFragment extends Fragment {
         showHead = (RelativeLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
 
-
-
         return v;
     }
 
@@ -163,26 +159,6 @@ public class EcoMapFragment extends Fragment {
         setUpMap();
     }
 
-//    // saving map position for restoring after rotation or backstack
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putDouble("longitude", mMap.getCameraPosition().target.longitude);
-//        outState.putDouble("latitude", mMap.getCameraPosition().target.latitude);
-//        outState.putFloat("zoomlevel", mMap.getCameraPosition().zoom);
-//    }
-//
-//    // restoring saved map position after rotation or backstack
-//    @Override
-//    public void onActivityCreated(Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        if(savedInstanceState != null){
-//            latitude = savedInstanceState.getDouble("latitude");
-//            longitude = savedInstanceState.getDouble("longitude");
-//            zoomlevel = savedInstanceState.getFloat("zoomlevel");
-//        }
-//    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -195,7 +171,6 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
         // if current map fragment is last in backstack - kill activity
         if (getFragmentManager().getBackStackEntryCount() == 0){
             getActivity().finish();

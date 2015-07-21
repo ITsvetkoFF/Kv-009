@@ -2,20 +2,6 @@
 <items version="2" >
 
     <item
-        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.0/jars/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-0ab5e039b2aedbff0413389aac91a7db1a0d3632.jar" />
-    </item>
-    <item
-        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/picasso-2.5.2-c9682ce6c50f4678831a404be95a94b57221cf34.jar" />
-    </item>
-    <item
         jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/3.6.0/a7537446a030da8eb0da4c71424d16c2589f6c4a/glide-3.6.0.jar"
         jumboMode="false"
         revision="22.0.1"
@@ -23,11 +9,25 @@
         <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/glide-3.6.0-c93c4171e627bd523ab53cd459bb7fd821e4aabd.jar" />
     </item>
     <item
-        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/Kv-009/PhotoPicker/unspecified/jars/classes.jar"
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.2.0/jars/classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="5ffe662cfcb60baea51852d26e277f6001d7d238">
-        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-0f3d2574cad465e8ea36d54bb9a5a02474254f35.jar" />
+        sha1="5b37cf49773f7f17aca9830efd3053b0cac56728">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-0ab5e039b2aedbff0413389aac91a7db1a0d3632.jar" />
+    </item>
+    <item
+        jar="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/exploded-aar/com.github.donglua/PhotoPicker/v0.2.0/jars/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="3dd41ceb760dbc9186685439f42b95e389be99ae">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/classes-3a03a07214251a500b39ff7a7fea21c3fb0773ad.jar" />
+    </item>
+    <item
+        jar="/home/yura/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/home/yura/AndroidStudioProjects/Kv-009/app/build/intermediates/pre-dexed/debug/picasso-2.5.2-c9682ce6c50f4678831a404be95a94b57221cf34.jar" />
     </item>
 
 </items>

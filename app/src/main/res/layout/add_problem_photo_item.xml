@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp"
+    android:orientation="horizontal">
+
     <ImageView
-        android:padding="1dip"
-        android:layout_gravity="center"
         android:id="@+id/iv_photo"
-        android:scaleType="centerCrop"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:background="@drawable/photo_bg"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:adjustViewBounds="true"
-        />
+        android:background="@drawable/photo_bg"
+        android:minHeight="16dp"
+        android:padding="1dip"
+        android:scaleType="centerCrop" />
+
     <EditText
+        android:id="@+id/add_photo_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:hint="Add your comments here..."
-        android:id="@+id/add_photo_edit_text"/>
+        android:hint="Add your comments here..." />
 </LinearLayout>
