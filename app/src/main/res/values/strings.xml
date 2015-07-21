@@ -60,6 +60,29 @@
     <string name="prefNumRevision">numRevision</string>
     <string name="proceed">Proceed</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
+    <!--Strings for filtermap fragment-->
+    <string name="woods_problem">Problem of woods</string>
+    <string name="trash_problem">Landfill</string>
+    <string name="building_problem">illegal development</string>
+    <string name="water_problem">water pollution</string>
+    <string name="lifeforms_problem">diminishing of lifeforms</string>
+    <string name="poaching_problem">poaching problem</string>
+    <string name="other_problem">other problems</string>
+    <string name="reset">Reset filters</string>
+
+    <string-array name="types">
+        <item>Problem of woods</item>
+        <item>Landfill</item>
+        <item>illegal development</item>
+        <item>water pollution</item>
+        <item>diminishing of lifeforms</item>
+        <item>poaching problem</item>
+        <item>other problems</item>
+
+    </string-array>
+
     <string name="problem_type_string_1">Проблемы лесов</string>
     <string name="problem_type_string_2">Свалка</string>
     <string name="problem_type_string_3">Незаконное строительство</string>

@@ -31,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -77,6 +76,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import android.widget.Toast;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -100,18 +100,21 @@ public class EcoMapFragment extends Fragment {
     private static float zoomlevel = 5;
 
 
+
+
     Button cancelButton;
     MapView mapView;
     // Might be null if Google Play services APK is not available.
 
-
+    private static final String tag="EcoMapFragment";
     private static int markerClickType;
     private View v;
     private SlidingLayer slidingLayer;
     private SlidingLayer addProblemSliding;
     private ImageView showTypeImage, showLike;
-    private TextView showTitle, showType, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
+    private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
     private LinearLayout showHead;
+    private static String filterCondition;
 
     private FloatingActionButton floatingActionButton;
     private Marker marker;
@@ -124,17 +127,26 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(tag, "onCreate");
+
+    }
+    public static void setFilterCondition(String s){
+        filterCondition=s;
+        Log.i(tag, "condition is set:"+ filterCondition);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setRetainInstance(true);
+        Log.i(tag, "onCreateView");
+
 
         v = inflater.inflate(R.layout.map_layout_main, container, false);
-
         mapView = (MapView) v.findViewById(R.id.mapview);
 
         //Temporary is to initialize mapView by null to get rotation works without exceptions.
         mapView.onCreate(null);
+        Log.i(tag, "OnCreateView mapview");
 
         mMap = mapView.getMap();
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -147,10 +159,17 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(this.getActivity());
 
+
+
+
+
+
+
         values = new ArrayList<>();
         points = new ArrayList<>();
         markers = new ArrayList<>();
         mContext = getActivity();
+
         addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
         addProblemSliding.setSlidingEnabled(false);
 
@@ -280,11 +299,14 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(tag, "onDestroy");
+
         mapView.onDestroy();
         // if current map fragment is last in backstack - kill activity
         if (getFragmentManager().getBackStackEntryCount() == 0){
             getActivity().finish();
         }
+        Log.i(tag, "mapView onDestroy");
     }
 
     @Override
@@ -294,18 +316,34 @@ public class EcoMapFragment extends Fragment {
     }
 
     private void setUpMap() {
+        Log.i(tag, "set up map");
 
         if (isNetworkAvailable()) {
             //Start service to get a new number of revision and new data
             Intent intent = new Intent(this.getActivity(), EcoMapService.class);
             getActivity().startService(intent);
-        } else {
-            fillMap();
+        }
+        if(filterCondition==null)
+            {
+                fillMap();
+            }
+
+        else {
+                fillMap(filterCondition);
+            }
         }
 
-    }
+
+
+
+
+
 
     public void fillMap() {
+        Log.i(tag, "fillmap");
+        double latitude, longitude;
+        String title;
+        int type_id;
 
         values.clear();
         mMap.clear();
@@ -321,6 +359,31 @@ public class EcoMapFragment extends Fragment {
         cursor.close();
         setUpClusterer();
     }
+    //����� ��� ��������� ����� �� problem_id, ���������� ������ fillmap � ���������� �������
+    public void fillMap(String filterCondition) {
+        Log.i(tag, "fillmap with condition"+filterCondition);
+        double latitude, longitude;
+        String title;
+        int type_id;
+
+
+        values.clear();
+        mMap.clear();
+
+
+        cursor = getActivity().getContentResolver()
+                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null, null);
+
+        while (cursor.moveToNext()) {
+
+            Problem p = new Problem(cursor, getActivity());
+            values.add(p);
+        }
+
+        cursor.close();
+        setUpClusterer();
+    }
+
 
     public void setUpClusterer() {
         //Position the map from static variables
@@ -507,7 +570,14 @@ public class EcoMapFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            fillMap();
+            if(filterCondition==null)
+            {
+                fillMap();
+            }
+
+            else {
+                fillMap(filterCondition);
+            }
 
         }
     }
