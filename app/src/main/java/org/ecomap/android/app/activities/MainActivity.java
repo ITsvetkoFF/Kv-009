@@ -55,9 +55,12 @@ import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
+import org.ecomap.android.app.fragments.FiltersFragment.Filterable;
+
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -95,12 +98,13 @@ import java.util.List;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Filterable{
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
-    public static final int NAV_RESOURCES = 3;
+    public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
+    public static final int NAV_FILTER=3;
     public final static String FIRST_NAME_KEY = "firstName";
     public final static String LAST_NAME_KEY = "lastName";
     public final static String EMAIL_KEY = "email";
@@ -112,15 +116,21 @@ public class MainActivity extends AppCompatActivity {
     private static String[] mScreenTitles;
     private static String userId;
     private static boolean userIsAuthorized = false;
+  
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    private ActionBar actionBar;
+    private FragmentManager fragmentManager;
+    private Fragment fragment;
     private Toolbar toolbar;
+    private static  String filterCondition="";
 
     public static String getUserId() {
         return userId;
     }
+
 
     public static void setUserId(String userId) {
         MainActivity.userId = userId;
@@ -132,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isEmailValid(CharSequence email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    
 
     }
 
@@ -308,18 +319,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = null;
+        fragmentManager = getSupportFragmentManager();
+
         boolean stop = false;
         String tag = null;
 
         switch (position) {
+
             case NAV_MAP:
-                tag = EcoMapFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment == null) {
-                    fragment = new EcoMapFragment();
-                }
+                chooseEcoMapFragment(filterCondition);
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();
@@ -332,7 +340,16 @@ public class MainActivity extends AppCompatActivity {
                 if (fragment == null) {
                     fragment = new MockFragment();
                 }
+
+
                 break;
+            case NAV_FILTER:
+                tag = FiltersFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new FiltersFragment();}
+                break;
+
             case NAV_DETAILS:
                 tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
@@ -395,6 +412,17 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
+    private void chooseEcoMapFragment(String s) {
+        String tag;
+        tag = EcoMapFragment.class.getSimpleName();
+        fragment = fragmentManager.findFragmentByTag(tag);
+        if(fragment == null) {
+            fragment = new EcoMapFragment();
+        }
+        EcoMapFragment frag=(EcoMapFragment) fragment;
+        frag.setFilterCondition(s);
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -405,6 +433,14 @@ public class MainActivity extends AppCompatActivity {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
+
+    @Override
+    public void filter(String s){
+        filterCondition=s;
+        selectItem(0);
+
+
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -471,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class FiltersFragment extends Fragment {
+    /*public static class FiltersFragment extends Fragment {
         public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
 
         public FiltersFragment() {
@@ -497,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
 
             return rootView;
         }
-    }
+    } */
 
     public static class FiltersAdapter extends ArrayAdapter<String> {
 
