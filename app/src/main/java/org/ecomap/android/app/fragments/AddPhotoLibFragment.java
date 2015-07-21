@@ -2,41 +2,46 @@ package org.ecomap.android.app.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import me.iwf.photopicker.PhotoPagerActivity;
+import me.iwf.photopicker.PhotoPickerActivity;
+import me.iwf.photopicker.utils.PhotoPickerIntent;
 
 /**
  * Created by yura on 7/18/15.
@@ -46,13 +51,13 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
     Button addPhoto;
     Button sendPhoto;
     private View view;
-    String pathToImage;
-    TextView pathToImageView;
+    Context mContext;
 
-    ImageView ivImage;
+    public static final int REQUEST_CODE = 1;
 
-    private static int REQUEST_CAMERA = 1;
-    private static int SELECT_FILE = 2;
+    RecyclerView recyclerView;
+    PhotoAdapter photoAdapter;
+    ArrayList<String> selectedPhotos = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,96 +68,126 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         view = inflater.inflate(R.layout.add_photo_layout, container, false);
+        mContext = getActivity();
 
         addPhoto = (Button) view.findViewById(R.id.add_photo);
         sendPhoto = (Button) view.findViewById(R.id.send_photo);
-        ivImage = (ImageView) view.findViewById(R.id.imageViewPhoto);
-        pathToImageView = (TextView) view.findViewById(R.id.add_photo_path);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+
+
+        photoAdapter = new PhotoAdapter(mContext, selectedPhotos);
+
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, OrientationHelper.VERTICAL));
+        recyclerView.setAdapter(photoAdapter);
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectImage();
+                PhotoPickerIntent intent = new PhotoPickerIntent(mContext);
+                intent.setPhotoCount(8);
+                intent.setShowCamera(true);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         sendPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new UploadPhotoTask(getActivity()).execute();
+                    View view;
+                    EditText editText;
+                    String path;
+                    String comment;
+                    for(int i = 0; i < selectedPhotos.size(); i++){
+                        view = recyclerView.getChildAt(i);
+                        editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
+                        comment = editText.getText().toString();
+                        path = selectedPhotos.get(i);
+                        new UploadPhotoTask(getActivity(), 363, path, comment).execute();
+                    }
             }
         });
 
         return view;
     }
 
-        private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Photo!");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAMERA);
-                } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
+    public void previewPhoto(Intent intent) {
+        startActivityForResult(intent, REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == REQUEST_CAMERA) {
-                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                File destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
-                FileOutputStream fo;
-                try {
-                    destination.createNewFile();
-                    fo = new FileOutputStream(destination);
-                    fo.write(bytes.toByteArray());
-                    fo.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+
+        List<String> photos = null;
+        if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE) {
+            if (data != null) {
+                photos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
+            }
+            selectedPhotos.clear();
+
+            if (photos != null) {
+                selectedPhotos.addAll(photos);
+            }
+            photoAdapter.notifyDataSetChanged();
+        }
+    }
+
+    class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
+
+        private ArrayList<String> photoPaths = new ArrayList<String>();
+        private LayoutInflater inflater;
+
+        private Context mContext;
+
+        public PhotoAdapter(Context mContext, ArrayList<String> photoPaths) {
+            this.photoPaths = photoPaths;
+            this.mContext = mContext;
+            inflater = LayoutInflater.from(mContext);
+
+        }
+
+        @Override public PhotoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = inflater.inflate(R.layout.add_problem_photo_item, parent, false);
+            return new PhotoViewHolder(itemView);
+        }
+
+
+        @Override
+        public void onBindViewHolder(final PhotoViewHolder holder, final int position) {
+
+            Uri uri = Uri.fromFile(new File(photoPaths.get(position)));
+
+            Glide.with(mContext)
+                    .load(uri)
+                    .centerCrop()
+                    .thumbnail(0.1f)
+                    .placeholder(R.drawable.ic_photo_black_48dp)
+                    .error(R.drawable.ic_broken_image_black_48dp)
+                    .into(holder.ivPhoto);
+
+            holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, PhotoPagerActivity.class);
+                    intent.putExtra(PhotoPagerActivity.EXTRA_CURRENT_ITEM, position);
+                    intent.putExtra(PhotoPagerActivity.EXTRA_PHOTOS, photoPaths);
+                    if (mContext instanceof MainActivity) {
+                        previewPhoto(intent);
+                    }
                 }
-                ivImage.setImageBitmap(thumbnail);
-                pathToImage = destination.getPath();
-                pathToImageView.setText(pathToImage);
-            } else if (requestCode == SELECT_FILE) {
-                Uri selectedImageUri = data.getData();
-                String[] projection = {MediaStore.MediaColumns.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(selectedImageUri, projection, null, null, null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                cursor.moveToFirst();
-                String selectedImagePath = cursor.getString(column_index);
-                Bitmap bm;
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(selectedImagePath, options);
-                final int REQUIRED_SIZE = 200;
-                int scale = 1;
-                while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-                    scale *= 2;
-                options.inSampleSize = scale;
-                options.inJustDecodeBounds = false;
-                bm = BitmapFactory.decodeFile(selectedImagePath, options);
-                ivImage.setImageBitmap(bm);
-                pathToImage = selectedImagePath;
-                pathToImageView.setText(pathToImage);
+            });
+        }
+
+        @Override public int getItemCount() {
+            return photoPaths.size();
+        }
+
+        class PhotoViewHolder extends RecyclerView.ViewHolder {
+            private ImageView ivPhoto;
+
+            public PhotoViewHolder(View itemView) {
+                super(itemView);
+                ivPhoto = (ImageView) itemView.findViewById(R.id.iv_photo);
             }
         }
     }
@@ -162,9 +197,15 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
         String resMessage;
         Context mContext;
         ProgressDialog progressBar;
+        int problemID;
+        String imagePath;
+        String comment;
 
-        public UploadPhotoTask(Context context) {
+        public UploadPhotoTask(Context context, int problemID, String imagePath, String comment) {
             this.mContext = context;
+            this.problemID = problemID;
+            this.imagePath = imagePath;
+            this.comment = comment;
             resMessage = null;
         }
 
@@ -181,17 +222,15 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
             int bytesRead, bytesAvailable, bufferSize;
             byte[] buffer;
             int maxBufferSize = 1 * 1024 * 1024;
-            File sourceFile = new File(pathToImage);
+            File sourceFile = new File(imagePath);
 
             if (!MainActivity.isUserIsAuthorized()) {
-
                 Log.e("MYLOG", "Not auth");
                 return null;
-
             } else {
                 try {
                     FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                    URL url = new URL("http://176.36.11.25:8000/api/problems/3/photos");
+                    URL url = new URL("http://176.36.11.25:8000/api/problems/" + problemID + "/photos");
                     conn = (HttpURLConnection) url.openConnection();
                     conn.setDoInput(true); // Allow Inputs
                     conn.setDoOutput(true); // Allow Outputs
@@ -206,16 +245,14 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
                     dos.writeBytes("Content-Disposition: form-data; name=\"comments\"" + lineEnd);
                     dos.writeBytes(lineEnd);
-                    dos.writeBytes("some comment!!!"); // mobile_no is String variable
+                    dos.writeBytes(comment); // mobile_no is String variable
                     dos.writeBytes(lineEnd);
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
 
                     //Adding Parameter image
                     dos.writeBytes(twoHyphens + boundary + lineEnd);
-                    dos.writeBytes("Content-Disposition: form-data; name=\"photos\";filename=\"" + pathToImage +"\"" + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"photos\";filename=\"" + imagePath +"\"" + lineEnd);
                     dos.writeBytes(lineEnd);
-
-                    Log.e("MYLOG", "Headers are written");
 
                     // create a buffer of maximum size
                     bytesAvailable = fileInputStream.available();
@@ -282,7 +319,5 @@ public class AddPhotoLibFragment extends android.support.v4.app.Fragment{
             progressBar.dismiss();
             new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
         }
-
-
     }
 }

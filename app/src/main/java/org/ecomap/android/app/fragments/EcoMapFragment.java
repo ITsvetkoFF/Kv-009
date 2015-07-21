@@ -195,7 +195,7 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView = null;
+        mapView.onDestroy();
         // if current map fragment is last in backstack - kill activity
         if (getFragmentManager().getBackStackEntryCount() == 0){
             getActivity().finish();

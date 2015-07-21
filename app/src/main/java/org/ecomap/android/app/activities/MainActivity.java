@@ -50,7 +50,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.AddPhotoFragment;
 import org.ecomap.android.app.fragments.AddPhotoLibFragment;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
@@ -287,10 +286,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             default:
-                tag = AddPhotoFragment.class.getSimpleName();
+                tag = AddPhotoLibFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
                 if (fragment == null) {
-                    fragment = new AddPhotoFragment();
+                    fragment = new AddPhotoLibFragment();
                 }
                 break;
         }
