@@ -36,6 +36,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -81,10 +82,6 @@ public class EcoMapFragment extends Fragment {
 
     public static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
     private static final String tag = "EcoMapFragment";
-    // initializing static variables of position for map saving after rotation and backstack
-    private static double longitude = 30.417397;
-    private static double latitude = 50.461166;
-    private static float zoomlevel = 5;
     private static int markerClickType;
     private static String filterCondition;
     public ImageAdapter imgAdapter;
@@ -109,6 +106,7 @@ public class EcoMapFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private Marker marker;
     private List<String> mImagesURLArray;
+    private static CameraPosition cameraPosition;
 
     public static void setFilterCondition(String s) {
         filterCondition = s;
@@ -257,27 +255,9 @@ public class EcoMapFragment extends Fragment {
 
     // saving map position for restoring after rotation or backstack
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putDouble("longitude", mMap.getCameraPosition().target.longitude);
-        outState.putDouble("latitude", mMap.getCameraPosition().target.latitude);
-        outState.putFloat("zoomlevel", mMap.getCameraPosition().zoom);
-    }
-
-    // restoring saved map position after rotation or backstack
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            latitude = savedInstanceState.getDouble("latitude");
-            longitude = savedInstanceState.getDouble("longitude");
-            zoomlevel = savedInstanceState.getFloat("zoomlevel");
-        }
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
+        cameraPosition = mMap.getCameraPosition();
         // unregistering receiver after pausing fragment
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
     }
@@ -365,8 +345,19 @@ public class EcoMapFragment extends Fragment {
     }
 
     public void setUpClusterer() {
-        //Position the map from static variables
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
+
+            if(cameraPosition != null){
+
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+
+            else {
+                //Position the map from static variables
+                double longitude = 30.417397;
+                double latitude = 50.461166;
+                float zoomlevel = 5;
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
+            }
 
         //Initialize the manager with the mContext and the map.
         mClusterManager = new ClusterManager<>(mContext, mMap);
