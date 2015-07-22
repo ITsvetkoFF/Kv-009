@@ -29,7 +29,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -54,11 +53,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.fragments.FiltersFragment;
+import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.sync.EcoMapService;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -96,13 +95,13 @@ import java.util.List;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
-public class MainActivity extends AppCompatActivity implements Filterable{
+public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
+    public static final int NAV_FILTER=3;
     public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
-    public static final int NAV_FILTER=3;
     public final static String FIRST_NAME_KEY = "firstName";
     public final static String LAST_NAME_KEY = "lastName";
     public final static String EMAIL_KEY = "email";
@@ -122,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements Filterable{
     private static  String filterCondition="";
 
     private static Context mContext;
+    private Fragment fragment;
+    private FragmentManager fragmentManager;
 
     public static String getUserId() {
         return userId;

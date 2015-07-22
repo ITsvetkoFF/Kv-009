@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.fragments.LanguageFragment;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 import java.util.Random;
 
@@ -62,12 +61,6 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Context context = Profile.this;
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
                 AlertDialog.Builder alert = new AlertDialog.Builder(Profile.this);
                 alert.setMessage(getString(R.string.want_logout));
                 alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
@@ -82,6 +75,7 @@ public class Profile extends AppCompatActivity {
                         onBackPressed();
                     }
                 });
+
 
                 alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override

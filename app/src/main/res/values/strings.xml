@@ -9,6 +9,16 @@
         <item>Login</item>
     </string-array>
 
+    <string-array name="types">
+        <item>Forestry issues</item>
+        <item>Rubbish dump</item>
+        <item>Illegal building</item>
+        <item>Water pollution</item>
+        <item>Threat to biodiversity</item>
+        <item>Poaching</item>
+        <item>Other issues</item>
+    </string-array>
+
     <string name="message_you_are_logged">You are already logged in</string>
     <string name="first_name_blank">First name cannot be blank</string>
     <string name="second_name_blank">Second name cannot be blank</string>
@@ -55,13 +65,16 @@
     <string name="problem_type_string_1">Forestry issues</string>
     <string name="problem_type_string_2">Rubbish dump</string>
     <string name="problem_type_string_3">Illegal building</string>
-    <string name="problem_type_string_4">Water issues</string>
+    <string name="problem_type_string_4">Water pollution</string>
     <string name="problem_type_string_5">Threat to biodiversity</string>
     <string name="problem_type_string_6">Poaching</string>
     <string name="problem_type_string_7">Other issues</string>
 
     <string name="language_menu">Language</string>
     <string name="choose_language">Choose language</string>
+    <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
+    <string name="reset">Reset</string>
+    <string name="ok">Okay</string>
     <!---->
 
     <!--Do not translate!-->
@@ -71,16 +84,8 @@
         <item>Українська</item>
     </string-array>
 
-    <string-array name="types">
-        <item>Problem of woods</item>
-        <item>Landfill</item>
-        <item>illegal development</item>
-        <item>water pollution</item>
-        <item>diminishing of lifeforms</item>
-        <item>poaching problem</item>
-        <item>other problems</item>
 
-    </string-array>
+
     <string name="app_name" translatable="false">EcoMap</string>
     <string name="shared_preferences_title" translatable="false">ecomap</string>
     <string name="fileNamePreferences" translatable="false">EcoMapPref</string>
@@ -88,9 +93,6 @@
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="gridview_img_description" translatable="false">Image</string>
-    <!---->
-    
     <string name="prefLikedProblems">LikedProblems</string>
-    <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
-
+    <!---->
 </resources>
