@@ -138,7 +138,7 @@ public class CommentsFragment extends Fragment {
                 if(!MainActivity.isUserIsAuthorized()){
                     MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
                 }else if(comment.isEmpty()){
-                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_write_something_to_post, Snackbar.LENGTH_SHORT);
+                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.write_comment, Snackbar.LENGTH_SHORT);
                 }
             }
         });
@@ -199,7 +199,7 @@ public class CommentsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     private static class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {

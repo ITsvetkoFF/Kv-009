@@ -25,7 +25,7 @@ public class AddPhotoService extends Service {
         @Override
         public void run() {
             millis = System.currentTimeMillis() - startTime;
-            activity.updateClient(millis); //Update Activity (client) by the implementd callback
+            activity.updateClient(millis); //Update Activity (client) by the implemented callback
             handler.postDelayed(this, 1000);
         }
     };
@@ -67,6 +67,6 @@ public class AddPhotoService extends Service {
 
     //callbacks interface for communication with service clients!
     public interface Callbacks{
-        public void updateClient(long data);
+        void updateClient(long data);
     }
 }

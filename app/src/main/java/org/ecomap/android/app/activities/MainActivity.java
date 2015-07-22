@@ -17,6 +17,7 @@
 package org.ecomap.android.app.activities;
 
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,7 +29,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,21 +43,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.sync.EcoMapService;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -101,12 +97,15 @@ public class MainActivity extends AppCompatActivity {
     public static final int NAV_DETAILS = 2;
     public static final int NAV_RESOURCES = 3;
     public static final int NAV_PROFILE = 5;
+
     public final static String FIRST_NAME_KEY = "firstName";
     public final static String LAST_NAME_KEY = "lastName";
     public final static String EMAIL_KEY = "email";
     public final static String ROLE_KEY = "role";
     public final static String PASSWORD_KEY = "password";
+
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     public static CookieManager cookieManager;
     private static ListView mDrawerList;
     private static String[] mScreenTitles;
@@ -117,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private Toolbar toolbar;
+
+    private static Context mContext;
 
     public static String getUserId() {
         return userId;
@@ -139,18 +140,14 @@ public class MainActivity extends AppCompatActivity {
         return userIsAuthorized || getUserId() != null;
     }
 
-    public static void setUserIsAuthorized(boolean userIsAuthorized) {
-        MainActivity.userIsAuthorized = userIsAuthorized;
-    }
-
     public static void changeAuthorizationState() {
-        if (isUserIdSet()) {
-            mScreenTitles[5] = "Profile";
+        if (!isUserIdSet()) {
+            mScreenTitles[5] = mContext.getString(R.string.login);
 
             ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
             arrayAdapter.notifyDataSetChanged();
         } else {
-            mScreenTitles[5] = "Login";
+            mScreenTitles[5] = mContext.getString(R.string.profile);
 
             ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
             arrayAdapter.notifyDataSetChanged();
@@ -209,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -289,18 +288,9 @@ public class MainActivity extends AppCompatActivity {
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            case R.id.action_details:
-                // create intent to perform web search for this planet
-//                Intent intent = new Intent(this, ProblemDetailsActivity.class);
-//                startActivity(intent);
-                return true;
-            case R.id.action_add_polygon:
-                EcoMapFragment.setMarkerClickType(1);
-                return true;
-            case R.id.action_update:
-                Intent intentService = new Intent(this, EcoMapService.class);
-                startService(intentService);
-                return true;
+            case R.id.language:
+                DialogFragment df = new LanguageFragment();
+                df.show(getFragmentManager(), "language");
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -462,78 +452,10 @@ public class MainActivity extends AppCompatActivity {
             int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String planet = getResources().getStringArray(R.array.navigation_array)[i];
 
-
-//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-//                            "drawable", getActivity().getPackageName());
-//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
             getActivity().setTitle(planet);
             return rootView;
         }
     }
-
-    public static class FiltersFragment extends Fragment {
-        public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
-
-        public FiltersFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_map_filters, container, false);
-
-            //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
-            String[] planet = getResources().getStringArray(R.array.navigation_array);
-            ListView mListView = (ListView) rootView.findViewById(R.id.filter_list_view);
-            FiltersAdapter mFiltersAdapter = new FiltersAdapter(getActivity(), planet);
-            mListView.setAdapter(mFiltersAdapter);
-
-//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-//                            "drawable", getActivity().getPackageName());
-//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-            getActivity().setTitle("Filters");
-
-            return rootView;
-        }
-    }
-
-    public static class FiltersAdapter extends ArrayAdapter<String> {
-
-        Context mContext;
-
-        FiltersAdapter(Context context, String[] objects) {
-            super(context, R.layout.filter_listview_item, 0, objects);
-            this.mContext = context;
-
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            View view;
-            if (convertView == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
-            } else {
-                view = convertView;
-            }
-
-            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
-            String text = getItem(position);
-            txtListItem.setText(text);
-            CheckBox chkBox = (CheckBox) view.findViewById(R.id.checkBox);
-            chkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Toast.makeText(mContext, "You select: " + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            return view;
-            //super.getView(position, convertView, parent);
-        }
-    }
-
 }
 
 

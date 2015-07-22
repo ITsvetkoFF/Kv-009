@@ -1,6 +1,7 @@
 package org.ecomap.android.app.activities;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -8,12 +9,15 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.LanguageFragment;
 
 import java.util.Random;
 
@@ -58,8 +62,8 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(Profile.this);
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                alert.setMessage(getString(R.string.want_logout));
+                alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         MainActivity.cookieManager.getCookieStore().removeAll();
@@ -77,7 +81,7 @@ public class Profile extends AppCompatActivity {
                         onBackPressed();
                     }
                 });
-                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -87,12 +91,26 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-
-
         firstName.setText(sharedPreferences.getString(MainActivity.FIRST_NAME_KEY, ""));
         lastName.setText(sharedPreferences.getString(MainActivity.LAST_NAME_KEY, ""));
         email.setText(sharedPreferences.getString(MainActivity.EMAIL_KEY, ""));
-        //head.setBackgroundResource(setRandomHead());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.language:
+                DialogFragment df = new LanguageFragment();
+                df.show(getFragmentManager(), "language");
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private int setRandomHead(){

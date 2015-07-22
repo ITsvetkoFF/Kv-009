@@ -11,54 +11,6 @@
 
     <com.wunderlist.slidinglayer.SlidingLayer
         xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/slidingLayer1"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        slidingLayer:offsetDistance="0dp"
-        slidingLayer:previewOffsetDistance="0dp"
-        slidingLayer:stickTo="bottom"
-        slidingLayer:changeStateOnTap="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="choose a location to add new problem"
-            android:layout_gravity="center_horizontal">
-        </TextView>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:id="@+id/button_proceed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/proceed"
-                android:layout_weight="1">
-            </Button>
-            <Button
-                 android:id="@+id/button_cancel"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:text="@string/cancel"
-                android:layout_weight="1">
-
-            </Button>
-
-        </LinearLayout>
-        </LinearLayout>
-
-
-    </com.wunderlist.slidinglayer.SlidingLayer>
-
-    <com.wunderlist.slidinglayer.SlidingLayer
-        xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
         android:id="@+id/show_problem_sliding_layer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -176,7 +128,7 @@
 
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:text="3"
+                            android:text=""
                             android:gravity="right"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
@@ -191,7 +143,6 @@
                             android:layout_height="24dp"
                             android:id="@+id/show_like"
                             android:src="@drawable/heart_icon"
-                            android:contentDescription="heart"
                             android:layout_alignParentTop="true"
                             android:layout_toLeftOf="@+id/show_numOfLikes"
                             android:layout_toStartOf="@+id/show_numOfLikes"
@@ -202,7 +153,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/textRed"
-                            android:text="@string/string_unsolved"
                             android:id="@+id/show_status"
 
                             android:layout_alignParentTop="true"

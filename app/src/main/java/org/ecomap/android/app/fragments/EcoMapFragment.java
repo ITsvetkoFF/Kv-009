@@ -1,6 +1,5 @@
 package org.ecomap.android.app.fragments;
 
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,12 +8,11 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,7 +26,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,7 +68,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -108,7 +104,6 @@ public class EcoMapFragment extends Fragment {
     private static int markerClickType;
     private View v;
     private SlidingLayer slidingLayer;
-    private SlidingLayer addProblemSliding;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showType, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private LinearLayout showHead;
@@ -151,15 +146,12 @@ public class EcoMapFragment extends Fragment {
         points = new ArrayList<>();
         markers = new ArrayList<>();
         mContext = getActivity();
-        addProblemSliding= (SlidingLayer) v.findViewById(R.id.slidingLayer1);
-        addProblemSliding.setSlidingEnabled(false);
 
         floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProblemSliding.openLayer(true);
                 //call the wunderlist
                 setMarkerClickType(2);
             }
@@ -200,14 +192,6 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClosed() {
 
-            }
-        });
-
-        cancelButton = (Button)v.findViewById(R.id.button_cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addProblemSliding.closeLayer(true);
             }
         });
 
@@ -367,31 +351,27 @@ public class EcoMapFragment extends Fragment {
                             marker.remove();
                         }
                         marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                        marker.setTitle("Houston we have a problem here!");
+                        marker.setTitle(getString(R.string.have_problem));
                         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
                     } else {
 
                         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(R.string.action_sign_in);
-                        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+                        alert.setMessage(R.string.sign_in);
+
+                        alert.setPositiveButton(getString(R.string.sign_in), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 new LoginFragment().show(getFragmentManager(), "login_layout");
                             }
                         });
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //dialog.cancel();
                             }
                         });
-                        //alert.setCancelable(true);
-                       /* alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                dialog.cancel();
-                            }
-                        });*/
+
                         alert.show();
                     }
                 }

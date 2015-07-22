@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="navigation_array">
+        <item>Мапа</item>
+        <item>Статистика</item>
+        <item>ТОП 10</item>
+        <item>Фільтри</item>
+        <item>Ресурси</item>
+        <item>Увійти</item>
+    </string-array>
+
+    <string name="message_you_are_logged">Ви вже увійшли до системи</string>
+    <string name="first_name_blank">Ім\'я не може бути порожнім</string>
+    <string name="second_name_blank">Прізвище не може бути порожнім</string>
+    <string name="incorrect_email">Введіть правильну едектронну адресу</string>
+    <string name="fill_all_fields">Заповньті всі поля коректно</string>
+    <string name="email_blank">Електронна адреса не може буті порожньою</string>
+    <string name="password_blank">Пароль не може бути порожнім</string>
+    <string name="check_internet">Перевірте інтернет з\'єднання</string>
+    <string name="connecting_server">З\'єднуємося з сервером Ecomap</string>
+    <string name="message_log_in_to_leave_comments">Увійдіть, щоб коментувати</string>
+    <string name="message_isLiked">Голос додано</string>
+    <string name="message_isAlreadyLiked">Ви вже голосували за дану проблему</string>
+
+    <string name="register_if_new">Новий користувач? Зареєструйся!</string>
+    <string name="want_logout">Ви насправді бажаєте вийти?</string>
+    <string name="change_password">Забули пароль? Змініть його!</string>
+    <string name="write_comment">Напишіть коментар...</string>
+    <string name="have_problem">Хьюстон у нас проблема!</string>
+    <string name="action_add_polygon">Додати полігон</string>
+    <string name="profile">Профіль</string>
+
+    <string name="string_suggested_solution">Пропозиції щодо вирішення</string>
+    <string name="string_description">Опис</string>
+    <string name="add_problem_title">Заголовок</string>
+    <string name="add_problem_type">Тип проблеми</string>
+    <string name="add_problem_add_button">Додати</string>
+    <string name="first_name">Ім\'я</string>
+    <string name="last_name">Прізвище</string>
+    <string name="role">Роль</string>
+    <string name="user">Користувач</string>
+    <string name="email">Електронна адреса</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Підтвердіть пароль</string>
+
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="sign_in">Увійти</string>
+    <string name="cancel">Відмінити</string>
+    <string name="sign_up">Зареєструватися</string>
+    <string name="login">Увійти</string>
+    <string name="logout">Вийти</string>
+    <string name="post">Запостити</string>
+
+    <string name="problem_type_string_1">Проблеми лісів</string>
+    <string name="problem_type_string_2">Свалка</string>
+    <string name="problem_type_string_3">Незаконне будівництво</string>
+    <string name="problem_type_string_4">Проблеми водоймищ</string>
+    <string name="problem_type_string_5">Загроза біорізноманіттю</string>
+    <string name="problem_type_string_6">Браконьєрство</string>
+    <string name="problem_type_string_7">Інші проблеми</string>
+
+    <string name="language_menu">Мова</string>
+    <string name="choose_language">Оберіть мову</string>
+</resources>
