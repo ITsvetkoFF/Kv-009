@@ -308,7 +308,7 @@ public class EcoMapFragment extends Fragment {
         mMap.clear();
 
         cursor = getActivity().getContentResolver()
-                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
+                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null);
 
         while (cursor.moveToNext()) {
             Problem p = new Problem(cursor, getActivity());
