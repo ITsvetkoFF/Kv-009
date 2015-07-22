@@ -3,13 +3,13 @@ package org.ecomap.android.app.sync;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +25,6 @@ import java.util.Vector;
 public class EcoMapService extends IntentService {
 
     private final String LOG_TAG = EcoMapService.class.getSimpleName();
-    private SharedPreferences sPref;
     private int numCurrentRevision;
 
     // is this a first start of app and service?
@@ -46,8 +45,7 @@ public class EcoMapService extends IntentService {
 
             try {
 
-                sPref = getSharedPreferences(getString(R.string.fileNamePreferences), MODE_PRIVATE);
-                numCurrentRevision = sPref.getInt(getString(R.string.prefNumRevision), 0);
+                numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(),getString(R.string.fileNamePreferences),getString(R.string.prefNumRevision), 0);
 
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
@@ -235,10 +233,7 @@ public class EcoMapService extends IntentService {
             }
 
             //update preferences
-            sPref = getSharedPreferences(getString(R.string.fileNamePreferences), MODE_PRIVATE);
-            SharedPreferences.Editor ed = sPref.edit();
-            ed.putInt(getString(R.string.prefNumRevision), numNewRevision);
-            ed.commit();
+            SharedPreferencesHelper.updateNumRevision(getApplicationContext(),numNewRevision);
 
             Log.i(LOG_TAG, "revision was updated!");
 

@@ -30,8 +30,6 @@
 
     <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
 
-    <string name="shared_preferences_title">ecomap</string>
-
     <string name="hello_world">Hello world!</string>
 
 <!-- TODO: Remove or change this placeholder text -->
@@ -106,5 +104,6 @@
     <!---->
 
     <string name="facebook_app_id">428789340644097</string>
+    <string name="prefLikedProblems">LikedProblems</string>
 
 </resources>
