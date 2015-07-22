@@ -8,6 +8,7 @@ import android.util.Pair;
 
 import org.ecomap.android.app.data.model.SerializableUriCookiePair;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,25 +31,28 @@ public class PersistentCookieStore implements CookieStore {
     private CookieStore store;
 
     private static final String LOG_TAG = PersistentCookieStore.class.getSimpleName();
-    private static final String COOKIE_PREFS = EcoMapAPIContract.APP_PACKAGE_NAME + ".CookiePrefsFile";
-    private static final String COOKIE_NAME_STORE = "names";
-    private static final String COOKIE_NAME_PREFIX = "cookie_";
+
+    public static final String COOKIE_PREFS = EcoMapAPIContract.APP_PACKAGE_NAME + ".CookiePrefsFile";
+    public static final String COOKIE_NAME_STORE = "names";
+    public static final String COOKIE_NAME_PREFIX = "cookie_";
+
+    private Context mContext;
 
     private boolean omitNonPersistentCookies = false;
-    private final SharedPreferences cookiePrefs;
 
     public PersistentCookieStore(Context context) {
 
+        this.mContext = context;
+
         // get the default in memory cookie store
         store = new CookieManager().getCookieStore();
-        cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, Context.MODE_PRIVATE);
 
         // Load any previously stored cookies into the store
-        String storedCookieNames = cookiePrefs.getString(COOKIE_NAME_STORE, null);
+        String storedCookieNames = SharedPreferencesHelper.getStringPref(context, COOKIE_PREFS, COOKIE_NAME_STORE, null);
         if (storedCookieNames != null) {
             String[] cookieNames = TextUtils.split(storedCookieNames, ",");
             for (String name : cookieNames) {
-                String encodedCookie = cookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
+                String encodedCookie = SharedPreferencesHelper.getStringPref(context, COOKIE_PREFS, COOKIE_NAME_PREFIX + name, null);
                 if (encodedCookie != null) {
                     Pair<URI, HttpCookie> pairUriCookie = decodeCookie(encodedCookie);
                     if (pairUriCookie != null) {
@@ -62,19 +66,17 @@ public class PersistentCookieStore implements CookieStore {
 
     /**
      * Add a cookie to persistent store
-     * @param uri - cookie URI
+     *
+     * @param uri    - cookie URI
      * @param cookie - http cookie object
      */
-    public void	add(URI uri, HttpCookie cookie) {
+    public void add(URI uri, HttpCookie cookie) {
         store.add(uri, cookie);
 
         String name = cookie.getName() + cookie.getDomain();
 
         // Save cookie into persistent store
-        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-        prefsWriter.putString(COOKIE_NAME_STORE, getInlineCookiesNames());
-        prefsWriter.putString(COOKIE_NAME_PREFIX + name, encodeCookie(new SerializableUriCookiePair(uri, cookie)));
-        prefsWriter.apply();
+        SharedPreferencesHelper.addCookie(mContext, name, getInlineCookiesNames(), encodeCookie(new SerializableUriCookiePair(uri, cookie)));
 
     }
 
@@ -95,27 +97,17 @@ public class PersistentCookieStore implements CookieStore {
         boolean b = store.remove(uri, cookie);
 
         String name = cookie.getName() + cookie.getDomain();
-        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-        prefsWriter.remove(COOKIE_NAME_PREFIX + name);
-        prefsWriter.putString(COOKIE_NAME_STORE, getInlineCookiesNames());
-        prefsWriter.apply();
+
+        //Remove cookie from preferences
+        SharedPreferencesHelper.removeCookie(mContext, name, getInlineCookiesNames());
 
         return b;
     }
 
-    public boolean removeAll()  {
+    public boolean removeAll() {
 
         // Clear cookies from persistent store
-        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-        List<HttpCookie> cookies = getCookies();
-
-        for (HttpCookie cookie : cookies) {
-            String name = cookie.getName() + cookie.getDomain();
-            prefsWriter.remove(COOKIE_NAME_PREFIX + name);
-        }
-
-        prefsWriter.remove(COOKIE_NAME_STORE);
-        prefsWriter.apply();
+        SharedPreferencesHelper.removeAllCookie(mContext, getCookies());
 
         return store.removeAll();
     }
@@ -199,16 +191,17 @@ public class PersistentCookieStore implements CookieStore {
 
     /**
      * Using for
+     *
      * @return comma separated string with cookies names
      */
-    private String getInlineCookiesNames(){
+    private String getInlineCookiesNames() {
 
         List<HttpCookie> cookies = store.getCookies();
 
         StringBuilder sCookiesNames = new StringBuilder();
 
         boolean firstTime = true;
-        for (HttpCookie token: cookies) {
+        for (HttpCookie token : cookies) {
             if (firstTime) {
                 firstTime = false;
             } else {

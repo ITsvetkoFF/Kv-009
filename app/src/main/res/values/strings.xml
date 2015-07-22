@@ -71,6 +71,16 @@
         <item>Українська</item>
     </string-array>
 
+    <string-array name="types">
+        <item>Problem of woods</item>
+        <item>Landfill</item>
+        <item>illegal development</item>
+        <item>water pollution</item>
+        <item>diminishing of lifeforms</item>
+        <item>poaching problem</item>
+        <item>other problems</item>
+
+    </string-array>
     <string name="app_name" translatable="false">EcoMap</string>
     <string name="shared_preferences_title" translatable="false">ecomap</string>
     <string name="fileNamePreferences" translatable="false">EcoMapPref</string>
@@ -79,5 +89,8 @@
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="gridview_img_description" translatable="false">Image</string>
     <!---->
+    
+    <string name="prefLikedProblems">LikedProblems</string>
+    <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
 
 </resources>

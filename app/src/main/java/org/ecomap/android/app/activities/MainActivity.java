@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,17 +44,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.sync.EcoMapService;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -91,21 +96,19 @@ import java.util.List;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Filterable{
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
-    public static final int NAV_RESOURCES = 3;
+    public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
-
+    public static final int NAV_FILTER=3;
     public final static String FIRST_NAME_KEY = "firstName";
     public final static String LAST_NAME_KEY = "lastName";
     public final static String EMAIL_KEY = "email";
     public final static String ROLE_KEY = "role";
     public final static String PASSWORD_KEY = "password";
-
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-
     public static CookieManager cookieManager;
     private static ListView mDrawerList;
     private static String[] mScreenTitles;
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private Toolbar toolbar;
+    private static  String filterCondition="";
 
     private static Context mContext;
 
@@ -138,6 +142,10 @@ public class MainActivity extends AppCompatActivity {
 
     public static boolean isUserIsAuthorized() {
         return userIsAuthorized || getUserId() != null;
+    }
+
+    public static void setUserIsAuthorized(boolean userIsAuthorized) {
+        MainActivity.userIsAuthorized = userIsAuthorized;
     }
 
     public static void changeAuthorizationState() {
@@ -298,18 +306,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = null;
+        fragmentManager = getSupportFragmentManager();
+
         boolean stop = false;
         String tag = null;
 
         switch (position) {
             case NAV_MAP:
-                tag = EcoMapFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment == null) {
-                    fragment = new EcoMapFragment();
-                }
+                chooseEcoMapFragment(filterCondition);
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();
@@ -323,6 +327,13 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new MockFragment();
                 }
                 break;
+            case NAV_FILTER:
+                tag = FiltersFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new FiltersFragment();}
+                break;
+
             case NAV_DETAILS:
                 tag = MockFragment.class.getSimpleName();
                 fragment = fragmentManager.findFragmentByTag(tag);
@@ -337,12 +348,12 @@ public class MainActivity extends AppCompatActivity {
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
+                    /*Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
                     TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setTextColor(Color.WHITE);//change Snackbar's text color;
-                    snackbar.show();
+                    snackbar.show();*/
 
                     break;
                 } else {
@@ -385,6 +396,17 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
+    private void chooseEcoMapFragment(String s) {
+        String tag;
+        tag = EcoMapFragment.class.getSimpleName();
+        fragment = fragmentManager.findFragmentByTag(tag);
+        if(fragment == null) {
+            fragment = new EcoMapFragment();
+        }
+        EcoMapFragment frag=(EcoMapFragment) fragment;
+        frag.setFilterCondition(s);
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
@@ -395,6 +417,12 @@ public class MainActivity extends AppCompatActivity {
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
      */
+
+    @Override
+    public void filter(String s){
+        filterCondition=s;
+        selectItem(0);
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -452,10 +480,78 @@ public class MainActivity extends AppCompatActivity {
             int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String planet = getResources().getStringArray(R.array.navigation_array)[i];
 
+
+//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
+//                            "drawable", getActivity().getPackageName());
+//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
             getActivity().setTitle(planet);
             return rootView;
         }
     }
+
+    /*public static class FiltersFragment extends Fragment {
+        public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
+
+        public FiltersFragment() {
+            // Empty constructor required for fragment subclasses
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.fragment_map_filters, container, false);
+
+            //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
+            String[] planet = getResources().getStringArray(R.array.navigation_array);
+            ListView mListView = (ListView) rootView.findViewById(R.id.filter_list_view);
+            FiltersAdapter mFiltersAdapter = new FiltersAdapter(getActivity(), planet);
+            mListView.setAdapter(mFiltersAdapter);
+
+//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
+//                            "drawable", getActivity().getPackageName());
+//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
+            getActivity().setTitle("Filters");
+
+            return rootView;
+        }
+    } */
+
+    public static class FiltersAdapter extends ArrayAdapter<String> {
+
+        Context mContext;
+
+        FiltersAdapter(Context context, String[] objects) {
+            super(context, R.layout.filter_listview_item, 0, objects);
+            this.mContext = context;
+
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            View view;
+            if (convertView == null) {
+                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
+            } else {
+                view = convertView;
+            }
+
+            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
+            String text = getItem(position);
+            txtListItem.setText(text);
+            CheckBox chkBox = (CheckBox) view.findViewById(R.id.checkBox);
+            chkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    Toast.makeText(mContext, "You select: " + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+            return view;
+            //super.getView(position, convertView, parent);
+        }
+    }
+
 }
 
 

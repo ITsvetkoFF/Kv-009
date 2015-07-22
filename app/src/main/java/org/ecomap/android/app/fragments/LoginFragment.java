@@ -2,7 +2,6 @@ package org.ecomap.android.app.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -17,10 +16,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -181,20 +182,17 @@ public class LoginFragment extends DialogFragment {
 
                         JSONObject data = new JSONObject(responseBody.toString());
 
-                        SharedPreferences sharedPreferences = getActivity().
-                                getSharedPreferences(getResources().getString(R.string.shared_preferences_title),Context.MODE_PRIVATE);
-                        SharedPreferences.Editor edit = sharedPreferences.edit();
-                        edit.putString(MainActivity.FIRST_NAME_KEY, data.get("first_name").toString());
-                        edit.putString(MainActivity.LAST_NAME_KEY, data.get("last_name").toString());
-                        edit.putString(MainActivity.EMAIL_KEY, params[0]);
-                        edit.putString(MainActivity.PASSWORD_KEY, params[1]);
-                        edit.commit();
-
+                        SharedPreferencesHelper.onLogInSavePref(mContext, data.get("first_name").toString(),
+                                data.get("last_name").toString(),
+                                params[0],
+                                params[1]);
 
                         MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
 
-                        resMessage = "Hello " + sharedPreferences.getString(MainActivity.FIRST_NAME_KEY, "")
-                                + " " + sharedPreferences.getString(MainActivity.LAST_NAME_KEY, "") + "!";
+                        String fileNamePref = getResources().getString(R.string.fileNamePreferences);
+
+                        resMessage = "Hello " + SharedPreferencesHelper.getStringPref(mContext,fileNamePref,MainActivity.FIRST_NAME_KEY, "")
+                                + " " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.LAST_NAME_KEY, "") + "!";
 
                     } else {
 
@@ -232,7 +230,8 @@ public class LoginFragment extends DialogFragment {
 
             progressBar.dismiss();
             dismiss();
-            Snackbar.make(getView(), resMessage, Snackbar.LENGTH_LONG).show();
+
+            Toast.makeText(mContext, resMessage, Toast.LENGTH_LONG).show();
         }
     }
 

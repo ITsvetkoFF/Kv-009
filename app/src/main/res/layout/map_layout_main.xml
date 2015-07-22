@@ -216,15 +216,61 @@
 
     </com.wunderlist.slidinglayer.SlidingLayer>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            android:layout_gravity="bottom|right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="visible"
+            app:fabSize="normal" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_white_24dp"
+            android:layout_gravity="bottom|right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            app:fabSize="normal" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_white_18dp"
+            android:layout_gravity="bottom|left"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            app:fabSize="mini" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:scrollbars="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_white_24dp"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        app:fabSize="normal" />
+        app:tabMode="fixed"
+        app:tabGravity="fill" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/tabLayout"/>
 
 </RelativeLayout>
