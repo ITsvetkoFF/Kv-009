@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">EcoMap</string>
-    <string name="title_activity_maps">Eco map</string>
-
+    <!--Translatable strings-->
     <string-array name="navigation_array">
         <item>Map</item>
         <item>Statistics</item>
@@ -11,101 +9,90 @@
         <item>Login</item>
     </string-array>
 
-    <string-array name="problem_details_tabs">
-        <item>Details</item>
-        <item>Comments</item>
-        <item>Activity</item>
-    </string-array>
-
-    <string name="action_add_polygon">Add polygon</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_details">Details</string>
-    <string name="action_update">Update</string>
-    <string name="title_activity_problem_details">ProblemDetailsActivity</string>
-    <string name="title_activity_profile">Profile</string>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="gridview_img_description">Image</string>
-    <string name="title_activity_view_photos">Problem\'s photos</string>
-
-    <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
-
-    <string name="hello_world">Hello world!</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <!-- Strings related to login -->
-    <string name="title_login_layout">Sign In</string>
-    <string name="title_registration_layut">Sign Up</string>
-    <string name="prompt_first_name">First Name</string>
-    <string name="prompt_second_name">Second Name</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="prompt_confirm_password">Confirm Password</string>
-    <string name="action_sign_in">Sign in or Register</string>
-    <string name="action_sign_in_short">Sign In</string>
-    <string name="plus_sign_out">Switch Google+ account</string>
-    <string name="plus_disconnect">Disconnect from Google+</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="message_you_are_logged">You are already logged in</string>
-    <!---->
-
-    <string name="fileNamePreferences">EcoMapPref</string>
-    <string name="prefNumRevision">numRevision</string>
-    <string name="proceed">Proceed</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">OK</string>
-
-    <!--Strings for filtermap fragment-->
-    <string name="woods_problem">Problem of woods</string>
-    <string name="trash_problem">Landfill</string>
-    <string name="building_problem">illegal development</string>
-    <string name="water_problem">water pollution</string>
-    <string name="lifeforms_problem">diminishing of lifeforms</string>
-    <string name="poaching_problem">poaching problem</string>
-    <string name="other_problem">other problems</string>
-    <string name="reset">Reset filters</string>
-
     <string-array name="types">
-        <item>Problem of woods</item>
-        <item>Landfill</item>
-        <item>illegal development</item>
-        <item>water pollution</item>
-        <item>diminishing of lifeforms</item>
-        <item>poaching problem</item>
-        <item>other problems</item>
-
+        <item>Forestry issues</item>
+        <item>Rubbish dump</item>
+        <item>Illegal building</item>
+        <item>Water pollution</item>
+        <item>Threat to biodiversity</item>
+        <item>Poaching</item>
+        <item>Other issues</item>
     </string-array>
 
-    <string name="problem_type_string_1">Проблемы лесов</string>
-    <string name="problem_type_string_2">Свалка</string>
-    <string name="problem_type_string_3">Незаконное строительство</string>
-    <string name="problem_type_string_4">Проблемы водойомов</string>
-    <string name="problem_type_string_5">Угроза биоразнообразию</string>
-    <string name="problem_type_string_6">Браконьерство</string>
-    <string name="problem_type_string_7">Прочие проблемы</string>
+    <string name="message_you_are_logged">You are already logged in</string>
+    <string name="first_name_blank">First name cannot be blank</string>
+    <string name="second_name_blank">Second name cannot be blank</string>
+    <string name="incorrect_email">Enter correct email</string>
+    <string name="fill_all_fields">Fill all fields correctly, please</string>
+    <string name="email_blank">Email cannot be blank</string>
+    <string name="password_blank">Password cannot be blank</string>
+    <string name="check_internet">Check internet connection please</string>
+    <string name="connecting_server">Connecting Ecomap server</string>
+    <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
+    <string name="message_isLiked">Vote added</string>
+    <string name="message_isAlreadyLiked">You have already vote for this problem</string>
 
-
-
-    <!-- Accessibility content descriptions block-->
-    <string name="user_avatar">User avatar</string>
+    <string name="register_if_new">New to EcoMap? Register here</string>
+    <string name="want_logout">Do you really want to logout?</string>
+    <string name="change_password">Forgot your password? Change it!</string>
     <string name="write_comment">Write a comment...</string>
-    <string name="button_send_comment_caption">Post</string>
-    <string name="message_write_something_to_post">Write something to post</string>
-    <string name="message_isLiked">Голос добавлен</string>
-    <string name="message_isAlreadyLiked">Вы уже голосовали за эту проблему</string>
-    <string name="string_suggested_solution">Suggested solution:</string>
-    <string name="string_description">Description:</string>
-    <string name="string_unsolved">unsolved</string>
+    <string name="have_problem">Houston we have a problem!</string>
+    <string name="action_add_polygon">Add polygon</string>
+    <string name="profile">Profile</string>
+
+    <string name="string_suggested_solution">Suggested solution</string>
+    <string name="string_description">Description</string>
+    <string name="add_problem_title">Problem title</string>
+    <string name="add_problem_type">Problem type</string>
+    <string name="add_problem_add_button">Add</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="role">Role</string>
+    <string name="user">User</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="sign_in">Sign in</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_up">Sign up</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="post">Post</string>
+
+    <string name="problem_type_string_1">Forestry issues</string>
+    <string name="problem_type_string_2">Rubbish dump</string>
+    <string name="problem_type_string_3">Illegal building</string>
+    <string name="problem_type_string_4">Water pollution</string>
+    <string name="problem_type_string_5">Threat to biodiversity</string>
+    <string name="problem_type_string_6">Poaching</string>
+    <string name="problem_type_string_7">Other issues</string>
+
+    <string name="language_menu">Language</string>
+    <string name="choose_language">Choose language</string>
+    <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
+    <string name="reset">Reset</string>
+    <string name="ok">Okay</string>
     <!---->
 
-    <string name="facebook_app_id">428789340644097</string>
+    <!--Do not translate!-->
+    <string-array name="supported_languages" translatable="false">
+        <item>English</item>
+        <item>Русский</item>
+        <item>Українська</item>
+    </string-array>
+
+
+
+    <string name="app_name" translatable="false">EcoMap</string>
+    <string name="shared_preferences_title" translatable="false">ecomap</string>
+    <string name="fileNamePreferences" translatable="false">EcoMapPref</string>
+    <string name="prefNumRevision" translatable="false">numRevision</string>
+    <string name="drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="gridview_img_description" translatable="false">Image</string>
     <string name="prefLikedProblems">LikedProblems</string>
-
-    <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
-
+    <!---->
 </resources>

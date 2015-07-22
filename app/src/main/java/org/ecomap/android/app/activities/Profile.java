@@ -1,18 +1,22 @@
 package org.ecomap.android.app.activities;
 
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 import java.util.Random;
@@ -57,12 +61,9 @@ public class Profile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final Context context = Profile.this;
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-
-                alert.setMessage("Do you really want to logout?");
-                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
+                AlertDialog.Builder alert = new AlertDialog.Builder(Profile.this);
+                alert.setMessage(getString(R.string.want_logout));
+                alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         MainActivity.cookieManager.getCookieStore().removeAll();
@@ -75,13 +76,13 @@ public class Profile extends AppCompatActivity {
                     }
                 });
 
+
                 alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
-
                 alert.show();
             }
         });
@@ -89,7 +90,23 @@ public class Profile extends AppCompatActivity {
         firstName.setText(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.FIRST_NAME_KEY, ""));
         lastName.setText(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.LAST_NAME_KEY, ""));
         email.setText(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.EMAIL_KEY, ""));
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.language:
+                DialogFragment df = new LanguageFragment();
+                df.show(getFragmentManager(), "language");
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private int setRandomHead(){

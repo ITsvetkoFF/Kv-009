@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content">
                     <EditText
                         android:id="@+id/first_name"
-                        android:hint="@string/prompt_first_name"
+                        android:hint="@string/first_name"
                         android:inputType="textPersonName"
                         android:imeOptions="actionNext"
                         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content">
                     <EditText
                         android:id="@+id/second_name"
-                        android:hint="@string/prompt_second_name"
+                        android:hint="@string/last_name"
                         android:inputType="textPersonName"
                         android:imeOptions="actionNext"
                         android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
-                        android:hint="@string/prompt_email"
+                        android:hint="@string/email"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -113,7 +113,7 @@
                         android:id="@+id/password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_password"
+                        android:hint="@string/password"
                         android:imeOptions="actionNext"
                         android:inputType="textPassword"
                         android:maxLines="1"
@@ -130,7 +130,7 @@
                         android:id="@+id/confirm_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_confirm_password"
+                        android:hint="@string/confirm_password"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -143,7 +143,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Sign Up"
+                    android:text="@string/sign_up"
                     android:textStyle="bold" />
                 <!-- SIGN UP BUTTON end -->
 

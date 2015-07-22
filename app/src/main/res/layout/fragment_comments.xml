@@ -26,8 +26,8 @@
         android:layout_alignParentBottom="false"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:hint="Post comment"
-        android:text="@string/button_send_comment_caption" />
+        android:hint="@string/post"
+        android:text="@string/post" />
 
 
 <!--

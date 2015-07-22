@@ -40,7 +40,7 @@ public class LoginFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_layout, container, false);
-        getDialog().setTitle("Sign In");
+        getDialog().setTitle(getString(R.string.sign_in));
 
         return view;
     }
@@ -62,17 +62,17 @@ public class LoginFragment extends DialogFragment {
                 if (!hasFocus) {
                     if (!email.getText().toString().isEmpty()) {
                         if (!MainActivity.isEmailValid(email.getText().toString())) {
-                            tilEmail.setError("Please enter correct email");
+                            tilEmail.setError(getString(R.string.incorrect_email));
                             signIn.setClickable(false);
-                            Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                         } else {
                             tilEmail.setErrorEnabled(false);
                             signIn.setClickable(true);
                         }
                     } else if (email.getText().toString().isEmpty()) {
-                        tilEmail.setError("Email cannot be blank");
+                        tilEmail.setError(getString(R.string.email_blank));
                         signIn.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilEmail.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -88,9 +88,9 @@ public class LoginFragment extends DialogFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (password.getText().toString().isEmpty()) {
-                        tilPass.setError("Password cannot be blank");
+                        tilPass.setError(getString(R.string.password_blank));
                         signIn.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilPass.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -109,7 +109,7 @@ public class LoginFragment extends DialogFragment {
                     new LoginTask(getActivity()).execute(email.getText().toString()
                             , password.getText().toString());
                 } else {
-                    Snackbar.make(v, "Check internet connection please", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -139,7 +139,7 @@ public class LoginFragment extends DialogFragment {
             super.onPreExecute();
 
             progressBar = new ProgressDialog(mContext);
-            progressBar.setMessage("Connecting to Ecomap Server");
+            progressBar.setMessage(getString(R.string.connecting_server));
             progressBar.setIndeterminate(true);
             progressBar.setCancelable(true);
             progressBar.show();
@@ -211,14 +211,14 @@ public class LoginFragment extends DialogFragment {
 
                 }
 
+                connection.disconnect();
+
                 return null;
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            finally {
-                connection.disconnect();
-            }
+
             return null;
         }
 

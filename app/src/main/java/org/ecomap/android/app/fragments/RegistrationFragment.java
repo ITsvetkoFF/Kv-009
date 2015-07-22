@@ -43,7 +43,7 @@ public class RegistrationFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.registration_layout, container, false);
-        getDialog().setTitle("Sign Up");
+        getDialog().setTitle(getString(R.string.sign_up));
 
         return view;
     }
@@ -66,9 +66,9 @@ public class RegistrationFragment extends DialogFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (firstName.getText().toString().isEmpty()){
-                        tilFirstName.setError("First name cannot be blank");
+                        tilFirstName.setError(getString(R.string.first_name_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilFirstName.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -84,9 +84,9 @@ public class RegistrationFragment extends DialogFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (secondName.getText().toString().isEmpty()){
-                        tilSecondName.setError("Second name cannot be blank");
+                        tilSecondName.setError(getString(R.string.second_name_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilSecondName.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -103,17 +103,17 @@ public class RegistrationFragment extends DialogFragment {
                 if (!hasFocus) {
                     if (!email.getText().toString().isEmpty()) {
                         if (!MainActivity.isEmailValid(email.getText().toString())) {
-                            tilEmail.setError("Please enter correct email");
+                            tilEmail.setError(getString(R.string.incorrect_email));
                             signUp.setClickable(false);
-                            Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                         } else {
                             tilEmail.setErrorEnabled(false);
                             signUp.setClickable(true);
                         }
                     } else if (email.getText().toString().isEmpty()) {
-                        tilEmail.setError("Email cannot be blank");
+                        tilEmail.setError(getString(R.string.email_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilEmail.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -129,9 +129,9 @@ public class RegistrationFragment extends DialogFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (password.getText().toString().isEmpty()){
-                        tilPassword.setError("Password cannot be blank");
+                        tilPassword.setError(getString(R.string.password_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilPassword.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -147,9 +147,9 @@ public class RegistrationFragment extends DialogFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (confirmPassword.getText().toString().isEmpty()){
-                        tilConfirmPassword.setError("Password cannot be blank");
+                        tilConfirmPassword.setError(getString(R.string.password_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilConfirmPassword.setErrorEnabled(false);
                         confirmPassword.setClickable(true);
@@ -167,7 +167,7 @@ public class RegistrationFragment extends DialogFragment {
                             , secondName.getText().toString(), email.getText().toString()
                             , password.getText().toString(), confirmPassword.getText().toString());
                 } else {
-                    Snackbar.make(v, "Check internet connection please", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -189,7 +189,7 @@ public class RegistrationFragment extends DialogFragment {
             super.onPreExecute();
 
             progressBar = new ProgressDialog(mContext);
-            progressBar.setMessage("Connecting to Ecomap Server");
+            progressBar.setMessage(getString(R.string.connecting_server));
             progressBar.setIndeterminate(true);
             progressBar.setCancelable(true);
             progressBar.show();
@@ -262,13 +262,6 @@ public class RegistrationFragment extends DialogFragment {
                         JSONObject data = new JSONObject(responseBody.toString());
                         resMessage = data.get("message").toString();
                     }
-                } else if(params[0].isEmpty() || params[1].isEmpty() || params[3].isEmpty()
-                        || params[2].isEmpty()){
-                    resMessage = "Please fill all the fields for registration";
-                } else if (! params[3].equals(params[4])){
-                    resMessage = "Password does not match";
-                } else if(! MainActivity.isEmailValid(params[2])) {
-                    resMessage = "Please enter correct email";
                 }
             }
             catch(Exception e){

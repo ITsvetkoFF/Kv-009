@@ -161,7 +161,6 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(this.getActivity());
 
-
         values = new ArrayList<>();
         points = new ArrayList<>();
         markers = new ArrayList<>();
