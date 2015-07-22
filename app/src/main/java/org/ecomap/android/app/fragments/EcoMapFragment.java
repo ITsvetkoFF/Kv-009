@@ -12,10 +12,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -99,14 +104,22 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<Marker> markers;
     private View v;
     private SlidingLayer slidingLayer;
-    private SlidingLayer addProblemSliding;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
     private LinearLayout showHead;
-    private FloatingActionButton floatingActionButton;
     private Marker marker;
     private List<String> mImagesURLArray;
     private static CameraPosition cameraPosition;
+
+    private FloatingActionButton fabAddProblem;
+    private FloatingActionButton fabConfirm;
+    private FloatingActionButton fabCancel;
+
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
+
+    CoordinatorLayout rootLayout;
+    TabLayout tabLayout;
 
     public static void setFilterCondition(String s) {
         filterCondition = s;
@@ -154,17 +167,69 @@ public class EcoMapFragment extends Fragment {
         markers = new ArrayList<>();
         mContext = getActivity();
 
-        addProblemSliding = (SlidingLayer) v.findViewById(R.id.slidingLayer1);
-        addProblemSliding.setSlidingEnabled(false);
+        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
-        floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
+        fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
+        fabConfirm = (FloatingActionButton) v.findViewById(R.id.fabConfirm);
+        fabCancel = (FloatingActionButton) v.findViewById(R.id.fabCancel);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
+
+        fabAddProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProblemSliding.openLayer(true);
-                //call the wunderlist
-                setMarkerClickType(2);
+
+                if (!MainActivity.isUserIdSet()) {
+                    signInAlertDialog();
+                } else {
+
+                    setMarkerClickType(2);
+                    fabAddProblem.setVisibility(View.INVISIBLE);
+                    fabConfirm.setVisibility(View.VISIBLE);
+                    fabCancel.setVisibility(View.VISIBLE);
+
+
+                    Snackbar snackbar = Snackbar.make(rootLayout, "Choose location to add problem", Snackbar.LENGTH_LONG);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackbar.show();
+
+                    //showTabLayout();
+                }
+            }
+        });
+
+        fabConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabAddProblem.setVisibility(View.VISIBLE);
+                fabConfirm.setVisibility(View.INVISIBLE);
+                fabCancel.setVisibility(View.INVISIBLE);
+                setMarkerClickType(0);
+
+                Snackbar snackbar = Snackbar.make(rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                snackbar.show();
+
+                new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
+            }
+        });
+
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMarkerClickType(0);
+                marker.remove();
+
+                fabAddProblem.setVisibility(View.VISIBLE);
+                fabConfirm.setVisibility(View.INVISIBLE);
+                fabCancel.setVisibility(View.INVISIBLE);
+
+                Snackbar snackbar = Snackbar.make(rootLayout, "You canceled", Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                snackbar.show();
             }
         });
 
@@ -179,14 +244,14 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onShowPreview() {
 
-                floatingActionButton.setVisibility(View.INVISIBLE);
+                fabAddProblem.setVisibility(View.INVISIBLE);
 
             }
 
             @Override
             public void onClose() {
 
-                floatingActionButton.setVisibility(View.VISIBLE);
+                fabAddProblem.setVisibility(View.VISIBLE);
 
             }
 
@@ -206,13 +271,6 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        cancelButton = (Button) v.findViewById(R.id.button_cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addProblemSliding.closeLayer(true);
-            }
-        });
 
         showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
@@ -332,7 +390,7 @@ public class EcoMapFragment extends Fragment {
 
 
         cursor = getActivity().getContentResolver()
-                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null, null);
+                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null);
 
         while (cursor.moveToNext()) {
 
@@ -394,39 +452,15 @@ public class EcoMapFragment extends Fragment {
                     //ADDING PROBLEM VIA FLOATING ACTION BUTTON
 
                 } else if (markerClickType == 2) {
-                    //TODO check if user is authorized
-                    if (MainActivity.isUserIdSet()) {
-                        if (marker != null) {
-                            marker.remove();
-                        }
-                        marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                        marker.setTitle("Houston we have a problem here!");
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                    } else {
 
-                        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(R.string.action_sign_in);
-                        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                new LoginFragment().show(getFragmentManager(), "login_layout");
-                            }
-                        });
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dialog.cancel();
-                            }
-                        });
-                        //alert.setCancelable(true);
-                       /* alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                dialog.cancel();
-                            }
-                        });*/
-                        alert.show();
+                    if (marker != null) {
+                        marker.remove();
                     }
+
+                    marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                    marker.setTitle("Houston we have a problem here!");
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
                 }
             }
         });
@@ -509,6 +543,67 @@ public class EcoMapFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private void signInAlertDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        alert.setMessage(R.string.error_need_to_sign_in);
+
+        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new LoginFragment().show(getFragmentManager(), "login_layout");
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        alert.show();
+    }
+
+    private void showTabLayout(){
+
+        if (tabLayout != null){
+            tabLayout.removeAllTabs();
+            tabLayout.setVisibility(TabLayout.VISIBLE);
+        }
+
+        tabLayout = (TabLayout) v.findViewById(R.id.tabLayout);
+
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.secondary_text));
+        tabLayout.addTab(tabLayout.newTab().setText("Choose Location"));
+        tabLayout.addTab(tabLayout.newTab().setText("Add Description"));
+
+        viewPager = (ViewPager) v.findViewById(R.id.pager);
+
+        adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
     private void countPolygonPoints() {
@@ -840,3 +935,58 @@ public class EcoMapFragment extends Fragment {
 
 }
 
+    class PagerAdapter extends FragmentPagerAdapter {
+
+        int numOfTabs;
+        FragmentManager fragmentManager;
+
+        public PagerAdapter (FragmentManager fm, int numOfTabs){
+            super(fm);
+            this.numOfTabs = numOfTabs;
+            this.fragmentManager = fm;
+        }
+
+        @Override
+        public Fragment getItem(int index) {
+            Fragment fragment = null;
+            String tag = null;
+            switch (index){
+                case 0:
+    /*
+                        tag = EcoMapFragment.class.getSimpleName();
+                        fragment = fragmentManager.findFragmentByTag(tag);
+                        if (fragment == null) {
+                            fragment = new EcoMapFragment();
+                            return fragment;
+                        } else {
+                            return fragment;
+                        }
+    */
+
+                    return new EcoMapFragment();
+
+                case 1:
+                    tag = AddProblemFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+                    if (fragment == null) {
+                        fragment = new AddProblemFragment();
+                    }
+
+                    return fragment;
+            }
+    /*
+                Bundle args = new Bundle();
+                args.putDoubleArray("Position", EcoMapFragment.getMarkerPosition());
+                fragment.setArguments(args);
+                android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.content_frame, fragment, tag).commit();
+    */
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
