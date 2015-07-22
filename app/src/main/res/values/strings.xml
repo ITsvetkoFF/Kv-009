@@ -106,4 +106,6 @@
     <string name="facebook_app_id">428789340644097</string>
     <string name="prefLikedProblems">LikedProblems</string>
 
+    <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
+
 </resources>
