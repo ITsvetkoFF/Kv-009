@@ -9,6 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
+
+import java.util.Set;
 
 /**
  * Created by Stanislav on 23.06.2015.
@@ -180,11 +183,19 @@ public class Problem implements ClusterItem, Parcelable {
     }
 
     public void setLiked(boolean liked){
+
         this.liked = liked;
+
+        //save this problem into set in SharedPreferences
+        SharedPreferencesHelper.addLikedProblem(mContext,getId());
+
     }
 
     public boolean isLiked(){
-        return liked;
+
+        //check if this problem is in set of SharedPreferences
+        return liked||SharedPreferencesHelper.isLikedProblem(mContext,getId());
+
     }
 
     public String getStatus(){

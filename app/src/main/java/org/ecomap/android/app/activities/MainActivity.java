@@ -364,12 +364,12 @@ public class MainActivity extends AppCompatActivity implements Filterable{
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
+                    /*Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
                     TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setTextColor(Color.WHITE);//change Snackbar's text color;
-                    snackbar.show();
+                    snackbar.show();*/
 
                     break;
                 } else {
