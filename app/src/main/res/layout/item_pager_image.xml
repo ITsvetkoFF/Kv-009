@@ -12,7 +12,7 @@
         android:layout_above="@+id/photoDescription">
 
 
-        <org.ecomap.android.app.ui.components.ZoomableImageView
+        <org.ecomap.android.app.widget.ZoomableImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -8,32 +8,53 @@
     android:paddingBottom="20dp">
 
     <ImageView
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@drawable/problem_type_1_3x"
-        >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_face"
+        android:contentDescription="@string/user_avatar"
+        android:layout_gravity="center_horizontal">
     </ImageView>
 
     <LinearLayout
+        android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textUserName"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-            android:textStyle="bold" />
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textUserName"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:textStyle="bold"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textDate"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/textUserName"
+                android:gravity="top|right"
+                android:maxLines="2" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/txtCaption"
             android:textSize="14sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-            >
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1">
         </TextView>
 
     </LinearLayout>

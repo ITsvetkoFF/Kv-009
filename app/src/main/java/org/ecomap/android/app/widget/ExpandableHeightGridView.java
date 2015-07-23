@@ -1,19 +1,27 @@
-package org.ecomap.android.app.ui.components;
+package org.ecomap.android.app.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.GridView;
 
 /**
- * Created by y.ridkous@gmail.com on 16.07.2015.
+ * Created by y.ridkous@gmail.com on 02.07.2015.
  */
-public class ExpandableListView extends ListView {
+public class ExpandableHeightGridView extends GridView {
 
-    boolean expanded = false;
+    private boolean expanded = false;
 
-    public ExpandableListView(Context context, AttributeSet attrs, int defaultStyle) {
-        super(context, attrs, defaultStyle);
+    public ExpandableHeightGridView(Context context) {
+        super(context);
+    }
+
+    public ExpandableHeightGridView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ExpandableHeightGridView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     public boolean isExpanded() {
@@ -26,7 +34,7 @@ public class ExpandableListView extends ListView {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // HACK!  TAKE THAT ANDROID!
+        // HACK! TAKE THAT ANDROID!
         if (isExpanded()) {
             // Calculate entire height by providing a very large height hint.
             // View.MEASURED_SIZE_MASK represents the largest height possible.

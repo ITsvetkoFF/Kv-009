@@ -1,4 +1,4 @@
-package org.ecomap.android.app.ui.fragments;
+package org.ecomap.android.app.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,16 +7,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.plus.PlusOneButton;
 
 import org.ecomap.android.app.Problem;
@@ -24,7 +27,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.ui.components.ExpandableListView;
+import org.ecomap.android.app.widget.ExpandableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +39,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -92,11 +98,6 @@ public class CommentsFragment extends Fragment {
         return fragment;
     }
 
-    public static CommentsFragment newInstance() {
-        CommentsFragment fragment = new CommentsFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,15 +125,20 @@ public class CommentsFragment extends Fragment {
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         mTxtComment = (EditText) mRootView.findViewById(R.id.editComment);
-        final Button addButton = (Button) mRootView.findViewById(R.id.addCommentButton);
+        final ImageButton addButton = (ImageButton) mRootView.findViewById(R.id.addCommentButton);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                YoYo.with(Techniques.RotateIn).duration(500).playOn(addButton);
+
+                final String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+
                 //small validation
                 String comment = mTxtComment.getText().toString();
                 if (!comment.isEmpty() && MainActivity.isUserIsAuthorized()) {
-                    new AsyncSendComment().execute(comment,String.valueOf(mProblem.getId()));
+                    new AsyncSendComment().execute(comment, String.valueOf(mProblem.getId()));
                 }
 
                 if(!MainActivity.isUserIsAuthorized()){
@@ -209,7 +215,7 @@ public class CommentsFragment extends Fragment {
 
         public CommentsAdapter(Context mContext, List<T> commentsArray) {
             this.mContext = mContext;
-            this.mCommentsArray = commentsArray;
+            updateDataSet(commentsArray);
         }
 
         @Override
@@ -245,6 +251,14 @@ public class CommentsFragment extends Fragment {
                 final TextView txtUserName = (TextView) view.findViewById(R.id.textUserName);
                 txtUserName.setText(currentItem.getCreatedBy());
 
+                final TextView txtCommentDate = (TextView) view.findViewById(R.id.textDate);
+                final long currentTimeMillis = new Date().getTime();
+                final String currentDateTimeString = DateFormat.getDateTimeInstance().format(currentTimeMillis);
+                final Date createdDate = currentItem.getCreatedDate();
+
+                final String relativeTimeString = DateUtils.getRelativeTimeSpanString(createdDate.getTime(), currentTimeMillis, DateUtils.SECOND_IN_MILLIS).toString();
+                txtCommentDate.setText(relativeTimeString);
+
                 final TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
                 txtListItem.setText(currentItem.getContent());
             }
@@ -256,6 +270,12 @@ public class CommentsFragment extends Fragment {
          * Update adapter data set
          */
         public void updateDataSet(List<T> data) {
+            Collections.sort(data, new Comparator<T>() {
+                @Override
+                public int compare(T lhs, T rhs) {
+                    return (int) (rhs.getId() - lhs.getId());
+                }
+            });
             mCommentsArray = data;
             notifyDataSetChanged();
 
@@ -385,7 +405,6 @@ public class CommentsFragment extends Fragment {
                         url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problem_id + "/comments");
 
                         connection = (HttpURLConnection) url.openConnection();
-                        //connection.setRequestMethod("POST");
                         connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                         connection.setDoOutput(true);
                         connection.connect();

@@ -1,46 +1,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="16dp"
-    tools:context=".CommentsFragment">
-
+    android:paddingTop="16dp">
 
     <EditText
         android:id="@+id/editComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentEnd="false"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="false"
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/addCommentButton"
+        android:layout_toStartOf="@+id/addCommentButton"
         android:hint="@string/write_comment" />
 
-    <Button
+    <ImageButton
         android:id="@+id/addCommentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editComment"
         android:layout_alignParentBottom="false"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:hint="@string/post"
-        android:text="@string/post" />
-
-
-<!--
-    <org.ecomap.android.app.ui.components.ExpandableListView
-        android:id="@+id/lstComments"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="false"
-        android:layout_below="@+id/editComment"
-      >
-
-    </org.ecomap.android.app.ui.components.ExpandableListView>
--->
+        android:background="@color/slidinglayer_background"
+        android:contentDescription="Send"
+        android:src="@drawable/ic_action_send" />
 
 
     <!--<com.google.android.gms.plus.PlusOneButton -->
