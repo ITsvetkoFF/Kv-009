@@ -25,9 +25,9 @@
 
                 <LinearLayout
                     android:id="@+id/show_head"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
+                    android:layout_width="match_parent"                    
+                    android:background="@color/slidinglayer_background"
+                    android:layout_height="wrap_content"                    
                     android:orientation="horizontal"
                     android:weightSum="4">
 
@@ -185,7 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp" />
 
-                    <org.ecomap.android.app.ui.components.ExpandableHeightGridView
+                    <org.ecomap.android.app.widget.ExpandableHeightGridView
                         android:id="@+id/gridview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -197,7 +197,7 @@
                         android:stretchMode="columnWidth"
                         android:verticalSpacing="10dp">
 
-                    </org.ecomap.android.app.ui.components.ExpandableHeightGridView>
+                    </org.ecomap.android.app.widget.ExpandableHeightGridView>
 
                     <FrameLayout
                         android:id="@+id/fragment_comments"

@@ -94,5 +94,6 @@
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="gridview_img_description" translatable="false">Image</string>
     <string name="prefLikedProblems">LikedProblems</string>
+    <string name="user_avatar">user avatar</string>
     <!---->
 </resources>

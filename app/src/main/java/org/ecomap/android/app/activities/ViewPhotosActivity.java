@@ -32,7 +32,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.ui.components.ZoomableImageView;
+import org.ecomap.android.app.widget.ZoomableImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
