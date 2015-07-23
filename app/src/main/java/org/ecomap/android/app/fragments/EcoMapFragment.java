@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -106,6 +107,7 @@ public class EcoMapFragment extends Fragment {
     private SlidingLayer slidingLayer;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
+    private ScrollView detailedScrollView;
     private LinearLayout showHead;
     private Marker marker;
     private List<String> mImagesURLArray;
@@ -232,11 +234,32 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
+
+        showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
+        showLike = (ImageView) v.findViewById(R.id.show_like);
+        showTitle = (TextView) v.findViewById(R.id.show_title);
+        showType = (TextView) v.findViewById(R.id.show_type);
+        //showByTime = (TextView) v.findViewById(R.id.show_by_time);
+        showContent = (TextView) v.findViewById(R.id.show_content);
+        showProposal = (TextView) v.findViewById(R.id.show_proposal);
+        showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
+        showHead = (LinearLayout) v.findViewById(R.id.show_head);
+        showStatus = (TextView) v.findViewById(R.id.show_status);
+        detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+
         slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
         slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
             @Override
             public void onOpen() {
+
+                //If onOpen, we show all lines of title
+                showTitle.setMaxLines(99);
+                showTitle.setEllipsize(null);
+
+                //set scroll UP
+                detailedScrollView.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
+                detailedScrollView.pageScroll(View.FOCUS_UP);//if you move at the middle of the scroll
 
             }
 
@@ -244,6 +267,10 @@ public class EcoMapFragment extends Fragment {
             public void onShowPreview() {
 
                 fabAddProblem.setVisibility(View.INVISIBLE);
+
+                //If onPreview, we show only 1 line of title
+                showTitle.setMaxLines(1);
+                showTitle.setEllipsize(TextUtils.TruncateAt.END);
 
             }
 
@@ -261,7 +288,6 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onPreviewShowed() {
-
             }
 
             @Override
@@ -269,18 +295,6 @@ public class EcoMapFragment extends Fragment {
 
             }
         });
-
-
-        showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
-        showLike = (ImageView) v.findViewById(R.id.show_like);
-        showTitle = (TextView) v.findViewById(R.id.show_title);
-        showType = (TextView) v.findViewById(R.id.show_type);
-        //showByTime = (TextView) v.findViewById(R.id.show_by_time);
-        showContent = (TextView) v.findViewById(R.id.show_content);
-        showProposal = (TextView) v.findViewById(R.id.show_proposal);
-        showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
-        showHead = (LinearLayout) v.findViewById(R.id.show_head);
-        showStatus = (TextView) v.findViewById(R.id.show_status);
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -482,8 +496,8 @@ public class EcoMapFragment extends Fragment {
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Problem>() {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                        /*mMap.getCameraPosition().zoom*/15.0f));
+              //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
+                //        /*mMap.getCameraPosition().zoom*/15.0f));
 
                 //Set Problem object parameters to a view at show problem fragment
                 showTypeImage.setImageResource(problem.getResBigImage());
