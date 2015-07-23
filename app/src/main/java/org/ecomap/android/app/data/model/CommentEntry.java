@@ -12,11 +12,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
-<<<<<<< HEAD
- * Created by yridk_000 on 15.07.2015.
-=======
  * Created by y.ridkous@gmail.com on 15.07.2015.
->>>>>>> master
  */
 public class CommentEntry {
 
