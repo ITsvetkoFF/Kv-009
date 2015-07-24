@@ -119,6 +119,10 @@ public class EcoMapFragment extends Fragment {
     private ViewPager viewPager;
     private PagerAdapter adapter;
 
+    //for rotating screen - save last position of SlidingPanel
+    private static boolean isOpenSlidingLayer = false;
+    private static Problem lastOpenProblem;
+
     CoordinatorLayout rootLayout;
     TabLayout tabLayout;
 
@@ -166,8 +170,6 @@ public class EcoMapFragment extends Fragment {
         points = new ArrayList<>();
         markers = new ArrayList<>();
         mContext = getActivity();
-
-        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         fabConfirm = (FloatingActionButton) v.findViewById(R.id.fabConfirm);
@@ -283,6 +285,8 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onOpened() {
 
+                isOpenSlidingLayer = true;
+
             }
 
             @Override
@@ -292,8 +296,15 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClosed() {
 
+                isOpenSlidingLayer = false;
+
             }
         });
+
+        if (isOpenSlidingLayer) {
+            slidingLayer.openPreview(true);
+            fillSlidingPanel(lastOpenProblem);
+        }
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -495,66 +506,74 @@ public class EcoMapFragment extends Fragment {
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Problem>() {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
-              //  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                //        /*mMap.getCameraPosition().zoom*/15.0f));
 
-                //Set Problem object parameters to a view at show problem fragment
-                showTypeImage.setImageResource(problem.getResBigImage());
-                showType.setText(problem.getTypeString());
-                showTitle.setText(problem.getTitle());
-                //showByTime.setText(problem.getByTime());
-                showContent.setText(problem.getContent());
-                showProposal.setText(problem.getProposal());
-                showNumOfLikes.setText(problem.getNumberOfLikes());
-
-                //Check problem status and choose color fo text
-                if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
-                    showStatus.setText(problem.getStatus());
-                    showStatus.setTextColor(Color.RED);
-                } else {
-                    showStatus.setText(problem.getStatus());
-                    showStatus.setTextColor(Color.GREEN);
-                }
-
-                //Mechanism for likes ++ when click on heart
-                showLike.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!problem.isLiked()) {
-                            problem.setNumberOfLikes(1);
-                            problem.setLiked(true);
-
-                            new AsyncAddVote().execute(problem.getId());
-
-                            Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
-
-                        } else if (problem.isLiked()) {
-                            //problem.setNumberOfLikes(-1);
-                            //problem.setLiked(false);
-                            Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
-                        }
-                        showNumOfLikes.setText(problem.getNumberOfLikes());
-                    }
-                });
-
-                //comments
-                FragmentManager chFm = getChildFragmentManager();
-                Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
-                //if (f == null) {
-                f = CommentsFragment.newInstance(problem);
-                //}
-                chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
-
-                //photos
-                new AsyncGetPhotos().execute(problem.getId());
+                fillSlidingPanel(problem);
 
                 //Set part of sliding layer visible
-                slidingLayer.setPreviewOffsetDistance(showHead.getHeight());
                 slidingLayer.openPreview(true);
+
+                //save last open Problem for rotating screen
+                lastOpenProblem = problem;
 
                 return false;
             }
         });
+    }
+
+    private void fillSlidingPanel(final Problem problem){
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
+               /*mMap.getCameraPosition().zoom*/15.0f));
+
+        //Set Problem object parameters to a view at show problem fragment
+        showTypeImage.setImageResource(problem.getResBigImage());
+        showType.setText(problem.getTypeString());
+        showTitle.setText(problem.getTitle());
+        //showByTime.setText(problem.getByTime());
+        showContent.setText(problem.getContent());
+        showProposal.setText(problem.getProposal());
+        showNumOfLikes.setText(problem.getNumberOfLikes());
+
+        //Check problem status and choose color fo text
+        if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
+            showStatus.setText(problem.getStatus());
+            showStatus.setTextColor(Color.RED);
+        } else {
+            showStatus.setText(problem.getStatus());
+            showStatus.setTextColor(Color.GREEN);
+        }
+
+        //Mechanism for likes ++ when click on heart
+        showLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!problem.isLiked()) {
+                    problem.setNumberOfLikes(1);
+                    problem.setLiked(true);
+
+                    new AsyncAddVote().execute(problem.getId());
+
+                    Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+
+                } else if (problem.isLiked()) {
+                    //problem.setNumberOfLikes(-1);
+                    //problem.setLiked(false);
+                    Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
+                }
+                showNumOfLikes.setText(problem.getNumberOfLikes());
+            }
+        });
+
+        //comments
+        FragmentManager chFm = getChildFragmentManager();
+        Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
+        //if (f == null) {
+        f = CommentsFragment.newInstance(problem);
+        //}
+        chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
+
+        //photos
+        new AsyncGetPhotos().execute(problem.getId());
     }
 
     private void signInAlertDialog() {
