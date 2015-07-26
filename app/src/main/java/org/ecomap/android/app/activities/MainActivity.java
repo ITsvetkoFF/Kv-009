@@ -21,7 +21,6 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -58,6 +57,7 @@ import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.utils.SnackBarHelper;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -113,16 +113,17 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private static String[] mScreenTitles;
     private static String userId;
     private static boolean userIsAuthorized = false;
+    private static String filterCondition="";
+    private static Context mContext;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private Toolbar toolbar;
-    private static  String filterCondition="";
-
-    private static Context mContext;
-    private Fragment fragment;
+    private Fragment mFragment;
     private FragmentManager fragmentManager;
+    private int mBackPressingCount;
+    private long mLastBackPressMillis;
 
     public static String getUserId() {
         return userId;
@@ -163,54 +164,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         }
     }
 
-    /**
-     * SnackBar stencils
-     *
-     * @param context
-     * @param view
-     * @param message
-     * @param duration
-     * @param backgroundColor
-     */
-    private static void showSnackBar(Context context, View view, String message, int duration, int backgroundColor) {
-        Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(context.getResources().getColor(backgroundColor));
-        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.WHITE);
-        snackbar.show();
-    }
-
-    /**
-     * Overrides showInfoSnackBar in order to use strings from xml
-     */
-    public static void showInfoSnackBar(Context context, View view, int messageResource, int duration) {
-        showInfoSnackBar(context, view, context.getString(messageResource), duration);
-    }
-
-    //Shows information snack bar
-    public static void showInfoSnackBar(Context context, View view, String message, int duration) {
-        showSnackBar(context, view, message, duration, R.color.snackBarInfo);
-    }
-
-    public static void showWarningSnackBar(Context context, View view, int messageResource, int duration) {
-        showWarningSnackBar(context, view, context.getString(messageResource), duration);
-    }
-
-    //Shows warning snack bar
-    public static void showWarningSnackBar(Context context, View view, String message, int duration) {
-        showSnackBar(context, view, message, duration, R.color.snackBarWarning);
-    }
-
-    public static void showSuccessSnackBar(Context context, View view, int messageResource, int duration) {
-        showSuccessSnackBar(context, view, context.getString(messageResource), duration);
-    }
-
-    //Shows success snack bar
-    public static void showSuccessSnackBar(Context context, View view, String message, int duration) {
-        showSnackBar(context, view, message, duration, R.color.snackBarSuccess);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mBackPressingCount = 0;
 
         mTitle = mDrawerTitle = getTitle();
         mScreenTitles = getResources().getStringArray(R.array.navigation_array);
@@ -318,34 +273,34 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
-                    fragment = new FiltersFragment();
+                mFragment = fragmentManager.findFragmentByTag(tag);
+                if(mFragment == null) {
+                    mFragment = new FiltersFragment();
                 }*/
                 tag = MockFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment == null) {
-                    fragment = new MockFragment();
+                mFragment = fragmentManager.findFragmentByTag(tag);
+                if (mFragment == null) {
+                    mFragment = new MockFragment();
                 }
                 break;
             case NAV_FILTER:
                 tag = FiltersFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
-                    fragment = new FiltersFragment();}
+                mFragment = fragmentManager.findFragmentByTag(tag);
+                if(mFragment == null) {
+                    mFragment = new FiltersFragment();}
                 break;
 
             case NAV_DETAILS:
                 tag = MockFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment == null) {
-                    fragment = new MockFragment();
+                mFragment = fragmentManager.findFragmentByTag(tag);
+                if (mFragment == null) {
+                    mFragment = new MockFragment();
                 }
                 break;
             case NAV_PROFILE:
                 if (isUserIdSet()) {
                     tag = LoginFragment.class.getSimpleName();
-                    fragment = fragmentManager.findFragmentByTag(tag);
+                    mFragment = fragmentManager.findFragmentByTag(tag);
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
@@ -359,9 +314,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     break;
                 } else {
                     tag = LoginFragment.class.getSimpleName();
-                    fragment = fragmentManager.findFragmentByTag(tag);
+                    mFragment = fragmentManager.findFragmentByTag(tag);
 
-                    if (fragment == null) {
+                    if (mFragment == null) {
                         new LoginFragment().show(fragmentManager, "login_layout");
                         stop = true;
                     }
@@ -370,25 +325,25 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             default:
                 tag = MockFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if (fragment == null) {
-                    fragment = new MockFragment();
+                mFragment = fragmentManager.findFragmentByTag(tag);
+                if (mFragment == null) {
+                    mFragment = new MockFragment();
                 }
                 break;
         }
 
         if (!stop) {
 
-            if (fragment.getClass() == MockFragment.class && fragment.getArguments() == null) {
+            if (mFragment.getClass() == MockFragment.class && mFragment.getArguments() == null) {
                 Bundle args = new Bundle();
                 args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
-                fragment.setArguments(args);
+                mFragment.setArguments(args);
             }
 
             //Main magic happens here
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.addToBackStack(null);
-            transaction.replace(R.id.content_frame, fragment, tag).commit();
+            transaction.replace(R.id.content_frame, mFragment, tag).commit();
 
         }
         // update selected item and title, then close the drawer
@@ -400,11 +355,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private void chooseEcoMapFragment(String s) {
         String tag;
         tag = EcoMapFragment.class.getSimpleName();
-        fragment = fragmentManager.findFragmentByTag(tag);
-        if(fragment == null) {
-            fragment = new EcoMapFragment();
+        mFragment = fragmentManager.findFragmentByTag(tag);
+        if(mFragment == null) {
+            mFragment = new EcoMapFragment();
         }
-        EcoMapFragment frag=(EcoMapFragment) fragment;
+        EcoMapFragment frag=(EcoMapFragment) mFragment;
         frag.setFilterCondition(s);
     }
 
@@ -434,8 +389,34 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     @Override
     public void onBackPressed() {
-        ImageLoader.getInstance().stop();
-        super.onBackPressed();
+
+        if(mFragment.getClass() == EcoMapFragment.class){
+            EcoMapFragment frag = (EcoMapFragment)mFragment;
+            if(frag.mSlidingLayer.isOpened()) {
+                frag.mSlidingLayer.openPreview(true);
+                return;
+            }else if(frag.mSlidingLayer.isInPreviewMode()){
+                frag.mSlidingLayer.closeLayer(true);
+                return;
+            }
+        }
+
+        mBackPressingCount++;
+        if(System.currentTimeMillis() - mLastBackPressMillis > 1500){
+            mLastBackPressMillis = System.currentTimeMillis();
+            mBackPressingCount = 1;
+        }
+
+        if(mBackPressingCount == 2) {
+            ImageLoader.getInstance().stop();
+            super.onBackPressed();
+            return;
+        }
+
+        if(mBackPressingCount == 1){
+            mLastBackPressMillis = System.currentTimeMillis();
+            SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+        }
     }
 
     @Override
@@ -470,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
 
         public MockFragment() {
-            // Empty constructor required for fragment subclasses
+            // Empty constructor required for mFragment subclasses
         }
 
         @Override
@@ -481,42 +462,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
             String planet = getResources().getStringArray(R.array.navigation_array)[i];
 
-
-//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-//                            "drawable", getActivity().getPackageName());
-//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
             getActivity().setTitle(planet);
             return rootView;
         }
     }
 
-    /*public static class FiltersFragment extends Fragment {
-        public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
-
-        public FiltersFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_map_filters, container, false);
-
-            //int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
-            String[] planet = getResources().getStringArray(R.array.navigation_array);
-            ListView mListView = (ListView) rootView.findViewById(R.id.filter_list_view);
-            FiltersAdapter mFiltersAdapter = new FiltersAdapter(getActivity(), planet);
-            mListView.setAdapter(mFiltersAdapter);
-
-//            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-//                            "drawable", getActivity().getPackageName());
-//            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-            getActivity().setTitle("Filters");
-
-            return rootView;
-        }
-    } */
 
     public static class FiltersAdapter extends ArrayAdapter<String> {
 
