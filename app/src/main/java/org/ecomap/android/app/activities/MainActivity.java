@@ -99,8 +99,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
 
     public static final int NAV_MAP = 0;
-    public static final int NAV_DETAILS = 2;
-    public static final int NAV_TOP10 = 1;
+    public static final int NAV_DETAILS = 1;
+    public static final int NAV_TOP10 =2;
     public static final int NAV_FILTER=3;
     public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 if(mFragment == null) {
                     mFragment = new FiltersFragment();}
                 break;
+
             case NAV_TOP10:
                 tag = Top10TabFragment.class.getSimpleName();
                mFragment =fragmentManager.findFragmentByTag(tag);
