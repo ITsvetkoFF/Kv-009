@@ -68,53 +68,32 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-/**
- * This example illustrates a common usage of the DrawerLayout widget
- * in the Android support library.
- * <p/>
- * <p>When a navigation (left) drawer is present, the host activity should detect presses of
- * the action bar's Up affordance as a signal to open and close the navigation drawer. The
- * ActionBarDrawerToggle facilitates this behavior.
- * Items within the drawer should fall into one of two categories:</p>
- * <p/>
- * <ul>
- * <li><strong>View switches</strong>. A view switch follows the same basic policies as
- * list or tab navigation in that a view switch does not create navigation history.
- * This pattern should only be used at the root activity of a task, leaving some form
- * of Up navigation active for activities further down the navigation hierarchy.</li>
- * <li><strong>Selective Up</strong>. The drawer allows the user to choose an alternate
- * parent for Up navigation. This allows a user to jump across an app's navigation
- * hierarchy at will. The application should treat this as it treats Up navigation from
- * a different task, replacing the current task stack using TaskStackBuilder or similar.
- * This is the only form of navigation drawer that should be used outside of the root
- * activity of a task.</li>
- * </ul>
- * <p/>
- * <p>Right side drawers should be used for actions, not navigation. This follows the pattern
- * established by the Action Bar that navigation should be to the left and actions to the right.
- * An action should be an operation performed on the current contents of the window,
- * for example enabling or disabling a data overlay on top of the current content.</p>
- */
+
 public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
+
+    public static final String FIRST_NAME_KEY = "firstName";
+    public static final String LAST_NAME_KEY = "lastName";
+    public static final String EMAIL_KEY = "email";
+    public static final String ROLE_KEY = "role";
+    public static final String PASSWORD_KEY = "password";
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
-    public static final int NAV_FILTER=3;
+    public static final int NAV_FILTER = 3;
     public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
-    public final static String FIRST_NAME_KEY = "firstName";
-    public final static String LAST_NAME_KEY = "lastName";
-    public final static String EMAIL_KEY = "email";
-    public final static String ROLE_KEY = "role";
-    public final static String PASSWORD_KEY = "password";
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     public static CookieManager cookieManager;
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private static ListView mDrawerList;
     private static String[] mScreenTitles;
     private static String userId;
     private static boolean userIsAuthorized = false;
-    private static String filterCondition="";
+    private static String filterCondition = "";
     private static Context mContext;
+
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
@@ -124,45 +103,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private FragmentManager fragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
-
-    public static String getUserId() {
-        return userId;
-    }
-
-    public static void setUserId(String userId) {
-        MainActivity.userId = userId;
-    }
-
-    public static boolean isUserIdSet() {
-        return userId != null;
-    }
-
-    public static boolean isEmailValid(CharSequence email) {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-
-    }
-
-    public static boolean isUserIsAuthorized() {
-        return userIsAuthorized || getUserId() != null;
-    }
-
-    public static void setUserIsAuthorized(boolean userIsAuthorized) {
-        MainActivity.userIsAuthorized = userIsAuthorized;
-    }
-
-    public static void changeAuthorizationState() {
-        if (!isUserIdSet()) {
-            mScreenTitles[5] = mContext.getString(R.string.login);
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
-        } else {
-            mScreenTitles[5] = mContext.getString(R.string.profile);
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +168,13 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     }
 
     @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
@@ -260,6 +207,57 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (mFragment.getClass() == EcoMapFragment.class) {
+            EcoMapFragment frag = (EcoMapFragment) mFragment;
+            if (frag.mSlidingLayer.isOpened()) {
+                frag.mSlidingLayer.openPreview(true);
+                return;
+            } else if (frag.mSlidingLayer.isInPreviewMode()) {
+                frag.mSlidingLayer.closeLayer(true);
+                return;
+            }
+        }
+
+        mBackPressingCount++;
+        if (System.currentTimeMillis() - mLastBackPressMillis > 1500) {
+            mLastBackPressMillis = System.currentTimeMillis();
+            mBackPressingCount = 1;
+        }
+
+        if (mBackPressingCount == 2) {
+            ImageLoader.getInstance().stop();
+            super.onBackPressed();
+            return;
+        }
+
+        if (mBackPressingCount == 1) {
+            mLastBackPressMillis = System.currentTimeMillis();
+            SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        toolbar.setTitle(mTitle);
+    }
+
+    @Override
+    public void filter(String s) {
+        filterCondition = s;
+        selectItem(0);
+    }
+
     private void selectItem(int position) {
         // update the main content by replacing fragments
         fragmentManager = getSupportFragmentManager();
@@ -286,8 +284,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_FILTER:
                 tag = FiltersFragment.class.getSimpleName();
                 mFragment = fragmentManager.findFragmentByTag(tag);
-                if(mFragment == null) {
-                    mFragment = new FiltersFragment();}
+                if (mFragment == null) {
+                    mFragment = new FiltersFragment();
+                }
                 break;
 
             case NAV_DETAILS:
@@ -356,76 +355,47 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         String tag;
         tag = EcoMapFragment.class.getSimpleName();
         mFragment = fragmentManager.findFragmentByTag(tag);
-        if(mFragment == null) {
+        if (mFragment == null) {
             mFragment = new EcoMapFragment();
         }
-        EcoMapFragment frag=(EcoMapFragment) mFragment;
+        EcoMapFragment frag = (EcoMapFragment) mFragment;
         frag.setFilterCondition(s);
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        toolbar.setTitle(mTitle);
+    public static String getUserId() {
+        return userId;
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
-    @Override
-    public void filter(String s){
-        filterCondition=s;
-        selectItem(0);
+    public static void setUserId(String userId) {
+        MainActivity.userId = userId;
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public static boolean isUserIdSet() {
+        return userId != null;
     }
 
-    @Override
-    public void onBackPressed() {
+    public static boolean isEmailValid(CharSequence email) {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
 
-        if(mFragment.getClass() == EcoMapFragment.class){
-            EcoMapFragment frag = (EcoMapFragment)mFragment;
-            if(frag.mSlidingLayer.isOpened()) {
-                frag.mSlidingLayer.openPreview(true);
-                return;
-            }else if(frag.mSlidingLayer.isInPreviewMode()){
-                frag.mSlidingLayer.closeLayer(true);
-                return;
-            }
-        }
+    }
 
-        mBackPressingCount++;
-        if(System.currentTimeMillis() - mLastBackPressMillis > 1500){
-            mLastBackPressMillis = System.currentTimeMillis();
-            mBackPressingCount = 1;
-        }
+    public static boolean isUserIsAuthorized() {
+        return userIsAuthorized || getUserId() != null;
+    }
 
-        if(mBackPressingCount == 2) {
-            ImageLoader.getInstance().stop();
-            super.onBackPressed();
-            return;
-        }
+    public static void changeAuthorizationState() {
+        if (!isUserIdSet()) {
+            mScreenTitles[5] = mContext.getString(R.string.login);
 
-        if(mBackPressingCount == 1){
-            mLastBackPressMillis = System.currentTimeMillis();
-            SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
+        } else {
+            mScreenTitles[5] = mContext.getString(R.string.profile);
+
+            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
+            arrayAdapter.notifyDataSetChanged();
         }
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
 
     /**
      * Sets logged in user id from COOKIE_USER_ID if cookieStore has it
@@ -446,6 +416,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     /**
      * Fragment that appears in the "content_frame", shows a planet
+     * TODO: delete, after removing fragments "Under construction"
      */
     public static class MockFragment extends Fragment {
         public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
@@ -464,42 +435,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
             getActivity().setTitle(planet);
             return rootView;
-        }
-    }
-
-
-    public static class FiltersAdapter extends ArrayAdapter<String> {
-
-        Context mContext;
-
-        FiltersAdapter(Context context, String[] objects) {
-            super(context, R.layout.filter_listview_item, 0, objects);
-            this.mContext = context;
-
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            View view;
-            if (convertView == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
-            } else {
-                view = convertView;
-            }
-
-            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
-            String text = getItem(position);
-            txtListItem.setText(text);
-            CheckBox chkBox = (CheckBox) view.findViewById(R.id.checkBox);
-            chkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Toast.makeText(mContext, "You select: " + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            return view;
-            //super.getView(position, convertView, parent);
         }
     }
 
