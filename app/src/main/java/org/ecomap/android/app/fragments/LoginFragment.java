@@ -88,8 +88,6 @@ public class LoginFragment extends DialogFragment {
             }
         });
 
-
-
         signIn.setClickable(false);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override

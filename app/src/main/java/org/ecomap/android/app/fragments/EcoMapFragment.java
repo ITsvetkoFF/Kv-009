@@ -108,11 +108,11 @@ public class EcoMapFragment extends Fragment {
         mapView = (MapView) v.findViewById(R.id.mapview);
 
         //Temporary is to initialize mapView by null to get rotation works without exceptions.
-        //mapView.onCreate(null);
+        mapView.onCreate(null);
         Log.i(tag, "OnCreateView mapview");
 
         mMap = mapView.getMap();
-        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setMyLocationEnabled(true);
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
@@ -176,7 +176,7 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setMarkerClickType(0);
-                marker.remove();
+                deleteMarker(marker);
 
                 fabAddProblem.setVisibility(View.VISIBLE);
                 fabConfirm.setVisibility(View.INVISIBLE);
@@ -257,7 +257,7 @@ public class EcoMapFragment extends Fragment {
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
 
-        imgAdapter = new ImageAdapter(getActivity(), new ArrayList<ProblemPhotoEntry>());
+        imgAdapter = new ImageAdapter(mContext, new ArrayList<ProblemPhotoEntry>());
         gridview.setAdapter(imgAdapter);
 
         final ScrollView mScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
@@ -367,6 +367,12 @@ public class EcoMapFragment extends Fragment {
 
     public static int getMarkerClickType(){
         return markerClickType;
+    }
+
+    public void deleteMarker(Marker marker){
+        if (marker != null) {
+            marker.remove();
+        }
     }
 
     public void fillSlidingPanel(final Problem problem){
