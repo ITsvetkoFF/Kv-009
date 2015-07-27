@@ -24,6 +24,8 @@ import java.util.ArrayList;
 
 public class FiltersFragment extends ListFragment {
 
+    //these are never used. Though we need them to understand the type of problems.
+
     public static final int WOODS_PROBLEM = 1;
     public static final int TRASH_PROBLEM = 2;
     public static final int BUILDING_PROBLEM = 3;
@@ -34,13 +36,6 @@ public class FiltersFragment extends ListFragment {
     private final String LOG_TAG = "FilterFragment";
     public String problemType = EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " = ";
     public String resultCondition;
-    CheckBox woodsChb;
-    CheckBox trashChb;
-    CheckBox buildingChb;
-    CheckBox waterChb;
-    CheckBox lifeformsChb;
-    CheckBox poachingChb;
-    CheckBox otherChb;
     Button okBtn;
     Button resetBtn;
     ListView listView;
