@@ -32,7 +32,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.ui.components.ZoomableImageView;
+import org.ecomap.android.app.widget.ZoomableImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,17 +129,12 @@ public class ViewPhotosActivity extends AppCompatActivity {
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             // Inflate the menu; this adds items to the action bar if it is present.
-            inflater.inflate(R.menu.menu_problem_details, menu);
+            //inflater.inflate(R.menu.menu_problem_details, menu);
         }
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
-
-            //noinspection SimplifiableIfStatement
-            if (id == R.id.action_settings) {
-                return true;
-            }
 
             return super.onOptionsItemSelected(item);
         }

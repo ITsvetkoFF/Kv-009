@@ -16,19 +16,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_details"
-          android:icon="@drawable/action_search"
-          android:title="@string/action_details"
-          app:showAsAction="never" />
-
-    <item android:id="@+id/action_add_polygon"
+    <!--<item android:id="@+id/action_add_polygon"
         android:title="@string/action_add_polygon"
         android:orderInCategory="1"
-        app:showAsAction="never" />
-
-    <item android:id="@+id/action_update"
-        android:title="@string/action_update"
-        android:orderInCategory="2"
-        app:showAsAction="never" />
-
+        app:showAsAction="never" />-->
+    <item android:id="@+id/language"
+        android:title="@string/language_menu"
+        app:showAsAction="never"/>
 </menu>

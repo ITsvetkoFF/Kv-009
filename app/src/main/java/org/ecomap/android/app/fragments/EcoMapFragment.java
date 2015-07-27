@@ -12,11 +12,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +42,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -58,8 +65,7 @@ import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
-import org.ecomap.android.app.ui.components.ExpandableHeightGridView;
-import org.ecomap.android.app.ui.fragments.CommentsFragment;
+import org.ecomap.android.app.widget.ExpandableHeightGridView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,10 +87,6 @@ public class EcoMapFragment extends Fragment {
 
     public static final String ARG_SECTION_NUMBER = "ARG_SECTION_NUMBER";
     private static final String tag = "EcoMapFragment";
-    // initializing static variables of position for map saving after rotation and backstack
-    private static double longitude = 30.417397;
-    private static double latitude = 50.461166;
-    private static float zoomlevel = 5;
     private static int markerClickType;
     private static String filterCondition;
     public ImageAdapter imgAdapter;
@@ -102,13 +104,27 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<Marker> markers;
     private View v;
     private SlidingLayer slidingLayer;
-    private SlidingLayer addProblemSliding;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
+    private ScrollView detailedScrollView;
     private LinearLayout showHead;
-    private FloatingActionButton floatingActionButton;
     private Marker marker;
     private List<String> mImagesURLArray;
+    private static CameraPosition cameraPosition;
+
+    private FloatingActionButton fabAddProblem;
+    private FloatingActionButton fabConfirm;
+    private FloatingActionButton fabCancel;
+
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
+
+    //for rotating screen - save last position of SlidingPanel
+    private static boolean isOpenSlidingLayer = false;
+    private static Problem lastOpenProblem;
+
+    CoordinatorLayout rootLayout;
+    TabLayout tabLayout;
 
     public static void setFilterCondition(String s) {
         filterCondition = s;
@@ -150,71 +166,75 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(this.getActivity());
 
-
         values = new ArrayList<>();
         points = new ArrayList<>();
         markers = new ArrayList<>();
         mContext = getActivity();
 
-        addProblemSliding = (SlidingLayer) v.findViewById(R.id.slidingLayer1);
-        addProblemSliding.setSlidingEnabled(false);
+        fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
+        fabConfirm = (FloatingActionButton) v.findViewById(R.id.fabConfirm);
+        fabCancel = (FloatingActionButton) v.findViewById(R.id.fabCancel);
 
-        floatingActionButton = (FloatingActionButton) v.findViewById(R.id.fab);
+        rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        fabAddProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProblemSliding.openLayer(true);
-                //call the wunderlist
-                setMarkerClickType(2);
+
+                if (!MainActivity.isUserIdSet()) {
+                    signInAlertDialog();
+                } else {
+
+                    setMarkerClickType(2);
+                    fabAddProblem.setVisibility(View.INVISIBLE);
+                    fabConfirm.setVisibility(View.VISIBLE);
+                    fabCancel.setVisibility(View.VISIBLE);
+
+
+                    Snackbar snackbar = Snackbar.make(rootLayout, "Choose location to add problem", Snackbar.LENGTH_LONG);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                    snackbar.show();
+
+                    //showTabLayout();
+                }
             }
         });
 
-        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
-
-        slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
-            @Override
-            public void onOpen() {
-
-            }
-
-            @Override
-            public void onShowPreview() {
-
-                floatingActionButton.setVisibility(View.INVISIBLE);
-
-            }
-
-            @Override
-            public void onClose() {
-
-                floatingActionButton.setVisibility(View.VISIBLE);
-
-            }
-
-            @Override
-            public void onOpened() {
-
-            }
-
-            @Override
-            public void onPreviewShowed() {
-
-            }
-
-            @Override
-            public void onClosed() {
-
-            }
-        });
-
-        cancelButton = (Button) v.findViewById(R.id.button_cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        fabConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProblemSliding.closeLayer(true);
+                fabAddProblem.setVisibility(View.VISIBLE);
+                fabConfirm.setVisibility(View.INVISIBLE);
+                fabCancel.setVisibility(View.INVISIBLE);
+                setMarkerClickType(0);
+
+                Snackbar snackbar = Snackbar.make(rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                snackbar.show();
+
+                new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
             }
         });
+
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMarkerClickType(0);
+                marker.remove();
+
+                fabAddProblem.setVisibility(View.VISIBLE);
+                fabConfirm.setVisibility(View.INVISIBLE);
+                fabCancel.setVisibility(View.INVISIBLE);
+
+                Snackbar snackbar = Snackbar.make(rootLayout, "You canceled", Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                snackbar.show();
+            }
+        });
+
 
         showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
@@ -226,6 +246,65 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
         showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
+        detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+
+        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+
+        slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
+            @Override
+            public void onOpen() {
+
+                //If onOpen, we show all lines of title
+                showTitle.setMaxLines(99);
+                showTitle.setEllipsize(null);
+
+                //set scroll UP
+                detailedScrollView.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
+                detailedScrollView.pageScroll(View.FOCUS_UP);//if you move at the middle of the scroll
+
+            }
+
+            @Override
+            public void onShowPreview() {
+
+                fabAddProblem.setVisibility(View.INVISIBLE);
+
+                //If onPreview, we show only 1 line of title
+                showTitle.setMaxLines(1);
+                showTitle.setEllipsize(TextUtils.TruncateAt.END);
+
+            }
+
+            @Override
+            public void onClose() {
+
+                fabAddProblem.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onOpened() {
+
+                isOpenSlidingLayer = true;
+
+            }
+
+            @Override
+            public void onPreviewShowed() {
+            }
+
+            @Override
+            public void onClosed() {
+
+                isOpenSlidingLayer = false;
+
+            }
+        });
+
+        if (isOpenSlidingLayer) {
+            slidingLayer.openPreview(true);
+            fillSlidingPanel(lastOpenProblem);
+        }
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -257,27 +336,9 @@ public class EcoMapFragment extends Fragment {
 
     // saving map position for restoring after rotation or backstack
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putDouble("longitude", mMap.getCameraPosition().target.longitude);
-        outState.putDouble("latitude", mMap.getCameraPosition().target.latitude);
-        outState.putFloat("zoomlevel", mMap.getCameraPosition().zoom);
-    }
-
-    // restoring saved map position after rotation or backstack
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            latitude = savedInstanceState.getDouble("latitude");
-            longitude = savedInstanceState.getDouble("longitude");
-            zoomlevel = savedInstanceState.getFloat("zoomlevel");
-        }
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
+        cameraPosition = mMap.getCameraPosition();
         // unregistering receiver after pausing fragment
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
     }
@@ -328,7 +389,7 @@ public class EcoMapFragment extends Fragment {
         mMap.clear();
 
         cursor = getActivity().getContentResolver()
-                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null, null);
+                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null);
 
         while (cursor.moveToNext()) {
             Problem p = new Problem(cursor, getActivity());
@@ -352,7 +413,7 @@ public class EcoMapFragment extends Fragment {
 
 
         cursor = getActivity().getContentResolver()
-                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null, null);
+                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null);
 
         while (cursor.moveToNext()) {
 
@@ -365,8 +426,19 @@ public class EcoMapFragment extends Fragment {
     }
 
     public void setUpClusterer() {
-        //Position the map from static variables
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
+
+            if(cameraPosition != null){
+
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+
+            else {
+                //Position the map from static variables
+                double longitude = 30.417397;
+                double latitude = 50.461166;
+                float zoomlevel = 5;
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
+            }
 
         //Initialize the manager with the mContext and the map.
         mClusterManager = new ClusterManager<>(mContext, mMap);
@@ -403,39 +475,15 @@ public class EcoMapFragment extends Fragment {
                     //ADDING PROBLEM VIA FLOATING ACTION BUTTON
 
                 } else if (markerClickType == 2) {
-                    //TODO check if user is authorized
-                    if (MainActivity.isUserIdSet()) {
-                        if (marker != null) {
-                            marker.remove();
-                        }
-                        marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                        marker.setTitle("Houston we have a problem here!");
-                        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                    } else {
 
-                        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setMessage(R.string.action_sign_in);
-                        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                new LoginFragment().show(getFragmentManager(), "login_layout");
-                            }
-                        });
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dialog.cancel();
-                            }
-                        });
-                        //alert.setCancelable(true);
-                       /* alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                dialog.cancel();
-                            }
-                        });*/
-                        alert.show();
+                    if (marker != null) {
+                        marker.remove();
                     }
+
+                    marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                    marker.setTitle("Houston we have a problem here!");
+                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
                 }
             }
         });
@@ -458,66 +506,135 @@ public class EcoMapFragment extends Fragment {
         mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Problem>() {
             @Override
             public boolean onClusterItemClick(final Problem problem) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-                        /*mMap.getCameraPosition().zoom*/15.0f));
 
-                //Set Problem object parameters to a view at show problem fragment
-                showTypeImage.setImageResource(problem.getResBigImage());
-                showType.setText(problem.getTypeString());
-                showTitle.setText(problem.getTitle());
-                //showByTime.setText(problem.getByTime());
-                showContent.setText(problem.getContent());
-                showProposal.setText(problem.getProposal());
-                showNumOfLikes.setText(problem.getNumberOfLikes());
-
-                //Check problem status and choose color fo text
-                if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
-                    showStatus.setText(problem.getStatus());
-                    showStatus.setTextColor(Color.RED);
-                } else {
-                    showStatus.setText(problem.getStatus());
-                    showStatus.setTextColor(Color.GREEN);
-                }
-
-                //Mechanism for likes ++ when click on heart
-                showLike.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!problem.isLiked()) {
-                            problem.setNumberOfLikes(1);
-                            problem.setLiked(true);
-
-                            new AsyncAddVote().execute(problem.getId());
-
-                            Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
-
-                        } else if (problem.isLiked()) {
-                            //problem.setNumberOfLikes(-1);
-                            //problem.setLiked(false);
-                            Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
-                        }
-                        showNumOfLikes.setText(problem.getNumberOfLikes());
-                    }
-                });
-
-                //comments
-                FragmentManager chFm = getChildFragmentManager();
-                Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
-                //if (f == null) {
-                f = CommentsFragment.newInstance(problem);
-                //}
-                chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
-
-                //photos
-                new AsyncGetPhotos().execute(problem.getId());
+                fillSlidingPanel(problem);
 
                 //Set part of sliding layer visible
-                slidingLayer.setPreviewOffsetDistance(showHead.getHeight());
                 slidingLayer.openPreview(true);
+
+                //save last open Problem for rotating screen
+                lastOpenProblem = problem;
 
                 return false;
             }
         });
+    }
+
+    private void fillSlidingPanel(final Problem problem){
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
+               /*mMap.getCameraPosition().zoom*/15.0f));
+
+        //Set Problem object parameters to a view at show problem fragment
+        showTypeImage.setImageResource(problem.getResBigImage());
+        showType.setText(problem.getTypeString());
+        showTitle.setText(problem.getTitle());
+        //showByTime.setText(problem.getByTime());
+        showContent.setText(problem.getContent());
+        showProposal.setText(problem.getProposal());
+        showNumOfLikes.setText(problem.getNumberOfLikes());
+
+        //Check problem status and choose color fo text
+        if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
+            showStatus.setText(problem.getStatus());
+            showStatus.setTextColor(Color.RED);
+        } else {
+            showStatus.setText(problem.getStatus());
+            showStatus.setTextColor(Color.GREEN);
+        }
+
+        //Mechanism for likes ++ when click on heart
+        showLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!problem.isLiked()) {
+                    problem.setNumberOfLikes(1);
+                    problem.setLiked(true);
+
+                    new AsyncAddVote().execute(problem.getId());
+
+                    Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+
+                } else if (problem.isLiked()) {
+                    //problem.setNumberOfLikes(-1);
+                    //problem.setLiked(false);
+                    Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
+                }
+                showNumOfLikes.setText(problem.getNumberOfLikes());
+            }
+        });
+
+        //comments
+        FragmentManager chFm = getChildFragmentManager();
+        Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
+        //if (f == null) {
+        f = CommentsFragment.newInstance(problem);
+        //}
+        chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
+
+        //photos
+        new AsyncGetPhotos().execute(problem.getId());
+    }
+
+    private void signInAlertDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        alert.setMessage(R.string.error_need_to_sign_in);
+
+        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new LoginFragment().show(getFragmentManager(), "login_layout");
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        alert.show();
+    }
+
+    private void showTabLayout(){
+
+        if (tabLayout != null){
+            tabLayout.removeAllTabs();
+            tabLayout.setVisibility(TabLayout.VISIBLE);
+        }
+
+        tabLayout = (TabLayout) v.findViewById(R.id.tabLayout);
+
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
+        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.secondary_text));
+        tabLayout.addTab(tabLayout.newTab().setText("Choose Location"));
+        tabLayout.addTab(tabLayout.newTab().setText("Add Description"));
+
+        viewPager = (ViewPager) v.findViewById(R.id.pager);
+
+        adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
     private void countPolygonPoints() {
@@ -849,3 +966,58 @@ public class EcoMapFragment extends Fragment {
 
 }
 
+    class PagerAdapter extends FragmentPagerAdapter {
+
+        int numOfTabs;
+        FragmentManager fragmentManager;
+
+        public PagerAdapter (FragmentManager fm, int numOfTabs){
+            super(fm);
+            this.numOfTabs = numOfTabs;
+            this.fragmentManager = fm;
+        }
+
+        @Override
+        public Fragment getItem(int index) {
+            Fragment fragment = null;
+            String tag = null;
+            switch (index){
+                case 0:
+    /*
+                        tag = EcoMapFragment.class.getSimpleName();
+                        fragment = fragmentManager.findFragmentByTag(tag);
+                        if (fragment == null) {
+                            fragment = new EcoMapFragment();
+                            return fragment;
+                        } else {
+                            return fragment;
+                        }
+    */
+
+                    return new EcoMapFragment();
+
+                case 1:
+                    tag = AddProblemFragment.class.getSimpleName();
+                    fragment = fragmentManager.findFragmentByTag(tag);
+                    if (fragment == null) {
+                        fragment = new AddProblemFragment();
+                    }
+
+                    return fragment;
+            }
+    /*
+                Bundle args = new Bundle();
+                args.putDoubleArray("Position", EcoMapFragment.getMarkerPosition());
+                fragment.setArguments(args);
+                android.support.v4.app.FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.addToBackStack(null);
+                transaction.replace(R.id.content_frame, fragment, tag).commit();
+    */
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }

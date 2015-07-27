@@ -11,54 +11,6 @@
 
     <com.wunderlist.slidinglayer.SlidingLayer
         xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/slidingLayer1"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        slidingLayer:offsetDistance="0dp"
-        slidingLayer:previewOffsetDistance="0dp"
-        slidingLayer:stickTo="bottom"
-        slidingLayer:changeStateOnTap="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="choose a location to add new problem"
-            android:layout_gravity="center_horizontal">
-        </TextView>
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <Button
-                android:id="@+id/button_proceed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/proceed"
-                android:layout_weight="1">
-            </Button>
-            <Button
-                 android:id="@+id/button_cancel"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:text="@string/cancel"
-                android:layout_weight="1">
-
-            </Button>
-
-        </LinearLayout>
-        </LinearLayout>
-
-
-    </com.wunderlist.slidinglayer.SlidingLayer>
-
-    <com.wunderlist.slidinglayer.SlidingLayer
-        xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
         android:id="@+id/show_problem_sliding_layer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -73,15 +25,15 @@
 
                 <LinearLayout
                     android:id="@+id/show_head"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:background="#FFFFFF"
+                    android:layout_width="match_parent"                    
+                    android:background="@color/slidinglayer_background"
+                    android:layout_height="wrap_content"                    
                     android:orientation="horizontal"
                     android:weightSum="4">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="5dp"
@@ -176,7 +128,7 @@
 
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:text="3"
+                            android:text=""
                             android:gravity="right"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
@@ -191,7 +143,6 @@
                             android:layout_height="24dp"
                             android:id="@+id/show_like"
                             android:src="@drawable/heart_icon"
-                            android:contentDescription="heart"
                             android:layout_alignParentTop="true"
                             android:layout_toLeftOf="@+id/show_numOfLikes"
                             android:layout_toStartOf="@+id/show_numOfLikes"
@@ -202,7 +153,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceSmall"
                             android:textColor="@color/textRed"
-                            android:text="@string/string_unsolved"
                             android:id="@+id/show_status"
 
                             android:layout_alignParentTop="true"
@@ -235,7 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp" />
 
-                    <org.ecomap.android.app.ui.components.ExpandableHeightGridView
+                    <org.ecomap.android.app.widget.ExpandableHeightGridView
                         android:id="@+id/gridview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -247,7 +197,7 @@
                         android:stretchMode="columnWidth"
                         android:verticalSpacing="10dp">
 
-                    </org.ecomap.android.app.ui.components.ExpandableHeightGridView>
+                    </org.ecomap.android.app.widget.ExpandableHeightGridView>
 
                     <FrameLayout
                         android:id="@+id/fragment_comments"
@@ -266,15 +216,61 @@
 
     </com.wunderlist.slidinglayer.SlidingLayer>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            android:layout_gravity="bottom|right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="visible"
+            app:fabSize="normal" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_done_white_24dp"
+            android:layout_gravity="bottom|right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            app:fabSize="normal" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_white_18dp"
+            android:layout_gravity="bottom|left"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            app:fabSize="mini" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:scrollbars="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_white_24dp"
-        android:layout_gravity="bottom|end"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        app:fabSize="normal" />
+        app:tabMode="fixed"
+        app:tabGravity="fill" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/tabLayout"/>
 
 </RelativeLayout>

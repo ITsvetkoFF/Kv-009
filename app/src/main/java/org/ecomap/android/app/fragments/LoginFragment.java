@@ -2,7 +2,6 @@ package org.ecomap.android.app.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -17,10 +16,12 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -39,7 +40,7 @@ public class LoginFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_layout, container, false);
-        getDialog().setTitle("Sign In");
+        getDialog().setTitle(getString(R.string.sign_in));
 
         return view;
     }
@@ -61,17 +62,17 @@ public class LoginFragment extends DialogFragment {
                 if (!hasFocus) {
                     if (!email.getText().toString().isEmpty()) {
                         if (!MainActivity.isEmailValid(email.getText().toString())) {
-                            tilEmail.setError("Please enter correct email");
+                            tilEmail.setError(getString(R.string.incorrect_email));
                             signIn.setClickable(false);
-                            Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                         } else {
                             tilEmail.setErrorEnabled(false);
                             signIn.setClickable(true);
                         }
                     } else if (email.getText().toString().isEmpty()) {
-                        tilEmail.setError("Email cannot be blank");
+                        tilEmail.setError(getString(R.string.email_blank));
                         signIn.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilEmail.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -87,9 +88,9 @@ public class LoginFragment extends DialogFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     if (password.getText().toString().isEmpty()) {
-                        tilPass.setError("Password cannot be blank");
+                        tilPass.setError(getString(R.string.password_blank));
                         signIn.setClickable(false);
-                        Snackbar.make(v, "Fill all fields correctly, please", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilPass.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -108,7 +109,7 @@ public class LoginFragment extends DialogFragment {
                     new LoginTask(getActivity()).execute(email.getText().toString()
                             , password.getText().toString());
                 } else {
-                    Snackbar.make(v, "Check internet connection please", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
@@ -138,7 +139,7 @@ public class LoginFragment extends DialogFragment {
             super.onPreExecute();
 
             progressBar = new ProgressDialog(mContext);
-            progressBar.setMessage("Connecting to Ecomap Server");
+            progressBar.setMessage(getString(R.string.connecting_server));
             progressBar.setIndeterminate(true);
             progressBar.setCancelable(true);
             progressBar.show();
@@ -181,20 +182,17 @@ public class LoginFragment extends DialogFragment {
 
                         JSONObject data = new JSONObject(responseBody.toString());
 
-                        SharedPreferences sharedPreferences = getActivity().
-                                getSharedPreferences(getResources().getString(R.string.shared_preferences_title),Context.MODE_PRIVATE);
-                        SharedPreferences.Editor edit = sharedPreferences.edit();
-                        edit.putString(MainActivity.FIRST_NAME_KEY, data.get("first_name").toString());
-                        edit.putString(MainActivity.LAST_NAME_KEY, data.get("last_name").toString());
-                        edit.putString(MainActivity.EMAIL_KEY, params[0]);
-                        edit.putString(MainActivity.PASSWORD_KEY, params[1]);
-                        edit.commit();
-
+                        SharedPreferencesHelper.onLogInSavePref(mContext, data.get("first_name").toString(),
+                                data.get("last_name").toString(),
+                                params[0],
+                                params[1]);
 
                         MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
 
-                        resMessage = "Hello " + sharedPreferences.getString(MainActivity.FIRST_NAME_KEY, "")
-                                + " " + sharedPreferences.getString(MainActivity.LAST_NAME_KEY, "") + "!";
+                        String fileNamePref = getResources().getString(R.string.fileNamePreferences);
+
+                        resMessage = "Hello " + SharedPreferencesHelper.getStringPref(mContext,fileNamePref,MainActivity.FIRST_NAME_KEY, "")
+                                + " " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.LAST_NAME_KEY, "") + "!";
 
                     } else {
 
@@ -213,14 +211,14 @@ public class LoginFragment extends DialogFragment {
 
                 }
 
+                connection.disconnect();
+
                 return null;
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            finally {
-                connection.disconnect();
-            }
+
             return null;
         }
 
@@ -232,7 +230,8 @@ public class LoginFragment extends DialogFragment {
 
             progressBar.dismiss();
             dismiss();
-            Snackbar.make(getView(), resMessage, Snackbar.LENGTH_LONG).show();
+
+            Toast.makeText(mContext, resMessage, Toast.LENGTH_LONG).show();
         }
     }
 

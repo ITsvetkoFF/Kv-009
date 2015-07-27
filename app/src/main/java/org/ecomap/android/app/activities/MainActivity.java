@@ -17,6 +17,7 @@
 package org.ecomap.android.app.activities;
 
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -28,7 +29,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,14 +53,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
+import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.sync.EcoMapService;
-import org.ecomap.android.app.fragments.FiltersFragment.Filterable;
-
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -98,13 +95,13 @@ import java.util.List;
  * An action should be an operation performed on the current contents of the window,
  * for example enabling or disabling a data overlay on top of the current content.</p>
  */
-public class MainActivity extends AppCompatActivity implements Filterable{
+public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
+    public static final int NAV_FILTER=3;
     public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
-    public static final int NAV_FILTER=3;
     public final static String FIRST_NAME_KEY = "firstName";
     public final static String LAST_NAME_KEY = "lastName";
     public final static String EMAIL_KEY = "email";
@@ -116,21 +113,20 @@ public class MainActivity extends AppCompatActivity implements Filterable{
     private static String[] mScreenTitles;
     private static String userId;
     private static boolean userIsAuthorized = false;
-  
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private ActionBar actionBar;
-    private FragmentManager fragmentManager;
-    private Fragment fragment;
     private Toolbar toolbar;
     private static  String filterCondition="";
+
+    private static Context mContext;
+    private Fragment fragment;
+    private FragmentManager fragmentManager;
 
     public static String getUserId() {
         return userId;
     }
-
 
     public static void setUserId(String userId) {
         MainActivity.userId = userId;
@@ -142,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements Filterable{
 
     public static boolean isEmailValid(CharSequence email) {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    
 
     }
 
@@ -155,13 +150,13 @@ public class MainActivity extends AppCompatActivity implements Filterable{
     }
 
     public static void changeAuthorizationState() {
-        if (isUserIdSet()) {
-            mScreenTitles[5] = "Profile";
+        if (!isUserIdSet()) {
+            mScreenTitles[5] = mContext.getString(R.string.login);
 
             ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
             arrayAdapter.notifyDataSetChanged();
         } else {
-            mScreenTitles[5] = "Login";
+            mScreenTitles[5] = mContext.getString(R.string.profile);
 
             ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
             arrayAdapter.notifyDataSetChanged();
@@ -220,6 +215,8 @@ public class MainActivity extends AppCompatActivity implements Filterable{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -300,18 +297,9 @@ public class MainActivity extends AppCompatActivity implements Filterable{
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            case R.id.action_details:
-                // create intent to perform web search for this planet
-//                Intent intent = new Intent(this, ProblemDetailsActivity.class);
-//                startActivity(intent);
-                return true;
-            case R.id.action_add_polygon:
-                EcoMapFragment.setMarkerClickType(1);
-                return true;
-            case R.id.action_update:
-                Intent intentService = new Intent(this, EcoMapService.class);
-                startService(intentService);
-                return true;
+            case R.id.language:
+                DialogFragment df = new LanguageFragment();
+                df.show(getFragmentManager(), "language");
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -325,7 +313,6 @@ public class MainActivity extends AppCompatActivity implements Filterable{
         String tag = null;
 
         switch (position) {
-
             case NAV_MAP:
                 chooseEcoMapFragment(filterCondition);
                 break;
@@ -340,8 +327,6 @@ public class MainActivity extends AppCompatActivity implements Filterable{
                 if (fragment == null) {
                     fragment = new MockFragment();
                 }
-
-
                 break;
             case NAV_FILTER:
                 tag = FiltersFragment.class.getSimpleName();
@@ -364,12 +349,12 @@ public class MainActivity extends AppCompatActivity implements Filterable{
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
-                    Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
+                    /*Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
                     View snackBarView = snackbar.getView();
                     snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
                     TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
                     textView.setTextColor(Color.WHITE);//change Snackbar's text color;
-                    snackbar.show();
+                    snackbar.show();*/
 
                     break;
                 } else {
@@ -438,8 +423,6 @@ public class MainActivity extends AppCompatActivity implements Filterable{
     public void filter(String s){
         filterCondition=s;
         selectItem(0);
-
-
     }
 
     @Override

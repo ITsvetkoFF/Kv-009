@@ -2,18 +2,21 @@ package org.ecomap.android.app.data.model;
 
 import android.util.Log;
 
-import org.ecomap.android.app.ui.fragments.CommentsFragment;
+import org.ecomap.android.app.fragments.CommentsFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
-<<<<<<< HEAD
- * Created by yridk_000 on 15.07.2015.
-=======
  * Created by y.ridkous@gmail.com on 15.07.2015.
->>>>>>> master
  */
 public class CommentEntry {
+
+    public static final String TAG = CommentEntry.class.getSimpleName();
 
     private static final String MODIFIEDDATE = "modified_date";
     private static final String MODIFIEDBY = "modified_by";
@@ -48,7 +51,8 @@ public class CommentEntry {
         return null;
     }
 
-    public CommentEntry(String modifiedDate, String modifiedBy, String createdBy, String content, String createdDate, long id) {
+
+    public CommentEntry(final String modifiedDate, final String modifiedBy, final String createdBy, final String content, final String createdDate, final long id) {
         this.modifiedDate = modifiedDate;
         this.modifiedBy = modifiedBy;
         this.createdBy = createdBy;
@@ -73,11 +77,28 @@ public class CommentEntry {
         return content;
     }
 
-    public String getCreatedDate() {
+    public String getCreatedDateAsString() {
         return createdDate;
     }
 
     public long getId() {
         return id;
     }
+
+    public Date getCreatedDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        Date date = null;
+        try {
+
+            long currentTimeMillis = System.currentTimeMillis();
+            long tzOffset = TimeZone.getDefault().getOffset(currentTimeMillis);
+
+            date = new Date(format.parse(createdDate).getTime() + tzOffset);
+
+        } catch (ParseException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        return date;
+    }
+
 }

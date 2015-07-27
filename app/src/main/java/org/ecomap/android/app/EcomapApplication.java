@@ -50,8 +50,11 @@ public class EcomapApplication extends Application {
 
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config.build());
+
+		/* uncomment in test purposes only to erase cache all time app starts
 		ImageLoader.getInstance().clearDiskCache();
 		ImageLoader.getInstance().clearMemoryCache();
+		*/
 
 	}
 }

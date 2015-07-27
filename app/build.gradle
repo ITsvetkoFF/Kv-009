@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "org.ecomap.android.app"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -36,4 +36,14 @@ dependencies {
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
     compile 'com.wunderlist:sliding-layer:1.1.1'
     compile 'com.android.support:design:22.2.0'
+
+    /**
+     * Animations libraries
+     * https://github.com/daimajia/AndroidViewAnimations
+     */
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.1@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
+    /**/
+
 }

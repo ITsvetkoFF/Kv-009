@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="navigation_array">
+        <item>Карта</item>
+        <item>Статистика</item>
+        <item>ТОП 10</item>
+        <item>Фильтры</item>
+        <item>Ресурсы</item>
+        <item>Войти</item>
+    </string-array>
+
+    <string-array name="types">
+        <item>Проблемы лесов</item>
+        <item>Свалка</item>
+        <item>Незаконное строительство</item>
+        <item>Проблемы водоёмов</item>
+        <item>Угроза биоразнообразию</item>
+        <item>Браконьерство</item>
+        <item>Прочие проблемы</item>
+    </string-array>
+
+    <string name="message_you_are_logged">Вы уже вошли в систему</string>
+    <string name="first_name_blank">Имя не может быть пустым</string>
+    <string name="second_name_blank">Фамилия не может быть пустой</string>
+    <string name="incorrect_email">Введите корректный почтовый адрес</string>
+    <string name="fill_all_fields">Заполните все поля корректно</string>
+    <string name="email_blank">Почтовый адрес не может быть пустым</string>
+    <string name="password_blank">Пароль не может быть пустым</string>
+    <string name="check_internet">Проверьте интернет соединение</string>
+    <string name="connecting_server">Соединяемся с сервером Ecomap</string>
+    <string name="message_log_in_to_leave_comments">Войдите чтобы оставлять комментарии</string>
+    <string name="message_isLiked">Голос добавлен</string>
+    <string name="message_isAlreadyLiked">Вы уже голосовали за эту проблему</string>
+
+    <string name="register_if_new">Совсем зелёный? Регистрируйся!</string>
+    <string name="want_logout">Вы действительно хотите выйти?</string>
+    <string name="change_password">Забыли пароль? Смените в два клика!</string>
+    <string name="write_comment">Напишите комментарий...</string>
+    <string name="have_problem">Хьюстон у нас проблема!</string>
+    <string name="action_add_polygon">Добавить полигон</string>
+    <string name="profile">Профиль</string>
+
+    <string name="string_suggested_solution">Предлагаемое решение</string>
+    <string name="string_description">Описание</string>
+    <string name="add_problem_title">Заголовок</string>
+    <string name="add_problem_type">Тип проблемы</string>
+    <string name="add_problem_add_button">Добавить</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="role">Роль</string>
+    <string name="user">Пользователь</string>
+    <string name="email">Електронный адрес</string>
+    <string name="password">Пароль</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="sign_in">Войти</string>
+    <string name="cancel">Отменить</string>
+    <string name="sign_up">Зарегестрироваться</string>
+    <string name="login">Войти</string>
+    <string name="logout">Выйти</string>
+    <string name="post">Запостить</string>
+
+    <string name="problem_type_string_1">Проблемы лесов</string>
+    <string name="problem_type_string_2">Свалка</string>
+    <string name="problem_type_string_3">Незаконное строительство</string>
+    <string name="problem_type_string_4">Проблемы водоёмов</string>
+    <string name="problem_type_string_5">Угроза биоразнообразию</string>
+    <string name="problem_type_string_6">Браконьерство</string>
+    <string name="problem_type_string_7">Прочие проблемы</string>
+
+    <string name="language_menu">Язык</string>
+    <string name="choose_language">Выберите язык</string>
+    <string name="error_need_to_sign_in">Только авторизированые пользователи могут добавлять проблему. Войдите либо зарегестрируйтесь</string>
+    <string name="reset">Сброс</string>
+    <string name="ok">Окей</string>
+</resources>

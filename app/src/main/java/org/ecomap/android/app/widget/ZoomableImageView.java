@@ -1,4 +1,4 @@
-package org.ecomap.android.app.ui.components;
+package org.ecomap.android.app.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -36,29 +36,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ProblemDetailsActivity"
-            android:label="@string/title_activity_problem_details"
-            android:parentActivityName=".activities.MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".activities.Profile"
-            android:label="@string/title_activity_profile"
+            android:label="@string/profile"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.ViewPhotosActivity"
-            android:label="@string/title_activity_view_photos"
-            android:parentActivityName=".activities.ProblemDetailsActivity"
-            android:theme="@style/AppThemeTransparentActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.ProblemDetailsActivity" />
         </activity>
 
         <provider
