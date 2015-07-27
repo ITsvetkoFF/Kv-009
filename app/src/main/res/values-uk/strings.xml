@@ -24,7 +24,7 @@
     <string name="second_name_blank">Прізвище не може бути порожнім</string>
     <string name="incorrect_email">Введіть правильну едектронну адресу</string>
     <string name="fill_all_fields">Заповньті всі поля коректно</string>
-    <string name="email_blank">Електронна адреса не може буті порожньою</string>
+    <string name="email_blank">Електронна адреса не може бути порожньою</string>
     <string name="password_blank">Пароль не може бути порожнім</string>
     <string name="check_internet">Перевірте інтернет з\'єднання</string>
     <string name="connecting_server">З\'єднуємося з сервером Ecomap</string>

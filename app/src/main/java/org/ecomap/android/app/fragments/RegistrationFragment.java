@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,7 @@ public class RegistrationFragment extends DialogFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (firstName.getText().toString().isEmpty()){
+                    if (firstName.getText().toString().isEmpty()) {
                         tilFirstName.setError(getString(R.string.first_name_blank));
                         signUp.setClickable(false);
                         Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
@@ -72,7 +73,7 @@ public class RegistrationFragment extends DialogFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (secondName.getText().toString().isEmpty()){
+                    if (secondName.getText().toString().isEmpty()) {
                         tilSecondName.setError(getString(R.string.second_name_blank));
                         signUp.setClickable(false);
                         Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
@@ -117,7 +118,7 @@ public class RegistrationFragment extends DialogFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (password.getText().toString().isEmpty()){
+                    if (password.getText().toString().isEmpty()) {
                         tilPassword.setError(getString(R.string.password_blank));
                         signUp.setClickable(false);
                         Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
@@ -135,7 +136,7 @@ public class RegistrationFragment extends DialogFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    if (confirmPassword.getText().toString().isEmpty()){
+                    if (confirmPassword.getText().toString().isEmpty()) {
                         tilConfirmPassword.setError(getString(R.string.password_blank));
                         signUp.setClickable(false);
                         Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
@@ -143,6 +144,18 @@ public class RegistrationFragment extends DialogFragment {
                         tilConfirmPassword.setErrorEnabled(false);
                         confirmPassword.setClickable(true);
                     }
+                }
+            }
+        });
+        confirmPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    confirmPassword.setFocusable(false);
+                    confirmPassword.setFocusableInTouchMode(false);
+                    return true;
+                } else {
+                    return false;
                 }
             }
         });
