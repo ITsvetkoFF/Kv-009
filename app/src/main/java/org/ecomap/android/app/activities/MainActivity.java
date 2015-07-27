@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private CharSequence mTitle;
     private Toolbar toolbar;
     private Fragment mFragment;
-    private FragmentManager fragmentManager;
+    private FragmentManager mFragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
 
@@ -222,9 +222,13 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         changeAuthorizationState();
 
+        mFragmentManager = getSupportFragmentManager();
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
+
+
     }
 
     @Override
@@ -262,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        fragmentManager = getSupportFragmentManager();
+
 
         boolean stop = false;
         String tag = null;
@@ -273,26 +277,26 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if(mFragment == null) {
                     mFragment = new FiltersFragment();
                 }*/
                 tag = MockFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
                 break;
             case NAV_FILTER:
                 tag = FiltersFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if(mFragment == null) {
                     mFragment = new FiltersFragment();}
                 break;
 
             case NAV_DETAILS:
                 tag = MockFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
@@ -300,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_PROFILE:
                 if (isUserIdSet()) {
                     tag = LoginFragment.class.getSimpleName();
-                    mFragment = fragmentManager.findFragmentByTag(tag);
+                    mFragment = mFragmentManager.findFragmentByTag(tag);
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
@@ -314,10 +318,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     break;
                 } else {
                     tag = LoginFragment.class.getSimpleName();
-                    mFragment = fragmentManager.findFragmentByTag(tag);
+                    mFragment = mFragmentManager.findFragmentByTag(tag);
 
                     if (mFragment == null) {
-                        new LoginFragment().show(fragmentManager, "login_layout");
+                        new LoginFragment().show(mFragmentManager, "login_layout");
                         stop = true;
                     }
                 }
@@ -325,7 +329,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             default:
                 tag = MockFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
@@ -341,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             }
 
             //Main magic happens here
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.content_frame, mFragment, tag).commit();
 
@@ -355,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private void chooseEcoMapFragment(String s) {
         String tag;
         tag = EcoMapFragment.class.getSimpleName();
-        mFragment = fragmentManager.findFragmentByTag(tag);
+        mFragment = mFragmentManager.findFragmentByTag(tag);
         if(mFragment == null) {
             mFragment = new EcoMapFragment();
         }
@@ -401,21 +405,26 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             }
         }
 
-        mBackPressingCount++;
-        if(System.currentTimeMillis() - mLastBackPressMillis > 1500){
-            mLastBackPressMillis = System.currentTimeMillis();
-            mBackPressingCount = 1;
-        }
-
-        if(mBackPressingCount == 2) {
-            ImageLoader.getInstance().stop();
+        if (mFragmentManager.getBackStackEntryCount() > 1 ) {
             super.onBackPressed();
-            return;
-        }
+        }else{
 
-        if(mBackPressingCount == 1){
-            mLastBackPressMillis = System.currentTimeMillis();
-            SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+            mBackPressingCount++;
+            if (System.currentTimeMillis() - mLastBackPressMillis > 1500) {
+                mLastBackPressMillis = System.currentTimeMillis();
+                mBackPressingCount = 1;
+            }
+
+            if (mBackPressingCount == 2) {
+                ImageLoader.getInstance().stop();
+                super.onBackPressed();
+                return;
+            }
+
+            if (mBackPressingCount == 1) {
+                mLastBackPressMillis = System.currentTimeMillis();
+                SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+            }
         }
     }
 
