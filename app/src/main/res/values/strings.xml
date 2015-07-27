@@ -40,8 +40,9 @@
     <string name="action_add_polygon">Add polygon</string>
     <string name="profile">Profile</string>
 
-    <string name="string_suggested_solution">Suggested solution</string>
-    <string name="string_description">Description</string>
+    <string name="string_added_by">"Added by: "</string>
+    <string name="string_suggested_solution">Suggested solution: </string>
+    <string name="string_description">Description: </string>
     <string name="add_problem_title">Problem title</string>
     <string name="add_problem_type">Problem type</string>
     <string name="add_problem_add_button">Add</string>
@@ -97,5 +98,6 @@
     <string name="gridview_img_description" translatable="false">Image</string>
     <string name="prefLikedProblems">LikedProblems</string>
     <string name="user_avatar">user avatar</string>
+
     <!---->
 </resources>
