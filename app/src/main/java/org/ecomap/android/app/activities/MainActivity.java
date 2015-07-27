@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static CookieManager cookieManager;
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LAST_FRAGMENT_TAG = "LAST_FRAGMENT_TAG";
 
     private static ListView mDrawerList;
     private static String[] mScreenTitles;
@@ -158,9 +159,28 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         changeAuthorizationState();
 
+        mFragmentManager = getSupportFragmentManager();
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(mFragment != null) {
+            outState.putString(LAST_FRAGMENT_TAG, mFragment.getTag());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        String tag = savedInstanceState.getString(LAST_FRAGMENT_TAG, null);
+        if(tag != null){
+            mFragment = mFragmentManager.findFragmentByTag(tag);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -261,13 +281,13 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        mFragmentManager = getSupportFragmentManager();
 
         boolean stop = false;
         String tag = null;
 
         switch (position) {
             case NAV_MAP:
+                tag = EcoMapFragment.class.getSimpleName();
                 chooseEcoMapFragment(filterCondition);
                 break;
             case NAV_RESOURCES:
