@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,19 @@ public class LoginFragment extends DialogFragment {
                         tilPass.setErrorEnabled(false);
                         signIn.setClickable(true);
                     }
+                }
+            }
+        });
+        password.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER){
+                    password.setFocusable(false);
+                    password.setFocusableInTouchMode(false);
+                    return true;
+                }
+                else {
+                    return false;
                 }
             }
         });
