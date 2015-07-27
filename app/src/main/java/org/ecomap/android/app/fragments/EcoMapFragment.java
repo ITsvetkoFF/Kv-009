@@ -34,6 +34,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.clustering.ClusterManager;
 import com.wunderlist.slidinglayer.SlidingLayer;
@@ -82,6 +83,8 @@ public class EcoMapFragment extends Fragment {
     private FloatingActionButton fabAddProblem;
     private FloatingActionButton fabConfirm;
     private FloatingActionButton fabCancel;
+
+    private static LatLng markerPosition = null;
 
     private ViewPager viewPager;
     private PagerAdapter adapter;
@@ -367,6 +370,14 @@ public class EcoMapFragment extends Fragment {
 
     public static int getMarkerClickType(){
         return markerClickType;
+    }
+
+    public static LatLng getMarkerPosition() {
+        return markerPosition;
+    }
+
+    public static void setMarkerPosition(LatLng position) {
+        markerPosition = position;
     }
 
     public void deleteMarker(Marker marker){
