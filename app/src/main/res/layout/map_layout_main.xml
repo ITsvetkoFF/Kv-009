@@ -249,19 +249,7 @@
             android:layout_alignParentEnd="true"
             android:visibility="visible"
             app:fabSize="normal" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabConfirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_done_white_24dp"
-            android:layout_gravity="bottom|right"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            app:fabSize="normal" />
-
+<!--
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabCancel"
             android:layout_width="wrap_content"
@@ -272,8 +260,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:visibility="invisible"
-            app:fabSize="mini" />
-
+            app:fabSize="normal" />
+-->
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.TabLayout

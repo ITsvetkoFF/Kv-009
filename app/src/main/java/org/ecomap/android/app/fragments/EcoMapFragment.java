@@ -19,12 +19,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,7 @@ import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.PagerAdapter;
+import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
@@ -81,10 +84,11 @@ public class EcoMapFragment extends Fragment {
     public static CameraPosition cameraPosition;
 
     private FloatingActionButton fabAddProblem;
-    private FloatingActionButton fabConfirm;
     private FloatingActionButton fabCancel;
 
     private static LatLng markerPosition = null;
+
+    private MapClustering mapClusterer;
 
     private ViewPager viewPager;
     private PagerAdapter adapter;
@@ -122,16 +126,12 @@ public class EcoMapFragment extends Fragment {
         UISettings.setCompassEnabled(true);
         UISettings.setMyLocationButtonEnabled(true);
 
-
         MapsInitializer.initialize(this.getActivity());
 
         values = new ArrayList<>();
         mContext = getActivity();
 
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
-        fabConfirm = (FloatingActionButton) v.findViewById(R.id.fabConfirm);
-        fabCancel = (FloatingActionButton) v.findViewById(R.id.fabCancel);
-
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
 
         fabAddProblem.setOnClickListener(new View.OnClickListener() {
@@ -142,56 +142,38 @@ public class EcoMapFragment extends Fragment {
                     signInAlertDialog();
                 } else {
 
-                    setMarkerClickType(2);
-                    fabAddProblem.setVisibility(View.INVISIBLE);
-                    fabConfirm.setVisibility(View.VISIBLE);
-                    fabCancel.setVisibility(View.VISIBLE);
+                    if (mapClusterer.getMarker() == null) {
+                        setMarkerClickType(2);
+                        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
 
+                        if (fabCancel == null) {
+                            createCancelButton();
+                        } else {
+                            fabCancel.setVisibility(View.VISIBLE);
+                        }
 
-                    Snackbar snackbar = Snackbar.make(rootLayout, "Choose location to add problem", Snackbar.LENGTH_LONG);
-                    View snackBarView = snackbar.getView();
-                    snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                    snackbar.show();
+                        //SnackBarHelper.showInfoSnackBar(mContext, rootLayout, "Please Choose Location", Snackbar.LENGTH_LONG);
 
-                    //showTabLayout();
+                        Snackbar snackbar = Snackbar.make(rootLayout, "Choose location to add problem", Snackbar.LENGTH_LONG);
+                        View snackBarView = snackbar.getView();
+                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                        snackbar.show();
+
+                    } else {
+                        //SnackBarHelper.showInfoSnackBar(mContext, rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
+
+                        Snackbar snackbar = Snackbar.make(rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
+                        View snackBarView = snackbar.getView();
+                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                        snackbar.show();
+
+                        new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
+
+                        //showTabLayout();
+                    }
                 }
             }
         });
-
-        fabConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fabAddProblem.setVisibility(View.VISIBLE);
-                fabConfirm.setVisibility(View.INVISIBLE);
-                fabCancel.setVisibility(View.INVISIBLE);
-                setMarkerClickType(0);
-
-                Snackbar snackbar = Snackbar.make(rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                snackbar.show();
-
-                new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
-            }
-        });
-
-        fabCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setMarkerClickType(0);
-                deleteMarker(marker);
-
-                fabAddProblem.setVisibility(View.VISIBLE);
-                fabConfirm.setVisibility(View.INVISIBLE);
-                fabCancel.setVisibility(View.INVISIBLE);
-
-                Snackbar snackbar = Snackbar.make(rootLayout, "You canceled", Snackbar.LENGTH_LONG);
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                snackbar.show();
-            }
-        });
-
 
         showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
@@ -271,6 +253,37 @@ public class EcoMapFragment extends Fragment {
         });
 
         return v;
+    }
+
+    private void createCancelButton(){
+        fabCancel = new FloatingActionButton(mContext);
+
+        CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT,
+                CoordinatorLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = (Gravity.LEFT | Gravity.BOTTOM);
+
+        fabCancel.setLayoutParams(params);
+        fabCancel.setImageResource(R.drawable.ic_clear_white_24dp);
+
+        //fabCancel.setVisibility(View.VISIBLE);
+
+        rootLayout.addView(fabCancel);
+
+        fabCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setMarkerClickType(0);
+
+                mapClusterer.deleteMarker();
+                fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
+                fabCancel.setVisibility(View.INVISIBLE);
+
+                Snackbar snackbar = Snackbar.make(rootLayout, "You canceled", Snackbar.LENGTH_LONG);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+                snackbar.show();
+            }
+        });
     }
 
     @Override
@@ -354,10 +367,9 @@ public class EcoMapFragment extends Fragment {
         }
 
         cursor.close();
-        new MapClustering(cameraPosition, mMap, mContext, values, marker, this).setUpClusterer();
+        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, marker, this);
+        mapClusterer.setUpClusterer();
     }
-
-
 
     public static void setFilterCondition(String s) {
         filterCondition = s;
@@ -378,12 +390,6 @@ public class EcoMapFragment extends Fragment {
 
     public static void setMarkerPosition(LatLng position) {
         markerPosition = position;
-    }
-
-    public void deleteMarker(Marker marker){
-        if (marker != null) {
-            marker.remove();
-        }
     }
 
     public void fillSlidingPanel(final Problem problem){

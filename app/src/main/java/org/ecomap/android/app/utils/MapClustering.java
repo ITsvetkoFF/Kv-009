@@ -157,4 +157,15 @@ public class MapClustering {
             mMap.setOnMarkerClickListener(mClusterManager);
         }
     }
+
+    public void deleteMarker(){
+        if (marker != null) {
+            marker.remove();
+            marker = null;
+        }
+    }
+
+    public Marker getMarker() {
+        return marker;
+    }
 }
