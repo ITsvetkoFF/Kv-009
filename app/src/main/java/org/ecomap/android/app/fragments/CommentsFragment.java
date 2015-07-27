@@ -57,7 +57,7 @@ import java.util.List;
  */
 public class CommentsFragment extends Fragment {
 
-    public static final String TAG = "CommentsFragment";
+    public static final String LOG_TAG = "CommentsFragment";
 
     private static final String ARG_PROBLEM = "problem";
 
