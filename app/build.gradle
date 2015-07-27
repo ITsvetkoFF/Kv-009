@@ -34,7 +34,8 @@ dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.3.+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
-    compile 'com.wunderlist:sliding-layer:1.1.1'
+    //compile 'com.wunderlist:sliding-layer:1.2.5'
+    compile project(':LibrarySlidingLayer')
     compile 'com.android.support:design:22.2.0'
 
     /**

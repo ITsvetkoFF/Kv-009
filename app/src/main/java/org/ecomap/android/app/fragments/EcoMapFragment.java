@@ -103,7 +103,7 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<LatLng> points;
     private ArrayList<Marker> markers;
     private View v;
-    private SlidingLayer slidingLayer;
+    public SlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
@@ -248,9 +248,12 @@ public class EcoMapFragment extends Fragment {
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
 
-        slidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+        mSlidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
-        slidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
+//        LayerTransformer transformer = new AlphaTransformer();
+//        mSlidingLayer.setLayerTransformer(transformer);
+
+        mSlidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
             @Override
             public void onOpen() {
 
@@ -302,7 +305,7 @@ public class EcoMapFragment extends Fragment {
         });
 
         if (isOpenSlidingLayer) {
-            slidingLayer.openPreview(true);
+            mSlidingLayer.openPreview(true);
             fillSlidingPanel(lastOpenProblem);
         }
 
@@ -510,7 +513,7 @@ public class EcoMapFragment extends Fragment {
                 fillSlidingPanel(problem);
 
                 //Set part of sliding layer visible
-                slidingLayer.openPreview(true);
+                mSlidingLayer.openPreview(true);
 
                 //save last open Problem for rotating screen
                 lastOpenProblem = problem;

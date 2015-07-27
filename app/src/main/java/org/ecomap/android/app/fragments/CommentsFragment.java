@@ -27,6 +27,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.ExpandableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -142,9 +143,9 @@ public class CommentsFragment extends Fragment {
                 }
 
                 if(!MainActivity.isUserIsAuthorized()){
-                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
+                    SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
                 }else if(comment.isEmpty()){
-                    MainActivity.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.write_comment, Snackbar.LENGTH_SHORT);
+                    SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.write_comment, Snackbar.LENGTH_SHORT);
                 }
             }
         });
