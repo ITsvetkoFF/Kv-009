@@ -194,7 +194,7 @@ public class EcoMapFragment extends Fragment {
         showLike = (ImageView) v.findViewById(R.id.show_like);
         showTitle = (TextView) v.findViewById(R.id.show_title);
         showType = (TextView) v.findViewById(R.id.show_type);
-        //showByTime = (TextView) v.findViewById(R.id.show_by_time);
+        showByTime = (TextView) v.findViewById(R.id.show_date_added);
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
@@ -384,10 +384,16 @@ public class EcoMapFragment extends Fragment {
         showTypeImage.setImageResource(problem.getResBigImage());
         showType.setText(problem.getTypeString());
         showTitle.setText(problem.getTitle());
-        //showByTime.setText(problem.getByTime());
+        showByTime.setText(problem.getByTime());
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
+
+        if (problem.isLiked()){
+            showLike.setImageResource(R.drawable.heart_icon);
+        }else{
+            showLike.setImageResource(R.drawable.heart_empty);
+        }
 
         //Check problem status and choose color fo text
         if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
@@ -407,6 +413,8 @@ public class EcoMapFragment extends Fragment {
                     problem.setLiked(true);
 
                     new AddVoteTask().execute(problem.getId());
+
+                    showLike.setImageResource(R.drawable.heart_icon);
 
                     Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
 
