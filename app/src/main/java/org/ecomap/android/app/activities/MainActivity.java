@@ -56,6 +56,7 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.utils.SnackBarHelper;
 
@@ -292,9 +293,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             case NAV_TOP10:
                 tag = Top10TabFragment.class.getSimpleName();
-                fragment =fragmentManager.findFragmentByTag(tag);
-                if(fragment==null){
-                    fragment = new Top10TabFragment();
+               mFragment =fragmentManager.findFragmentByTag(tag);
+                if(mFragment==null){
+                    mFragment = new Top10TabFragment();
                 };
                 break;
 

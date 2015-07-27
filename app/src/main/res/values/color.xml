@@ -2,4 +2,8 @@
 <resources>
     <color name="lime_500">#CDDC39</color>
     <color name="profile_gray">#858585</color>
+
+    <color name="ColorPrimaryTab">#ff1db800</color>
+    <color name="ColorPrimaryDarkTab">#ff157401</color>
+    <color name="tabsScrollColorTab">#ff157401</color>
 </resources>
