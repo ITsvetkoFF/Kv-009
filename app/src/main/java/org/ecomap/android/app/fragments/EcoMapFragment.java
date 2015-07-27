@@ -569,11 +569,11 @@ public class EcoMapFragment extends Fragment {
 
         //comments
         FragmentManager chFm = getChildFragmentManager();
-        Fragment f = chFm.findFragmentByTag(CommentsFragment.TAG);
+        Fragment f = chFm.findFragmentByTag(CommentsFragment.LOG_TAG);
         //if (f == null) {
         f = CommentsFragment.newInstance(problem);
         //}
-        chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.TAG).commit();
+        chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.LOG_TAG).commit();
 
         //photos
         new AsyncGetPhotos().execute(problem.getId());

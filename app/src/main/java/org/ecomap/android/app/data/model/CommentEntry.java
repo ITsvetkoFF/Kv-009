@@ -2,7 +2,6 @@ package org.ecomap.android.app.data.model;
 
 import android.util.Log;
 
-import org.ecomap.android.app.fragments.CommentsFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +15,7 @@ import java.util.TimeZone;
  */
 public class CommentEntry {
 
-    public static final String TAG = CommentEntry.class.getSimpleName();
+    public static final String LOG_TAG = CommentEntry.class.getSimpleName();
 
     private static final String MODIFIEDDATE = "modified_date";
     private static final String MODIFIEDBY = "modified_by";
@@ -45,7 +44,7 @@ public class CommentEntry {
             return new CommentEntry(modifiedDate, modifiedBy, createdBy, content, createdDate, id);
 
         } catch (JSONException e) {
-            Log.e(CommentsFragment.TAG, e.getMessage(), e);
+            Log.e(LOG_TAG, e.getMessage(), e);
         }
 
         return null;
@@ -96,7 +95,7 @@ public class CommentEntry {
             date = new Date(format.parse(createdDate).getTime() + tzOffset);
 
         } catch (ParseException e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.e(LOG_TAG, e.getMessage(), e);
         }
         return date;
     }
