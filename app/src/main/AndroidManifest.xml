@@ -49,6 +49,12 @@
                  android:parentActivityName=".activities.MainActivity"
                   android:theme="@style/AppThemeTransparentActionBar" >
         </activity>
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
         <provider
             android:name=".data.EcoMapProvider"
             android:authorities="org.ecomap.android.app.data" />

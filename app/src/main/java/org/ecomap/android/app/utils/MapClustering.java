@@ -106,6 +106,8 @@ public class MapClustering {
                     marker.setTitle("Houston we have a problem here!");
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
+                    EcoMapFragment.setMarkerPosition(latLng);
+
                 }
             }
         });
