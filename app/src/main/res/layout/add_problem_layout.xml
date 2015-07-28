@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/white"
     >
 
     <LinearLayout
@@ -22,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Problem Title:"
+            android:text="@string/add_problem_title"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
@@ -45,21 +46,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Problem Type:"
+            android:text="@string/add_problem_type"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:entries="@array/types"/>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Description:"
+            android:text="@string/string_description"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
@@ -82,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Suggested Solution:"
+            android:text="@string/string_suggested_solution"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
@@ -111,27 +113,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+            <!--
+                        <Button
+                            android:id="@+id/cancel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/cancel"
+                            style="?android:attr/borderlessButtonStyle"/>
 
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Cancel" />
+                        <Button
+                            android:id="@+id/add_photo"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/add_photo"
+                            style="?android:attr/borderlessButtonStyle"/>
+
+                        <Button
+                            android:id="@+id/send_problem"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/send"
+                            style="?android:attr/borderlessButtonStyle"/>
+            -->
 
             <Button
                 android:id="@+id/add_photo"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Add Photo" />
+                android:text="@string/add_photo"
+                android:textColor="#ff0099cc"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textColor="#ff0099cc"
+                style="?android:attr/borderlessButtonStyle"/>
 
             <Button
                 android:id="@+id/send_problem"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Send" />
+                android:text="@string/send"
+                android:textColor="#ff0099cc"
+                style="?android:attr/borderlessButtonStyle"/>
 
         </LinearLayout>
     </LinearLayout>

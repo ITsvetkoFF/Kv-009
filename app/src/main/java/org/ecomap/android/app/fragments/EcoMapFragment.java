@@ -85,16 +85,17 @@ public class EcoMapFragment extends Fragment {
     private Marker marker;
     public static CameraPosition cameraPosition;
 
+    private boolean addProblemModeActivated = false;
     private FloatingActionButton fabAddProblem;
     private CoordinatorLayout rootLayout;
 
     private static LatLng markerPosition = null;
-
     private MapClustering mapClusterer;
 
     //for rotating screen - save last position of SlidingPanel
     private static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
+
 
 
     @Override
@@ -134,30 +135,41 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (MainActivity.isUserIdSet()) {
 
-                if (!MainActivity.isUserIdSet()) {
-                    signInAlertDialog();
-                } else {
                     if (mapClusterer.getMarker() == null) {
-                        setMarkerClickType(2);
-                        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
 
-                        Snackbar snackbar = Snackbar.make(rootLayout, "Choose Location", Snackbar.LENGTH_INDEFINITE);
-                        View snackBarView = snackbar.getView();
-                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                        snackbar.setAction("Cancel", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setMarkerClickType(0);
-                                mapClusterer.deleteMarker();
-                                fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
-                            }
-                        });
-                        snackbar.show();
+                        if (!addProblemModeActivated) {
 
+                            setMarkerClickType(2);
+                            addProblemModeActivated = true;
+                            fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
+
+                            Snackbar snackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
+                            View snackBarView = snackbar.getView();
+                            TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_action);
+
+                            textView.setTextColor(Color.WHITE);
+                            snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+
+                            snackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setMarkerClickType(0);
+                                    addProblemModeActivated = false;
+
+                                    mapClusterer.deleteMarker();
+                                    fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
+                                }
+                            });
+
+                            snackbar.show();
+                        }
                     } else {
                         new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
                     }
+                } else {
+                    signInAlertDialog();
                 }
             }
         });
@@ -416,14 +428,14 @@ public class EcoMapFragment extends Fragment {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
         alert.setMessage(R.string.error_need_to_sign_in);
 
-        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(getString(R.string.sign_in), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 new LoginFragment().show(getFragmentManager(), "login_layout");
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

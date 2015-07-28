@@ -103,7 +103,7 @@ public class MapClustering {
                     }
 
                     marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                    marker.setTitle("Houston we have a problem here!");
+                    marker.setTitle("Houston, we have a problem!");
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
                     EcoMapFragment.setMarkerPosition(latLng);
