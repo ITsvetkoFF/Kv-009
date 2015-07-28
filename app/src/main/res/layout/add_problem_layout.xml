@@ -73,9 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textMultiLine"
-                android:imeOptions="actionNext"
-                android:singleLine="true"/>
+                android:inputType="textMultiLine" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -98,9 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textMultiLine"
-                android:imeOptions="actionDone"
-                android:singleLine="true"/>
+                android:inputType="textMultiLine" />
 
         </android.support.design.widget.TextInputLayout>
 
