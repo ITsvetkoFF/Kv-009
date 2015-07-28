@@ -98,6 +98,12 @@
     <string name="gridview_img_description" translatable="false">Image</string>
     <string name="prefLikedProblems">LikedProblems</string>
     <string name="user_avatar">user avatar</string>
+    <string name="item_map">Map</string>
+    <string name="item_statistics">Statistics</string>
+    <string name="item_top10">TOP 10</string>
+    <string name="item_filters">Filters</string>
+    <string name="item_resources">Resources</string>
+    <string name="item_login">Login</string>
 
     <!---->
 </resources>

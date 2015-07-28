@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/map"
+            android:checked="false"
+            android:icon="@drawable/ic_map"
+            android:title="@string/item_map" />
+
+        <item
+            android:id="@+id/statistics"
+            android:checked="false"
+            android:icon="@drawable/ic_statistics"
+            android:title="@string/item_statistics" />
+
+        <item
+            android:id="@+id/top10"
+            android:checked="false"
+            android:icon="@drawable/ic_top10"
+            android:title="@string/item_top10" />
+
+        <item
+            android:id="@+id/filters"
+            android:checked="false"
+            android:icon="@drawable/ic_filters"
+            android:title="@string/item_filters" />
+
+        <item
+            android:id="@+id/resourses"
+            android:checked="false"
+            android:icon="@drawable/ic_resouces"
+            android:title="@string/item_resources" />
+
+        <item
+            android:id="@+id/login"
+            android:checked="false"
+            android:icon="@drawable/ic_login"
+            android:title="@string/item_login" />
+
+    </group>
+</menu>

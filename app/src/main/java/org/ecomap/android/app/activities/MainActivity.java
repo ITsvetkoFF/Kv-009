@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -83,15 +84,14 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String LAST_FRAGMENT_TAG = "LAST_FRAGMENT_TAG";
-
-    private static ListView mDrawerList;
-    private static String[] mScreenTitles;
     private static String userId;
     private static boolean userIsAuthorized = false;
     private static String filterCondition = "";
     private static Context mContext;
 
     private DrawerLayout mDrawerLayout;
+    private static NavigationView mNavigationView;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
@@ -114,26 +114,47 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mBackPressingCount = 0;
 
         mTitle = mDrawerTitle = getTitle();
-        mScreenTitles = getResources().getStringArray(R.array.navigation_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                if(menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+
+                switch (menuItem.getItemId()){
+                    case R.id.map:
+                        selectItem(0);
+                        return true;
+                    case R.id.statistics:
+                        selectItem(1);
+                        return true;
+                    case R.id.top10:
+                        selectItem(2);
+                        return true;
+                    case R.id.filters:
+                        selectItem(3);
+                        return true;
+                    case R.id.resourses:
+                        selectItem(4);
+                        return true;
+                    case R.id.login:
+                        selectItem(5);
+                        return true;
+                    default:
+                        selectItem(0);
+                        return true;
+                }
+            }
+        });
         cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
         initUserIdFromCookies();
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mScreenTitles));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -201,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        //menu.findItem(R.id.action_details).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -366,10 +385,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             transaction.replace(R.id.content_frame, mFragment, tag).commit();
 
         }
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        //setTitle(mScreenTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     private void chooseEcoMapFragment(String s) {
@@ -406,15 +421,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     public static void changeAuthorizationState() {
         if (!isUserIdSet()) {
-            mScreenTitles[5] = mContext.getString(R.string.login);
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
+            mNavigationView.getMenu().getItem(5).setTitle(R.string.login);
         } else {
-            mScreenTitles[5] = mContext.getString(R.string.profile);
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
+            mNavigationView.getMenu().getItem(5).setTitle(R.string.profile);
         }
     }
 
@@ -458,9 +467,4 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             return rootView;
         }
     }
-
 }
-
-
-
-

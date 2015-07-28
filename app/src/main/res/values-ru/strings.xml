@@ -77,5 +77,11 @@
     <string name="reset">Сброс</string>
     <string name="ok">Окей</string>
     <string name="title_activity_view_photos">Просмотрщик фотографий</string>
+    <string name="item_map">Карта</string>
+    <string name="item_statistics">Статистика</string>
+    <string name="item_top10">ТОП 10</string>
+    <string name="item_filters">Фильтры</string>
+    <string name="item_resources">Ресурсы</string>
+    <string name="item_login">Войти</string>
 
 </resources>
