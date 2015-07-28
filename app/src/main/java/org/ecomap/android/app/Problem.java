@@ -167,7 +167,7 @@ public class Problem implements ClusterItem, Parcelable {
     }
 
     public String getByTime(){
-        return ("Added by:" + first_name + " " + last_name + "\n" + date);
+        return (first_name + " " + last_name + "\n" + date);
     }
 
     public String getContent(){

@@ -15,31 +15,37 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"
-        android:paddingBottom="16dp"
-
-        android:weightSum="100">
-
+        android:paddingBottom="16dp" >
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/add_problem_title"
+            android:text="Problem Title:"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
-        <EditText
-            android:id="@+id/editText"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_problemTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/problemTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:singleLine="true"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/add_problem_type"
+            android:text="Problem Type:"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
@@ -50,73 +56,87 @@
 
         <TextView
             android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/string_description"
+            android:text="Description:"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
-        <EditText
-            android:id="@+id/editText3"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_problemDescription"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="25"
-            android:ems="10"
-            android:inputType="textMultiLine" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/problemDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionNext"
+                android:singleLine="true"/>
+
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="@string/string_suggested_solution"
+            android:text="Suggested Solution:"
             android:paddingBottom="5dp"
             android:textColor="@color/blue2" />
 
-        <EditText
-            android:id="@+id/editText2"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_problemSolution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/problemSolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionDone"
+                android:singleLine="true"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <org.ecomap.android.app.ui.components.NonScrollableListView
+            android:id="@+id/nonScrollableListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="25"
-            android:ems="10"
-            android:inputType="textMultiLine" />
-
-
-        <android.support.v4.view.ViewPager
-            android:id="@+id/gallery_item"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="45" />
+            android:layout_marginTop="16dp">
+        </org.ecomap.android.app.ui.components.NonScrollableListView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel" />
 
             <Button
-                android:id="@+id/add_button"
-                android:layout_width="wrap_content"
+                android:id="@+id/add_photo"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/add_problem_add_button"
-                android:textColor="#000000"
-                />
+                android:layout_weight="1"
+                android:text="Add Photo" />
 
             <Button
-                android:id="@+id/cancel_button"
-                android:layout_width="wrap_content"
+                android:id="@+id/send_problem"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:textColor="#000000"
-                android:layout_gravity="center_horizontal"
-                />
+                android:layout_weight="1"
+                android:text="Send" />
+
         </LinearLayout>
-
-        <!--
-        http://stackoverflow.com/questions/13796382/android-viewpager-as-image-slide-gallery?rq=1
-        -->
-
     </LinearLayout>
 </ScrollView>

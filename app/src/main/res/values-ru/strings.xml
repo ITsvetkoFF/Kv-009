@@ -40,8 +40,9 @@
     <string name="action_add_polygon">Добавить полигон</string>
     <string name="profile">Профиль</string>
 
-    <string name="string_suggested_solution">Предлагаемое решение</string>
-    <string name="string_description">Описание</string>
+    <string name="string_added_by">"Добавлено: "</string>
+    <string name="string_suggested_solution">Предлагаемое решение: </string>
+    <string name="string_description">Описание: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблемы</string>
     <string name="add_problem_add_button">Добавить</string>
@@ -75,4 +76,6 @@
     <string name="error_need_to_sign_in">Только авторизированые пользователи могут добавлять проблему. Войдите либо зарегестрируйтесь</string>
     <string name="reset">Сброс</string>
     <string name="ok">Окей</string>
+    <string name="title_activity_view_photos">Просмотрщик фотографий</string>
+
 </resources>

@@ -115,7 +115,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_image_pager, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_image_pager_view_photos, container, false);
 
             ArrayList<Parcelable> mImagesURLArray = getArguments().getParcelableArrayList(PHOTO_ENTRY);
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:background="@drawable/photo_bg"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="top|right"
+            android:background="@drawable/ic_error"
+            android:scaleType="centerCrop" />
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:max="100"
+            android:progressDrawable="@drawable/progressbar" />
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/add_photo_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:hint="Add your comments here..." />
+
+
+</LinearLayout>
