@@ -6,6 +6,7 @@ package org.ecomap.android.app.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -14,8 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
@@ -39,6 +41,7 @@ public class FiltersFragment extends ListFragment {
     Button okBtn;
     Button resetBtn;
     ListView listView;
+    TextView startDate,endDate;
     ArrayList<Integer> selectedIdees;
     private View mainView;
     private Filterable ourActivity;
@@ -67,6 +70,8 @@ public class FiltersFragment extends ListFragment {
         Log.i(LOG_TAG, "onCreateView");
 
         mainView = inflater.inflate(R.layout.filters_fragment_main, container, false);
+        ScrollView scrollView=(ScrollView)mainView.findViewById(R.id.scroll_view);
+        scrollView.scrollTo(0, 0);
 
         return mainView;
     }
@@ -111,6 +116,9 @@ public class FiltersFragment extends ListFragment {
         }
         okBtn = (Button) mainView.findViewById(R.id.ok);
         resetBtn = (Button) mainView.findViewById(R.id.reset);
+        startDate=(TextView) mainView.findViewById(R.id.start_date);
+        endDate=(TextView)mainView.findViewById(R.id.end_date);
+
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,12 +160,33 @@ public class FiltersFragment extends ListFragment {
                 sbArray = null;
             }
         });
+
+        startDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+
+            }
+        });
+
+        endDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+
+            }
+        });
     }
     @Override
     public void onPause() {
         super.onPause();
         Log.i(LOG_TAG, "on pause");
     }
+
+
+
 
     public interface Filterable {
         public void filter(String string);
