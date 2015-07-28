@@ -5,6 +5,8 @@ package org.ecomap.android.app.fragments;
  */
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -23,6 +26,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class FiltersFragment extends ListFragment {
 
@@ -46,6 +50,9 @@ public class FiltersFragment extends ListFragment {
     private View mainView;
     private Filterable ourActivity;
     private SparseBooleanArray sbArray;
+    int startYear,startMonth, startDay, endYear, endMonth, endDay;
+
+
 
 
     @Override
@@ -53,6 +60,8 @@ public class FiltersFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         Log.i(LOG_TAG, "OnCreate");
+
+
     }
 
     @Override
@@ -119,6 +128,19 @@ public class FiltersFragment extends ListFragment {
         startDate=(TextView) mainView.findViewById(R.id.start_date);
         endDate=(TextView)mainView.findViewById(R.id.end_date);
 
+        final Calendar c = Calendar.getInstance();
+
+        startYear=2013;
+        startMonth=6;
+        startDay=15;
+
+        endYear=c.get(Calendar.YEAR);
+        endMonth=c.get(Calendar.MONTH);
+        endDay=c.get(Calendar.DATE);
+
+        startDate.setText(" "+startDay+"."+startMonth+"."+startYear);
+        endDate.setText(" "+endDay+"."+endMonth+"."+endYear);
+
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,23 +183,48 @@ public class FiltersFragment extends ListFragment {
             }
         });
 
-        startDate.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener showDatePicker = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+                final View vv = v;
+                DatePickerDialog datePickerDialog;
 
-            }
-        });
+                if(vv.getId()==R.id.start_date){
+                    datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-        endDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment();
-                newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+                                startYear=year;
+                                startMonth=monthOfYear;
+                                startDay=dayOfMonth;
+                                startDate.setText(" "+startDay+"."+startMonth+"."+startYear);
+                            }
 
-            }
-        });
+
+                    }, startYear, startMonth, startDay);
+
+                }
+                else{
+                    datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                            endYear=year;
+                            endMonth=monthOfYear;
+                            endDay=dayOfMonth;
+                            endDate.setText(" "+endDay+"."+endMonth+"."+endYear);
+
+                        }
+                    }, endYear, endMonth, endDay);
+                }
+
+
+        datePickerDialog.show();
+    }
+};      startDate.setOnClickListener(showDatePicker);
+        endDate.setOnClickListener(showDatePicker);
+
+
     }
     @Override
     public void onPause() {
@@ -191,6 +238,8 @@ public class FiltersFragment extends ListFragment {
     public interface Filterable {
         public void filter(String string);
     }
+
+
 
 }
 
