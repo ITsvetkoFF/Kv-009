@@ -1,16 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/scroll_view"
     >
+
+        <LinearLayout
+
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:id="@+id/line1">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:id="@+id/textView5"
+                android:text="@string/starting_date"
+                android:textColor="@color/secondary_text"
+                android:layout_margin="6dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="New Text"
+                android:id="@+id/start_date"
+                android:textColor="@color/primary_text"
+                android:layout_margin="6dp"
+                android:gravity="center"
+                android:onClick="onStartDateClicked"
+                android:clickable="true"/>
+            </LinearLayout>
+        <LinearLayout
+
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="@string/end_date"
+                android:id="@+id/textView9"
+                android:textColor="@color/secondary_text"
+                android:layout_margin="6dp"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="New Text"
+                android:id="@+id/end_date"
+                android:textColor="@color/primary_text"
+                android:layout_margin="6dp"
+                android:gravity="center"
+                android:onClick="onEndDateClicked"
+                android:clickable="true"/>
+
+        </LinearLayout>
+
+
 
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
+
+
+
     <LinearLayout
 
         android:orientation="horizontal"
@@ -31,4 +96,4 @@
 
         </Button>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
