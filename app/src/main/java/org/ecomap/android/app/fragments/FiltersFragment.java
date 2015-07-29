@@ -25,6 +25,7 @@ import android.widget.TextView;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -41,6 +42,7 @@ public class FiltersFragment extends ListFragment {
     public static final int OTHER_PROBLEM = 7;
     private final String LOG_TAG = "FilterFragment";
     public String problemType = EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " = ";
+    public String dateInterval=") AND ("+ EcoMapContract.ProblemsEntry.COLUMN_DATE+" BETWEEN ";
     public String resultCondition;
     Button okBtn;
     Button resetBtn;
@@ -51,6 +53,12 @@ public class FiltersFragment extends ListFragment {
     private Filterable ourActivity;
     private SparseBooleanArray sbArray;
     int startYear,startMonth, startDay, endYear, endMonth, endDay;
+    private String dateCondition;
+    private boolean startDateInitialized;
+    private boolean endDateInitialized;
+
+    String beginDate;
+    String finishDate;
 
 
 
@@ -130,16 +138,27 @@ public class FiltersFragment extends ListFragment {
 
         final Calendar c = Calendar.getInstance();
 
-        startYear=2013;
-        startMonth=6;
-        startDay=15;
+       if(!startDateInitialized)
+       {
 
-        endYear=c.get(Calendar.YEAR);
-        endMonth=c.get(Calendar.MONTH);
-        endDay=c.get(Calendar.DATE);
+           beginDate="2014-02-18";
+           startYear=2014;
+           startMonth=2;
+           startDay=18;
+       }
 
-        startDate.setText(" "+startDay+"."+startMonth+"."+startYear);
-        endDate.setText(" "+endDay+"."+endMonth+"."+endYear);
+        if(!endDateInitialized) {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            finishDate = sdf.format(c.getTime());
+            endYear=c.get(Calendar.YEAR);
+            endMonth=c.get(Calendar.MONTH);
+            endDay=c.get(Calendar.DAY_OF_MONTH);
+        }
+
+        startDate.setText(beginDate);
+        endDate.setText(finishDate);
+
 
 
         okBtn.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +166,7 @@ public class FiltersFragment extends ListFragment {
             public void onClick(View v) {
 
                 sbArray = listView.getCheckedItemPositions();
+
                 Log.i(LOG_TAG, "sbArray created. size= " + sbArray.size());
                 for (int i = 0; i < sbArray.size(); i++) {
                     int key = sbArray.keyAt(i);
@@ -157,17 +177,21 @@ public class FiltersFragment extends ListFragment {
                     }
                 }
                 if (selectedIdees.size() == 0) {
-                    resultCondition = problemType + 8;
+                    resultCondition = "("+problemType + 120;
 
                 } else if (selectedIdees.size() == 1) {
-                    resultCondition = problemType + selectedIdees.get(0);
+                    resultCondition = "("+problemType + selectedIdees.get(0);
 
                 } else {
-                    resultCondition = problemType + selectedIdees.remove(0);
+                    resultCondition = "("+problemType + selectedIdees.remove(0);
                     for (int i = 0; i < selectedIdees.size(); i++) {
                         resultCondition += " OR " + problemType + selectedIdees.get(i);
                     }
                 }
+                dateCondition=dateInterval + "\'"+beginDate+"\'" + " AND " + "\'"+finishDate+"\')";
+                resultCondition+=dateCondition;
+                Log.i(LOG_TAG, resultCondition);
+
                 ourActivity.filter(resultCondition);
             }
         });
@@ -193,11 +217,20 @@ public class FiltersFragment extends ListFragment {
                     datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar c = Calendar.getInstance();
+                            c.set(year, monthOfYear, dayOfMonth);
+                            startYear=year;
+                            startMonth=monthOfYear;
+                            startDay=dayOfMonth;
 
-                                startYear=year;
-                                startMonth=monthOfYear;
-                                startDay=dayOfMonth;
-                                startDate.setText(" "+startDay+"."+startMonth+"."+startYear);
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            beginDate = sdf.format(c.getTime());
+
+                            startDateInitialized=true;
+                            startDate.setText(beginDate);
+
+                                ;
+
                             }
 
 
@@ -209,10 +242,18 @@ public class FiltersFragment extends ListFragment {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
+                            Calendar c = Calendar.getInstance();
+                            c.set(year, monthOfYear, dayOfMonth);
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            finishDate = sdf.format(c.getTime());
+
                             endYear=year;
                             endMonth=monthOfYear;
                             endDay=dayOfMonth;
-                            endDate.setText(" "+endDay+"."+endMonth+"."+endYear);
+
+                            endDateInitialized=true;
+                            endDate.setText(finishDate);;
 
                         }
                     }, endYear, endMonth, endDay);
