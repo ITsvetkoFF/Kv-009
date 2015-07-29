@@ -53,6 +53,7 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.utils.SnackBarHelper;
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final String PASSWORD_KEY = "password";
 
     public static final int NAV_MAP = 0;
+    public static final int NAV_STATISTICS = 1;
     public static final int NAV_DETAILS = 2;
     public static final int NAV_FILTER = 3;
     public static final int NAV_RESOURCES = 4;
@@ -308,6 +310,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_MAP:
                 tag = EcoMapFragment.class.getSimpleName();
                 chooseEcoMapFragment(filterCondition);
+                break;
+            case NAV_STATISTICS:
+                tag = StatisticsFragment.class.getSimpleName();
+                fragment = fragmentManager.findFragmentByTag(tag);
+                if(fragment == null) {
+                    fragment = new StatisticsFragment();}
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();
