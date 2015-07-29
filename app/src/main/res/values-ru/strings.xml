@@ -87,5 +87,6 @@
     <string name="item_filters">Фильтры</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
+    <string name="string_anonymous">Аноним</string>
 
 </resources>

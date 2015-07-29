@@ -109,5 +109,7 @@
     <string name="item_resources">Resources</string>
     <string name="item_login">Login</string>
 
+    <string name="string_anonymous">Anonymous</string>
+
     <!---->
 </resources>

@@ -79,7 +79,7 @@ public class EcoMapFragment extends Fragment {
     private View v;
     public SlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
-    private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
+    private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
     private LinearLayout showHead;
     private Marker marker;
@@ -177,7 +177,6 @@ public class EcoMapFragment extends Fragment {
         showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
         showTitle = (TextView) v.findViewById(R.id.show_title);
-        showType = (TextView) v.findViewById(R.id.show_type);
         showByTime = (TextView) v.findViewById(R.id.show_date_added);
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
@@ -367,9 +366,8 @@ public class EcoMapFragment extends Fragment {
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
-        showType.setText(problem.getTypeString());
         showTitle.setText(problem.getTitle());
-        showByTime.setText(problem.getByTime());
+        showByTime.setText(problem.getUserDate());
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
