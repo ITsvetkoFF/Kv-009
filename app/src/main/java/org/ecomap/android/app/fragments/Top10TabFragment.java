@@ -20,7 +20,7 @@ public class Top10TabFragment extends Fragment {
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Top10Pop","Top10Hot","Top10Say"};
+    CharSequence Titles[]={"популярних","важливих ","обговорюваних"};
     int Numboftabs =3;
 
 

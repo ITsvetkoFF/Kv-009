@@ -2,6 +2,7 @@ package org.ecomap.android.app.tabs;
 
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,18 +13,40 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.data.EcoMapContract;
 
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class Top10Tab3 extends Fragment {
 
-    String [] top10say = {"1. ТОП 10 обговорюваних проблем.","2. ТОП 10 обговорюваних проблем.","3. ТОП 10 обговорюваних проблем.","4. ТОП 10 обговорюваних проблем.","5. ТОП 10 обговорюваних проблем.","6. ТОП 10 обговорюваних проблем.","7. ТОП 10 обговорюваних проблем.","8. ТОП 10 обговорюваних проблем.","9. ТОП 10 обговорюваних проблем.","10. ТОП 10 обговорюваних проблем."};
+    String [] top10say ={"","","","","","","","","",""};
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_top_3,container,false);
+
+        Cursor cursor = getActivity().getContentResolver()
+                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null,"("+EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER + ") DESC");
+
+
+        cursor.moveToFirst();
+        top10say[0] =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
+        top10say[0]= "1."+top10say[0]+".";
+
+
+        int i=1;
+        int j=2;
+        for(i=1;i<10;i++){
+
+            cursor.moveToNext();
+            top10say[i] =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
+            top10say[i]= j+ "." + top10say[i]+".";
+            j++;
+        }
+
+        cursor.close();
 
         ListView lvTopSay = (ListView) v.findViewById(R.id.lvSay);
         // создаем адаптер
