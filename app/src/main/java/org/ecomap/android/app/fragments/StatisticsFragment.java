@@ -52,6 +52,8 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.statistics_layout, container, false);
 
+        getActivity().setTitle(getString(R.string.nav_titles_statistics));
+
         one_day = (TextView) view.findViewById(R.id.one_day);
         one_week = (TextView) view.findViewById(R.id.one_week);
         one_month = (TextView) view.findViewById(R.id.one_month);
