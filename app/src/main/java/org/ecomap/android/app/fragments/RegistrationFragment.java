@@ -9,9 +9,12 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
@@ -44,7 +47,7 @@ public class RegistrationFragment extends DialogFragment {
 
         firstName = (EditText) getView().findViewById(R.id.first_name);
         secondName = (EditText) getView().findViewById(R.id.second_name);
-        email = (AutoCompleteTextView) getView().findViewById(R.id.email);
+        email = (AutoCompleteTextView) getView().findViewById(R.id.email_registration);
         password = (EditText) getView().findViewById(R.id.password);
         confirmPassword = (EditText) getView().findViewById(R.id.confirm_password);
         signUp = (Button) getView().findViewById(R.id.email_sign_up_button);
@@ -58,7 +61,6 @@ public class RegistrationFragment extends DialogFragment {
                     if (firstName.getText().toString().isEmpty()) {
                         tilFirstName.setError(getString(R.string.first_name_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilFirstName.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -76,7 +78,6 @@ public class RegistrationFragment extends DialogFragment {
                     if (secondName.getText().toString().isEmpty()) {
                         tilSecondName.setError(getString(R.string.second_name_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilSecondName.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -95,7 +96,6 @@ public class RegistrationFragment extends DialogFragment {
                         if (!MainActivity.isEmailValid(email.getText().toString())) {
                             tilEmail.setError(getString(R.string.incorrect_email));
                             signUp.setClickable(false);
-                            Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                         } else {
                             tilEmail.setErrorEnabled(false);
                             signUp.setClickable(true);
@@ -103,7 +103,6 @@ public class RegistrationFragment extends DialogFragment {
                     } else if (email.getText().toString().isEmpty()) {
                         tilEmail.setError(getString(R.string.email_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilEmail.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -121,7 +120,6 @@ public class RegistrationFragment extends DialogFragment {
                     if (password.getText().toString().isEmpty()) {
                         tilPassword.setError(getString(R.string.password_blank));
                         signUp.setClickable(false);
-                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
                     } else {
                         tilPassword.setErrorEnabled(false);
                         signUp.setClickable(true);
@@ -147,12 +145,14 @@ public class RegistrationFragment extends DialogFragment {
                 }
             }
         });
-        confirmPassword.setOnKeyListener(new View.OnKeyListener() {
+        confirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     confirmPassword.setFocusable(false);
-                    confirmPassword.setFocusableInTouchMode(false);
+                    confirmPassword.setFocusableInTouchMode(true);
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     return true;
                 } else {
                     return false;

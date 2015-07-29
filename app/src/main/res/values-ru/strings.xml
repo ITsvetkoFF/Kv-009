@@ -93,5 +93,15 @@
     <string name="problem_title_blank">Заголовок проблемы не может быть пустым</string>
     <string name="add_comment">Добавьте Ваши комментарии</string>
     <string name="exit">Выход</string>
+    <string name="string_anonymous">Аноним</string>
 
+    <string name="starting_date">начальная дата</string>
+    <string name="end_date">конечная дата</string>
+
+    <string name="day_sort">День</string>
+    <string name="week_sort">Неделя</string>
+    <string name="month_sort">Месяц</string>
+    <string name="year_sort">Год</string>
+    <string name="reset_sort">Сброс</string>
+    <string name="all_sort">Всего</string>
 </resources>

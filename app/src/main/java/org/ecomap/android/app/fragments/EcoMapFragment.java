@@ -5,30 +5,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +49,6 @@ import org.ecomap.android.app.sync.GetPhotosTask;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
-import org.ecomap.android.app.utils.PagerAdapter;
-import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
@@ -79,20 +72,20 @@ public class EcoMapFragment extends Fragment {
     private View v;
     public SlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
-    private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
+    private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
     private LinearLayout showHead;
     private Marker marker;
     public static CameraPosition cameraPosition;
 
-    private FloatingActionButton fabAddProblem;
-    private CoordinatorLayout rootLayout;
+    private FloatingActionButton fabAddProblem, fabUkraine, fabToMe;
 
     private static LatLng markerPosition = null;
     private MapClustering mapClusterer;
+    private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
-    private static boolean isOpenSlidingLayer = false;
+    private static boolean isOpenSlidingLayer = false, addProblemModeActivated;
     public static Problem lastOpenProblem;
 
     Snackbar addProblemSnackbar;
@@ -113,17 +106,16 @@ public class EcoMapFragment extends Fragment {
 
         //Temporary is to initialize mapView by null to get rotation works without exceptions.
         mapView.onCreate(null);
-        Log.i(tag, "OnCreateView mapview");
+        mMap = mapView.getMap();
+        mMap.setMyLocationEnabled(true);
+
+        MapsInitializer.initialize(getActivity());
 
         mMap = mapView.getMap();
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setMyLocationEnabled(true);
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
-        UISettings.setCompassEnabled(true);
-        UISettings.setMyLocationButtonEnabled(true);
-
-        MapsInitializer.initialize(this.getActivity());
+        UISettings.setMyLocationButtonEnabled(false);
 
         values = new ArrayList<>();
         mContext = getActivity();
@@ -160,10 +152,28 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
+        fabUkraine = (FloatingActionButton) v.findViewById(R.id.fabUkraine);
+        fabUkraine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
+            }
+        });
+
+        fabToMe = (FloatingActionButton) v.findViewById(R.id.fabToMe);
+        fabToMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location loc = mMap.getMyLocation();
+                if (loc != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
+                }
+            }
+        });
+
         showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
         showTitle = (TextView) v.findViewById(R.id.show_title);
-        showType = (TextView) v.findViewById(R.id.show_type);
         showByTime = (TextView) v.findViewById(R.id.show_date_added);
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
@@ -192,7 +202,6 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onShowPreview() {
-                fabAddProblem.setVisibility(View.INVISIBLE);
 
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
@@ -201,7 +210,7 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onClose() {
-                fabAddProblem.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -328,7 +337,7 @@ public class EcoMapFragment extends Fragment {
         }
 
         cursor.close();
-        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, marker, this);
+        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, this);
         mapClusterer.setUpClusterer();
     }
 
@@ -355,14 +364,12 @@ public class EcoMapFragment extends Fragment {
 
     public void fillSlidingPanel(final Problem problem){
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-               /*mMap.getCameraPosition().zoom*/15.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 11.0f));
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
-        showType.setText(problem.getTypeString());
         showTitle.setText(problem.getTitle());
-        showByTime.setText(problem.getByTime());
+        showByTime.setText(problem.getUserDate());
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());

@@ -9,7 +9,8 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,11 +22,12 @@ import org.ecomap.android.app.utils.NetworkAvailability;
 
 public class LoginFragment extends DialogFragment {
 
-    private AutoCompleteTextView email;
+    private EditText email;
     private EditText password;
     private Button signIn;
     private TextView signUpLink;
     private TextInputLayout tilEmail, tilPass;
+    private InputMethodManager imm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,10 +41,12 @@ public class LoginFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        email = (AutoCompleteTextView) getView().findViewById(R.id.email);
+        email = (EditText) getView().findViewById(R.id.email_login);
         password = (EditText) getView().findViewById(R.id.password);
         signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
         signUpLink = (TextView) getView().findViewById(R.id.link_to_register);
+
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         tilEmail = (TextInputLayout) getView().findViewById(R.id.til_email);
         tilEmail.setErrorEnabled(true);
@@ -88,15 +92,17 @@ public class LoginFragment extends DialogFragment {
                 }
             }
         });
-        password.setOnKeyListener(new View.OnKeyListener() {
+        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER){
-                    password.setFocusable(false);
-                    password.setFocusableInTouchMode(false);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    //password.clearFocus();
+                    //password.requestFocus();
+
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
                     return true;
-                }
-                else {
+                } else {
                     return false;
                 }
             }
