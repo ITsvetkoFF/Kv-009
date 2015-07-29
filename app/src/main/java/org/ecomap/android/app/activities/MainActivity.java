@@ -313,9 +313,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             case NAV_STATISTICS:
                 tag = StatisticsFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-                if(fragment == null) {
-                    fragment = new StatisticsFragment();}
+                mFragment = mFragmentManager.findFragmentByTag(tag);
+                if(mFragment == null) {
+                    mFragment = new StatisticsFragment();}
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();

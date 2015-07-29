@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -37,11 +38,11 @@ public class StatisticsFragment extends Fragment {
 
     private View view;
     PieChart pieChart;
-    Button one_day;
-    Button one_week;
-    Button one_month;
-    Button one_year;
-    Button one_reset;
+    TextView one_day;
+    TextView one_week;
+    TextView one_month;
+    TextView one_year;
+    TextView one_reset;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +54,11 @@ public class StatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.statistics_layout, container, false);
 
-        one_day = (Button) view.findViewById(R.id.one_day);
-        one_week = (Button) view.findViewById(R.id.one_week);
-        one_month = (Button) view.findViewById(R.id.one_month);
-        one_year = (Button) view.findViewById(R.id.one_year);
-        one_reset = (Button) view.findViewById(R.id.one_reset);
+        one_day = (TextView) view.findViewById(R.id.one_day);
+        one_week = (TextView) view.findViewById(R.id.one_week);
+        one_month = (TextView) view.findViewById(R.id.one_month);
+        one_year = (TextView) view.findViewById(R.id.one_year);
+        one_reset = (TextView) view.findViewById(R.id.one_reset);
 
         one_day.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,16 +94,21 @@ public class StatisticsFragment extends Fragment {
         pieChart = (PieChart) view.findViewById(R.id.pie_chart);
 
         //Setting piechart
+        pieChart.setDescription("");
         pieChart.setUsePercentValues(true);
         pieChart.setDrawHoleEnabled(true);
         pieChart.setHoleColorTransparent(true);
         pieChart.setHoleRadius(30f);
-        pieChart.setTransparentCircleRadius(50f);
+        pieChart.setDrawSliceText(false);
+        pieChart.setTransparentCircleRadius(40f);
         pieChart.setRotationAngle(0);
         pieChart.setRotationEnabled(true);
 
         Legend legend = pieChart.getLegend();
-        legend.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
+        legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        legend.setWordWrapEnabled(true);
+        legend.setForm(Legend.LegendForm.SQUARE);
+        legend.setXEntrySpace(20);
 
         //Starting chart - all problems
         setData(0);
@@ -231,41 +237,44 @@ public class StatisticsFragment extends Fragment {
 
         if(woods_problem_count != 0) {
             problemsResults.add(new Entry((woods_problem_count/whole_result)*100, 0));
-            problemsNames.add("Woods problem");
+            problemsNames.add(getString(R.string.problem_type_string_1) + ": " + woods_problem_count);
         }
         if(trash_problem_count != 0) {
             problemsResults.add(new Entry((trash_problem_count/whole_result)*100, 1));
-            problemsNames.add("Trash problem");
+            problemsNames.add(getString(R.string.problem_type_string_2) + ": " + trash_problem_count);
         }
         if(building_problem_count != 0) {
             problemsResults.add(new Entry((building_problem_count/whole_result)*100, 2));
-            problemsNames.add("Building problem");
+            problemsNames.add(getString(R.string.problem_type_string_3) + ": " + building_problem_count);
         }
         if(water_problem_count != 0) {
             problemsResults.add(new Entry((water_problem_count/whole_result)*100, 3));
-            problemsNames.add("Water problem");
+            problemsNames.add(getString(R.string.problem_type_string_4) + ": " + water_problem_count);
         }
         if(lifeforms_problem_count != 0) {
             problemsResults.add(new Entry((lifeforms_problem_count/whole_result)*100, 4));
-            problemsNames.add("Lifeforms problem");
+            problemsNames.add(getString(R.string.problem_type_string_5) + ": " + lifeforms_problem_count);
         }
         if(poaching_problem_count != 0) {
             problemsResults.add(new Entry((poaching_problem_count/whole_result)*100, 5));
-            problemsNames.add("Poaching problem");
+            problemsNames.add(getString(R.string.problem_type_string_6) + ": " + poaching_problem_count);
         }
         if(other_problem_count != 0) {
             problemsResults.add(new Entry((other_problem_count/whole_result)*100, 6));
-            problemsNames.add("Other problem");
+            problemsNames.add(getString(R.string.problem_type_string_7) + ": " + other_problem_count);
         }
 
         // Setting dataset
-        PieDataSet dataSet = new PieDataSet(problemsResults, "Statistics");
+        PieDataSet dataSet = new PieDataSet(problemsResults, getString(R.string.all_sort) + ": " + (int) whole_result);
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
         // add a colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
+
         for (int c : ColorTemplate.COLORFUL_COLORS) colors.add(c);
+        for (int c : ColorTemplate.LIBERTY_COLORS) colors.add(c);
+
         dataSet.setColors(colors);
 
         // set Data
