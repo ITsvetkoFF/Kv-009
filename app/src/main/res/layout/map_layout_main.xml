@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:slidingLayer="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.google.android.gms.maps.MapView android:id="@+id/mapview"
         android:layout_width="fill_parent"
@@ -43,18 +43,20 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/show_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textSize="18dp" />
+
+                        <TextView
                             android:id="@+id/show_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:lines="1"
-                            style="@style/Title" />
-
-                        <TextView
-                            android:id="@+id/show_date_added"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            style="@style/Caption" />
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textSize="24dp" />
 
                     </LinearLayout>
 
@@ -160,29 +162,45 @@
 
                     <TextView
                         android:id="@+id/textView2"
-                        style="@style/Subhead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/string_description" />
+                        android:text="@string/string_description"
+                        android:textStyle="bold"
+                        android:layout_marginTop="32dp" />
 
                     <TextView
                         android:id="@+id/show_content"
-                        style="@style/Body2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"/>
 
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/Subhead"
-                        android:text="@string/string_suggested_solution"/>
+                        android:layout_marginTop="32dp"
+                        android:textStyle="bold"
+                        android:text="@string/string_suggested_solution" />
 
                     <TextView
                         android:id="@+id/show_proposal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Body2"/>
+                        android:layout_marginTop="6dp" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:textStyle="bold"
+                        android:text="@string/string_added_by" />
+
+                    <TextView
+                        android:id="@+id/show_date_added"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp" />
 
                     <org.ecomap.android.app.widget.ExpandableHeightGridView
                         android:id="@+id/gridview"
@@ -215,24 +233,65 @@
 
     </com.wunderlist.slidinglayer.SlidingLayer>
 
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/rootLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabAddProblem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_white_24dp"
-            android:layout_margin="16dp"
-            android:layout_gravity="bottom|end"
+            android:layout_gravity="bottom|right"
             android:visibility="visible"
-            app:fabSize="normal" />
+            app:fabSize="normal"
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabUkraine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:visibility="visible"
+            app:fabSize="mini"
+            app:backgroundTint="@color/profile_gray"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_ukraine"
+            android:alpha="0.7" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabToMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:visibility="visible"
+            app:fabSize="mini"
+            app:backgroundTint="@color/profile_gray"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="74dp"
+            android:src="@drawable/ic_my_location"
+            android:alpha="0.7" />
+<!--
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_white_18dp"
+            android:layout_gravity="bottom|left"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            app:fabSize="normal" />
+-->
     </android.support.design.widget.CoordinatorLayout>
 
-    <android.support.design.widget.TabLayout
+    <!--<android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
         android:scrollbars="horizontal"
         android:layout_width="match_parent"
@@ -244,6 +303,6 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/tabLayout"/>
+        android:layout_below="@id/tabLayout"/>-->
 
 </RelativeLayout>
