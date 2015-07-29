@@ -81,5 +81,11 @@
     <string name="add_photo">Добавить фото</string>
     <string name="send">Отправить</string>
     <string name="add_problem_description">Добавьте описание проблемы</string>
+    <string name="item_map">Карта</string>
+    <string name="item_statistics">Статистика</string>
+    <string name="item_top10">ТОП 10</string>
+    <string name="item_filters">Фильтры</string>
+    <string name="item_resources">Ресурсы</string>
+    <string name="item_login">Войти</string>
 
 </resources>
