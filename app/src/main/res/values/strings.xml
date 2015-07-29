@@ -111,5 +111,7 @@
 
     <string name="string_anonymous">Anonymous</string>
 
+    <string name="starting_date">Start date</string>
+    <string name="end_date">End date</string>
     <!---->
 </resources>

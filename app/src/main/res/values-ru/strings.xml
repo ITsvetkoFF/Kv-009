@@ -89,4 +89,6 @@
     <string name="item_login">Войти</string>
     <string name="string_anonymous">Аноним</string>
 
+    <string name="starting_date">начальная дата</string>
+    <string name="end_date">конечная дата</string>
 </resources>
