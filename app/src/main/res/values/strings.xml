@@ -95,5 +95,7 @@
     <string name="gridview_img_description" translatable="false">Image</string>
     <string name="prefLikedProblems">LikedProblems</string>
     <string name="user_avatar">user avatar</string>
+    <string name="starting_date">Start date</string>
+    <string name="end_date">End date</string>
     <!---->
 </resources>

@@ -151,6 +151,7 @@ public class FiltersFragment extends ListFragment {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             finishDate = sdf.format(c.getTime());
+
             endYear=c.get(Calendar.YEAR);
             endMonth=c.get(Calendar.MONTH);
             endDay=c.get(Calendar.DAY_OF_MONTH);
@@ -219,6 +220,7 @@ public class FiltersFragment extends ListFragment {
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar c = Calendar.getInstance();
                             c.set(year, monthOfYear, dayOfMonth);
+
                             startYear=year;
                             startMonth=monthOfYear;
                             startDay=dayOfMonth;

@@ -75,4 +75,6 @@
     <string name="error_need_to_sign_in">Лише авторизовані користувачі можуть додавати проблеми. Увійдіть або зареєструйтеся</string>
     <string name="reset">Скинути</string>
     <string name="ok">Окей</string>
+    <string name="starting_date">початкова дата</string>
+    <string name="end_date">кінцева дата</string>
 </resources>
