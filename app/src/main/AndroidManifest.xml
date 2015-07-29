@@ -28,7 +28,7 @@
 
         <activity
             android:name=".activities.MainActivity"
-            android:label="Ecomap" >
+            android:label="Ecomap">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
