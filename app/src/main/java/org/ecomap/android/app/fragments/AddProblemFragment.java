@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.sync.AddProblemTask;
@@ -94,8 +95,10 @@ public class AddProblemFragment extends DialogFragment{
                         sendProblemButton.setClickable(false);
                     }
                 } else {
-                    tilProblemTitle.setErrorEnabled(false);
-                    sendProblemButton.setClickable(true);
+                    if (!problemTitle.getText().toString().isEmpty()) {
+                        tilProblemTitle.setErrorEnabled(false);
+                        sendProblemButton.setClickable(true);
+                    }
                 }
             }
         });
@@ -142,25 +145,33 @@ public class AddProblemFragment extends DialogFragment{
             @Override
             public void onClick(View v) {
 
-                params = new String[9];
+                if (!problemTitle.getText().toString().isEmpty()) {
+                    params = new String[9];
 
-                params[0] = "UNSOLVED";
-                params[1] = "3";
-                params[2] = problemTitle.getText().toString();
-                params[3] = String.valueOf(problemType);
-                params[4] = problemDescription.getText().toString();
-                params[5] = problemSolution.getText().toString();
-                params[6] = "1";
-                params[7] = String.valueOf(EcoMapFragment.getMarkerPosition().latitude);
-                params[8] = String.valueOf(EcoMapFragment.getMarkerPosition().longitude);
+                    params[0] = "UNSOLVED";
+                    params[1] = "3";
+                    params[2] = problemTitle.getText().toString();
+                    params[3] = String.valueOf(problemType);
+                    params[4] = problemDescription.getText().toString();
+                    params[5] = problemSolution.getText().toString();
+                    params[6] = "1";
+                    params[7] = String.valueOf(EcoMapFragment.getMarkerPosition().latitude);
+                    params[8] = String.valueOf(EcoMapFragment.getMarkerPosition().longitude);
 
-                if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
-                        .isNetworkAvailable()) {
-                    new AddProblemTask(mContext).execute(params);
+                    tilProblemTitle.setErrorEnabled(false);
 
+                    if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
+                            .isNetworkAvailable()) {
+                        new AddProblemTask(mContext).execute(params);
+
+                    } else {
+                        Snackbar.make(view, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                    }
                 } else {
-                    Snackbar.make(view, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                    new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_title_blank), Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
     }

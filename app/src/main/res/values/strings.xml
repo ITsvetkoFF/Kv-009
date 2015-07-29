@@ -48,6 +48,7 @@
     <string name="uploading_error">Uploading Error</string>
     <string name="problem_title_blank">Problem title can not be blank</string>
     <string name="exit">Exit</string>
+    <string name="problem_added">Problem has been successfully added</string>
 
     <string name="string_added_by">"Added by: "</string>
     <string name="string_suggested_solution">Suggested Solution</string>

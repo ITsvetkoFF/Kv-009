@@ -2,6 +2,7 @@ package org.ecomap.android.app.sync;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.EditText;
@@ -118,6 +119,9 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
+
+            new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
+
             sendPhoto(problemID);
             AddProblemFragment.getCancelButton().setText(mContext.getString(R.string.exit));
         }

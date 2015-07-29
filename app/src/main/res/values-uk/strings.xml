@@ -80,7 +80,7 @@
     <string name="choose_location">Оберіть місцезнаходження проблеми</string>
     <string name="add_photo">Додати фото</string>
     <string name="send">Відправити</string>
-    <string name="add_problem_description">Додайте опис проблеми</string>
+    <string name="add_problem_description">Опис проблеми</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
@@ -104,4 +104,5 @@
     <string name="year_sort">Рік</string>
     <string name="reset_sort">Скинути</string>
     <string name="all_sort">Всього</string>
+    <string name="problem_added"> Проблему успішно додано</string>
 </resources>
