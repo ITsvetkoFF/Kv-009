@@ -101,7 +101,7 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="16dp"
                     android:orientation="vertical"
-                    android:background="#FFFFFF">
+                    android:background="#FFFFFF" >
 
                     <RelativeLayout
                         android:layout_width="match_parent"

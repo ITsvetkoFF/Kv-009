@@ -46,8 +46,8 @@ public class AddProblemFragment extends DialogFragment{
     public AddPhotoImageAdapter imgAdapter;
     public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
-    private Button cancelButton;
-    private static Button sendProblemButton;
+    private static Button cancelButton;
+    private Button sendProblemButton;
     private Button addPhotoButton;
 
     public static final int REQUEST_CODE = 1;
@@ -182,9 +182,10 @@ public class AddProblemFragment extends DialogFragment{
         return nonScrollableListView;
     }
 
-    public static Button getSendProblemButton() {
-        return sendProblemButton;
+    public static Button getCancelButton() {
+        return cancelButton;
     }
+
 }
 
 

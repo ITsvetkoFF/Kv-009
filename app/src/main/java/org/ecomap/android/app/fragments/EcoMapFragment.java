@@ -85,11 +85,11 @@ public class EcoMapFragment extends Fragment {
     private Marker marker;
     public static CameraPosition cameraPosition;
 
-    private static FloatingActionButton fabAddProblem;
+    private FloatingActionButton fabAddProblem;
     private CoordinatorLayout rootLayout;
 
     private static LatLng markerPosition = null;
-    private static MapClustering mapClusterer;
+    private MapClustering mapClusterer;
 
     //for rotating screen - save last position of SlidingPanel
     private static boolean isOpenSlidingLayer = false;
@@ -137,11 +137,15 @@ public class EcoMapFragment extends Fragment {
                 if (MainActivity.isUserIdSet()) {
 
                     if (mapClusterer.getMarker() == null) {
-                        enterAddProblemMode();
+                        setMarkerClickType(2);
+                        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
+
                         addProblemSnackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                exitAddProblemMode();
+                                setMarkerClickType(0);
+                                mapClusterer.deleteMarker();
+                                fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
                             }
                         });
 
@@ -431,17 +435,6 @@ public class EcoMapFragment extends Fragment {
         });
 
         alert.show();
-    }
-
-    public static void enterAddProblemMode(){
-        setMarkerClickType(2);
-        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
-    }
-
-    public static void exitAddProblemMode(){
-        setMarkerClickType(0);
-        mapClusterer.deleteMarker();
-        fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
     }
 
     /*private void showTabLayout(){

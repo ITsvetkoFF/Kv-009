@@ -56,8 +56,6 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             urlConnection.setDoOutput(true);
 
-            //TODO data validation here
-
             //creating JSONObject for request
             JSONObject request = new JSONObject();
             request.put("status", params[0]);
@@ -117,13 +115,11 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
         progressBar.dismiss();
 
-        //TODO change to SnackBar
         new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             sendPhoto(problemID);
-            AddProblemFragment.getSendProblemButton().setText(mContext.getString(R.string.exit));
-            EcoMapFragment.exitAddProblemMode();
+            AddProblemFragment.getCancelButton().setText(mContext.getString(R.string.exit));
         }
     }
 
