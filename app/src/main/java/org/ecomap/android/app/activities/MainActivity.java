@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,11 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -68,101 +65,41 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-/**
- * This example illustrates a common usage of the DrawerLayout widget
- * in the Android support library.
- * <p/>
- * <p>When a navigation (left) drawer is present, the host activity should detect presses of
- * the action bar's Up affordance as a signal to open and close the navigation drawer. The
- * ActionBarDrawerToggle facilitates this behavior.
- * Items within the drawer should fall into one of two categories:</p>
- * <p/>
- * <ul>
- * <li><strong>View switches</strong>. A view switch follows the same basic policies as
- * list or tab navigation in that a view switch does not create navigation history.
- * This pattern should only be used at the root activity of a task, leaving some form
- * of Up navigation active for activities further down the navigation hierarchy.</li>
- * <li><strong>Selective Up</strong>. The drawer allows the user to choose an alternate
- * parent for Up navigation. This allows a user to jump across an app's navigation
- * hierarchy at will. The application should treat this as it treats Up navigation from
- * a different task, replacing the current task stack using TaskStackBuilder or similar.
- * This is the only form of navigation drawer that should be used outside of the root
- * activity of a task.</li>
- * </ul>
- * <p/>
- * <p>Right side drawers should be used for actions, not navigation. This follows the pattern
- * established by the Action Bar that navigation should be to the left and actions to the right.
- * An action should be an operation performed on the current contents of the window,
- * for example enabling or disabling a data overlay on top of the current content.</p>
- */
+
 public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
+
+    public static final String FIRST_NAME_KEY = "firstName";
+    public static final String LAST_NAME_KEY = "lastName";
+    public static final String EMAIL_KEY = "email";
+    public static final String ROLE_KEY = "role";
+    public static final String PASSWORD_KEY = "password";
 
     public static final int NAV_MAP = 0;
     public static final int NAV_DETAILS = 2;
-    public static final int NAV_FILTER=3;
+    public static final int NAV_FILTER = 3;
     public static final int NAV_RESOURCES = 4;
     public static final int NAV_PROFILE = 5;
-    public final static String FIRST_NAME_KEY = "firstName";
-    public final static String LAST_NAME_KEY = "lastName";
-    public final static String EMAIL_KEY = "email";
-    public final static String ROLE_KEY = "role";
-    public final static String PASSWORD_KEY = "password";
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     public static CookieManager cookieManager;
-    private static ListView mDrawerList;
-    private static String[] mScreenTitles;
+
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LAST_FRAGMENT_TAG = "LAST_FRAGMENT_TAG";
     private static String userId;
     private static boolean userIsAuthorized = false;
-    private static String filterCondition="";
+    private static String filterCondition = "";
     private static Context mContext;
+
     private DrawerLayout mDrawerLayout;
+    private static NavigationView mNavigationView;
+
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private Toolbar toolbar;
     private Fragment mFragment;
-    private FragmentManager fragmentManager;
+    private FragmentManager mFragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
-
-    public static String getUserId() {
-        return userId;
-    }
-
-    public static void setUserId(String userId) {
-        MainActivity.userId = userId;
-    }
-
-    public static boolean isUserIdSet() {
-        return userId != null;
-    }
-
-    public static boolean isEmailValid(CharSequence email) {
-        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
-
-    }
-
-    public static boolean isUserIsAuthorized() {
-        return userIsAuthorized || getUserId() != null;
-    }
-
-    public static void setUserIsAuthorized(boolean userIsAuthorized) {
-        MainActivity.userIsAuthorized = userIsAuthorized;
-    }
-
-    public static void changeAuthorizationState() {
-        if (!isUserIdSet()) {
-            mScreenTitles[5] = mContext.getString(R.string.login);
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
-        } else {
-            mScreenTitles[5] = mContext.getString(R.string.profile);
-
-            ArrayAdapter arrayAdapter = (ArrayAdapter) mDrawerList.getAdapter();
-            arrayAdapter.notifyDataSetChanged();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,26 +114,47 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mBackPressingCount = 0;
 
         mTitle = mDrawerTitle = getTitle();
-        mScreenTitles = getResources().getStringArray(R.array.navigation_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                if(menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+                mDrawerLayout.closeDrawers();
+
+                switch (menuItem.getItemId()){
+                    case R.id.map:
+                        selectItem(0);
+                        return true;
+                    case R.id.statistics:
+                        selectItem(1);
+                        return true;
+                    case R.id.top10:
+                        selectItem(2);
+                        return true;
+                    case R.id.filters:
+                        selectItem(3);
+                        return true;
+                    case R.id.resourses:
+                        selectItem(4);
+                        return true;
+                    case R.id.login:
+                        selectItem(5);
+                        return true;
+                    default:
+                        selectItem(0);
+                        return true;
+                }
+            }
+        });
         cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
         initUserIdFromCookies();
 
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mScreenTitles));
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
-
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -222,9 +180,35 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         changeAuthorizationState();
 
+        mFragmentManager = getSupportFragmentManager();
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if(mFragment != null) {
+            outState.putString(LAST_FRAGMENT_TAG, mFragment.getTag());
+        }
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        String tag = savedInstanceState.getString(LAST_FRAGMENT_TAG, null);
+        if(tag != null){
+            mFragment = mFragmentManager.findFragmentByTag(tag);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
     }
 
     @Override
@@ -238,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        //menu.findItem(R.id.action_details).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -260,39 +242,96 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         }
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if(mFragment.getClass() == EcoMapFragment.class){
+            EcoMapFragment frag = (EcoMapFragment)mFragment;
+            if(frag.mSlidingLayer.isOpened()) {
+                frag.mSlidingLayer.openPreview(true);
+                return;
+            }else if(frag.mSlidingLayer.isInPreviewMode()){
+                frag.mSlidingLayer.closeLayer(true);
+                return;
+            }
+        }
+
+        if (mFragmentManager.getBackStackEntryCount() > 1 ) {
+            super.onBackPressed();
+        }else{
+
+            mBackPressingCount++;
+            if (System.currentTimeMillis() - mLastBackPressMillis > 1500) {
+                mLastBackPressMillis = System.currentTimeMillis();
+                mBackPressingCount = 1;
+            }
+
+            if (mBackPressingCount == 2) {
+                ImageLoader.getInstance().stop();
+                super.onBackPressed();
+                return;
+            }
+
+            if (mBackPressingCount == 1) {
+                mLastBackPressMillis = System.currentTimeMillis();
+                SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+            }
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        toolbar.setTitle(mTitle);
+    }
+
+    @Override
+    public void filter(String s) {
+        filterCondition = s;
+        selectItem(0);
+    }
+
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        fragmentManager = getSupportFragmentManager();
 
         boolean stop = false;
         String tag = null;
 
         switch (position) {
             case NAV_MAP:
+                tag = EcoMapFragment.class.getSimpleName();
                 chooseEcoMapFragment(filterCondition);
                 break;
             case NAV_RESOURCES:
                 /*tag = FiltersFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if(mFragment == null) {
                     mFragment = new FiltersFragment();
                 }*/
                 tag = MockFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
                 break;
             case NAV_FILTER:
                 tag = FiltersFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
-                if(mFragment == null) {
-                    mFragment = new FiltersFragment();}
+                mFragment = mFragmentManager.findFragmentByTag(tag);
+                if (mFragment == null) {
+                    mFragment = new FiltersFragment();
+                }
                 break;
 
             case NAV_DETAILS:
                 tag = MockFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
@@ -300,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_PROFILE:
                 if (isUserIdSet()) {
                     tag = LoginFragment.class.getSimpleName();
-                    mFragment = fragmentManager.findFragmentByTag(tag);
+                    mFragment = mFragmentManager.findFragmentByTag(tag);
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
@@ -314,10 +353,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     break;
                 } else {
                     tag = LoginFragment.class.getSimpleName();
-                    mFragment = fragmentManager.findFragmentByTag(tag);
+                    mFragment = mFragmentManager.findFragmentByTag(tag);
 
                     if (mFragment == null) {
-                        new LoginFragment().show(fragmentManager, "login_layout");
+                        new LoginFragment().show(mFragmentManager, "login_layout");
                         stop = true;
                     }
                 }
@@ -325,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
             default:
                 tag = MockFragment.class.getSimpleName();
-                mFragment = fragmentManager.findFragmentByTag(tag);
+                mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
@@ -341,91 +380,52 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             }
 
             //Main magic happens here
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
             transaction.addToBackStack(null);
             transaction.replace(R.id.content_frame, mFragment, tag).commit();
 
         }
-        // update selected item and title, then close the drawer
-        mDrawerList.setItemChecked(position, true);
-        //setTitle(mScreenTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
     private void chooseEcoMapFragment(String s) {
         String tag;
         tag = EcoMapFragment.class.getSimpleName();
-        mFragment = fragmentManager.findFragmentByTag(tag);
-        if(mFragment == null) {
+        mFragment = mFragmentManager.findFragmentByTag(tag);
+        if (mFragment == null) {
             mFragment = new EcoMapFragment();
         }
-        EcoMapFragment frag=(EcoMapFragment) mFragment;
+        EcoMapFragment frag = (EcoMapFragment) mFragment;
         frag.setFilterCondition(s);
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        toolbar.setTitle(mTitle);
+    public static String getUserId() {
+        return userId;
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
-    @Override
-    public void filter(String s){
-        filterCondition=s;
-        selectItem(0);
+    public static void setUserId(String userId) {
+        MainActivity.userId = userId;
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+    public static boolean isUserIdSet() {
+        return userId != null;
     }
 
-    @Override
-    public void onBackPressed() {
+    public static boolean isEmailValid(CharSequence email) {
+        return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
 
-        if(mFragment.getClass() == EcoMapFragment.class){
-            EcoMapFragment frag = (EcoMapFragment)mFragment;
-            if(frag.mSlidingLayer.isOpened()) {
-                frag.mSlidingLayer.openPreview(true);
-                return;
-            }else if(frag.mSlidingLayer.isInPreviewMode()){
-                frag.mSlidingLayer.closeLayer(true);
-                return;
-            }
-        }
+    }
 
-        mBackPressingCount++;
-        if(System.currentTimeMillis() - mLastBackPressMillis > 1500){
-            mLastBackPressMillis = System.currentTimeMillis();
-            mBackPressingCount = 1;
-        }
+    public static boolean isUserIsAuthorized() {
+        return userIsAuthorized || getUserId() != null;
+    }
 
-        if(mBackPressingCount == 2) {
-            ImageLoader.getInstance().stop();
-            super.onBackPressed();
-            return;
-        }
-
-        if(mBackPressingCount == 1){
-            mLastBackPressMillis = System.currentTimeMillis();
-            SnackBarHelper.showInfoSnackBar(mContext, getWindow().getDecorView().findViewById(android.R.id.content), "Press back again to exit", Snackbar.LENGTH_SHORT);
+    public static void changeAuthorizationState() {
+        if (!isUserIdSet()) {
+            mNavigationView.getMenu().getItem(5).setTitle(R.string.login);
+        } else {
+            mNavigationView.getMenu().getItem(5).setTitle(R.string.profile);
         }
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
 
     /**
      * Sets logged in user id from COOKIE_USER_ID if cookieStore has it
@@ -446,6 +446,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     /**
      * Fragment that appears in the "content_frame", shows a planet
+     * TODO: delete, after removing fragments "Under construction"
      */
     public static class MockFragment extends Fragment {
         public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
@@ -466,45 +467,4 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             return rootView;
         }
     }
-
-
-    public static class FiltersAdapter extends ArrayAdapter<String> {
-
-        Context mContext;
-
-        FiltersAdapter(Context context, String[] objects) {
-            super(context, R.layout.filter_listview_item, 0, objects);
-            this.mContext = context;
-
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            View view;
-            if (convertView == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.filter_listview_item, parent, false);
-            } else {
-                view = convertView;
-            }
-
-            TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
-            String text = getItem(position);
-            txtListItem.setText(text);
-            CheckBox chkBox = (CheckBox) view.findViewById(R.id.checkBox);
-            chkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    Toast.makeText(mContext, "You select: " + position, Toast.LENGTH_SHORT).show();
-                }
-            });
-            return view;
-            //super.getView(position, convertView, parent);
-        }
-    }
-
 }
-
-
-
-

@@ -24,7 +24,7 @@
     <string name="second_name_blank">Прізвище не може бути порожнім</string>
     <string name="incorrect_email">Введіть правильну едектронну адресу</string>
     <string name="fill_all_fields">Заповньті всі поля коректно</string>
-    <string name="email_blank">Електронна адреса не може буті порожньою</string>
+    <string name="email_blank">Електронна адреса не може бути порожньою</string>
     <string name="password_blank">Пароль не може бути порожнім</string>
     <string name="check_internet">Перевірте інтернет з\'єднання</string>
     <string name="connecting_server">З\'єднуємося з сервером Ecomap</string>
@@ -36,12 +36,13 @@
     <string name="want_logout">Ви насправді бажаєте вийти?</string>
     <string name="change_password">Забули пароль? Змініть його!</string>
     <string name="write_comment">Напишіть коментар...</string>
-    <string name="have_problem">Хьюстон у нас проблема!</string>
+    <string name="have_problem">Хьюстон, у нас проблема!</string>
     <string name="action_add_polygon">Додати полігон</string>
     <string name="profile">Профіль</string>
 
-    <string name="string_suggested_solution">Пропозиції щодо вирішення</string>
-    <string name="string_description">Опис</string>
+    <string name="string_added_by">"Створено: "</string>
+    <string name="string_suggested_solution">Пропозиції щодо вирішення: </string>
+    <string name="string_description">Опис: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблеми</string>
     <string name="add_problem_add_button">Додати</string>
@@ -75,4 +76,17 @@
     <string name="error_need_to_sign_in">Лише авторизовані користувачі можуть додавати проблеми. Увійдіть або зареєструйтеся</string>
     <string name="reset">Скинути</string>
     <string name="ok">Окей</string>
+    <string name="title_activity_view_photos">Переглядач фото</string>
+    <string name="choose_location">Оберіть місцезнаходження проблеми</string>
+    <string name="add_photo">Додати фото</string>
+    <string name="send">Відправити</string>
+    <string name="add_problem_description">Додайте опис проблеми</string>
+    <string name="item_map">Карта</string>
+    <string name="item_statistics">Статистика</string>
+    <string name="item_top10">ТОП 10</string>
+    <string name="item_filters">Фільтри</string>
+    <string name="item_resources">Ресурси</string>
+    <string name="item_login">Увійти</string>
+    <string name="string_anonymous">Анонім</string>
+
 </resources>

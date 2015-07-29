@@ -43,20 +43,18 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/show_type"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:textSize="18dp" />
-
-                        <TextView
                             android:id="@+id/show_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:lines="1"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:textSize="24dp" />
+                            style="@style/Title" />
+
+                        <TextView
+                            android:id="@+id/show_date_added"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/Caption" />
 
                     </LinearLayout>
 
@@ -143,7 +141,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="24dp"
                             android:id="@+id/show_like"
-                            android:src="@drawable/heart_icon"
+                            android:src="@drawable/heart_empty"
                             android:layout_alignParentTop="true"
                             android:layout_toLeftOf="@+id/show_numOfLikes"
                             android:layout_toStartOf="@+id/show_numOfLikes"
@@ -162,29 +160,29 @@
 
                     <TextView
                         android:id="@+id/textView2"
+                        style="@style/Subhead"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/string_description"
-                        android:layout_marginTop="32dp" />
+                        android:text="@string/string_description" />
 
                     <TextView
                         android:id="@+id/show_content"
+                        style="@style/Body2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"/>
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="32dp"
-                        android:text="@string/string_suggested_solution" />
+                        style="@style/Subhead"
+                        android:text="@string/string_suggested_solution"/>
 
                     <TextView
                         android:id="@+id/show_proposal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp" />
+                        style="@style/Body2"/>
 
                     <org.ecomap.android.app.widget.ExpandableHeightGridView
                         android:id="@+id/gridview"
@@ -217,46 +215,20 @@
 
     </com.wunderlist.slidinglayer.SlidingLayer>
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/rootLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/rootLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabAddProblem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_white_24dp"
-            android:layout_gravity="bottom|right"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp"
+            android:layout_gravity="bottom|end"
             android:visibility="visible"
             app:fabSize="normal" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabConfirm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_done_white_24dp"
-            android:layout_gravity="bottom|right"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            app:fabSize="normal" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_clear_white_18dp"
-            android:layout_gravity="bottom|left"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            app:fabSize="mini" />
 
     </android.support.design.widget.CoordinatorLayout>
 
