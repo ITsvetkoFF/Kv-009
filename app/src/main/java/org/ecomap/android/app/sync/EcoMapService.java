@@ -178,7 +178,7 @@ public class EcoMapService extends IntentService {
                     status             = obj.getString(EcoMapAPIContract.STATUS);
 
                     if (obj.isNull(EcoMapAPIContract.FIRST_NAME)) {
-                        first_name = "no name";
+                        first_name = "";
                     } else {
                         first_name = obj.getString(EcoMapAPIContract.FIRST_NAME);
                     }

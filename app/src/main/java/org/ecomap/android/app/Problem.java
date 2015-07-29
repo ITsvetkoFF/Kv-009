@@ -166,8 +166,16 @@ public class Problem implements ClusterItem, Parcelable {
         }
     }
 
-    public String getByTime(){
-        return ("Added by:" + first_name + " " + last_name + "\n" + date);
+    public String getUserDate(){
+
+        if (this.first_name.isEmpty()&&this.last_name.isEmpty()){
+
+            String no_name = "(" + mContext.getString(R.string.string_anonymous) + ")";
+
+            return (no_name + ": " + date);
+        }
+
+        return (first_name + " " + last_name + ": " + date);
     }
 
     public String getContent(){
