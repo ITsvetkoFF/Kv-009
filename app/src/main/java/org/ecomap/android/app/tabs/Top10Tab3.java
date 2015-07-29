@@ -15,35 +15,32 @@ import android.widget.ListView;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 
+import java.util.ArrayList;
+
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class Top10Tab3 extends Fragment {
 
-    String [] top10say ={"","","","","","","","","",""};
+    ArrayList top10say = new ArrayList();
 
-
-    @Override
+     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_top_3,container,false);
 
         Cursor cursor = getActivity().getContentResolver()
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null,"("+EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER + ") DESC");
 
-
         cursor.moveToFirst();
-        top10say[0] =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-        top10say[0]= "1."+top10say[0]+".";
 
+        for(int i=0;i<10;i++){
 
-        int i=1;
-        int j=2;
-        for(i=1;i<10;i++){
+            top10say.add(cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)));
+            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER));
+
+            top10say.add(i,"✎ "+votes+"  " + top10say.get(i) +".");
 
             cursor.moveToNext();
-            top10say[i] =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-            top10say[i]= j+ "." + top10say[i]+".";
-            j++;
         }
 
         cursor.close();

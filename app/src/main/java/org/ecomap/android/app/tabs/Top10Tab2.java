@@ -15,13 +15,14 @@ import android.widget.ListView;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 
+import java.util.ArrayList;
+
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class Top10Tab2 extends Fragment {
 
-    String  top10hot []={"","","","","","","","","",""};
-
+    ArrayList top10hot = new ArrayList();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,20 +31,15 @@ public class Top10Tab2 extends Fragment {
         Cursor cursor = getActivity().getContentResolver()
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null,"("+EcoMapContract.ProblemsEntry.COLUMN_SEVERITY + ") DESC");
 
-
         cursor.moveToFirst();
-        top10hot[0] =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-        top10hot[0]= "1."+top10hot[0]+".";
 
+        for(int i=0;i<10;i++){
 
-        int i=1;
-        int j=2;
-        for(i=1;i<10;i++){
+            top10hot.add(cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)));
+            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY));
 
+            top10hot.add(i,"★ "+votes+"  " + top10hot.get(i)+".");
             cursor.moveToNext();
-            top10hot[i] =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-            top10hot[i]= j+ "." + top10hot[i]+".";
-           j++;
         }
 
         cursor.close();
