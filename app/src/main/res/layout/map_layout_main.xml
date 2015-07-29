@@ -9,6 +9,52 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAddProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            android:layout_gravity="bottom|right"
+            android:visibility="visible"
+            app:fabSize="normal"
+            android:layout_margin="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabUkraine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:visibility="visible"
+            app:fabSize="mini"
+            app:backgroundTint="@color/profile_gray"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_ukraine"
+            android:alpha="0.7" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabToMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:visibility="visible"
+            app:fabSize="mini"
+            app:backgroundTint="@color/profile_gray"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="74dp"
+            android:src="@drawable/ic_my_location"
+            android:alpha="0.7" />
+
+    </android.support.design.widget.CoordinatorLayout>
+
     <com.wunderlist.slidinglayer.SlidingLayer
         xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
         android:id="@+id/show_problem_sliding_layer"
@@ -232,64 +278,6 @@
 
 
     </com.wunderlist.slidinglayer.SlidingLayer>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/rootLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAddProblem"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_white_24dp"
-            android:layout_gravity="bottom|right"
-            android:visibility="visible"
-            app:fabSize="normal"
-            android:layout_margin="16dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabUkraine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:visibility="visible"
-            app:fabSize="mini"
-            app:backgroundTint="@color/profile_gray"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="24dp"
-            android:src="@drawable/ic_ukraine"
-            android:alpha="0.7" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabToMe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:visibility="visible"
-            app:fabSize="mini"
-            app:backgroundTint="@color/profile_gray"
-            android:layout_marginRight="24dp"
-            android:layout_marginTop="74dp"
-            android:src="@drawable/ic_my_location"
-            android:alpha="0.7" />
-<!--
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabCancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_clear_white_18dp"
-            android:layout_gravity="bottom|left"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            app:fabSize="normal" />
--->
-    </android.support.design.widget.CoordinatorLayout>
 
     <!--<android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"

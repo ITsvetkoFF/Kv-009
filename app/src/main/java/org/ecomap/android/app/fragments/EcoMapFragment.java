@@ -218,7 +218,6 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onShowPreview() {
-                fabAddProblem.setVisibility(View.INVISIBLE);
 
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
@@ -227,7 +226,7 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onClose() {
-                fabAddProblem.setVisibility(View.VISIBLE);
+
             }
 
             @Override

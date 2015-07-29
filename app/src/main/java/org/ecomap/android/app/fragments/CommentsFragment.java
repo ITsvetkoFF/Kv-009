@@ -131,6 +131,7 @@ public class CommentsFragment extends Fragment {
         //we don't need focus, because scroll view must be on a top
         mTxtComment.setFocusableInTouchMode(false);
 
+
         mTxtComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
