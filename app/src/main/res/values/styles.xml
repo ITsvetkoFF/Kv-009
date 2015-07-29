@@ -42,7 +42,6 @@
         <item name="android:textColorHint">@color/secondary_text</item>
     </style>
 
-
     <!-- View photos activity theme -->
     <style name="AppThemeTransparentActionBar" parent="AppTheme">
         <item name="android:windowActionBarOverlay">true</item>
@@ -59,5 +58,28 @@
 
     <style name="ProgressBarStyle" parent="android:Widget.ProgressBar.Small" />
 
+    <!-- Styles for SlidingPanel -->
+    <style name="Title" parent="@android:style/TextAppearance">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="Caption" parent="@android:style/TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:textColor">@color/profile_gray</item>
+    </style>
+
+    <style name="Subhead" parent="@android:style/TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">32dp</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="Body2" parent="@android:style/TextAppearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
 
 </resources>

@@ -36,9 +36,13 @@
     <string name="want_logout">Do you really want to logout?</string>
     <string name="change_password">Forgot your password? Change it!</string>
     <string name="write_comment">Write a comment...</string>
-    <string name="have_problem">Houston we have a problem!</string>
+    <string name="have_problem">Houston, we have a problem!</string>
     <string name="action_add_polygon">Add polygon</string>
     <string name="profile">Profile</string>
+    <string name="choose_location">Choose problem location</string>
+    <string name="add_photo">Add photo</string>
+    <string name="send">Send</string>
+    <string name="add_problem_description">Add Problem Description</string>
 
     <string name="string_added_by">"Added by: "</string>
     <string name="string_suggested_solution">Suggested solution: </string>
@@ -104,6 +108,8 @@
     <string name="item_filters">Filters</string>
     <string name="item_resources">Resources</string>
     <string name="item_login">Login</string>
+
+    <string name="string_anonymous">Anonymous</string>
 
     <!---->
 </resources>

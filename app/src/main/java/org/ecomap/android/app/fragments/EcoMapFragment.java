@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -77,28 +79,24 @@ public class EcoMapFragment extends Fragment {
     private View v;
     public SlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
-    private TextView showTitle, showByTime, showType, showContent, showProposal, showNumOfLikes, showStatus;
+    private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
     private LinearLayout showHead;
     private Marker marker;
     public static CameraPosition cameraPosition;
 
+    private boolean addProblemModeActivated = false;
     private FloatingActionButton fabAddProblem;
-    private FloatingActionButton fabCancel;
+    private CoordinatorLayout rootLayout;
 
     private static LatLng markerPosition = null;
-
     private MapClustering mapClusterer;
-
-    private ViewPager viewPager;
-    private PagerAdapter adapter;
 
     //for rotating screen - save last position of SlidingPanel
     private static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
-    CoordinatorLayout rootLayout;
-    TabLayout tabLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,40 +135,41 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!MainActivity.isUserIdSet()) {
-                    signInAlertDialog();
-                } else {
+                if (MainActivity.isUserIdSet()) {
 
                     if (mapClusterer.getMarker() == null) {
-                        setMarkerClickType(2);
-                        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
 
-                        if (fabCancel == null) {
-                            createCancelButton();
-                        } else {
-                            fabCancel.setVisibility(View.VISIBLE);
+                        if (!addProblemModeActivated) {
+
+                            setMarkerClickType(2);
+                            addProblemModeActivated = true;
+                            fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
+
+                            Snackbar snackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
+                            View snackBarView = snackbar.getView();
+                            TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_action);
+
+                            textView.setTextColor(Color.WHITE);
+                            snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+
+                            snackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    setMarkerClickType(0);
+                                    addProblemModeActivated = false;
+
+                                    mapClusterer.deleteMarker();
+                                    fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
+                                }
+                            });
+
+                            snackbar.show();
                         }
-
-                        //SnackBarHelper.showInfoSnackBar(mContext, rootLayout, "Please Choose Location", Snackbar.LENGTH_LONG);
-
-                        Snackbar snackbar = Snackbar.make(rootLayout, "Choose location to add problem", Snackbar.LENGTH_LONG);
-                        View snackBarView = snackbar.getView();
-                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                        snackbar.show();
-
                     } else {
-                        //SnackBarHelper.showInfoSnackBar(mContext, rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
-
-                        Snackbar snackbar = Snackbar.make(rootLayout, "You accepted Problem Location", Snackbar.LENGTH_LONG);
-                        View snackBarView = snackbar.getView();
-                        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                        snackbar.show();
-
                         new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
-
-                        //showTabLayout();
                     }
+                } else {
+                    signInAlertDialog();
                 }
             }
         });
@@ -178,7 +177,6 @@ public class EcoMapFragment extends Fragment {
         showTypeImage = (ImageView) v.findViewById(R.id.show_type_image);
         showLike = (ImageView) v.findViewById(R.id.show_like);
         showTitle = (TextView) v.findViewById(R.id.show_title);
-        showType = (TextView) v.findViewById(R.id.show_type);
         showByTime = (TextView) v.findViewById(R.id.show_date_added);
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
@@ -253,37 +251,6 @@ public class EcoMapFragment extends Fragment {
         });
 
         return v;
-    }
-
-    private void createCancelButton(){
-        fabCancel = new FloatingActionButton(mContext);
-
-        CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(CoordinatorLayout.LayoutParams.WRAP_CONTENT,
-                CoordinatorLayout.LayoutParams.WRAP_CONTENT);
-        params.gravity = (Gravity.LEFT | Gravity.BOTTOM);
-
-        fabCancel.setLayoutParams(params);
-        fabCancel.setImageResource(R.drawable.ic_clear_white_24dp);
-
-        //fabCancel.setVisibility(View.VISIBLE);
-
-        rootLayout.addView(fabCancel);
-
-        fabCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setMarkerClickType(0);
-
-                mapClusterer.deleteMarker();
-                fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
-                fabCancel.setVisibility(View.INVISIBLE);
-
-                Snackbar snackbar = Snackbar.make(rootLayout, "You canceled", Snackbar.LENGTH_LONG);
-                View snackBarView = snackbar.getView();
-                snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-                snackbar.show();
-            }
-        });
     }
 
     @Override
@@ -399,9 +366,8 @@ public class EcoMapFragment extends Fragment {
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
-        showType.setText(problem.getTypeString());
         showTitle.setText(problem.getTitle());
-        showByTime.setText(problem.getByTime());
+        showByTime.setText(problem.getUserDate());
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
@@ -460,14 +426,14 @@ public class EcoMapFragment extends Fragment {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
         alert.setMessage(R.string.error_need_to_sign_in);
 
-        alert.setPositiveButton("Sign In", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(getString(R.string.sign_in), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 new LoginFragment().show(getFragmentManager(), "login_layout");
             }
         });
 
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

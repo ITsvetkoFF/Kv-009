@@ -36,7 +36,7 @@
     <string name="want_logout">Вы действительно хотите выйти?</string>
     <string name="change_password">Забыли пароль? Смените в два клика!</string>
     <string name="write_comment">Напишите комментарий...</string>
-    <string name="have_problem">Хьюстон у нас проблема!</string>
+    <string name="have_problem">Хьюстон, у нас проблема!</string>
     <string name="action_add_polygon">Добавить полигон</string>
     <string name="profile">Профиль</string>
 
@@ -77,11 +77,16 @@
     <string name="reset">Сброс</string>
     <string name="ok">Окей</string>
     <string name="title_activity_view_photos">Просмотрщик фотографий</string>
+    <string name="choose_location">Выберите месторасположение проблемы</string>
+    <string name="add_photo">Добавить фото</string>
+    <string name="send">Отправить</string>
+    <string name="add_problem_description">Добавьте описание проблемы</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
     <string name="item_filters">Фильтры</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
+    <string name="string_anonymous">Аноним</string>
 
 </resources>

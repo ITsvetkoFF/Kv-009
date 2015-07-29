@@ -36,7 +36,7 @@
     <string name="want_logout">Ви насправді бажаєте вийти?</string>
     <string name="change_password">Забули пароль? Змініть його!</string>
     <string name="write_comment">Напишіть коментар...</string>
-    <string name="have_problem">Хьюстон у нас проблема!</string>
+    <string name="have_problem">Хьюстон, у нас проблема!</string>
     <string name="action_add_polygon">Додати полігон</string>
     <string name="profile">Профіль</string>
 
@@ -77,11 +77,16 @@
     <string name="reset">Скинути</string>
     <string name="ok">Окей</string>
     <string name="title_activity_view_photos">Переглядач фото</string>
+    <string name="choose_location">Оберіть місцезнаходження проблеми</string>
+    <string name="add_photo">Додати фото</string>
+    <string name="send">Відправити</string>
+    <string name="add_problem_description">Додайте опис проблеми</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
     <string name="item_filters">Фільтри</string>
     <string name="item_resources">Ресурси</string>
     <string name="item_login">Увійти</string>
+    <string name="string_anonymous">Анонім</string>
 
 </resources>
