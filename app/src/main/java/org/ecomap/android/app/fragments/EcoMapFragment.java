@@ -5,30 +5,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,8 +48,6 @@ import org.ecomap.android.app.sync.GetPhotosTask;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
-import org.ecomap.android.app.utils.PagerAdapter;
-import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
@@ -128,6 +120,8 @@ public class EcoMapFragment extends Fragment {
 
         values = new ArrayList<>();
         mContext = getActivity();
+
+        getActivity().setTitle(mContext.getString(R.string.nav_titles_map));
 
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
