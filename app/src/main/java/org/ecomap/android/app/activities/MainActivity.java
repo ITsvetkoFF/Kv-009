@@ -235,7 +235,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             return;
         }
 
-        if(mFragment.getClass() == EcoMapFragment.class){
+        mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
+
+        if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
             EcoMapFragment frag = (EcoMapFragment)mFragment;
             if(frag.mSlidingLayer.isOpened()) {
                 frag.mSlidingLayer.openPreview(true);
