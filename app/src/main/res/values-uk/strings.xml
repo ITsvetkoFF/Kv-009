@@ -91,4 +91,11 @@
 
     <string name="starting_date">початкова дата</string>
     <string name="end_date">кінцева дата</string>
+
+    <string name="day_sort">День</string>
+    <string name="week_sort">Тиждень</string>
+    <string name="month_sort">Місяць</string>
+    <string name="year_sort">Рік</string>
+    <string name="reset_sort">Скинути</string>
+    <string name="all_sort">Всього</string>
 </resources>
