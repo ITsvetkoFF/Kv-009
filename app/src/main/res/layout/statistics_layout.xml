@@ -15,42 +15,57 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="1 day" />
+            android:textColor="#ff0099cc"
+            android:textSize="@dimen/abc_text_size_small_material"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/day_sort" />
 
         <Button
             android:id="@+id/one_week"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="1 week" />
+            android:textColor="#ff0099cc"
+            android:textSize="@dimen/abc_text_size_small_material"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/week_sort" />
 
         <Button
             android:id="@+id/one_month"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="1 month" />
+            android:textColor="#ff0099cc"
+            android:textSize="@dimen/abc_text_size_small_material"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/month_sort" />
 
         <Button
             android:id="@+id/one_year"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="1 year" />
+            android:textColor="#ff0099cc"
+            android:textSize="@dimen/abc_text_size_small_material"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/year_sort" />
 
         <Button
             android:id="@+id/one_reset"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Reset" />
+            android:textColor="#ff0099cc"
+            android:textSize="@dimen/abc_text_size_small_material"
+            style="?android:attr/borderlessButtonStyle"
+            android:text="@string/reset_sort" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8">
+        android:layout_weight="14">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart"
