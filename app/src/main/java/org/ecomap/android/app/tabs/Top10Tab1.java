@@ -39,10 +39,9 @@ public class Top10Tab1 extends Fragment implements View.OnClickListener{
 
         for(int i=0;i<10;i++){
 
-            top10pop.add(cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)));
-            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES));
 
-            top10pop.add( i,"❤ "+votes+"  " + top10pop.get(i) +".");
+            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES));
+            top10pop.add( i,"❤ "+votes+"  " + cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)) +".");
             cursor.moveToNext();
         }
 

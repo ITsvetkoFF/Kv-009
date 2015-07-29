@@ -35,10 +35,9 @@ public class Top10Tab2 extends Fragment {
 
         for(int i=0;i<10;i++){
 
-            top10hot.add(cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)));
-            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY));
 
-            top10hot.add(i,"★ "+votes+"  " + top10hot.get(i)+".");
+            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY));
+            top10hot.add(i,"★ "+votes+"  " + cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)) + ".");
             cursor.moveToNext();
         }
 

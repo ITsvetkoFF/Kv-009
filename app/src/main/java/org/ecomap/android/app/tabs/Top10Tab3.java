@@ -35,11 +35,8 @@ public class Top10Tab3 extends Fragment {
 
         for(int i=0;i<10;i++){
 
-            top10say.add(cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)));
             String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER));
-
-            top10say.add(i,"✎ "+votes+"  " + top10say.get(i) +".");
-
+            top10say.add(i,"✎ "+votes+"  " + cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)) +".");
             cursor.moveToNext();
         }
 
