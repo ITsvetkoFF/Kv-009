@@ -41,7 +41,7 @@
     <string name="profile">Профиль</string>
 
     <string name="string_added_by">"Добавлено: "</string>
-    <string name="string_suggested_solution">Предлагаемое решение: </string>
+    <string name="string_suggested_solution">Предлагаемое решение</string>
     <string name="string_description">Описание: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблемы</string>
@@ -87,5 +87,11 @@
     <string name="item_filters">Фильтры</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
+    <string name="uploading_photo">Загрузка фото...</string>
+    <string name="photos_uploaded">Фото успешно загружено</string>
+    <string name="uploading_error">Ошибка во время загрузки фото</string>
+    <string name="problem_title_blank">Заголовок проблемы не может быть пустым</string>
+    <string name="add_comment">Добавьте Ваши комментарии</string>
+    <string name="exit">Выход</string>
 
 </resources>

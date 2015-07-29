@@ -47,7 +47,7 @@ public class AddProblemFragment extends DialogFragment{
     public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
     private Button cancelButton;
-    private Button sendProblemButton;
+    private static Button sendProblemButton;
     private Button addPhotoButton;
 
     public static final int REQUEST_CODE = 1;
@@ -85,23 +85,29 @@ public class AddProblemFragment extends DialogFragment{
 
         tilProblemTitle = (TextInputLayout) view.findViewById(R.id.til_problemTitle);
         tilProblemTitle.setErrorEnabled(true);
+        problemTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (problemTitle.getText().toString().isEmpty()) {
+                        tilProblemTitle.setError(getString(R.string.problem_title_blank));
+                        sendProblemButton.setClickable(false);
+                    }
+                } else {
+                    tilProblemTitle.setErrorEnabled(false);
+                    sendProblemButton.setClickable(true);
+                }
+            }
+        });
 
         tilProblemDescription = (TextInputLayout) view.findViewById(R.id.til_problemDescription);
-        tilProblemDescription.setErrorEnabled(true);
 
         tilProblemSolution = (TextInputLayout) view.findViewById(R.id.til_problemSolution);
-        tilProblemSolution.setErrorEnabled(true);
 
         nonScrollableListView = (NonScrollableListView) view.findViewById(R.id.nonScrollableListView);
         imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
-/*      without this Spinner looks better. TODO test on Insignia and delete this peace of code
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext, R.array.types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
-*/
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -174,6 +180,10 @@ public class AddProblemFragment extends DialogFragment{
 
     public static NonScrollableListView getNonScrollableListView() {
         return nonScrollableListView;
+    }
+
+    public static Button getSendProblemButton() {
+        return sendProblemButton;
     }
 }
 

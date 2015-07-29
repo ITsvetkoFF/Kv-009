@@ -85,18 +85,17 @@ public class EcoMapFragment extends Fragment {
     private Marker marker;
     public static CameraPosition cameraPosition;
 
-    private boolean addProblemModeActivated = false;
-    private FloatingActionButton fabAddProblem;
+    private static FloatingActionButton fabAddProblem;
     private CoordinatorLayout rootLayout;
 
     private static LatLng markerPosition = null;
-    private MapClustering mapClusterer;
+    private static MapClustering mapClusterer;
 
     //for rotating screen - save last position of SlidingPanel
     private static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
-
+    Snackbar addProblemSnackbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,33 +137,16 @@ public class EcoMapFragment extends Fragment {
                 if (MainActivity.isUserIdSet()) {
 
                     if (mapClusterer.getMarker() == null) {
+                        enterAddProblemMode();
+                        addProblemSnackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                exitAddProblemMode();
+                            }
+                        });
 
-                        if (!addProblemModeActivated) {
+                        addProblemSnackbar.show();
 
-                            setMarkerClickType(2);
-                            addProblemModeActivated = true;
-                            fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
-
-                            Snackbar snackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
-                            View snackBarView = snackbar.getView();
-                            TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_action);
-
-                            textView.setTextColor(Color.WHITE);
-                            snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
-
-                            snackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    setMarkerClickType(0);
-                                    addProblemModeActivated = false;
-
-                                    mapClusterer.deleteMarker();
-                                    fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
-                                }
-                            });
-
-                            snackbar.show();
-                        }
                     } else {
                         new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
                     }
@@ -264,6 +246,13 @@ public class EcoMapFragment extends Fragment {
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
 
         setUpMap();
+
+        addProblemSnackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
+        View snackBarView = addProblemSnackbar.getView();
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+        TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_action);
+
+        textView.setTextColor(Color.WHITE);
     }
 
     // saving map position for restoring after rotation or backstack
@@ -442,6 +431,17 @@ public class EcoMapFragment extends Fragment {
         });
 
         alert.show();
+    }
+
+    public static void enterAddProblemMode(){
+        setMarkerClickType(2);
+        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
+    }
+
+    public static void exitAddProblemMode(){
+        setMarkerClickType(0);
+        mapClusterer.deleteMarker();
+        fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
     }
 
     /*private void showTabLayout(){
