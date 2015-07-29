@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.sync.AddProblemTask;
@@ -46,7 +47,7 @@ public class AddProblemFragment extends DialogFragment{
     public AddPhotoImageAdapter imgAdapter;
     public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
-    private Button cancelButton;
+    private static Button cancelButton;
     private Button sendProblemButton;
     private Button addPhotoButton;
 
@@ -85,23 +86,31 @@ public class AddProblemFragment extends DialogFragment{
 
         tilProblemTitle = (TextInputLayout) view.findViewById(R.id.til_problemTitle);
         tilProblemTitle.setErrorEnabled(true);
+        problemTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (problemTitle.getText().toString().isEmpty()) {
+                        tilProblemTitle.setError(getString(R.string.problem_title_blank));
+                        sendProblemButton.setClickable(false);
+                    }
+                } else {
+                    if (!problemTitle.getText().toString().isEmpty()) {
+                        tilProblemTitle.setErrorEnabled(false);
+                        sendProblemButton.setClickable(true);
+                    }
+                }
+            }
+        });
 
         tilProblemDescription = (TextInputLayout) view.findViewById(R.id.til_problemDescription);
-        tilProblemDescription.setErrorEnabled(true);
 
         tilProblemSolution = (TextInputLayout) view.findViewById(R.id.til_problemSolution);
-        tilProblemSolution.setErrorEnabled(true);
 
         nonScrollableListView = (NonScrollableListView) view.findViewById(R.id.nonScrollableListView);
         imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
-/*      without this Spinner looks better. TODO test on Insignia and delete this peace of code
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext, R.array.types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        spinner.setAdapter(adapter);
-*/
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -136,25 +145,33 @@ public class AddProblemFragment extends DialogFragment{
             @Override
             public void onClick(View v) {
 
-                params = new String[9];
+                if (!problemTitle.getText().toString().isEmpty()) {
+                    params = new String[9];
 
-                params[0] = "UNSOLVED";
-                params[1] = "3";
-                params[2] = problemTitle.getText().toString();
-                params[3] = String.valueOf(problemType);
-                params[4] = problemDescription.getText().toString();
-                params[5] = problemSolution.getText().toString();
-                params[6] = "1";
-                params[7] = String.valueOf(EcoMapFragment.getMarkerPosition().latitude);
-                params[8] = String.valueOf(EcoMapFragment.getMarkerPosition().longitude);
+                    params[0] = "UNSOLVED";
+                    params[1] = "3";
+                    params[2] = problemTitle.getText().toString();
+                    params[3] = String.valueOf(problemType);
+                    params[4] = problemDescription.getText().toString();
+                    params[5] = problemSolution.getText().toString();
+                    params[6] = "1";
+                    params[7] = String.valueOf(EcoMapFragment.getMarkerPosition().latitude);
+                    params[8] = String.valueOf(EcoMapFragment.getMarkerPosition().longitude);
 
-                if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
-                        .isNetworkAvailable()) {
-                    new AddProblemTask(mContext).execute(params);
+                    tilProblemTitle.setErrorEnabled(false);
 
+                    if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
+                            .isNetworkAvailable()) {
+                        new AddProblemTask(mContext).execute(params);
+
+                    } else {
+                        Snackbar.make(view, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                    }
                 } else {
-                    Snackbar.make(view, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                    new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_title_blank), Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
     }
@@ -175,6 +192,11 @@ public class AddProblemFragment extends DialogFragment{
     public static NonScrollableListView getNonScrollableListView() {
         return nonScrollableListView;
     }
+
+    public static Button getCancelButton() {
+        return cancelButton;
+    }
+
 }
 
 

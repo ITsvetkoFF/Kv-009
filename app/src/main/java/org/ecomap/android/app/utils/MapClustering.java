@@ -98,7 +98,7 @@ public class MapClustering {
                     }
 
                     marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                    marker.setTitle("Houston, we have a problem!");
+                    marker.setTitle(mContext.getString(R.string.have_problem));
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
                     EcoMapFragment.setMarkerPosition(latLng);

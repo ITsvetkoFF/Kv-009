@@ -41,7 +41,7 @@
     <string name="profile">Профиль</string>
 
     <string name="string_added_by">"Добавлено: "</string>
-    <string name="string_suggested_solution">Предлагаемое решение: </string>
+    <string name="string_suggested_solution">Предлагаемое решение</string>
     <string name="string_description">Описание: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблемы</string>
@@ -80,13 +80,19 @@
     <string name="choose_location">Выберите месторасположение проблемы</string>
     <string name="add_photo">Добавить фото</string>
     <string name="send">Отправить</string>
-    <string name="add_problem_description">Добавьте описание проблемы</string>
+    <string name="add_problem_description">Описание проблемы</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
     <string name="item_filters">Фильтры</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
+    <string name="uploading_photo">Загрузка фото...</string>
+    <string name="photos_uploaded">Фото успешно загружено</string>
+    <string name="uploading_error">Ошибка во время загрузки фото</string>
+    <string name="problem_title_blank">Заголовок проблемы не может быть пустым</string>
+    <string name="add_comment">Добавьте Ваши комментарии</string>
+    <string name="exit">Выход</string>
     <string name="string_anonymous">Аноним</string>
 
     <string name="starting_date">начальная дата</string>
@@ -98,4 +104,5 @@
     <string name="year_sort">Год</string>
     <string name="reset_sort">Сброс</string>
     <string name="all_sort">Всего</string>
+    <string name="problem_added">Проблема успешно добавлена</string>
 </resources>

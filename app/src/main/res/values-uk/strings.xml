@@ -41,7 +41,7 @@
     <string name="profile">Профіль</string>
 
     <string name="string_added_by">"Створено: "</string>
-    <string name="string_suggested_solution">Пропозиції щодо вирішення: </string>
+    <string name="string_suggested_solution">Пропозиції щодо вирішення</string>
     <string name="string_description">Опис: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблеми</string>
@@ -80,13 +80,19 @@
     <string name="choose_location">Оберіть місцезнаходження проблеми</string>
     <string name="add_photo">Додати фото</string>
     <string name="send">Відправити</string>
-    <string name="add_problem_description">Додайте опис проблеми</string>
+    <string name="add_problem_description">Опис проблеми</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
     <string name="item_filters">Фільтри</string>
     <string name="item_resources">Ресурси</string>
     <string name="item_login">Увійти</string>
+    <string name="uploading_photo">Завантаження фото...</string>
+    <string name="photos_uploaded">Фото успішно завантажено</string>
+    <string name="uploading_error">Помілка під час завантаження фото</string>
+    <string name="problem_title_blank">Заголовок не може бути порожнім</string>
+    <string name="add_comment">Додайте Ваші коментарі</string>
+    <string name="exit">Вихід</string>
     <string name="string_anonymous">Анонім</string>
 
     <string name="starting_date">початкова дата</string>
@@ -98,4 +104,5 @@
     <string name="year_sort">Рік</string>
     <string name="reset_sort">Скинути</string>
     <string name="all_sort">Всього</string>
+    <string name="problem_added"> Проблему успішно додано</string>
 </resources>
