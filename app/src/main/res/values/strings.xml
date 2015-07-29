@@ -108,9 +108,6 @@
     <string name="item_filters">Filters</string>
     <string name="item_resources">Resources</string>
     <string name="item_login">Login</string>
-    <string name="nav_titles_map">Ecomap</string>
-    <string name="nav_titles_filter">Filters</string>
-    <string name="nav_titles_underconstraction">Underconstruction</string>
     <string name="day_sort">Day</string>
     <string name="week_sort">Week</string>
     <string name="month_sort">Month</string>
@@ -119,10 +116,8 @@
     <string name="all_sort">Summary</string>
 
     <string name="string_anonymous">Anonymous</string>
-    <string name="nav_titles_top10">Top 10</string>
 
     <string name="starting_date">Start date</string>
     <string name="end_date">End date</string>
-    <string name="nav_titles_statistics">Statistics</string>
     <!---->
 </resources>

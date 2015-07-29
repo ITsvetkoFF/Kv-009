@@ -51,7 +51,6 @@ import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
-import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.utils.SnackBarHelper;
 
@@ -73,14 +72,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final String ROLE_KEY = "role";
     public static final String PASSWORD_KEY = "password";
 
-    public static final int NAV_MAP = R.id.map;
-    public static final int NAV_STATISTICS = R.id.statistics;
+    public static final int NAV_MAP = 0;
+    public static final int NAV_STATISTICS = 1;
     public static final int NAV_DETAILS = 2;
-    public static final int NAV_FILTER = R.id.filters;
-    public static final int NAV_RESOURCES = R.id.resourses;
-    public static final int NAV_PROFILE = R.id.login;
-    private static final int NAV_TOP10 = R.id.top10;
-
+    public static final int NAV_FILTER = 3;
+    public static final int NAV_RESOURCES = 4;
+    public static final int NAV_PROFILE = 5;
 
     public static CookieManager cookieManager;
 
@@ -122,18 +119,35 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if (menuItem.isChecked())
-                    menuItem.setChecked(false);
-                else
-                    menuItem.setChecked(true);
-
+                if(menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
                 mDrawerLayout.closeDrawers();
 
-                selectItem(menuItem.getItemId());
-                return true;
+                switch (menuItem.getItemId()){
+                    case R.id.map:
+                        selectItem(0);
+                        return true;
+                    case R.id.statistics:
+                        selectItem(1);
+                        return true;
+                    case R.id.top10:
+                        selectItem(2);
+                        return true;
+                    case R.id.filters:
+                        selectItem(3);
+                        return true;
+                    case R.id.resourses:
+                        selectItem(4);
+                        return true;
+                    case R.id.login:
+                        selectItem(5);
+                        return true;
+                    default:
+                        selectItem(0);
+                        return true;
+                }
             }
         });
-
         cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
         initUserIdFromCookies();
@@ -150,12 +164,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
             public void onDrawerClosed(View view) {
-                //toolbar.setTitle(mTitle);
+                toolbar.setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                //toolbar.setTitle(mDrawerTitle);
+                toolbar.setTitle(mDrawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
@@ -168,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mFragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
-            selectItem(NAV_MAP);
+            selectItem(0);
         }
     }
 
@@ -230,11 +244,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     public void onBackPressed() {
 
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-            return;
-        }
-
         if(mFragment.getClass() == EcoMapFragment.class){
             EcoMapFragment frag = (EcoMapFragment)mFragment;
             if(frag.mSlidingLayer.isOpened()) {
@@ -285,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     public void filter(String s) {
         filterCondition = s;
-        selectItem(NAV_MAP);
+        selectItem(0);
     }
 
     private void selectItem(int position) {
@@ -306,6 +315,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     mFragment = new StatisticsFragment();}
                 break;
             case NAV_RESOURCES:
+                /*tag = FiltersFragment.class.getSimpleName();
+                mFragment = mFragmentManager.findFragmentByTag(tag);
+                if(mFragment == null) {
+                    mFragment = new FiltersFragment();
+                }*/
                 tag = MockFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
@@ -319,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     mFragment = new FiltersFragment();
                 }
                 break;
+
             case NAV_DETAILS:
                 tag = MockFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
@@ -326,15 +341,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     mFragment = new MockFragment();
                 }
                 break;
-
-            case NAV_TOP10:
-                tag = Top10TabFragment.class.getSimpleName();
-                mFragment = mFragmentManager.findFragmentByTag(tag);
-                if(mFragment == null){
-                    mFragment = new Top10TabFragment();
-                };
-                break;
-
             case NAV_PROFILE:
                 if (isUserIdSet()) {
                     tag = LoginFragment.class.getSimpleName();
@@ -342,6 +348,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
+                    /*Snackbar snackbar = Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), getString(R.string.message_you_are_logged), Snackbar.LENGTH_SHORT);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.primary));
+                    TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);//change Snackbar's text color;
+                    snackbar.show();*/
 
                     break;
                 } else {
@@ -453,9 +465,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_empty, container, false);
+            int i = getArguments().getInt(ARG_NAV_ITEM_NUMBER);
+            String planet = getResources().getStringArray(R.array.navigation_array)[i];
 
-            getActivity().setTitle(mContext.getString(R.string.nav_titles_underconstraction));
-
+            getActivity().setTitle(planet);
             return rootView;
         }
     }
