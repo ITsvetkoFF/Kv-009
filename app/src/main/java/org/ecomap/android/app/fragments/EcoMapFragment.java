@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -77,15 +78,14 @@ public class EcoMapFragment extends Fragment {
     private Marker marker;
     public static CameraPosition cameraPosition;
 
-    private boolean addProblemModeActivated = false;
-    private FloatingActionButton fabAddProblem;
-    private CoordinatorLayout rootLayout;
+    private FloatingActionButton fabAddProblem, fabUkraine, fabToMe;
 
     private static LatLng markerPosition = null;
     private MapClustering mapClusterer;
+    private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
-    private static boolean isOpenSlidingLayer = false;
+    private static boolean isOpenSlidingLayer = false, addProblemModeActivated;
     public static Problem lastOpenProblem;
 
 
@@ -106,22 +106,19 @@ public class EcoMapFragment extends Fragment {
 
         //Temporary is to initialize mapView by null to get rotation works without exceptions.
         mapView.onCreate(null);
-        Log.i(tag, "OnCreateView mapview");
+        mMap = mapView.getMap();
+        mMap.setMyLocationEnabled(true);
+
+        MapsInitializer.initialize(getActivity());
 
         mMap = mapView.getMap();
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.setMyLocationEnabled(true);
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
-        UISettings.setCompassEnabled(true);
-        UISettings.setMyLocationButtonEnabled(true);
-
-        MapsInitializer.initialize(this.getActivity());
+        UISettings.setMyLocationButtonEnabled(false);
 
         values = new ArrayList<>();
         mContext = getActivity();
-
-        getActivity().setTitle(mContext.getString(R.string.nav_titles_map));
 
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
@@ -129,9 +126,14 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.isUserIdSet()) {
+
+                if (!MainActivity.isUserIdSet()) {
+                    signInAlertDialog();
+                } else {
 
                     if (mapClusterer.getMarker() == null) {
+                        setMarkerClickType(2);
+                        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
 
                         if (!addProblemModeActivated) {
 
@@ -162,8 +164,25 @@ public class EcoMapFragment extends Fragment {
                     } else {
                         new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
                     }
-                } else {
-                    signInAlertDialog();
+                }
+            }
+        });
+
+        fabUkraine = (FloatingActionButton) v.findViewById(R.id.fabUkraine);
+        fabUkraine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
+            }
+        });
+
+        fabToMe = (FloatingActionButton) v.findViewById(R.id.fabToMe);
+        fabToMe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Location loc = mMap.getMyLocation();
+                if (loc != null) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
                 }
             }
         });
@@ -328,7 +347,7 @@ public class EcoMapFragment extends Fragment {
         }
 
         cursor.close();
-        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, marker, this);
+        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, this);
         mapClusterer.setUpClusterer();
     }
 
@@ -355,8 +374,7 @@ public class EcoMapFragment extends Fragment {
 
     public void fillSlidingPanel(final Problem problem){
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(),
-               /*mMap.getCameraPosition().zoom*/15.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 11.0f));
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());

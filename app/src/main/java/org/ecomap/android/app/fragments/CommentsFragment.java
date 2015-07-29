@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -116,7 +115,7 @@ public class CommentsFragment extends Fragment {
         mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_comments, container, false);
         ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
 
-        lstComments.setId(R.id.email);
+        lstComments.setId(R.id.email_login);
         lstComments.setExpanded(true);
         lstComments.setClickable(false);
 
