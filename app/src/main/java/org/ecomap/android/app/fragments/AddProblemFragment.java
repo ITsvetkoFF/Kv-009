@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -104,8 +105,10 @@ public class AddProblemFragment extends DialogFragment{
         });
 
         tilProblemDescription = (TextInputLayout) view.findViewById(R.id.til_problemDescription);
+        tilProblemDescription.setErrorEnabled(true);
 
         tilProblemSolution = (TextInputLayout) view.findViewById(R.id.til_problemSolution);
+        tilProblemSolution.setErrorEnabled(true);
 
         nonScrollableListView = (NonScrollableListView) view.findViewById(R.id.nonScrollableListView);
         imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
