@@ -24,89 +24,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
+    <!-- LOGIN FORM start -->
+    <LinearLayout
+        android:id="@+id/email_login_form"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dip"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
-        <!-- HEADER start -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/header"
-            android:layout_width="fill_parent"
+        <!-- EMAIL start -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_email"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/email_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <!-- EMAIL end -->
 
-        </LinearLayout>
-        <!-- HEADER end -->
+        <!-- PASSWORD start -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/til_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+        <!-- PASSWORD end -->
 
-        <!-- LOGIN FORM start -->
-        <LinearLayout
-            android:id="@+id/email_login_form"
+        <!-- LOGIN BUTTON start -->
+        <Button
+            android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dip"
-            android:layout_below="@+id/header">
+            android:layout_marginTop="16dp"
+            android:text="@string/login"
+            android:textStyle="bold" />
+        <!-- LOGIN BUTTON end -->
 
-            <!-- EMAIL start -->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <AutoCompleteTextView
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:imeOptions="actionNext"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-            <!-- EMAIL end -->
+        <!--LINK TO REGISTER start -->
+        <TextView android:id="@+id/link_to_register"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dip"
+            android:layout_marginBottom="40dip"
+            android:text="@string/register_if_new"
+            android:gravity="center"
+            android:textSize="15dip"
+            android:textColor="#0b84aa"/>
+        <!-- LINK TO REGISTER end -->
 
-            <!-- PASSWORD start -->
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/password"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
-            <!-- PASSWORD end -->
-
-            <!-- LOGIN BUTTON start -->
-            <Button
-                android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/login"
-                android:textStyle="bold" />
-            <!-- LOGIN BUTTON end -->
-
-            <!--LINK TO REGISTER start -->
-            <TextView android:id="@+id/link_to_register"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dip"
-                android:layout_marginBottom="40dip"
-                android:text="@string/register_if_new"
-                android:gravity="center"
-                android:textSize="15dip"
-                android:textColor="#0b84aa"/>
-            <!-- LINK TO REGISTER end -->
-
-        </LinearLayout>
-        <!-- LOGIN FORM end -->
-
-    </RelativeLayout>
+    </LinearLayout>
+    <!-- LOGIN FORM end -->
 </ScrollView>
 
 </LinearLayout>

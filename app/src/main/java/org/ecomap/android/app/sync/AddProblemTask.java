@@ -2,6 +2,7 @@ package org.ecomap.android.app.sync;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.EditText;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.AddProblemFragment;
+import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -54,8 +56,6 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             urlConnection.setDoOutput(true);
-
-            //TODO data validation here
 
             //creating JSONObject for request
             JSONObject request = new JSONObject();
@@ -116,11 +116,14 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
         progressBar.dismiss();
 
-        //TODO change to SnackBar
         new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
+
+            new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
+
             sendPhoto(problemID);
+            AddProblemFragment.getCancelButton().setText(mContext.getString(R.string.exit));
         }
     }
 
