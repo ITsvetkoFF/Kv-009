@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 
 import java.io.DataOutputStream;
@@ -107,10 +108,10 @@ public class UploadPhotoTask extends AsyncTask {
                 Log.i("MYLOG", "HTTP Response is : "+ serverResponseMessage + ": " + serverResponseCode);
 
                 if (serverResponseCode == 200) {
-                    resMessage = "Photos uploaded";
+                    resMessage = mContext.getString(R.string.photos_uploaded);
                 }
                 else {
-                    resMessage = "Upload error";
+                    resMessage = mContext.getString(R.string.uploading_error);
                 }
                 // close the streams //
                 fileInputStream.close();
@@ -133,8 +134,9 @@ public class UploadPhotoTask extends AsyncTask {
     protected void onPreExecute() {
         super.onPreExecute();
 
+
         photoProgressBar = new ProgressDialog(mContext);
-        photoProgressBar.setMessage("Uploading photos");
+        photoProgressBar.setMessage(mContext.getString(R.string.uploading_photo));
         photoProgressBar.setIndeterminate(true);
         photoProgressBar.setCancelable(true);
         photoProgressBar.show();

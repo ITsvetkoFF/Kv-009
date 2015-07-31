@@ -1,8 +1,7 @@
 package org.ecomap.android.app.activities;
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -60,7 +59,6 @@ public class Profile extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Context context = Profile.this;
                 AlertDialog.Builder alert = new AlertDialog.Builder(Profile.this);
                 alert.setMessage(getString(R.string.want_logout));
                 alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
@@ -70,7 +68,7 @@ public class Profile extends AppCompatActivity {
                         MainActivity.setUserId(null);
                         MainActivity.changeAuthorizationState();
 
-                        SharedPreferencesHelper.onLogOutClearPref(context);
+                        SharedPreferencesHelper.onLogOutClearPref(Profile.this);
 
                         onBackPressed();
                     }

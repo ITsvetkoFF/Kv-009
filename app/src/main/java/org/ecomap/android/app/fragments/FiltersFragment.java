@@ -6,9 +6,7 @@ package org.ecomap.android.app.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -87,6 +85,9 @@ public class FiltersFragment extends ListFragment {
         Log.i(LOG_TAG, "onCreateView");
 
         mainView = inflater.inflate(R.layout.filters_fragment_main, container, false);
+
+        getActivity().setTitle(getActivity().getString(R.string.nav_titles_filter));
+
         ScrollView scrollView=(ScrollView)mainView.findViewById(R.id.scroll_view);
         scrollView.scrollTo(0, 0);
 
