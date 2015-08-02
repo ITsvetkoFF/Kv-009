@@ -16,8 +16,6 @@
 
 package org.ecomap.android.app.activities;
 
-
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -48,8 +46,8 @@ import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
-import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.fragments.SettingsFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
@@ -64,7 +62,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
 
     public static final String FIRST_NAME_KEY = "firstName";
@@ -72,14 +69,15 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final String EMAIL_KEY = "email";
     public static final String ROLE_KEY = "role";
     public static final String PASSWORD_KEY = "password";
+    private String tag;
 
     public static final int NAV_MAP = R.id.map;
     public static final int NAV_STATISTICS = R.id.statistics;
-    public static final int NAV_DETAILS = 2;
-    public static final int NAV_FILTER = R.id.filters;
+    public static final int NAV_SETTINGS = R.id.settings;
     public static final int NAV_RESOURCES = R.id.resourses;
     public static final int NAV_PROFILE = R.id.login;
     private static final int NAV_TOP10 = R.id.top10;
+    private static final int NAV_FILTERS = R.id.filters_menu_item;
 
 
     public static CookieManager cookieManager;
@@ -102,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private FragmentManager mFragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
+
+    private MenuItem filtersMenuItem;
+    private boolean savedInstanceStateNull = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         if (savedInstanceState == null) {
             selectItem(NAV_MAP);
         }
+
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -200,14 +203,24 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
+
+        filtersMenuItem = menu.findItem(R.id.filters_menu_item);
+
+        if (mFragment.getClass().equals(EcoMapFragment.class)){
+            filtersMenuItem.setVisible(true);
+        } else {
+            filtersMenuItem.setVisible(false);
+        }
+
         return super.onPrepareOptionsMenu(menu);
+
     }
 
     @Override
@@ -219,12 +232,14 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         }
         // Handle action buttons
         switch (item.getItemId()) {
-            case R.id.language:
-                DialogFragment df = new LanguageFragment();
-                df.show(getFragmentManager(), "language");
+            case R.id.filters_menu_item:
+                selectItem(NAV_FILTERS);
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+        return true;
     }
 
     @Override
@@ -238,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
 
         if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
-            EcoMapFragment frag = (EcoMapFragment)mFragment;
+            EcoMapFragment frag = (EcoMapFragment) mFragment;
             if(frag.mSlidingLayer.isOpened()) {
                 frag.mSlidingLayer.openPreview(true);
                 return;
@@ -250,7 +265,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         if (mFragmentManager.getBackStackEntryCount() > 1 ) {
             super.onBackPressed();
-        }else{
+
+            mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
+
+        } else{
 
             mBackPressingCount++;
             if (System.currentTimeMillis() - mLastBackPressMillis > 1500) {
@@ -294,39 +312,50 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         // update the main content by replacing fragments
 
         boolean stop = false;
-        String tag = null;
+        tag = null;
 
         switch (position) {
             case NAV_MAP:
                 tag = EcoMapFragment.class.getSimpleName();
                 chooseEcoMapFragment(filterCondition);
+
+                invalidateOptionsMenu();
+
                 break;
+
             case NAV_STATISTICS:
                 tag = StatisticsFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
                 if(mFragment == null) {
-                    mFragment = new StatisticsFragment();}
+                    mFragment = new StatisticsFragment();
+                }
+
+                invalidateOptionsMenu();
+
                 break;
+
             case NAV_RESOURCES:
                 tag = MockFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
+
+                invalidateOptionsMenu();
+                setTitle(getString(R.string.item_resources));
+
                 break;
-            case NAV_FILTER:
-                tag = FiltersFragment.class.getSimpleName();
+
+            case NAV_SETTINGS:
+                tag = SettingsFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
                 if (mFragment == null) {
-                    mFragment = new FiltersFragment();
+                    //mFragment = new FiltersFragment();
+                    mFragment = new SettingsFragment();
                 }
-                break;
-            case NAV_DETAILS:
-                tag = MockFragment.class.getSimpleName();
-                mFragment = mFragmentManager.findFragmentByTag(tag);
-                if (mFragment == null) {
-                    mFragment = new MockFragment();
-                }
+
+                invalidateOptionsMenu();
+
                 break;
 
             case NAV_TOP10:
@@ -334,7 +363,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 mFragment = mFragmentManager.findFragmentByTag(tag);
                 if(mFragment == null){
                     mFragment = new Top10TabFragment();
-                };
+                }
+
+                invalidateOptionsMenu();
+
                 break;
 
             case NAV_PROFILE:
@@ -355,6 +387,15 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                         stop = true;
                     }
                 }
+                break;
+            case NAV_FILTERS:
+                tag = FiltersFragment.class.getSimpleName();
+                mFragment = mFragmentManager.findFragmentByTag(tag);
+                if(mFragment == null) {
+                    mFragment = new FiltersFragment();
+                }
+
+                invalidateOptionsMenu();
 
                 break;
             default:
@@ -363,6 +404,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
+                invalidateOptionsMenu();
                 break;
         }
 

@@ -37,6 +37,7 @@ public class Top10TabFragment extends Fragment {
         v2 = inflater.inflate(R.layout.fragment_top10_tab, container, false);
 
         getActivity().setTitle(getActivity().getString(R.string.nav_titles_top10));
+        getActivity().invalidateOptionsMenu();
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter = new ViewPagerAdapter(getFragmentManager(), Titles, Numboftabs);

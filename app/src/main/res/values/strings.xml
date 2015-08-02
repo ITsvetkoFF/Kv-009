@@ -81,7 +81,7 @@
     <string name="problem_type_string_6">Poaching</string>
     <string name="problem_type_string_7">Other issues</string>
 
-    <string name="language_menu">Language</string>
+    <string name="language">Language</string>
     <string name="choose_language">Choose language</string>
     <string name="error_need_to_sign_in">Only authorized users can add problems. Please Sign In or Register</string>
     <string name="reset">Reset</string>
@@ -106,18 +106,19 @@
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="gridview_img_description" translatable="false">Image</string>
-    <string name="prefLikedProblems">LikedProblems</string>
-    <string name="user_avatar">user avatar</string>
+    <string name="prefLikedProblems" translatable="false">LikedProblems</string>
+    <string name="user_avatar" translatable="false">user avatar</string>
+
     <string name="item_map">Map</string>
     <string name="item_statistics">Statistics</string>
     <string name="item_top10">TOP 10</string>
-    <string name="item_filters">Filters</string>
+    <string name="item_settings">Settings</string>
     <string name="item_resources">Resources</string>
     <string name="item_login">Login</string>
     <string name="add_comment">Add your comments here</string>
-    <string name="nav_titles_map">Ecomap</string>
-    <string name="nav_titles_filter">Filters</string>
-    <string name="nav_titles_underconstraction">Underconstruction</string>
+    <string name="filters_menu_item_title">Filters</string>
+    <string name="nav_titles_underconstraction">Under construction</string>
+
     <string name="day_sort">Day</string>
     <string name="week_sort">Week</string>
     <string name="month_sort">Month</string>

@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -36,7 +35,6 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.maps.android.clustering.ClusterManager;
 import com.wunderlist.slidinglayer.SlidingLayer;
 
 import org.ecomap.android.app.Problem;
@@ -53,6 +51,7 @@ import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -68,7 +67,7 @@ public class EcoMapFragment extends Fragment {
     MapView mapView;
     private GoogleMap mMap;
     private UiSettings UISettings;
-    private ClusterManager<Problem> mClusterManager;
+    //private ClusterManager<Problem> mClusterManager;
     private ArrayList<Problem> values;
     private View v;
     public SlidingLayer mSlidingLayer;
@@ -95,12 +94,16 @@ public class EcoMapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(tag, "onCreate");
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setRetainInstance(true);
         Log.i(tag, "onCreateView");
+
+        getActivity().setTitle(getString(R.string.item_map));
+
+        Date start = new Date();
 
         v = inflater.inflate(R.layout.map_layout_main, container, false);
         mapView = (MapView) v.findViewById(R.id.mapview);
@@ -112,8 +115,7 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(getActivity());
 
-        mMap = mapView.getMap();
-        mMap.setMyLocationEnabled(true);
+
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
         UISettings.setMyLocationButtonEnabled(false);
@@ -157,7 +159,8 @@ public class EcoMapFragment extends Fragment {
         fabUkraine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
+                mSlidingLayer.closeLayer(true);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
             }
         });
 
@@ -167,7 +170,8 @@ public class EcoMapFragment extends Fragment {
             public void onClick(View v) {
                 Location loc = mMap.getMyLocation();
                 if (loc != null) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
+                    mSlidingLayer.closeLayer(true);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
                 }
             }
         });
@@ -247,6 +251,8 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
+        Log.d("TIMER", String.valueOf(new Date().getTime() - start.getTime()));
+
         return v;
     }
 
@@ -254,6 +260,12 @@ public class EcoMapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+
+        if (cameraPosition != null){
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
+        getActivity().invalidateOptionsMenu();
 
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
