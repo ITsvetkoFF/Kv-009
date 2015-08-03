@@ -86,7 +86,7 @@ public class EcoMapFragment extends Fragment {
     private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
-    private static boolean isOpenSlidingLayer = false, addProblemModeActivated;
+    public static boolean isOpenSlidingLayer = false, addProblemModeActivated;
     public static Problem lastOpenProblem;
 
     Snackbar addProblemSnackbar;

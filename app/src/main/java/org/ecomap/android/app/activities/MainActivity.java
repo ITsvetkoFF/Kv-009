@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         selectItem(NAV_MAP);
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         // update the main content by replacing fragments
 
         boolean stop = false;
