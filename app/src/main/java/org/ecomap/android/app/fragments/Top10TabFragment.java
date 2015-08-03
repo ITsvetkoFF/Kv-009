@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.tabs.SlidingTabLayout;
 import org.ecomap.android.app.tabs.ViewPagerAdapter;
 
@@ -22,7 +23,6 @@ public class Top10TabFragment extends Fragment {
     SlidingTabLayout tabs;
     CharSequence Titles[]={"популярних","важливих ","обговорюваних"};
     int Numboftabs =3;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

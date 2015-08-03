@@ -262,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         }
     }
 
-    private void selectItem(int position) {
+    public void selectItem(int position) {
         // update the main content by replacing fragments
         fragmentManager = getSupportFragmentManager();
 
@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                mFragment =fragmentManager.findFragmentByTag(tag);
                 if(mFragment==null){
                     mFragment = new Top10TabFragment();
+
                 };
                 break;
 

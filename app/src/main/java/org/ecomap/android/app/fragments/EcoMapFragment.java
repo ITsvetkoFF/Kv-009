@@ -30,6 +30,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -55,12 +56,11 @@ import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.PagerAdapter;
 import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
-
 import java.util.ArrayList;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+
+
+
 public class EcoMapFragment extends Fragment {
     private static final String tag = "EcoMapFragment";
     private static int markerClickType;
@@ -70,7 +70,7 @@ public class EcoMapFragment extends Fragment {
     Cursor cursor;
     EcoMapReceiver receiver;
     MapView mapView;
-    private GoogleMap mMap;
+    public static GoogleMap mMap;
     private UiSettings UISettings;
     private ClusterManager<Problem> mClusterManager;
     private ArrayList<Problem> values;
@@ -94,7 +94,7 @@ public class EcoMapFragment extends Fragment {
     private PagerAdapter adapter;
 
     //for rotating screen - save last position of SlidingPanel
-    private static boolean isOpenSlidingLayer = false;
+    public static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
     CoordinatorLayout rootLayout;
@@ -186,7 +186,6 @@ public class EcoMapFragment extends Fragment {
         showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
-
         mSlidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
 //        LayerTransformer transformer = new AlphaTransformer();
@@ -219,13 +218,17 @@ public class EcoMapFragment extends Fragment {
                 fabAddProblem.setVisibility(View.VISIBLE);
             }
 
+
+
             @Override
             public void onOpened() {
                 isOpenSlidingLayer = true;
+
             }
 
             @Override
             public void onPreviewShowed() {
+
             }
 
             @Override
@@ -275,6 +278,7 @@ public class EcoMapFragment extends Fragment {
                 setMarkerClickType(0);
 
                 mapClusterer.deleteMarker();
+
                 fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
                 fabCancel.setVisibility(View.INVISIBLE);
 
@@ -286,6 +290,8 @@ public class EcoMapFragment extends Fragment {
         });
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -294,6 +300,7 @@ public class EcoMapFragment extends Fragment {
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
+
 
         setUpMap();
     }
@@ -475,6 +482,9 @@ public class EcoMapFragment extends Fragment {
 
         alert.show();
     }
+
+
+
 
     /*private void showTabLayout(){
 

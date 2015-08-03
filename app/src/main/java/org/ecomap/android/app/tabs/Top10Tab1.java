@@ -1,8 +1,5 @@
 package org.ecomap.android.app.tabs;
 
-
-
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,68 +10,80 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.database.Cursor;
-import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+
+import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.utils.MapClustering;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
-
-/**
- * Created by hp1 on 21-01-2015.
- */
-public class Top10Tab1 extends Fragment implements View.OnClickListener{
+public class Top10Tab1 extends Fragment {
 
     ArrayList top10pop = new ArrayList();
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.tab_top_1, container, false);
 
-        Cursor cursor = getActivity().getContentResolver()
+       final Cursor cursor1 = getActivity().getContentResolver()
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null,"("+EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES + ") DESC");
 
-        cursor.moveToFirst();
+        cursor1.moveToFirst();
 
         for(int i=0;i<10;i++){
 
-
-            String votes =cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES));
-            top10pop.add( i,"❤ "+votes+"  " + cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)) +".");
-            cursor.moveToNext();
+            String votes =cursor1.getString(cursor1.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES));
+            top10pop.add( i,"❤ "+votes+"  " + cursor1.getString(cursor1.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE)) +".");
+            cursor1.moveToNext();
         }
-
-        cursor.close();
-
-
 
         ListView lvTopPop = (ListView) v.findViewById(R.id.lvPop);  // создаем адаптер
         ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this.getActivity() ,R.layout.my_list_view1, top10pop);
-
         lvTopPop.setAdapter(adapter1);// присваиваем адаптер списку
+
         lvTopPop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View viewClicked,
                                     int position, long id) {
 
+                cursor1.moveToPosition(position);
+                ((MainActivity) getActivity()).selectItem(0);
 
+                EcoMapFragment.isOpenSlidingLayer = true;
 
-                String message = "Деталі проблеми:  " + top10pop.get(position) + ".";
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                EcoMapFragment.lastOpenProblem = new Problem(cursor1, getActivity());
+                MapClustering.zoomCamera();
+
             }
         });
-
-
 
 
         return v;
     }
 
     @Override
-    public void onClick(View v) {
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
 
 
 
     }
 }
+
+
+

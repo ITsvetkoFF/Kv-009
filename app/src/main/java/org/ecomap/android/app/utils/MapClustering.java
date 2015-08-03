@@ -2,6 +2,7 @@ package org.ecomap.android.app.utils;
 
 import android.content.Context;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
  */
 public class MapClustering {
     private CameraPosition cameraPosition;
-    private GoogleMap mMap;
+    public static GoogleMap mMap;
     private Context mContext;
     private ArrayList<Problem> values;
     private Marker marker;
@@ -139,6 +140,8 @@ public class MapClustering {
                 //save last open Problem for rotating screen
                 ecoMapFragment.lastOpenProblem = problem;
 
+
+
                 return false;
             }
         });
@@ -163,6 +166,20 @@ public class MapClustering {
             marker.remove();
             marker = null;
         }
+    }
+
+    public static void zoomCamera(){
+
+        /*CameraUpdate center = CameraUpdateFactory.newLatLng(lastOpenProblem.getPosition());
+        CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);*/
+
+        CameraUpdate center=CameraUpdateFactory.newLatLng(new LatLng(40.76793169992044,-73.98180484771729));
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+        mMap.moveCamera(center);
+        mMap.animateCamera(zoom);
+
     }
 
     public Marker getMarker() {
