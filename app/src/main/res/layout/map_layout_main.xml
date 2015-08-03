@@ -55,7 +55,7 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <com.wunderlist.slidinglayer.SlidingLayer
+    <org.ecomap.android.app.ui.components.EcoMapSlidingLayer
         xmlns:slidingLayer="http://schemas.android.com/apk/res-auto"
         android:id="@+id/show_problem_sliding_layer"
         android:layout_width="match_parent"
@@ -259,7 +259,7 @@
         </LinearLayout>
 
 
-    </com.wunderlist.slidinglayer.SlidingLayer>
+    </org.ecomap.android.app.ui.components.EcoMapSlidingLayer>
 
     <!--<android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"

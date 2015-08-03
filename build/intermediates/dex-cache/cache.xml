@@ -2,11 +2,18 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\izhaltc\.gradle\caches\modules-2\files-2.1\com.github.PhilJay\MPAndroidChart\v2.1.1\2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6\MPAndroidChart-v2.1.1.jar"
+        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\Kv-009\LibrarySlidingLayer\unspecified\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="f64ec84833cf30194fe5bee01ecf7104e57aa3d6">
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-44ffcba6560ca50dfaec0d520371c762f19435f4.jar" />
+    </item>
+    <item
+        jar="C:\Users\SRV\.gradle\caches\modules-2\files-2.1\com.github.PhilJay\MPAndroidChart\v2.1.1\2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6\MPAndroidChart-v2.1.1.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6">
-        <dex dex="C:\Users\izhaltc\AndroidStudioProjects\ecomap\app\build\intermediates\pre-dexed\debug\MPAndroidChart-v2.1.1-04f95ff4d40c478c8873a8d526300160e52826ab.jar" />
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\MPAndroidChart-v2.1.1-45dfa284efa497f6a14f3556a50dacf45ccf0f4b.jar" />
     </item>
 
 </items>
