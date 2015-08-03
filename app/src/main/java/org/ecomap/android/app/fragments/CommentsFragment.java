@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -114,7 +115,7 @@ public class CommentsFragment extends Fragment {
         mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_comments, container, false);
         ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
 
-        lstComments.setId(R.id.email);
+        lstComments.setId(R.id.email_login);
         lstComments.setExpanded(true);
         lstComments.setClickable(false);
 
@@ -126,6 +127,30 @@ public class CommentsFragment extends Fragment {
         //Find the +1 button
         //mPlusOneButton = (PlusOneButton) view.findViewById(R.id.plus_one_button);
         mTxtComment = (EditText) mRootView.findViewById(R.id.editComment);
+
+        //we don't need focus, because scroll view must be on a top
+        mTxtComment.setFocusableInTouchMode(false);
+
+
+        mTxtComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!mTxtComment.isFocusableInTouchMode()) {
+
+                    mTxtComment.setFocusableInTouchMode(true);
+                    mTxtComment.setFocusable(true);
+
+                    if (mTxtComment.requestFocus()) {
+                        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputMethodManager.showSoftInput(v, 0);
+                    }
+
+                }
+
+            }
+        });
+
         final ImageButton addButton = (ImageButton) mRootView.findViewById(R.id.addCommentButton);
 
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -142,11 +167,19 @@ public class CommentsFragment extends Fragment {
                     new AsyncSendComment().execute(comment, String.valueOf(mProblem.getId()));
                 }
 
+                //Hiding keyboard
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getApplicationWindowToken(), 0);
+
+                //Set TextView unfocused
+                mTxtComment.setFocusableInTouchMode(false);
+
                 if(!MainActivity.isUserIsAuthorized()){
                     SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
                 }else if(comment.isEmpty()){
                     SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.write_comment, Snackbar.LENGTH_SHORT);
                 }
+
             }
         });
 

@@ -36,15 +36,25 @@
     <string name="want_logout">Do you really want to logout?</string>
     <string name="change_password">Forgot your password? Change it!</string>
     <string name="write_comment">Write a comment...</string>
-    <string name="have_problem">Houston we have a problem!</string>
+    <string name="have_problem">Houston, we have a problem!</string>
     <string name="action_add_polygon">Add polygon</string>
     <string name="profile">Profile</string>
+    <string name="choose_location">Choose problem location</string>
+    <string name="add_photo">Add photo</string>
+    <string name="send">Send</string>
+    <string name="add_problem_description">Add Problem Description</string>
+    <string name="uploading_photo">Uploading Photo...</string>
+    <string name="photos_uploaded">Photo Uploaded</string>
+    <string name="uploading_error">Uploading Error</string>
+    <string name="problem_title_blank">Problem title can not be blank</string>
+    <string name="exit">Exit</string>
+    <string name="problem_added">Problem has been successfully added</string>
 
     <string name="string_added_by">"Added by: "</string>
-    <string name="string_suggested_solution">Suggested solution: </string>
+    <string name="string_suggested_solution">Suggested Solution</string>
     <string name="string_description">Description: </string>
-    <string name="add_problem_title">Problem title</string>
-    <string name="add_problem_type">Problem type</string>
+    <string name="add_problem_title">Problem Title</string>
+    <string name="add_problem_type">Problem Type</string>
     <string name="add_problem_add_button">Add</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
@@ -98,6 +108,28 @@
     <string name="gridview_img_description" translatable="false">Image</string>
     <string name="prefLikedProblems">LikedProblems</string>
     <string name="user_avatar">user avatar</string>
+    <string name="item_map">Map</string>
+    <string name="item_statistics">Statistics</string>
+    <string name="item_top10">TOP 10</string>
+    <string name="item_filters">Filters</string>
+    <string name="item_resources">Resources</string>
+    <string name="item_login">Login</string>
+    <string name="add_comment">Add your comments here</string>
+    <string name="nav_titles_map">Ecomap</string>
+    <string name="nav_titles_filter">Filters</string>
+    <string name="nav_titles_underconstraction">Underconstruction</string>
+    <string name="day_sort">Day</string>
+    <string name="week_sort">Week</string>
+    <string name="month_sort">Month</string>
+    <string name="year_sort">Year</string>
+    <string name="reset_sort">Reset</string>
+    <string name="all_sort">Summary</string>
 
+    <string name="string_anonymous">Anonymous</string>
+    <string name="nav_titles_top10">Top 10</string>
+
+    <string name="starting_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="nav_titles_statistics">Statistics</string>
     <!---->
 </resources>

@@ -37,7 +37,7 @@ public class MapClustering {
     private ClusterManager mClusterManager;
 
     public MapClustering(CameraPosition cameraPosition, GoogleMap mMap, Context mContext
-            , ArrayList<Problem> values, Marker marker, EcoMapFragment ecoMapFragment){
+            , ArrayList<Problem> values, EcoMapFragment ecoMapFragment){
         points = new ArrayList<>();
         markers = new ArrayList<>();
 
@@ -45,7 +45,6 @@ public class MapClustering {
         this.mMap = mMap;
         this.mContext = mContext;
         this.values = values;
-        this.marker = marker;
         this.ecoMapFragment = ecoMapFragment;
     }
 
@@ -56,11 +55,7 @@ public class MapClustering {
         }
 
         else {
-            //Position the map from static variables
-            double longitude = 30.417397;
-            double latitude = 50.461166;
-            float zoomlevel = 5;
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), zoomlevel));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
         }
 
         //Initialize the manager with the mContext and the map.
@@ -104,7 +99,7 @@ public class MapClustering {
                     }
 
                     marker = mMap.addMarker(new MarkerOptions().position(latLng));
-                    marker.setTitle("Houston we have a problem here!");
+                    marker.setTitle(mContext.getString(R.string.have_problem));
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
                     EcoMapFragment.setMarkerPosition(latLng);

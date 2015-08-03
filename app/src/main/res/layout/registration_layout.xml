@@ -55,7 +55,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dip"
-                android:layout_below="@+id/header">
+                android:layout_below="@+id/header"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true">
 
                 <!-- FIRST NAME start -->
                 <android.support.design.widget.TextInputLayout
@@ -93,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <AutoCompleteTextView
-                        android:id="@+id/email"
+                        android:id="@+id/email_registration"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
@@ -132,6 +134,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/confirm_password"
                         android:inputType="textPassword"
+                        android:imeOptions="actionDone"
                         android:maxLines="1"
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>

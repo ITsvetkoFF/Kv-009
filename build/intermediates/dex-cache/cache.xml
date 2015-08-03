@@ -2,32 +2,18 @@
 <items version="2" >
 
     <item
-        jar="D:\Senior\Temp\Kv-009\app\build\intermediates\exploded-aar\com.daimajia.easing\library\1.0.1\jars\classes.jar"
+        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\Kv-009\LibrarySlidingLayer\unspecified\jars\classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="d7e947f993bf32a00fcb3078cdda8bb11c930afb">
-        <dex dex="D:\Senior\Temp\Kv-009\app\build\intermediates\pre-dexed\debug\classes-e90c06a6411c04ec9a79d4906b996cd625dc20f9.jar" />
+        sha1="f64ec84833cf30194fe5bee01ecf7104e57aa3d6">
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-44ffcba6560ca50dfaec0d520371c762f19435f4.jar" />
     </item>
     <item
-        jar="D:\Senior\Temp\Kv-009\app\build\intermediates\exploded-aar\com.daimajia.androidanimations\library\1.1.3\jars\classes.jar"
+        jar="C:\Users\SRV\.gradle\caches\modules-2\files-2.1\com.github.PhilJay\MPAndroidChart\v2.1.1\2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6\MPAndroidChart-v2.1.1.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="8cec50fc9cc847bad0d6ed7d93814f4b34744521">
-        <dex dex="D:\Senior\Temp\Kv-009\app\build\intermediates\pre-dexed\debug\classes-843374f587d08aff0b45a02877f8c7fc17db91a3.jar" />
-    </item>
-    <item
-        jar="D:\Senior\Temp\Kv-009\app\build\intermediates\exploded-aar\Kv-009\LibrarySlidingLayer\unspecified\jars\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="b035994a5e5fb0bc7f1a2aca9f0fbd31693e9634">
-        <dex dex="D:\Senior\Temp\Kv-009\app\build\intermediates\pre-dexed\debug\classes-f92c509bc45d793acfa5bfc3a7eeb58e62e5863c.jar" />
-    </item>
-    <item
-        jar="D:\Senior\Temp\Kv-009\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.0\jars\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="97f7e239e86ef994de894818fdd8a71d2e89d6aa">
-        <dex dex="D:\Senior\Temp\Kv-009\app\build\intermediates\pre-dexed\debug\classes-9259fd9236893680987dfc8149fdcae3b52e5e4a.jar" />
+        sha1="2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6">
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\MPAndroidChart-v2.1.1-45dfa284efa497f6a14f3556a50dacf45ccf0f4b.jar" />
     </item>
 
 </items>

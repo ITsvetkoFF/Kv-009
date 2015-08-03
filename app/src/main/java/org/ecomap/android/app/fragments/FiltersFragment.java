@@ -5,6 +5,7 @@ package org.ecomap.android.app.fragments;
  */
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -14,13 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class FiltersFragment extends ListFragment {
 
@@ -35,14 +40,25 @@ public class FiltersFragment extends ListFragment {
     public static final int OTHER_PROBLEM = 7;
     private final String LOG_TAG = "FilterFragment";
     public String problemType = EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " = ";
+    public String dateInterval=") AND ("+ EcoMapContract.ProblemsEntry.COLUMN_DATE+" BETWEEN ";
     public String resultCondition;
     Button okBtn;
     Button resetBtn;
     ListView listView;
+    TextView startDate,endDate;
     ArrayList<Integer> selectedIdees;
     private View mainView;
     private Filterable ourActivity;
     private SparseBooleanArray sbArray;
+    int startYear,startMonth, startDay, endYear, endMonth, endDay;
+    private String dateCondition;
+    private boolean startDateInitialized;
+    private boolean endDateInitialized;
+
+    String beginDate;
+    String finishDate;
+
+
 
 
     @Override
@@ -50,6 +66,8 @@ public class FiltersFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         Log.i(LOG_TAG, "OnCreate");
+
+
     }
 
     @Override
@@ -67,6 +85,11 @@ public class FiltersFragment extends ListFragment {
         Log.i(LOG_TAG, "onCreateView");
 
         mainView = inflater.inflate(R.layout.filters_fragment_main, container, false);
+
+        getActivity().setTitle(getActivity().getString(R.string.nav_titles_filter));
+
+        ScrollView scrollView=(ScrollView)mainView.findViewById(R.id.scroll_view);
+        scrollView.scrollTo(0, 0);
 
         return mainView;
     }
@@ -111,12 +134,41 @@ public class FiltersFragment extends ListFragment {
         }
         okBtn = (Button) mainView.findViewById(R.id.ok);
         resetBtn = (Button) mainView.findViewById(R.id.reset);
+        startDate=(TextView) mainView.findViewById(R.id.start_date);
+        endDate=(TextView)mainView.findViewById(R.id.end_date);
+
+        final Calendar c = Calendar.getInstance();
+
+       if(!startDateInitialized)
+       {
+
+           beginDate="2014-02-18";
+           startYear=2014;
+           startMonth=1;
+           startDay=18;
+       }
+
+        if(!endDateInitialized) {
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            finishDate = sdf.format(c.getTime());
+
+            endYear=c.get(Calendar.YEAR);
+            endMonth=c.get(Calendar.MONTH);
+            endDay=c.get(Calendar.DAY_OF_MONTH);
+        }
+
+        startDate.setText(beginDate);
+        endDate.setText(finishDate);
+
+
 
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 sbArray = listView.getCheckedItemPositions();
+
                 Log.i(LOG_TAG, "sbArray created. size= " + sbArray.size());
                 for (int i = 0; i < sbArray.size(); i++) {
                     int key = sbArray.keyAt(i);
@@ -127,17 +179,21 @@ public class FiltersFragment extends ListFragment {
                     }
                 }
                 if (selectedIdees.size() == 0) {
-                    resultCondition = problemType + 8;
+                    resultCondition = "("+problemType + 120;
 
                 } else if (selectedIdees.size() == 1) {
-                    resultCondition = problemType + selectedIdees.get(0);
+                    resultCondition = "("+problemType + selectedIdees.get(0);
 
                 } else {
-                    resultCondition = problemType + selectedIdees.remove(0);
+                    resultCondition = "("+problemType + selectedIdees.remove(0);
                     for (int i = 0; i < selectedIdees.size(); i++) {
                         resultCondition += " OR " + problemType + selectedIdees.get(i);
                     }
                 }
+                dateCondition=dateInterval + "\'"+beginDate+"\'" + " AND " + "\'"+finishDate+"\')";
+                resultCondition+=dateCondition;
+                Log.i(LOG_TAG, resultCondition);
+
                 ourActivity.filter(resultCondition);
             }
         });
@@ -150,8 +206,85 @@ public class FiltersFragment extends ListFragment {
                 }
                 //aaand delete our previous choises
                 sbArray = null;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                finishDate = sdf.format(c.getTime());
+
+                endYear=c.get(Calendar.YEAR);
+                endMonth=c.get(Calendar.MONTH);
+                endDay=c.get(Calendar.DAY_OF_MONTH);
+
+                startDate.setText(beginDate);
+                endDate.setText(finishDate);
+
+                beginDate="2014-02-18";
+                startYear=2014;
+                startMonth=1;
+                startDay=18;
+
+
             }
         });
+
+        View.OnClickListener showDatePicker = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View vv = v;
+                DatePickerDialog datePickerDialog;
+
+                if(vv.getId()==R.id.start_date){
+                    datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                            Calendar c = Calendar.getInstance();
+                            c.set(year, monthOfYear, dayOfMonth);
+
+                            startYear=year;
+                            startMonth=monthOfYear;
+                            startDay=dayOfMonth;
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            beginDate = sdf.format(c.getTime());
+
+                            startDateInitialized=true;
+                            startDate.setText(beginDate);
+
+                                ;
+
+                            }
+
+
+                    }, startYear, startMonth, startDay);
+
+                }
+                else{
+                    datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                            Calendar c = Calendar.getInstance();
+                            c.set(year, monthOfYear, dayOfMonth);
+
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            finishDate = sdf.format(c.getTime());
+
+                            endYear=year;
+                            endMonth=monthOfYear;
+                            endDay=dayOfMonth;
+
+                            endDateInitialized=true;
+                            endDate.setText(finishDate);;
+
+                        }
+                    }, endYear, endMonth, endDay);
+                }
+
+
+        datePickerDialog.show();
+    }
+};      startDate.setOnClickListener(showDatePicker);
+        endDate.setOnClickListener(showDatePicker);
+
+
     }
     @Override
     public void onPause() {
@@ -159,9 +292,14 @@ public class FiltersFragment extends ListFragment {
         Log.i(LOG_TAG, "on pause");
     }
 
+
+
+
     public interface Filterable {
         public void filter(String string);
     }
+
+
 
 }
 
