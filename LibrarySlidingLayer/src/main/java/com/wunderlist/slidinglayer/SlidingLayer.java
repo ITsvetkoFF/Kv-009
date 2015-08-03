@@ -23,6 +23,7 @@
 
 package com.wunderlist.slidinglayer;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -43,6 +44,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
@@ -166,6 +168,8 @@ public class SlidingLayer extends FrameLayout {
 
     private LayerTransformer mLayerTransformer;
 
+    private Context mContext;
+
     public SlidingLayer(Context context) {
         this(context, null);
     }
@@ -222,6 +226,8 @@ public class SlidingLayer extends FrameLayout {
         ta.recycle();
 
         init();
+
+        mContext = context;
     }
 
     private void init() {
@@ -650,6 +656,7 @@ public class SlidingLayer extends FrameLayout {
 
         switch (action & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_DOWN: {
+
             completeScroll();
 
             // Remember where the motion event started
@@ -745,6 +752,7 @@ public class SlidingLayer extends FrameLayout {
         case MotionEvent.ACTION_UP: {
 
             if (mIsDragging) {
+
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                 final int initialVelocityX = (int) VelocityTrackerCompat.getXVelocity(velocityTracker,
