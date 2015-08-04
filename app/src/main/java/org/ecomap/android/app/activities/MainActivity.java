@@ -16,6 +16,7 @@
 
 package org.ecomap.android.app.activities;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -48,6 +49,7 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.fragments.SettingsFragment;
+import org.ecomap.android.app.fragments.StaticPagesFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
@@ -355,16 +357,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
 
             case NAV_RESOURCES:
-                tag = MockFragment.class.getSimpleName();
+                tag = StaticPagesFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
-
                 if (mFragment == null) {
-                    mFragment = new MockFragment();
+                    mFragment = new StaticPagesFragment();
                 }
-
-                invalidateOptionsMenu();
-                setTitle(getString(R.string.item_resources));
-
                 break;
 
             case NAV_SETTINGS:
