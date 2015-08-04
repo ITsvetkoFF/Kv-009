@@ -60,6 +60,7 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements FiltersFragment.Filterable {
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private static final int NAV_TOP10 = R.id.top10;
     private static final int NAV_FILTERS = R.id.filters_menu_item;
 
+    private HashMap<Class, Integer> fragmentsIndexes = new HashMap<>(6);
 
     public static CookieManager cookieManager;
 
@@ -93,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private static NavigationView mNavigationView;
 
     private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private Toolbar toolbar;
     private Fragment mFragment;
@@ -116,9 +117,16 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         mBackPressingCount = 0;
 
-        mTitle = mDrawerTitle = getTitle();
+        mTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        fragmentsIndexes.put(EcoMapFragment.class, 0);
+        fragmentsIndexes.put(StatisticsFragment.class, 1);
+        fragmentsIndexes.put(SettingsFragment.class, 3);
+        fragmentsIndexes.put(MockFragment.class, 4);
+        fragmentsIndexes.put(Top10TabFragment.class, 2);
+
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -176,6 +184,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         if(mFragment != null) {
             outState.putString(LAST_FRAGMENT_TAG, mFragment.getTag());
@@ -213,10 +226,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         filtersMenuItem = menu.findItem(R.id.filters_menu_item);
 
-        if (mFragment.getClass().equals(EcoMapFragment.class)){
-            filtersMenuItem.setVisible(true);
-        } else {
-            filtersMenuItem.setVisible(false);
+        if (mFragment != null) {
+            if (mFragment.getClass().equals(EcoMapFragment.class)) {
+                filtersMenuItem.setVisible(true);
+            } else {
+                filtersMenuItem.setVisible(false);
+            }
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -268,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
             mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
 
+            Log.d("ASDASD", mFragment.getClass().getSimpleName());
+
+            updateNavigationViewPosition();
         } else{
 
             mBackPressingCount++;
@@ -326,6 +344,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_STATISTICS:
                 tag = StatisticsFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
+
                 if(mFragment == null) {
                     mFragment = new StatisticsFragment();
                 }
@@ -337,6 +356,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_RESOURCES:
                 tag = MockFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
+
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
@@ -349,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_SETTINGS:
                 tag = SettingsFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
+
                 if (mFragment == null) {
                     //mFragment = new FiltersFragment();
                     mFragment = new SettingsFragment();
@@ -361,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_TOP10:
                 tag = Top10TabFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
+
                 if(mFragment == null){
                     mFragment = new Top10TabFragment();
                 }
@@ -371,26 +393,22 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
             case NAV_PROFILE:
                 if (isUserIdSet()) {
-                    tag = LoginFragment.class.getSimpleName();
-                    mFragment = mFragmentManager.findFragmentByTag(tag);
 
                     startActivity(new Intent(getApplicationContext(), Profile.class));
                     stop = true;
 
                     break;
                 } else {
-                    tag = LoginFragment.class.getSimpleName();
-                    mFragment = mFragmentManager.findFragmentByTag(tag);
-
-                    if (mFragment == null) {
+                    //if (mFragment.getClass() != LoginFragment.class) {
                         new LoginFragment().show(mFragmentManager, "login_layout");
                         stop = true;
-                    }
+                    //}
                 }
                 break;
             case NAV_FILTERS:
                 tag = FiltersFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
+
                 if(mFragment == null) {
                     mFragment = new FiltersFragment();
                 }
@@ -401,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             default:
                 tag = MockFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
+
                 if (mFragment == null) {
                     mFragment = new MockFragment();
                 }
@@ -428,9 +447,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         String tag;
         tag = EcoMapFragment.class.getSimpleName();
         mFragment = mFragmentManager.findFragmentByTag(tag);
+
         if (mFragment == null) {
             mFragment = new EcoMapFragment();
         }
+
         EcoMapFragment frag = (EcoMapFragment) mFragment;
         frag.setFilterCondition(s);
     }
@@ -441,6 +462,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     public static void setUserId(String userId) {
         MainActivity.userId = userId;
+    }
+
+    public void updateNavigationViewPosition(){
+        mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
     }
 
     public static boolean isUserIdSet() {

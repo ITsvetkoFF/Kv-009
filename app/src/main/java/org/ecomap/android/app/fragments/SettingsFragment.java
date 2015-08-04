@@ -25,7 +25,7 @@ public class SettingsFragment extends Fragment {
         v = inflater.inflate(R.layout.settings_fragment,container, false);
 
         getActivity().setTitle(getString(R.string.item_settings));
-        getActivity().invalidateOptionsMenu();
+        //getActivity().invalidateOptionsMenu();
 
         return v;
     }

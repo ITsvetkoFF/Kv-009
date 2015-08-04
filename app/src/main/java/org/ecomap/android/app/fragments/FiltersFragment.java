@@ -87,7 +87,7 @@ public class FiltersFragment extends ListFragment {
         mainView = inflater.inflate(R.layout.filters_fragment_main, container, false);
 
         getActivity().setTitle(getActivity().getString(R.string.filters_menu_item_title));
-        getActivity().invalidateOptionsMenu();
+        //getActivity().invalidateOptionsMenu();
 
         ScrollView scrollView=(ScrollView)mainView.findViewById(R.id.scroll_view);
         scrollView.scrollTo(0, 0);

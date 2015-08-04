@@ -102,6 +102,7 @@ public class EcoMapFragment extends Fragment {
         Log.i(tag, "onCreateView");
 
         getActivity().setTitle(getString(R.string.item_map));
+        //getActivity().invalidateOptionsMenu();
 
         Date start = new Date();
 
