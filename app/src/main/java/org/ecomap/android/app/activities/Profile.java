@@ -1,10 +1,9 @@
 package org.ecomap.android.app.activities;
 
-import android.support.v7.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.fragments.LanguageFragment;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 import java.util.Random;
@@ -25,14 +23,12 @@ public class Profile extends AppCompatActivity {
     private TextView firstName, lastName, role, email, resetPassword;
     private Button logout;
 
-    public Profile() {
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
+
+        setTitle(getString(R.string.profile));
 
         //head = (FrameLayout) view.findViewById(R.id.profile_head);
         firstName = (TextView) findViewById(R.id.profile_firstname);
@@ -99,9 +95,6 @@ public class Profile extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.language:
-                DialogFragment df = new LanguageFragment();
-                df.show(getFragmentManager(), "language");
             default:
                 return super.onOptionsItemSelected(item);
         }
