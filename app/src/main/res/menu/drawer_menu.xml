@@ -5,7 +5,7 @@
 
         <item
             android:id="@+id/map"
-            android:checked="false"
+            android:checked="true"
             android:icon="@drawable/ic_map"
             android:title="@string/item_map" />
 
@@ -22,10 +22,10 @@
             android:title="@string/item_top10" />
 
         <item
-            android:id="@+id/filters"
+            android:id="@+id/settings"
             android:checked="false"
-            android:icon="@drawable/ic_filters"
-            android:title="@string/item_filters" />
+            android:icon="@drawable/ic_settings"
+            android:title="@string/item_settings" />
 
         <item
             android:id="@+id/resourses"

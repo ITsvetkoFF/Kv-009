@@ -86,7 +86,8 @@ public class FiltersFragment extends ListFragment {
 
         mainView = inflater.inflate(R.layout.filters_fragment_main, container, false);
 
-        getActivity().setTitle(getActivity().getString(R.string.nav_titles_filter));
+        getActivity().setTitle(getActivity().getString(R.string.filters_menu_item_title));
+        //getActivity().invalidateOptionsMenu();
 
         ScrollView scrollView=(ScrollView)mainView.findViewById(R.id.scroll_view);
         scrollView.scrollTo(0, 0);
@@ -144,7 +145,7 @@ public class FiltersFragment extends ListFragment {
 
            beginDate="2014-02-18";
            startYear=2014;
-           startMonth=2;
+           startMonth=1;
            startDay=18;
        }
 
@@ -206,6 +207,22 @@ public class FiltersFragment extends ListFragment {
                 }
                 //aaand delete our previous choises
                 sbArray = null;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                finishDate = sdf.format(c.getTime());
+
+                endYear=c.get(Calendar.YEAR);
+                endMonth=c.get(Calendar.MONTH);
+                endDay=c.get(Calendar.DAY_OF_MONTH);
+
+                startDate.setText(beginDate);
+                endDate.setText(finishDate);
+
+                beginDate="2014-02-18";
+                startYear=2014;
+                startMonth=1;
+                startDay=18;
+
+
             }
         });
 

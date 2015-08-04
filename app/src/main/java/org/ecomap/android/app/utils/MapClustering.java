@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 
 import org.ecomap.android.app.MyIconRendered;
 import org.ecomap.android.app.Problem;
@@ -20,9 +21,6 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 
 import java.util.ArrayList;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
 public class MapClustering {
     private CameraPosition cameraPosition;
     private GoogleMap mMap;
@@ -137,6 +135,8 @@ public class MapClustering {
                 return false;
             }
         });
+
+        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm());
     }
 
     private void countPolygonPoints() {

@@ -650,6 +650,7 @@ public class SlidingLayer extends FrameLayout {
 
         switch (action & MotionEvent.ACTION_MASK) {
         case MotionEvent.ACTION_DOWN: {
+
             completeScroll();
 
             // Remember where the motion event started
@@ -745,6 +746,7 @@ public class SlidingLayer extends FrameLayout {
         case MotionEvent.ACTION_UP: {
 
             if (mIsDragging) {
+
                 final VelocityTracker velocityTracker = mVelocityTracker;
                 velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                 final int initialVelocityX = (int) VelocityTrackerCompat.getXVelocity(velocityTracker,
