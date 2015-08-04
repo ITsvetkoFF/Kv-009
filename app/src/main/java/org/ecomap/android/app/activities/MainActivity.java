@@ -283,9 +283,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
             mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
 
-            Log.d("ASDASD", mFragment.getClass().getSimpleName());
+            if (mFragment.getClass() != FiltersFragment.class) {
+                updateNavigationViewPosition();
+            }
 
-            updateNavigationViewPosition();
         } else{
 
             mBackPressingCount++;
