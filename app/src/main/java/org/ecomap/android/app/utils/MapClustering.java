@@ -95,7 +95,7 @@ public class MapClustering {
                         marker.remove();
                     }
 
-                    marker = mMap.addMarker(new MarkerOptions().position(latLng));
+                    marker = mMap.addMarker(new MarkerOptions().draggable(true).position(latLng));
                     marker.setTitle(mContext.getString(R.string.have_problem));
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 

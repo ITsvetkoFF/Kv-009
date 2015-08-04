@@ -268,7 +268,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
 
         if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
-            EcoMapFragment frag = (EcoMapFragment) mFragment;
+            EcoMapFragment frag = (EcoMapFragment)mFragment;
+            // TODO if addProblemMode is on - goto AddproblemFragment
             if(frag.mSlidingLayer.isOpened()) {
                 frag.mSlidingLayer.openPreview(true);
                 return;
