@@ -1,6 +1,7 @@
 package org.ecomap.android.app.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -174,5 +175,11 @@ public class RegistrationFragment extends DialogFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        ((MainActivity)getActivity()).updateNavigationViewPosition();
     }
 }
