@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -35,7 +36,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.wunderlist.slidinglayer.SlidingLayer;
+import com.google.maps.android.clustering.ClusterManager;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
@@ -45,13 +46,13 @@ import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.sync.AddVoteTask;
 import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.sync.GetPhotosTask;
+import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -67,10 +68,10 @@ public class EcoMapFragment extends Fragment {
     MapView mapView;
     private GoogleMap mMap;
     private UiSettings UISettings;
-    //private ClusterManager<Problem> mClusterManager;
+    private ClusterManager<Problem> mClusterManager;
     private ArrayList<Problem> values;
     private View v;
-    public SlidingLayer mSlidingLayer;
+    public EcoMapSlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
@@ -99,6 +100,7 @@ public class EcoMapFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setRetainInstance(true);
         Log.i(tag, "onCreateView");
 
         getActivity().setTitle(getString(R.string.item_map));
@@ -188,12 +190,25 @@ public class EcoMapFragment extends Fragment {
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
 
-        mSlidingLayer = (SlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+        mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
-//        LayerTransformer transformer = new AlphaTransformer();
-//        mSlidingLayer.setLayerTransformer(transformer);
+        /*showHead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        mSlidingLayer.setOnInteractListener(new SlidingLayer.OnInteractListener() {
+                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                // check if no view has focus:
+                View focusedView = getActivity().getCurrentFocus();
+
+                if (focusedView != null) {
+                    inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+                }
+
+            }
+        });*/
+
+        mSlidingLayer.setOnInteractListener(new EcoMapSlidingLayer.OnInteractListener() {
             @Override
             public void onOpen() {
                 //If onOpen, we show all lines of title
@@ -251,8 +266,6 @@ public class EcoMapFragment extends Fragment {
                 mScrollView.scrollTo(0, 0);
             }
         });
-
-        Log.d("TIMER", String.valueOf(new Date().getTime() - start.getTime()));
 
         return v;
     }

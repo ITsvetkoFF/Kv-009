@@ -145,7 +145,7 @@ public class FiltersFragment extends ListFragment {
 
            beginDate="2014-02-18";
            startYear=2014;
-           startMonth=2;
+           startMonth=1;
            startDay=18;
        }
 
@@ -207,6 +207,22 @@ public class FiltersFragment extends ListFragment {
                 }
                 //aaand delete our previous choises
                 sbArray = null;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                finishDate = sdf.format(c.getTime());
+
+                endYear=c.get(Calendar.YEAR);
+                endMonth=c.get(Calendar.MONTH);
+                endDay=c.get(Calendar.DAY_OF_MONTH);
+
+                startDate.setText(beginDate);
+                endDate.setText(finishDate);
+
+                beginDate="2014-02-18";
+                startYear=2014;
+                startMonth=1;
+                startDay=18;
+
+
             }
         });
 
