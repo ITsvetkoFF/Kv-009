@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -95,12 +94,16 @@ public class EcoMapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(tag, "onCreate");
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
         Log.i(tag, "onCreateView");
+
+        getActivity().setTitle(getString(R.string.item_map));
+        //getActivity().invalidateOptionsMenu();
 
         v = inflater.inflate(R.layout.map_layout_main, container, false);
         mapView = (MapView) v.findViewById(R.id.mapview);
@@ -112,8 +115,7 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(getActivity());
 
-        mMap = mapView.getMap();
-        mMap.setMyLocationEnabled(true);
+
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
         UISettings.setMyLocationButtonEnabled(false);
@@ -157,7 +159,8 @@ public class EcoMapFragment extends Fragment {
         fabUkraine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
+                mSlidingLayer.closeLayer(true);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
             }
         });
 
@@ -167,7 +170,8 @@ public class EcoMapFragment extends Fragment {
             public void onClick(View v) {
                 Location loc = mMap.getMyLocation();
                 if (loc != null) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
+                    mSlidingLayer.closeLayer(true);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
                 }
             }
         });
@@ -220,7 +224,6 @@ public class EcoMapFragment extends Fragment {
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
                 showTitle.setEllipsize(TextUtils.TruncateAt.END);
-
             }
 
             @Override
@@ -235,15 +238,12 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onPreviewShowed() {
-
             }
 
             @Override
             public void onClosed() {
                 isOpenSlidingLayer = false;
             }
-
-
         });
 
         if (isOpenSlidingLayer) {
@@ -271,6 +271,12 @@ public class EcoMapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+
+        if (cameraPosition != null){
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
+        getActivity().invalidateOptionsMenu();
 
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
@@ -380,7 +386,7 @@ public class EcoMapFragment extends Fragment {
         markerPosition = position;
     }
 
-    public void fillSlidingPanel(final Problem problem) {
+    public void fillSlidingPanel(final Problem problem){
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 11.0f));
 

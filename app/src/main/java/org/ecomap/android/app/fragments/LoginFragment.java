@@ -1,6 +1,7 @@
 package org.ecomap.android.app.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -96,8 +97,8 @@ public class LoginFragment extends DialogFragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    //password.clearFocus();
-                    //password.requestFocus();
+                    password.setFocusable(false);
+                    password.setFocusableInTouchMode(true);
 
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -130,5 +131,11 @@ public class LoginFragment extends DialogFragment {
                 dismiss();
             }
         });
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        ((MainActivity)getActivity()).updateNavigationViewPosition();
     }
 }
