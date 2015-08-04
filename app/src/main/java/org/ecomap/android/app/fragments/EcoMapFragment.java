@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -21,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -91,6 +91,10 @@ public class EcoMapFragment extends Fragment {
 
     Snackbar addProblemSnackbar;
 
+    private Fragment fragment;
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +128,12 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
 
+        fragmentManager = getFragmentManager();
+
         fabAddProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (MainActivity.isUserIdSet()) {
 
                     if (mapClusterer.getMarker() == null) {
@@ -138,14 +145,23 @@ public class EcoMapFragment extends Fragment {
                             public void onClick(View v) {
                                 setMarkerClickType(0);
                                 mapClusterer.deleteMarker();
-                                fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
+                                fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
                             }
                         });
 
                         addProblemSnackbar.show();
 
                     } else {
-                        new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
+
+                        if (fragment == null) {
+                            fragment = new AddProblemFragment();
+                        }
+
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.add(R.id.content_frame, fragment);
+                        fragmentTransaction.commit();
+
                     }
                 } else {
                     signInAlertDialog();
@@ -263,10 +279,10 @@ public class EcoMapFragment extends Fragment {
 
         addProblemSnackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
         View snackBarView = addProblemSnackbar.getView();
-        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.white));
         TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_action);
 
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(Color.RED);
     }
 
     // saving map position for restoring after rotation or backstack
@@ -445,45 +461,8 @@ public class EcoMapFragment extends Fragment {
         alert.show();
     }
 
-    /*private void showTabLayout(){
-
-        if (tabLayout != null){
-            tabLayout.removeAllTabs();
-            tabLayout.setVisibility(TabLayout.VISIBLE);
-        }
-
-        tabLayout = (TabLayout) v.findViewById(R.id.tabLayout);
-
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
-        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.secondary_text));
-        tabLayout.addTab(tabLayout.newTab().setText("Choose Location"));
-        tabLayout.addTab(tabLayout.newTab().setText("Add Description"));
-
-        viewPager = (ViewPager) v.findViewById(R.id.pager);
-
-        adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
-
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-    }*/
+    public static CameraPosition getCameraPosition(){
+        return cameraPosition;
+    }
 }
 
