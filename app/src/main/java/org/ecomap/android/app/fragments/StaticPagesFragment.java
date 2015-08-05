@@ -39,6 +39,7 @@ public class StaticPagesFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.static_pages_list);
         listCursorAdapter = new ListCursorAdapter(getActivity(), resourcesCusor);
         listView.setAdapter(listCursorAdapter);
+        getActivity().setTitle(getString(R.string.item_resources));
         return view;
     }
 
