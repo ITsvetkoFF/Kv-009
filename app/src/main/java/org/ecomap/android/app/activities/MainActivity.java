@@ -16,6 +16,7 @@
 
 package org.ecomap.android.app.activities;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -33,12 +34,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -48,6 +47,7 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.fragments.SettingsFragment;
+import org.ecomap.android.app.fragments.StaticPagesFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
@@ -123,9 +123,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         fragmentsIndexes.put(EcoMapFragment.class, 0);
         fragmentsIndexes.put(StatisticsFragment.class, 1);
-        fragmentsIndexes.put(SettingsFragment.class, 3);
-        fragmentsIndexes.put(MockFragment.class, 4);
         fragmentsIndexes.put(Top10TabFragment.class, 2);
+        fragmentsIndexes.put(SettingsFragment.class, 3);
+        fragmentsIndexes.put(StaticPagesFragment.class, 4);
+
 
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -337,9 +338,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case NAV_MAP:
                 tag = EcoMapFragment.class.getSimpleName();
                 chooseEcoMapFragment(filterCondition);
-
                 invalidateOptionsMenu();
-
                 break;
 
             case NAV_STATISTICS:
@@ -349,22 +348,16 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 if(mFragment == null) {
                     mFragment = new StatisticsFragment();
                 }
-
                 invalidateOptionsMenu();
-
                 break;
 
             case NAV_RESOURCES:
-                tag = MockFragment.class.getSimpleName();
+                tag = StaticPagesFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
-
                 if (mFragment == null) {
-                    mFragment = new MockFragment();
+                    mFragment = new StaticPagesFragment();
                 }
-
                 invalidateOptionsMenu();
-                setTitle(getString(R.string.item_resources));
-
                 break;
 
             case NAV_SETTINGS:
@@ -375,9 +368,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     //mFragment = new FiltersFragment();
                     mFragment = new SettingsFragment();
                 }
-
                 invalidateOptionsMenu();
-
                 break;
 
             case NAV_TOP10:
@@ -387,9 +378,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 if(mFragment == null){
                     mFragment = new Top10TabFragment();
                 }
-
                 invalidateOptionsMenu();
-
                 break;
 
             case NAV_PROFILE:
@@ -413,28 +402,16 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 if(mFragment == null) {
                     mFragment = new FiltersFragment();
                 }
-
                 invalidateOptionsMenu();
-
                 break;
             default:
-                tag = MockFragment.class.getSimpleName();
-                mFragment = mFragmentManager.findFragmentByTag(tag);
-
-                if (mFragment == null) {
-                    mFragment = new MockFragment();
-                }
+                tag = EcoMapFragment.class.getSimpleName();
+                chooseEcoMapFragment(filterCondition);
                 invalidateOptionsMenu();
                 break;
         }
 
         if (!stop) {
-
-            if (mFragment.getClass() == MockFragment.class && mFragment.getArguments() == null) {
-                Bundle args = new Bundle();
-                args.putInt(MockFragment.ARG_NAV_ITEM_NUMBER, position);
-                mFragment.setArguments(args);
-            }
 
             //Main magic happens here
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -504,29 +481,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             }
         } catch (URISyntaxException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Fragment that appears in the "content_frame", shows a planet
-     * TODO: delete, after removing fragments "Under construction"
-     */
-    public static class MockFragment extends Fragment {
-        public static final String ARG_NAV_ITEM_NUMBER = "navigation_menu_item_number";
-
-        public MockFragment() {
-            // Empty constructor required for mFragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.fragment_empty, container, false);
-
-            getActivity().setTitle(mContext.getString(R.string.nav_titles_underconstraction));
-
-            return rootView;
         }
     }
 }

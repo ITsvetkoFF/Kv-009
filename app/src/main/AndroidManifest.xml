@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.ecomap.android.app" >
+    package="org.ecomap.android.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,7 +18,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -38,28 +38,40 @@
         <activity
             android:name=".activities.Profile"
             android:label="@string/profile"
-            android:parentActivityName=".activities.MainActivity" >
+            android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-                 android:name=".activities.ViewPhotosActivity"
-                android:label="@string/title_activity_view_photos"
-                 android:parentActivityName=".activities.MainActivity"
-                  android:theme="@style/AppThemeTransparentActionBar" >
-        </activity>
-        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:name=".activities.ViewPhotosActivity"
+            android:label="@string/title_activity_view_photos"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppThemeTransparentActionBar"></activity>
+        <activity
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".activities.StaticPagesActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppThemeTransparentActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
 
         <provider
             android:name=".data.EcoMapProvider"
             android:authorities="org.ecomap.android.app.data" />
 
         <service android:name=".sync.EcoMapService" />
+        <service android:name=".sync.GetResourcesService" />
+
     </application>
 
 </manifest>

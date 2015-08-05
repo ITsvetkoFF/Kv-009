@@ -46,7 +46,9 @@ public class EcoMapService extends IntentService {
             try {
 
                 numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(),getString(R.string.fileNamePreferences),getString(R.string.prefNumRevision), 0);
-
+                if(numCurrentRevision == 0){
+                    startService(new Intent(this, GetResourcesService.class));
+                }
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
                 final String REVISION_PARAM = "rev";
@@ -231,8 +233,7 @@ public class EcoMapService extends IntentService {
                 cVVector.toArray(cvArray);
                 this.getContentResolver().bulkInsert(EcoMapContract.ProblemsEntry.CONTENT_URI, cvArray);
             }
-
-            //update preferences
+            //update pnumCurrentRevisionreferences
             SharedPreferencesHelper.updateNumRevision(getApplicationContext(),numNewRevision);
 
             Log.i(LOG_TAG, "revision was updated!");
