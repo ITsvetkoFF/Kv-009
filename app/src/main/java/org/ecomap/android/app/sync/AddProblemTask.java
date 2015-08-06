@@ -121,6 +121,8 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         if (responseCode == HttpURLConnection.HTTP_OK) {
 
             new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
+            EcoMapFragment.disableAddProblemMode();
+            AddProblemFragment.switchToEcoMapFragment();
 
             sendPhoto(problemID);
         }

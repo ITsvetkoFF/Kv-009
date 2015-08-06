@@ -77,9 +77,9 @@ public class AddProblemFragment extends Fragment{
     Marker marker;
     UiSettings uiSettings;
 
-    FragmentTransaction fragmentTransaction;
-    FragmentManager fragmentManager;
-    Fragment fragment;
+    private static FragmentTransaction fragmentTransaction;
+    private static FragmentManager fragmentManager;
+    private static Fragment fragment;
 
 
     public static AddProblemFragment newInstance(){
@@ -105,10 +105,12 @@ public class AddProblemFragment extends Fragment{
         uiSettings.setMapToolbarEnabled(false);
         uiSettings.setMyLocationButtonEnabled(false);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EcoMapFragment.getMarkerPosition(), 16));
+        if (EcoMapFragment.getMarkerPosition() != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EcoMapFragment.getMarkerPosition(), 16));
 
-        marker = mMap.addMarker(new MarkerOptions().draggable(true).position(EcoMapFragment.getMarkerPosition()));
-        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            marker = mMap.addMarker(new MarkerOptions().draggable(true).position(EcoMapFragment.getMarkerPosition()));
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        }
 
         fragmentManager = getFragmentManager();
 
@@ -171,15 +173,7 @@ public class AddProblemFragment extends Fragment{
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-
-                String tag = EcoMapFragment.class.getSimpleName();
-                fragment = fragmentManager.findFragmentByTag(tag);
-
-                fragmentTransaction = fragmentManager.beginTransaction();
-
-                fragmentTransaction.replace(R.id.content_frame, fragment);
-                fragmentTransaction.commit();
-
+                switchToEcoMapFragment();
             }
         });
 
@@ -193,6 +187,8 @@ public class AddProblemFragment extends Fragment{
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
+
 
         sendProblemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,6 +240,16 @@ public class AddProblemFragment extends Fragment{
 
     public static NonScrollableListView getNonScrollableListView() {
         return nonScrollableListView;
+    }
+
+    public static void switchToEcoMapFragment() {
+        String tag = EcoMapFragment.class.getSimpleName();
+        fragment = fragmentManager.findFragmentByTag(tag);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
     }
 
 }
