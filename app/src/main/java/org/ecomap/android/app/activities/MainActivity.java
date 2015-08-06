@@ -43,6 +43,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
@@ -269,7 +270,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
 
         if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
-            EcoMapFragment frag = (EcoMapFragment) mFragment;
+            EcoMapFragment frag = (EcoMapFragment)mFragment;
+
+            frag.disableAddProblemMode();
+
             if(frag.mSlidingLayer.isOpened()) {
                 frag.mSlidingLayer.openPreview(true);
                 return;
