@@ -87,13 +87,13 @@ public class SharedPreferencesHelper {
         edit.remove(MainActivity.EMAIL_KEY);
         edit.remove(MainActivity.PASSWORD_KEY);
 
-        edit.commit();
+        edit.apply();
 
         Log.d(LOG_TAG, "Log in preferences was removed");
 
     }
 
-    public static void onLogInSavePref(Context mContext,String first_name,String last_name,String email, String pass) {
+    public static void onLogInSavePref(Context mContext,String first_name,String last_name,String email, String pass, String role) {
 
         sPref = mContext.getSharedPreferences(mContext.getResources().getString(R.string.fileNamePreferences), Context.MODE_PRIVATE);
 
@@ -103,8 +103,9 @@ public class SharedPreferencesHelper {
         edit.putString(MainActivity.LAST_NAME_KEY, last_name);
         edit.putString(MainActivity.EMAIL_KEY, email);
         edit.putString(MainActivity.PASSWORD_KEY, pass);
+        edit.putString(MainActivity.ROLE_KEY, role);
 
-        edit.commit();
+        edit.apply();
 
         Log.d(LOG_TAG, "Log in preferences was added");
 

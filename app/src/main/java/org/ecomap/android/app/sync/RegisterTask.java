@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.RegistrationFragment;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
@@ -88,11 +89,14 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
                     SharedPreferencesHelper.onLogInSavePref(mContext, data.get("first_name").toString(),
                             data.get("last_name").toString(),
                             params[2],
-                            params[3]);
+                            params[3], data.get("user_roles").toString());
 
                     MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
 
                     String fileNamePref = registrationFragment.getResources().getString(R.string.fileNamePreferences);
+
+                    User.getInstance(data.get("first_name").toString(), data.get("last_name").toString(),
+                            params[2], params[3], data.get("user_roles").toString());
 
                     resMessage = "Hello " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.FIRST_NAME_KEY, "")
                             + " " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.LAST_NAME_KEY, "") + "!";
