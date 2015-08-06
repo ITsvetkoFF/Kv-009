@@ -1,6 +1,8 @@
 package org.ecomap.android.app.utils;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -91,16 +93,16 @@ public class MapClustering {
 
                 } else if (EcoMapFragment.getMarkerClickType() == 2) {
 
-                    if (marker != null) {
-                        marker.remove();
-                    }
 
-                    marker = mMap.addMarker(new MarkerOptions().position(latLng));
+
+                    addMarkerToMap(latLng);
+/*
+                    marker = mMap.addMarker(new MarkerOptions().draggable(true).position(latLng));
                     marker.setTitle(mContext.getString(R.string.have_problem));
                     marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
                     EcoMapFragment.setMarkerPosition(latLng);
-
+*/
                 }
             }
         });
@@ -157,10 +159,24 @@ public class MapClustering {
         if (marker != null) {
             marker.remove();
             marker = null;
+            EcoMapFragment.setMarkerPosition(null);
         }
     }
 
     public Marker getMarker() {
         return marker;
+    }
+
+    public void addMarkerToMap(LatLng position){
+
+        if (marker != null) {
+            marker.remove();
+        }
+
+        marker = mMap.addMarker(new MarkerOptions().draggable(true).position(position));
+        marker.setTitle(mContext.getString(R.string.have_problem));
+        marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+        EcoMapFragment.setMarkerPosition(marker.getPosition());
     }
 }
