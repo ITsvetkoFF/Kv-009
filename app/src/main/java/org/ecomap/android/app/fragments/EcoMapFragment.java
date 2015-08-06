@@ -83,20 +83,20 @@ public class EcoMapFragment extends Fragment {
     private FloatingActionButton fabUkraine, fabToMe;
 
     private static LatLng markerPosition = null;
-    private MapClustering mapClusterer;
+    private static MapClustering mapClusterer;
     private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
     private static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
-    private Snackbar addProblemSnackbar;
+    private static Snackbar addProblemSnackbar;
 
-    private Fragment addProblemFragment;
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
+    private static Fragment addProblemFragment;
+    private static FragmentManager fragmentManager;
+    private static FragmentTransaction fragmentTransaction;
 
-    private boolean addproblemModeIsEnabled = false;
+    private static boolean addproblemModeIsEnabled = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -503,7 +503,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
     }
 
-    public void disableAddProblemMode(){
+    public static void disableAddProblemMode(){
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
@@ -514,7 +514,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
     }
 
-    public void switchToAddProblemFragment() {
+    public static void switchToAddProblemFragment() {
         if (addProblemFragment == null) {
             addProblemFragment = new AddProblemFragment();
         }
