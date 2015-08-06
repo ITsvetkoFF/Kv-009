@@ -20,7 +20,11 @@
         android:title="@string/action_add_polygon"
         android:orderInCategory="1"
         app:showAsAction="never" />-->
-    <item android:id="@+id/language"
-        android:title="@string/language_menu"
-        app:showAsAction="never"/>
+    <item
+        android:id="@+id/filters_menu_item"
+        android:title="@string/filters_menu_item_title"
+        android:icon="@drawable/ic_filters"
+        app:showAsAction="always"
+        android:visible="false"
+        />
 </menu>

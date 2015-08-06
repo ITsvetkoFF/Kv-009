@@ -53,6 +53,7 @@ public class StatisticsFragment extends Fragment {
         view = inflater.inflate(R.layout.statistics_layout, container, false);
 
         getActivity().setTitle(getString(R.string.nav_titles_statistics));
+        //getActivity().invalidateOptionsMenu();
 
         one_day = (TextView) view.findViewById(R.id.one_day);
         one_week = (TextView) view.findViewById(R.id.one_week);

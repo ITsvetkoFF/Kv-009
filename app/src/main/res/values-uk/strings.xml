@@ -71,7 +71,7 @@
     <string name="problem_type_string_6">Браконьєрство</string>
     <string name="problem_type_string_7">Інші проблеми</string>
 
-    <string name="language_menu">Мова</string>
+    <string name="language">Мова</string>
     <string name="choose_language">Оберіть мову</string>
     <string name="error_need_to_sign_in">Лише авторизовані користувачі можуть додавати проблеми. Увійдіть або зареєструйтеся</string>
     <string name="reset">Скинути</string>
@@ -84,7 +84,7 @@
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
-    <string name="item_filters">Фільтри</string>
+    <string name="item_settings">Налаштування</string>
     <string name="item_resources">Ресурси</string>
     <string name="item_login">Увійти</string>
     <string name="uploading_photo">Завантаження фото...</string>
@@ -105,4 +105,9 @@
     <string name="reset_sort">Скинути</string>
     <string name="all_sort">Всього</string>
     <string name="problem_added"> Проблему успішно додано</string>
+
+    <string name="nav_titles_underconstraction">У розробці</string>
+    <string name="filters_menu_item_title">Фільтри</string>
+    <string name="nav_titles_statistics">Статистика</string>
+    <string name="nav_titles_top10">Топ 10</string>
 </resources>
