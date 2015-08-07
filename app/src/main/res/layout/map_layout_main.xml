@@ -231,6 +231,26 @@
                         android:layout_height="wrap_content"
                         style="@style/Body2"/>
 
+                    <FrameLayout
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="25dp"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp"
+                        android:background="@drawable/dotted_border" >
+
+                        <Button
+                            android:id="@+id/add_photo"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:text="@string/add_photo"
+                            android:textColor="#ff0099cc"
+                            android:background="@color/white"
+                            style="?android:attr/borderlessButtonStyle" />
+
+                    </FrameLayout>
+
                     <org.ecomap.android.app.widget.ExpandableHeightGridView
                         android:id="@+id/gridview"
                         android:layout_width="match_parent"
