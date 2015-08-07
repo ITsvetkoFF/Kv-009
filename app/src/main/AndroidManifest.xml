@@ -43,6 +43,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
         <activity
             android:name=".activities.ViewPhotosActivity"
             android:label="@string/title_activity_view_photos"
@@ -63,6 +64,10 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
+        </activity>
+
+        <activity android:name=".activities.CommentPhotoActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
         </activity>
 
         <provider

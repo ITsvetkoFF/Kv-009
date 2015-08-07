@@ -22,6 +22,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -41,19 +44,27 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.CommentPhotoActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
+import org.ecomap.android.app.sync.AddProblemTask;
 import org.ecomap.android.app.sync.AddVoteTask;
 import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.sync.GetPhotosTask;
+import org.ecomap.android.app.sync.UploadPhotoTask;
 import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
+import org.ecomap.android.app.ui.components.NonScrollableListView;
+import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
+
+import me.iwf.photopicker.PhotoPickerActivity;
+import me.iwf.photopicker.utils.PhotoPickerIntent;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -97,6 +108,11 @@ public class EcoMapFragment extends Fragment {
     private static FragmentTransaction fragmentTransaction;
 
     private static boolean addproblemModeIsEnabled = false;
+
+    private Button addPhotoButton;
+    public static final int REQUEST_CODE = 1;
+    public static final int REQUEST_CODE_PHOTOS_ADDED = 2;
+    public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,22 +188,6 @@ public class EcoMapFragment extends Fragment {
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
-        /*showHead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                // check if no view has focus:
-                View focusedView = getActivity().getCurrentFocus();
-
-                if (focusedView != null) {
-                    inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-                }
-
-            }
-        });*/
-
         mSlidingLayer.setOnInteractListener(new EcoMapSlidingLayer.OnInteractListener() {
             @Override
             public void onOpen() {
@@ -244,6 +244,23 @@ public class EcoMapFragment extends Fragment {
         mScrollView.post(new Runnable() {
             public void run() {
                 mScrollView.scrollTo(0, 0);
+            }
+        });
+
+        addPhotoButton = (Button) v.findViewById(R.id.add_photo);
+
+        addPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Send intent to library for picking photos
+                if (MainActivity.isUserIdSet()) {
+                    PhotoPickerIntent intent = new PhotoPickerIntent(mContext);
+                    intent.setPhotoCount(8);
+                    intent.setShowCamera(true);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }else{
+                    signInAlertDialog();
+                }
             }
         });
 
@@ -489,6 +506,33 @@ public class EcoMapFragment extends Fragment {
         });
 
         alert.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //Getting photo paths from lib
+        if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE) {
+            if (data != null) {
+                selectedPhotos.clear();
+                selectedPhotos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
+
+                if (selectedPhotos.size()>0){
+                    Intent intent = new Intent(mContext, CommentPhotoActivity.class);
+                    intent.putExtra("problem_id", lastOpenProblem.getId());
+                    intent.putExtra("selectedPhotos", selectedPhotos);
+                    startActivityForResult(intent, REQUEST_CODE_PHOTOS_ADDED);
+                }
+
+            }
+        }else if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE_PHOTOS_ADDED) {
+                ArrayList<ProblemPhotoEntry> photos = data.getParcelableArrayListExtra("photos");
+                for (ProblemPhotoEntry photo:photos){
+                    new UploadPhotoTask(mContext, lastOpenProblem.getId(), photo.getImgURL(), photo.getCaption()).execute();
+                }
+            new GetPhotosTask(this).execute(lastOpenProblem.getId());
+        }
     }
 
     public static CameraPosition getCameraPosition(){
