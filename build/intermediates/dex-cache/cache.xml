@@ -2,18 +2,18 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\izhaltc\AndroidStudioProjects\ecomap\app\build\intermediates\exploded-aar\com.google.maps.android\android-maps-utils\0.4\jars\classes.jar"
+        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\com.google.maps.android\android-maps-utils\0.4\jars\classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="4b1a7fac58cc85b115adee653a10b6300f90951a">
-        <dex dex="C:\Users\izhaltc\AndroidStudioProjects\ecomap\app\build\intermediates\pre-dexed\debug\classes-85dc603e608e5fbde6aabcc16e5e053adb6ee90f.jar" />
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-99c80709ec99941f803d1907d7155547c8a59802.jar" />
     </item>
     <item
-        jar="C:\Users\izhaltc\AndroidStudioProjects\ecomap\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.1\jars\classes.jar"
+        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.1\jars\classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="e1fa5e1123997a55e3ed65b44892993ff4b58cfe">
-        <dex dex="C:\Users\izhaltc\AndroidStudioProjects\ecomap\app\build\intermediates\pre-dexed\debug\classes-513e1a66f2096dce60b5c261682643598f5d7a2e.jar" />
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-3f066940d46b4843b549a7e178da03f946fca35a.jar" />
     </item>
 
 </items>
