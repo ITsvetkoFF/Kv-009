@@ -28,7 +28,7 @@ public class EcoMapService extends IntentService {
     private int numCurrentRevision;
 
     // is this a first start of app and service?
-    private static boolean firstStart = true;
+    public static boolean firstStart = true;
 
     public EcoMapService() {
         super("EcoMapService");

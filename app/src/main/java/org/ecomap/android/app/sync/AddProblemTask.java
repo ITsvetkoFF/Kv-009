@@ -115,6 +115,10 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         super.onPostExecute(aVoid);
 
         progressBar.dismiss();
+        EcoMapService.firstStart=true;
+
+        Intent intent = new Intent(mContext, EcoMapService.class);
+        mContext.startService(intent);
 
         new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG);
 
