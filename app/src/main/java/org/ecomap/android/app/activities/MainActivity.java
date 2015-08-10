@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final int NAV_PROFILE = R.id.login;
     private static final int NAV_TOP10 = R.id.top10;
     private static final int NAV_FILTERS = R.id.filters_menu_item;
+    public static final int NAV_ADD_PROBLEM = R.id.addProblem;
 
     private HashMap<Class, Integer> fragmentsIndexes = new HashMap<>(6);
 
@@ -272,7 +273,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
             EcoMapFragment frag = (EcoMapFragment)mFragment;
 
-            frag.disableAddProblemMode();
+            if (EcoMapFragment.isAddproblemModeIsEnabled()) {
+                EcoMapFragment.disableAddProblemMode();
+            }
 
             if(frag.mSlidingLayer.isOpened()) {
                 frag.mSlidingLayer.openPreview(true);
@@ -332,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         selectItem(NAV_MAP);
     }
 
-    private void selectItem(int position) {
+    public  void selectItem(int position) {
         // update the main content by replacing fragments
 
         boolean stop = false;
@@ -408,6 +411,21 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 }
                 invalidateOptionsMenu();
                 break;
+
+            case NAV_ADD_PROBLEM:
+                tag = AddProblemFragment.class.getSimpleName();
+                mFragment = mFragmentManager.findFragmentByTag(tag);
+
+                if (mFragment == null) {
+                    mFragment = AddProblemFragment.newInstance();
+                }
+
+                AddProblemFragment.setMarkerPosition(EcoMapFragment.getMarkerPosition());
+
+                invalidateOptionsMenu();
+
+                break;
+
             default:
                 tag = EcoMapFragment.class.getSimpleName();
                 chooseEcoMapFragment(filterCondition);
@@ -447,7 +465,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     }
 
     public void updateNavigationViewPosition(){
-        mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
+
+        if (mFragment != null && mFragment.getClass() != AddProblemFragment.class) {
+            mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
+        }
+
     }
 
     public static boolean isUserIdSet() {

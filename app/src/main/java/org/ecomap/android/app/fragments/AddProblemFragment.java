@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,6 @@ public class AddProblemFragment extends Fragment{
     public AddPhotoImageAdapter imgAdapter;
     public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
-    private static Button cancelButton;
     private Button sendProblemButton;
     private Button addPhotoButton;
 
@@ -72,24 +72,31 @@ public class AddProblemFragment extends Fragment{
     private String[] params;
 
     // added 03.08.15
-    MapView mapView;
-    GoogleMap mMap;
-    Marker marker;
-    UiSettings uiSettings;
+    private MapView mapView;
+    private GoogleMap mMap;
+    private Marker marker;
+    private UiSettings uiSettings;
 
-    private static FragmentTransaction fragmentTransaction;
-    private static FragmentManager fragmentManager;
-    private static Fragment fragment;
-
+    public static LatLng markerPosition;
 
     public static AddProblemFragment newInstance(){
-
         AddProblemFragment fragment = new AddProblemFragment();
         return fragment;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_addProblem));
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setRetainInstance(true);
+
         view = inflater.inflate(R.layout.add_problem_layout, container, false);
 
         mContext = getActivity();
@@ -105,14 +112,12 @@ public class AddProblemFragment extends Fragment{
         uiSettings.setMapToolbarEnabled(false);
         uiSettings.setMyLocationButtonEnabled(false);
 
-        if (EcoMapFragment.getMarkerPosition() != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(EcoMapFragment.getMarkerPosition(), 16));
+        if (markerPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, 16));
 
-            marker = mMap.addMarker(new MarkerOptions().draggable(true).position(EcoMapFragment.getMarkerPosition()));
+            marker = mMap.addMarker(new MarkerOptions().draggable(true).position(markerPosition));
             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         }
-
-        fragmentManager = getFragmentManager();
 
         return view;
     }
@@ -134,10 +139,14 @@ public class AddProblemFragment extends Fragment{
         problemTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
                 if (!hasFocus) {
                     if (problemTitle.getText().toString().isEmpty()) {
                         tilProblemTitle.setError(getString(R.string.problem_title_blank));
                         sendProblemButton.setClickable(false);
+                    } else {
+                        tilProblemTitle.setErrorEnabled(false);
+                        sendProblemButton.setClickable(true);
                     }
                 } else {
                     if (!problemTitle.getText().toString().isEmpty()) {
@@ -173,7 +182,7 @@ public class AddProblemFragment extends Fragment{
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                switchToEcoMapFragment();
+                ((MainActivity) getActivity()).selectItem(MainActivity.NAV_MAP);
             }
         });
 
@@ -204,8 +213,8 @@ public class AddProblemFragment extends Fragment{
                     params[4] = problemDescription.getText().toString();
                     params[5] = problemSolution.getText().toString();
                     params[6] = "1";
-                    params[7] = String.valueOf(EcoMapFragment.getMarkerPosition().latitude);
-                    params[8] = String.valueOf(EcoMapFragment.getMarkerPosition().longitude);
+                    params[7] = String.valueOf(markerPosition.latitude);
+                    params[8] = String.valueOf(markerPosition.longitude);
 
                     tilProblemTitle.setErrorEnabled(false);
 
@@ -242,14 +251,8 @@ public class AddProblemFragment extends Fragment{
         return nonScrollableListView;
     }
 
-    public static void switchToEcoMapFragment() {
-        String tag = EcoMapFragment.class.getSimpleName();
-        fragment = fragmentManager.findFragmentByTag(tag);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.content_frame, fragment);
-        fragmentTransaction.commit();
+    public static void setMarkerPosition(LatLng position){
+        markerPosition = position;
     }
 
 }
