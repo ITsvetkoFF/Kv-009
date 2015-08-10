@@ -1,5 +1,3 @@
-http://176.36.11.25:8090/#/map 
-
 login: admin@example.com pass:admin_pass
 
 new api https://github.com/ITsvetkoFF/Kv-008/blob/develop/ecomap/api/v1_0/urls.py
