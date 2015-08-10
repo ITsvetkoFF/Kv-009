@@ -28,7 +28,7 @@ public class EcoMapService extends IntentService {
     private int numCurrentRevision;
 
     // is this a first start of app and service?
-    private static boolean firstStart = true;
+    public static boolean firstStart = true;
 
     public EcoMapService() {
         super("EcoMapService");
@@ -46,7 +46,9 @@ public class EcoMapService extends IntentService {
             try {
 
                 numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(),getString(R.string.fileNamePreferences),getString(R.string.prefNumRevision), 0);
-
+                if(numCurrentRevision == 0){
+                    startService(new Intent(this, GetResourcesService.class));
+                }
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
                 final String REVISION_PARAM = "rev";
@@ -83,7 +85,7 @@ public class EcoMapService extends IntentService {
                 boolean dataUpdated = getProblemsFromJSON(JSONStr);
 
                 if (dataUpdated) {
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
+                    //LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
                     firstStart = false;
                 }
 
@@ -102,10 +104,10 @@ public class EcoMapService extends IntentService {
                 }
             }
         }
-        // if we're just rotated a device - app can start to draw map without checking revision
-        else {
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
-        }
+
+        //anyway draw problems from local db
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
+
     }
 
 
@@ -231,8 +233,7 @@ public class EcoMapService extends IntentService {
                 cVVector.toArray(cvArray);
                 this.getContentResolver().bulkInsert(EcoMapContract.ProblemsEntry.CONTENT_URI, cvArray);
             }
-
-            //update preferences
+            //update pnumCurrentRevisionreferences
             SharedPreferencesHelper.updateNumRevision(getApplicationContext(),numNewRevision);
 
             Log.i(LOG_TAG, "revision was updated!");

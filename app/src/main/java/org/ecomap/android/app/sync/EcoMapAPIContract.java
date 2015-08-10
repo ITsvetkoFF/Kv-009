@@ -11,6 +11,7 @@ public class EcoMapAPIContract {
     public static final String ECOMAP_HTTP_BASE_URL = ECOMAP_SERVER_URL + ":8000";
     public static final String ECOMAP_API_URL = ECOMAP_HTTP_BASE_URL + "/api";
     public static final String ECOMAP_BASE_URL = ECOMAP_API_URL + "/problems?";
+    public static final String ECOMAP_RESOURCES_URL = ECOMAP_API_URL + "/pages";
 
     public static final String COOKIE_USER_ID = "user_id";
 

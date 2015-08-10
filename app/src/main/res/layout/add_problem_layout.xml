@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/white"
+    android:id="@+id/addProblem"
     >
 
     <LinearLayout
@@ -87,13 +88,6 @@
                 android:prompt="@string/add_problem_type"
                 android:spinnerMode="dialog"/>
 
-            <org.ecomap.android.app.ui.components.NonScrollableListView
-                android:id="@+id/nonScrollableListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
-            </org.ecomap.android.app.ui.components.NonScrollableListView>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -102,12 +96,23 @@
 
         </LinearLayout>
 
+        <com.google.android.gms.maps.MapView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/littleMap"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            map:mapType="normal"
+            map:liteMode="true"/>
+
         <FrameLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:orientation="horizontal"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:background="@drawable/dotted_border" >
 
             <Button
@@ -121,32 +126,31 @@
 
         </FrameLayout>
 
+        <org.ecomap.android.app.ui.components.NonScrollableListView
+            android:id="@+id/nonScrollableListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+        </org.ecomap.android.app.ui.components.NonScrollableListView>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="right">
-
-            <Button
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:textColor="#ff0099cc"
-                android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/send_problem"
-                android:layout_toStartOf="@+id/send_problem"
-                style="?android:attr/borderlessButtonStyle" />
+            android:layout_gravity="right"
+            android:layout_marginTop="16dp">
 
             <Button
                 android:id="@+id/send_problem"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/send"
-                android:textColor="#ff0099cc"
+                android:textColor="@color/white"
+                android:background="@color/blue3"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                style="?android:attr/borderlessButtonStyle" />
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp" />
 
         </RelativeLayout>
     </LinearLayout>

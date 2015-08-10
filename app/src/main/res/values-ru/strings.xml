@@ -71,7 +71,7 @@
     <string name="problem_type_string_6">Браконьерство</string>
     <string name="problem_type_string_7">Прочие проблемы</string>
 
-    <string name="language_menu">Язык</string>
+    <string name="language">Язык</string>
     <string name="choose_language">Выберите язык</string>
     <string name="error_need_to_sign_in">Только авторизированые пользователи могут добавлять проблему. Войдите либо зарегестрируйтесь</string>
     <string name="reset">Сброс</string>
@@ -84,7 +84,7 @@
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
-    <string name="item_filters">Фильтры</string>
+    <string name="item_settings">Настройки</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
     <string name="uploading_photo">Загрузка фото...</string>
@@ -105,4 +105,10 @@
     <string name="reset_sort">Сброс</string>
     <string name="all_sort">Всего</string>
     <string name="problem_added">Проблема успешно добавлена</string>
+
+    <string name="nav_titles_underconstraction">В разработке</string>
+    <string name="filters_menu_item_title">Фильтры</string>
+    <string name="nav_titles_statistics">Статистика</string>
+    <string name="nav_titles_top10">Топ 10</string>
+    <string name="item_addProblem">Добавить проблему</string>
 </resources>

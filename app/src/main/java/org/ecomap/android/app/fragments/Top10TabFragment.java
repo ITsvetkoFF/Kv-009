@@ -1,7 +1,5 @@
 package org.ecomap.android.app.fragments;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -10,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.tabs.SlidingTabLayout;
 import org.ecomap.android.app.tabs.ViewPagerAdapter;
 
@@ -23,6 +20,7 @@ public class Top10TabFragment extends Fragment {
     SlidingTabLayout tabs;
     CharSequence Titles[]={"популярних","важливих ","обговорюваних"};
     int Numboftabs =3;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,8 +35,12 @@ public class Top10TabFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         v2 = inflater.inflate(R.layout.fragment_top10_tab, container, false);
+
+        getActivity().setTitle(getActivity().getString(R.string.nav_titles_top10));
+        //getActivity().invalidateOptionsMenu();
+
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-        adapter = new ViewPagerAdapter(getFragmentManager(),Titles,Numboftabs);
+        adapter = new ViewPagerAdapter(getFragmentManager(), Titles, Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) v2.findViewById(R.id.pager);

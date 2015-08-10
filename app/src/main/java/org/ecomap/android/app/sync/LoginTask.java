@@ -2,6 +2,7 @@ package org.ecomap.android.app.sync;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -68,6 +69,9 @@ public class LoginTask extends AsyncTask<String, Void, Void> {
 
                 //handling result from server
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+
+
                     StringBuilder responseBody = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 

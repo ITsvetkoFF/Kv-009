@@ -2,18 +2,18 @@
 <items version="2" >
 
     <item
-        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\Kv-009\LibrarySlidingLayer\unspecified\jars\classes.jar"
+        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\com.google.maps.android\android-maps-utils\0.4\jars\classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="f64ec84833cf30194fe5bee01ecf7104e57aa3d6">
-        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-44ffcba6560ca50dfaec0d520371c762f19435f4.jar" />
+        sha1="4b1a7fac58cc85b115adee653a10b6300f90951a">
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-99c80709ec99941f803d1907d7155547c8a59802.jar" />
     </item>
     <item
-        jar="C:\Users\SRV\.gradle\caches\modules-2\files-2.1\com.github.PhilJay\MPAndroidChart\v2.1.1\2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6\MPAndroidChart-v2.1.1.jar"
+        jar="D:\Projects\Kv-009\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.1\jars\classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="2aadc8d74456cd9ecd0de2dcdfd61e4ecb7451f6">
-        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\MPAndroidChart-v2.1.1-45dfa284efa497f6a14f3556a50dacf45ccf0f4b.jar" />
+        sha1="e1fa5e1123997a55e3ed65b44892993ff4b58cfe">
+        <dex dex="D:\Projects\Kv-009\app\build\intermediates\pre-dexed\debug\classes-3f066940d46b4843b549a7e178da03f946fca35a.jar" />
     </item>
 
 </items>

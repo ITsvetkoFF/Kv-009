@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.json.JSONObject;
@@ -115,15 +116,21 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         super.onPostExecute(aVoid);
 
         progressBar.dismiss();
+        EcoMapService.firstStart=true;
+
+        Intent intent = new Intent(mContext, EcoMapService.class);
+        mContext.startService(intent);
 
         new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG);
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
 
             new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
+            EcoMapFragment.disableAddProblemMode();
+
+            ((MainActivity) mContext).selectItem(MainActivity.NAV_MAP);
 
             sendPhoto(problemID);
-            AddProblemFragment.getCancelButton().setText(mContext.getString(R.string.exit));
         }
     }
 

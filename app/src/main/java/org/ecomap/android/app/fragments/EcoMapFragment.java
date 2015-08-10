@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -22,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -36,23 +39,32 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.CommentPhotoActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
+import org.ecomap.android.app.sync.AddProblemTask;
 import org.ecomap.android.app.sync.AddVoteTask;
 import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.sync.GetPhotosTask;
+import org.ecomap.android.app.sync.UploadPhotoTask;
 import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
+import org.ecomap.android.app.ui.components.NonScrollableListView;
+import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
+
+import me.iwf.photopicker.PhotoPickerActivity;
+import me.iwf.photopicker.utils.PhotoPickerIntent;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -76,31 +88,47 @@ public class EcoMapFragment extends Fragment {
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
     private LinearLayout showHead;
-    private Marker marker;
     public static CameraPosition cameraPosition;
 
-    private FloatingActionButton fabAddProblem, fabUkraine, fabToMe;
+    private static FloatingActionButton fabAddProblem;
+    private FloatingActionButton fabUkraine, fabToMe;
 
     private static LatLng markerPosition = null;
-    private MapClustering mapClusterer;
+    private static MapClustering mapClusterer;
     private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
-    public static boolean isOpenSlidingLayer = false, addProblemModeActivated;
+    private static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
-    Snackbar addProblemSnackbar;
+    private static Snackbar addProblemSnackbar;
+
+    private static boolean addproblemModeIsEnabled = false;
+
+    public static EcoMapFragment newInstance() {
+        EcoMapFragment ecoMapFragment = new EcoMapFragment();
+        return ecoMapFragment;
+    }
+
+    private Button addPhotoButton;
+    public static final int REQUEST_CODE = 1;
+    public static final int REQUEST_CODE_PHOTOS_ADDED = 2;
+    public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(tag, "onCreate");
+        setRetainInstance(true);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setRetainInstance(true);
         Log.i(tag, "onCreateView");
+
+        //getActivity().invalidateOptionsMenu();
 
         v = inflater.inflate(R.layout.map_layout_main, container, false);
         mapView = (MapView) v.findViewById(R.id.mapview);
@@ -112,8 +140,7 @@ public class EcoMapFragment extends Fragment {
 
         MapsInitializer.initialize(getActivity());
 
-        mMap = mapView.getMap();
-        mMap.setMyLocationEnabled(true);
+
         UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
         UISettings.setMyLocationButtonEnabled(false);
@@ -124,40 +151,12 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
 
-        fabAddProblem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MainActivity.isUserIdSet()) {
-
-                    if (mapClusterer.getMarker() == null) {
-                        setMarkerClickType(2);
-                        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
-
-                        addProblemSnackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setMarkerClickType(0);
-                                mapClusterer.deleteMarker();
-                                fabAddProblem.setImageResource(R.drawable.ic_add_white_24dp);
-                            }
-                        });
-
-                        addProblemSnackbar.show();
-
-                    } else {
-                        new AddProblemFragment().show(getFragmentManager(), "add_problem_layout");
-                    }
-                } else {
-                    signInAlertDialog();
-                }
-            }
-        });
-
         fabUkraine = (FloatingActionButton) v.findViewById(R.id.fabUkraine);
         fabUkraine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
+                mSlidingLayer.closeLayer(true);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5f));
             }
         });
 
@@ -167,7 +166,8 @@ public class EcoMapFragment extends Fragment {
             public void onClick(View v) {
                 Location loc = mMap.getMyLocation();
                 if (loc != null) {
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
+                    mSlidingLayer.closeLayer(true);
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(loc.getLatitude(), loc.getLongitude()), 14.0f));
                 }
             }
         });
@@ -184,22 +184,6 @@ public class EcoMapFragment extends Fragment {
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
-
-        /*showHead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-                // check if no view has focus:
-                View focusedView = getActivity().getCurrentFocus();
-
-                if (focusedView != null) {
-                    inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-                }
-
-            }
-        });*/
 
         mSlidingLayer.setOnInteractListener(new EcoMapSlidingLayer.OnInteractListener() {
             @Override
@@ -220,7 +204,6 @@ public class EcoMapFragment extends Fragment {
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
                 showTitle.setEllipsize(TextUtils.TruncateAt.END);
-
             }
 
             @Override
@@ -235,15 +218,12 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onPreviewShowed() {
-
             }
 
             @Override
             public void onClosed() {
                 isOpenSlidingLayer = false;
             }
-
-
         });
 
         if (isOpenSlidingLayer) {
@@ -264,13 +244,38 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
+        addPhotoButton = (Button) v.findViewById(R.id.add_photo);
+
+        addPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Send intent to library for picking photos
+                if (MainActivity.isUserIdSet()) {
+                    PhotoPickerIntent intent = new PhotoPickerIntent(mContext);
+                    intent.setPhotoCount(8);
+                    intent.setShowCamera(true);
+                    startActivityForResult(intent, REQUEST_CODE);
+                }else{
+                    signInAlertDialog();
+                }
+            }
+        });
+
         return v;
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_map));
         mapView.onResume();
+
+        if (cameraPosition != null){
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
+        getActivity().invalidateOptionsMenu();
 
         IntentFilter filter = new IntentFilter("Data");
         receiver = new EcoMapReceiver();
@@ -280,10 +285,39 @@ public class EcoMapFragment extends Fragment {
 
         addProblemSnackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
         View snackBarView = addProblemSnackbar.getView();
-        snackBarView.setBackgroundColor(getResources().getColor(R.color.accent));
+        snackBarView.setBackgroundColor(getResources().getColor(R.color.white));
         TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_action);
 
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(Color.RED);
+
+        addProblemSnackbar.setAction(getString(R.string.cancel), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                disableAddProblemMode();
+            }
+        });
+
+        fabAddProblem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (MainActivity.isUserIdSet()) {
+
+                    if (mapClusterer.getMarker() == null) {
+
+                        enableAddProblemMode();
+
+                    } else {
+
+                        ((MainActivity) getActivity()).selectItem(MainActivity.NAV_ADD_PROBLEM);
+
+                    }
+                } else {
+                    signInAlertDialog();
+                }
+            }
+        });
+
     }
 
     // saving map position for restoring after rotation or backstack
@@ -293,6 +327,7 @@ public class EcoMapFragment extends Fragment {
         cameraPosition = mMap.getCameraPosition();
         // unregistering receiver after pausing fragment
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
+
     }
 
     @Override
@@ -357,6 +392,15 @@ public class EcoMapFragment extends Fragment {
         cursor.close();
         mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, this);
         mapClusterer.setUpClusterer();
+
+        //for displaying marker and enableAddProblemMode() after screen rotation
+        if (markerPosition != null) {
+            mapClusterer.addMarkerToMap(markerPosition);
+        }
+
+        if (addproblemModeIsEnabled) {
+            enableAddProblemMode();
+        }
     }
 
     public static void setFilterCondition(String s) {
@@ -380,7 +424,7 @@ public class EcoMapFragment extends Fragment {
         markerPosition = position;
     }
 
-    public void fillSlidingPanel(final Problem problem) {
+    public void fillSlidingPanel(final Problem problem){
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 11.0f));
 
@@ -462,45 +506,57 @@ public class EcoMapFragment extends Fragment {
         alert.show();
     }
 
-    /*private void showTabLayout(){
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if (tabLayout != null){
-            tabLayout.removeAllTabs();
-            tabLayout.setVisibility(TabLayout.VISIBLE);
+        //Getting photo paths from lib
+        if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE) {
+            if (data != null) {
+                selectedPhotos.clear();
+                selectedPhotos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
+
+                if (selectedPhotos.size()>0){
+                    Intent intent = new Intent(mContext, CommentPhotoActivity.class);
+                    intent.putExtra("problem_id", lastOpenProblem.getId());
+                    intent.putExtra("selectedPhotos", selectedPhotos);
+                    startActivityForResult(intent, REQUEST_CODE_PHOTOS_ADDED);
+                }
+
+            }
+        }else if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE_PHOTOS_ADDED) {
+                ArrayList<ProblemPhotoEntry> photos = data.getParcelableArrayListExtra("photos");
+                for (ProblemPhotoEntry photo:photos){
+                    new UploadPhotoTask(mContext, lastOpenProblem.getId(), photo.getImgURL(), photo.getCaption()).execute();
+                }
+            new GetPhotosTask(this).execute(lastOpenProblem.getId());
         }
+    }
 
-        tabLayout = (TabLayout) v.findViewById(R.id.tabLayout);
+    public static CameraPosition getCameraPosition(){
+        return cameraPosition;
+    }
 
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabLayout.setBackgroundColor(getResources().getColor(R.color.primary));
-        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.secondary_text));
-        tabLayout.addTab(tabLayout.newTab().setText("Choose Location"));
-        tabLayout.addTab(tabLayout.newTab().setText("Add Description"));
+    private void enableAddProblemMode(){
+        addproblemModeIsEnabled = true;
+        setMarkerClickType(2);
 
-        viewPager = (ViewPager) v.findViewById(R.id.pager);
+        addProblemSnackbar.show();
+        fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
+    }
 
-        adapter = new PagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+    public static void disableAddProblemMode(){
+        addproblemModeIsEnabled = false;
+        setMarkerClickType(0);
 
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        mapClusterer.deleteMarker();
 
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+        addProblemSnackbar.dismiss();
+        fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
+    }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-    }*/
+    public static boolean isAddproblemModeIsEnabled() {
+        return addproblemModeIsEnabled;
+    }
 }
 

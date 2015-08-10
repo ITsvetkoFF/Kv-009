@@ -7,6 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +21,20 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.sync.AddProblemTask;
 import org.ecomap.android.app.sync.LoginTask;
 import org.ecomap.android.app.ui.components.NonScrollableListView;
@@ -30,7 +46,7 @@ import java.util.ArrayList;
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 
-public class AddProblemFragment extends DialogFragment{
+public class AddProblemFragment extends Fragment{
 
     private Context mContext;
     private View view;
@@ -48,7 +64,6 @@ public class AddProblemFragment extends DialogFragment{
     public AddPhotoImageAdapter imgAdapter;
     public static ArrayList<String> selectedPhotos = new ArrayList<>();
 
-    private static Button cancelButton;
     private Button sendProblemButton;
     private Button addPhotoButton;
 
@@ -56,16 +71,53 @@ public class AddProblemFragment extends DialogFragment{
     private int problemType;
     private String[] params;
 
-    public static AddProblemFragment newInstance(){
+    // added 03.08.15
+    private MapView mapView;
+    private GoogleMap mMap;
+    private Marker marker;
+    private UiSettings uiSettings;
 
+    public static LatLng markerPosition;
+
+    public static AddProblemFragment newInstance(){
         AddProblemFragment fragment = new AddProblemFragment();
         return fragment;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_addProblem));
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setRetainInstance(true);
+
         view = inflater.inflate(R.layout.add_problem_layout, container, false);
-        getDialog().setTitle(getString(R.string.add_problem_description));
+
+        mContext = getActivity();
+
+        mapView = (MapView) view.findViewById(R.id.littleMap);
+        mapView.onCreate(null);
+
+        MapsInitializer.initialize(mContext);
+
+        mMap = mapView.getMap();
+
+        uiSettings = mMap.getUiSettings();
+        uiSettings.setMapToolbarEnabled(false);
+        uiSettings.setMyLocationButtonEnabled(false);
+
+        if (markerPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, 16));
+
+            marker = mMap.addMarker(new MarkerOptions().draggable(true).position(markerPosition));
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        }
 
         return view;
     }
@@ -74,14 +126,11 @@ public class AddProblemFragment extends DialogFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mContext = getActivity();
-
         problemTitle = (EditText) view.findViewById(R.id.problemTitle);
         problemDescription = (EditText) view.findViewById(R.id.problemDescription);
         problemSolution = (EditText) view.findViewById(R.id.problemSolution);
 
         spinner = (Spinner) view.findViewById(R.id.spinner);
-        cancelButton = (Button) view.findViewById(R.id.cancel);
         sendProblemButton = (Button) view.findViewById(R.id.send_problem);
         addPhotoButton = (Button) view.findViewById(R.id.add_photo);
 
@@ -90,10 +139,14 @@ public class AddProblemFragment extends DialogFragment{
         problemTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
                 if (!hasFocus) {
                     if (problemTitle.getText().toString().isEmpty()) {
                         tilProblemTitle.setError(getString(R.string.problem_title_blank));
                         sendProblemButton.setClickable(false);
+                    } else {
+                        tilProblemTitle.setErrorEnabled(false);
+                        sendProblemButton.setClickable(true);
                     }
                 } else {
                     if (!problemTitle.getText().toString().isEmpty()) {
@@ -126,10 +179,10 @@ public class AddProblemFragment extends DialogFragment{
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onClick(View v) {
-                dismiss();
+            public void onMapClick(LatLng latLng) {
+                ((MainActivity) getActivity()).selectItem(MainActivity.NAV_MAP);
             }
         });
 
@@ -143,6 +196,8 @@ public class AddProblemFragment extends DialogFragment{
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
+
+
 
         sendProblemButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,8 +213,8 @@ public class AddProblemFragment extends DialogFragment{
                     params[4] = problemDescription.getText().toString();
                     params[5] = problemSolution.getText().toString();
                     params[6] = "1";
-                    params[7] = String.valueOf(EcoMapFragment.getMarkerPosition().latitude);
-                    params[8] = String.valueOf(EcoMapFragment.getMarkerPosition().longitude);
+                    params[7] = String.valueOf(markerPosition.latitude);
+                    params[8] = String.valueOf(markerPosition.longitude);
 
                     tilProblemTitle.setErrorEnabled(false);
 
@@ -196,8 +251,8 @@ public class AddProblemFragment extends DialogFragment{
         return nonScrollableListView;
     }
 
-    public static Button getCancelButton() {
-        return cancelButton;
+    public static void setMarkerPosition(LatLng position){
+        markerPosition = position;
     }
 
 }
