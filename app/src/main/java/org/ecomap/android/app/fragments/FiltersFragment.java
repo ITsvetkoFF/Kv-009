@@ -137,6 +137,7 @@ public class FiltersFragment extends ListFragment {
         resetBtn = (Button) mainView.findViewById(R.id.reset);
         startDate=(TextView) mainView.findViewById(R.id.start_date);
         endDate=(TextView)mainView.findViewById(R.id.end_date);
+        String finishDateForTextfield="";
 
         final Calendar c = Calendar.getInstance();
 
@@ -151,16 +152,27 @@ public class FiltersFragment extends ListFragment {
 
         if(!endDateInitialized) {
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            finishDate = sdf.format(c.getTime());
-
             endYear=c.get(Calendar.YEAR);
             endMonth=c.get(Calendar.MONTH);
             endDay=c.get(Calendar.DAY_OF_MONTH);
+
+            //this is needed because user will want to see problems what were added today.
+            //So we increase the day to see all the problems from the last day.
+            c.set(endYear, endMonth, endDay );
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            finishDateForTextfield = sdf.format(c.getTime());
+
+            //make a finish date for query. Need to make it one day more, to see the problems added today.
+            c.set(endYear, endMonth, endDay+1);
+            finishDate=sdf.format(c.getTime());
+
+
+
         }
 
         startDate.setText(beginDate);
-        endDate.setText(finishDate);
+        endDate.setText(finishDateForTextfield);
 
 
 
@@ -264,16 +276,18 @@ public class FiltersFragment extends ListFragment {
 
                             Calendar c = Calendar.getInstance();
                             c.set(year, monthOfYear, dayOfMonth);
+                            String dateForTextField;
 
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            finishDate = sdf.format(c.getTime());
+                            dateForTextField = sdf.format(c.getTime());
+                            c.set(year, monthOfYear, dayOfMonth+1);
 
                             endYear=year;
                             endMonth=monthOfYear;
                             endDay=dayOfMonth;
 
                             endDateInitialized=true;
-                            endDate.setText(finishDate);;
+                            endDate.setText(dateForTextField);
 
                         }
                     }, endYear, endMonth, endDay);

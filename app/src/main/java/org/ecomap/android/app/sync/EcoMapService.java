@@ -28,7 +28,7 @@ public class EcoMapService extends IntentService {
     private int numCurrentRevision;
 
     // is this a first start of app and service?
-    private static boolean firstStart = true;
+    public static boolean firstStart = true;
 
     public EcoMapService() {
         super("EcoMapService");
@@ -85,7 +85,7 @@ public class EcoMapService extends IntentService {
                 boolean dataUpdated = getProblemsFromJSON(JSONStr);
 
                 if (dataUpdated) {
-                    LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
+                    //LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
                     firstStart = false;
                 }
 
@@ -104,10 +104,10 @@ public class EcoMapService extends IntentService {
                 }
             }
         }
-        // if we're just rotated a device - app can start to draw map without checking revision
-        else {
-            LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
-        }
+
+        //anyway draw problems from local db
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
+
     }
 
 
