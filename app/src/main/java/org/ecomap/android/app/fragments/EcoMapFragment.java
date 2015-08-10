@@ -128,7 +128,6 @@ public class EcoMapFragment extends Fragment {
         setRetainInstance(true);
         Log.i(tag, "onCreateView");
 
-        getActivity().setTitle(getString(R.string.item_map));
         //getActivity().invalidateOptionsMenu();
 
         v = inflater.inflate(R.layout.map_layout_main, container, false);
@@ -268,6 +267,8 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_map));
         mapView.onResume();
 
         if (cameraPosition != null){

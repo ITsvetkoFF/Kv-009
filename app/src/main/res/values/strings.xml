@@ -115,6 +115,7 @@
     <string name="item_settings">Settings</string>
     <string name="item_resources">Resources</string>
     <string name="item_login">Login</string>
+    <string name="item_addProblem">Add Problem</string>
     <string name="add_comment">Add your comments here</string>
     <string name="filters_menu_item_title">Filters</string>
     <string name="nav_titles_underconstraction">Under construction</string>

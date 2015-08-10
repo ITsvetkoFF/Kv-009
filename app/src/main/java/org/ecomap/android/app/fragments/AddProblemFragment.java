@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,13 +80,23 @@ public class AddProblemFragment extends Fragment{
     public static LatLng markerPosition;
 
     public static AddProblemFragment newInstance(){
-
         AddProblemFragment fragment = new AddProblemFragment();
         return fragment;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_addProblem));
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setRetainInstance(true);
+
         view = inflater.inflate(R.layout.add_problem_layout, container, false);
 
         mContext = getActivity();
