@@ -110,4 +110,5 @@
     <string name="filters_menu_item_title">Фильтры</string>
     <string name="nav_titles_statistics">Статистика</string>
     <string name="nav_titles_top10">Топ 10</string>
+    <string name="want_delete_problem">Вы действительно хотите удалить эту проблему?</string>
 </resources>

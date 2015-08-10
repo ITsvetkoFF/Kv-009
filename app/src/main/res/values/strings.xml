@@ -34,6 +34,7 @@
 
     <string name="register_if_new">New to EcoMap? Register here</string>
     <string name="want_logout">Do you really want to logout?</string>
+    <string name="want_delete_problem">Do you really want to delete this problem?</string>
     <string name="change_password">Forgot your password? Change it!</string>
     <string name="write_comment">Write a comment...</string>
     <string name="have_problem">Houston, we have a problem!</string>

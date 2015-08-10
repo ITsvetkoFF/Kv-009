@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final String EMAIL_KEY = "email";
     public static final String ROLE_KEY = "role";
     public static final String PASSWORD_KEY = "password";
+    public static final String USER_ID_KEY = "user_id";
+    public static final String USER_PERMISSION_SET_KEY = "permissions_set";
     private String tag;
 
     public static final int NAV_MAP = R.id.map;
@@ -129,8 +131,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         fragmentsIndexes.put(SettingsFragment.class, 3);
         fragmentsIndexes.put(StaticPagesFragment.class, 4);
 
-
-
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -155,7 +155,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.LAST_NAME_KEY, ""),
                     SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.EMAIL_KEY, ""),
                     SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.PASSWORD_KEY, ""),
-                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.ROLE_KEY, ""));
+                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.ROLE_KEY, ""),
+                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.USER_ID_KEY, ""),
+                    SharedPreferencesHelper.getStringSetPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.USER_PERMISSION_SET_KEY, null));
         }
 
         // set a custom shadow that overlays the main content when the drawer opens

@@ -155,14 +155,14 @@ public class Problem implements ClusterItem, Parcelable {
 
     public String getUserDate(){
 
-        if (this.firstName.isEmpty()&&this.lastName.isEmpty()){
+        if (this.firstName.isEmpty() && this.lastName.isEmpty()){
 
             String no_name = "(" + mContext.getString(R.string.string_anonymous) + ")";
 
             return (no_name + ": " + date);
         }
 
-        return (firstName + " " + lastName + ": " + date);
+        return (firstName + ": " + date);
     }
 
     public String getContent(){

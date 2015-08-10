@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,9 +34,6 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.ClusterManager;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
@@ -69,14 +65,12 @@ public class EcoMapFragment extends Fragment {
     MapView mapView;
     private GoogleMap mMap;
     private UiSettings UISettings;
-    private ClusterManager<Problem> mClusterManager;
     private ArrayList<Problem> values;
     private View v;
     public EcoMapSlidingLayer mSlidingLayer;
-    private ImageView showTypeImage, showLike;
+    private ImageView showTypeImage, showLike, deleteProblem;
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
-    private LinearLayout showHead;
     public static CameraPosition cameraPosition;
 
     private static FloatingActionButton fabAddProblem;
@@ -166,9 +160,9 @@ public class EcoMapFragment extends Fragment {
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
-        showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+        deleteProblem = (ImageView) v.findViewById(R.id.action_delete_problem);
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
@@ -192,8 +186,8 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onOpen() {
                 //If onOpen, we show all lines of title
-                showTitle.setMaxLines(99);
-                showTitle.setEllipsize(null);
+                showTitle.setMaxLines(5);
+                showTitle.setEllipsize(TextUtils.TruncateAt.END);
 
                 //set scroll UP
                 detailedScrollView.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
@@ -301,7 +295,6 @@ public class EcoMapFragment extends Fragment {
                 }
             }
         });
-
     }
 
     // saving map position for restoring after rotation or backstack
@@ -456,6 +449,29 @@ public class EcoMapFragment extends Fragment {
                     Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
                 }
                 showNumOfLikes.setText(problem.getNumberOfLikes());
+            }
+        });
+
+        deleteProblem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                alert.setMessage(getString(R.string.want_delete_problem));
+                alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+
+                alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alert.show();
             }
         });
 
