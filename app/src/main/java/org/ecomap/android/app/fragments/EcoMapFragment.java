@@ -22,9 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -40,18 +38,17 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.CommentPhotoActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
-import org.ecomap.android.app.sync.AddProblemTask;
 import org.ecomap.android.app.sync.AddVoteTask;
+import org.ecomap.android.app.sync.DeleteTask;
 import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.sync.GetPhotosTask;
 import org.ecomap.android.app.sync.UploadPhotoTask;
 import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
-import org.ecomap.android.app.ui.components.NonScrollableListView;
-import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
@@ -252,7 +249,7 @@ public class EcoMapFragment extends Fragment {
                     intent.setPhotoCount(8);
                     intent.setShowCamera(true);
                     startActivityForResult(intent, REQUEST_CODE);
-                }else{
+                } else {
                     signInAlertDialog();
                 }
             }
@@ -469,28 +466,37 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        deleteProblem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                alert.setMessage(getString(R.string.want_delete_problem));
-                alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        if (User.canUserDeleteProblem(problem)){
+            deleteProblem.setVisibility(View.VISIBLE);
 
-                    }
-                });
+            deleteProblem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+                    alert.setMessage(getString(R.string.want_delete_problem));
+                    alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
+                                new DeleteTask(mContext).execute(String.valueOf(problem.getId()));
+                                mSlidingLayer.closeLayer(true);
+                            }
+                        }
+                    });
 
 
-                alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-                alert.show();
-            }
-        });
+                        }
+                    });
+                    alert.show();
+                }
+            });
+        }
+
+
 
         //comments
         FragmentManager chFm = getChildFragmentManager();

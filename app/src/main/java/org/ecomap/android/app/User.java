@@ -87,12 +87,14 @@ public class User {
 
     public static boolean canUserDeleteProblem(Problem p){
 
-        for (String s : set){
-            if (s.contains("ProblemHandler:DELETE")){
-                if (userId == p.userId){
-                    return (s.contains("OWN") || s.contains("ANY"));
-                } else {
-                    return s.contains("ANY");
+        if (user != null) {
+            for (String s : set) {
+                if (s.contains("ProblemHandler:DELETE")) {
+                    if (userId == p.userId) {
+                        return (s.contains("OWN") || s.contains("ANY"));
+                    } else {
+                        return s.contains("ANY");
+                    }
                 }
             }
         }
