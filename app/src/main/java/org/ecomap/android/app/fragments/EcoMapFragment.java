@@ -94,11 +94,12 @@ public class EcoMapFragment extends Fragment {
 
     private static Snackbar addProblemSnackbar;
 
-    private static Fragment addProblemFragment;
-    private static FragmentManager fragmentManager;
-    private static FragmentTransaction fragmentTransaction;
-
     private static boolean addproblemModeIsEnabled = false;
+
+    public static EcoMapFragment newInstance() {
+        EcoMapFragment ecoMapFragment = new EcoMapFragment();
+        return ecoMapFragment;
+    }
 
     private Button addPhotoButton;
     public static final int REQUEST_CODE = 1;
@@ -118,7 +119,6 @@ public class EcoMapFragment extends Fragment {
         setRetainInstance(true);
         Log.i(tag, "onCreateView");
 
-        getActivity().setTitle(getString(R.string.item_map));
         //getActivity().invalidateOptionsMenu();
 
         v = inflater.inflate(R.layout.map_layout_main, container, false);
@@ -141,9 +141,6 @@ public class EcoMapFragment extends Fragment {
 
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
-
-        fragmentManager = getFragmentManager();
-
 
         fabUkraine = (FloatingActionButton) v.findViewById(R.id.fabUkraine);
         fabUkraine.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +258,8 @@ public class EcoMapFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_map));
         mapView.onResume();
 
         if (cameraPosition != null){
@@ -301,7 +300,7 @@ public class EcoMapFragment extends Fragment {
 
                     } else {
 
-                        switchToAddProblemFragment();
+                        ((MainActivity) getActivity()).selectItem(MainActivity.NAV_ADD_PROBLEM);
 
                     }
                 } else {
@@ -316,7 +315,6 @@ public class EcoMapFragment extends Fragment {
     public void onPause() {
         super.onPause();
         cameraPosition = mMap.getCameraPosition();
-//        savedPosition = getMarkerPosition();
         // unregistering receiver after pausing fragment
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
 
@@ -573,23 +571,14 @@ public class EcoMapFragment extends Fragment {
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
-        addProblemFragment = null;
         mapClusterer.deleteMarker();
 
         addProblemSnackbar.dismiss();
         fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
     }
 
-    public static void switchToAddProblemFragment() {
-        if (addProblemFragment == null) {
-            addProblemFragment = new AddProblemFragment();
-        }
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.add(R.id.content_frame, addProblemFragment);
-        fragmentTransaction.commit();
+    public static boolean isAddproblemModeIsEnabled() {
+        return addproblemModeIsEnabled;
     }
 }
 

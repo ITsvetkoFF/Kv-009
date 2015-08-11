@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.json.JSONObject;
@@ -126,7 +127,8 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
             new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
             EcoMapFragment.disableAddProblemMode();
-            AddProblemFragment.switchToEcoMapFragment();
+
+            ((MainActivity) mContext).selectItem(MainActivity.NAV_MAP);
 
             sendPhoto(problemID);
         }
