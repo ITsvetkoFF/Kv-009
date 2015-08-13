@@ -86,7 +86,7 @@ public class EcoMapFragment extends Fragment {
     private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
-    private static boolean isOpenSlidingLayer = false;
+    public static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
     private Snackbar addProblemSnackbar;
@@ -188,7 +188,6 @@ public class EcoMapFragment extends Fragment {
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
                 showTitle.setEllipsize(TextUtils.TruncateAt.END);
-                isOpenSlidingLayer = true;
             }
 
             @Override
@@ -212,11 +211,6 @@ public class EcoMapFragment extends Fragment {
                 getActivity().invalidateOptionsMenu();
             }
         });
-
-        if (isOpenSlidingLayer) {
-            mSlidingLayer.openPreview(true);
-            fillSlidingPanel(lastOpenProblem);
-        }
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -392,6 +386,11 @@ public class EcoMapFragment extends Fragment {
         if (addproblemModeIsEnabled) {
             enableAddProblemMode();
         }
+
+        if (isOpenSlidingLayer) {
+            mSlidingLayer.openPreview(true);
+            fillSlidingPanel(lastOpenProblem);
+        }
     }
 
     public static void setFilterCondition(String s) {
@@ -420,6 +419,7 @@ public class EcoMapFragment extends Fragment {
         if (mMap.getCameraPosition().zoom < 13.0f) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 13.0f));
         }
+        cameraPosition = new CameraPosition(problem.getPosition(),11.0f,0.0f,0.0f);
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
