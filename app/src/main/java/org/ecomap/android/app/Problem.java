@@ -11,28 +11,14 @@ import com.google.maps.android.clustering.ClusterItem;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
-import java.util.Set;
-
 /**
  * Created by Stanislav on 23.06.2015.
  */
 public class Problem implements ClusterItem, Parcelable {
     LatLng mPos;
 
-    int id;
-    String mTitle;
-    int type_id;
-    int res_id;
-    String status;
-    String first_name;
-    String last_name;
-    String severity;
-    int number_of_votes;
-    String date;
-    String content;
-    String proposal;
-    int region_id;
-    int number_of_comments;
+    int id, typeId, resId, numberOfVotes, regionId, numberOfComments, userId;
+    String mTitle, status, firstName, lastName, severity, date, content, proposal;
 
     boolean liked;
 
@@ -52,18 +38,18 @@ public class Problem implements ClusterItem, Parcelable {
 
         this.mTitle = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
-        this.type_id = cursor.getInt(cursor
+        this.typeId = cursor.getInt(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID));
         this.mContext = mContext;
         this.status = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_STATUS));
-        this.first_name = cursor.getString(cursor
+        this.firstName = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_USER_FIRST_NAME));
-        this.last_name = cursor.getString(cursor
+        this.lastName = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_USER_LAST_NAME));
         this.severity = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY));
-        this.number_of_votes = cursor.getInt(cursor
+        this.numberOfVotes = cursor.getInt(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES));
         this.date = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_DATE));
@@ -71,10 +57,11 @@ public class Problem implements ClusterItem, Parcelable {
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_CONTENT));
         this.proposal = cursor.getString(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROPOSAL));
-        this.region_id = cursor.getInt(cursor
+        this.regionId = cursor.getInt(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID));
-        this.number_of_comments = cursor.getInt(cursor
+        this.numberOfComments = cursor.getInt(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER));
+        this.userId = cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_USER_ID));
 
         chooseIcon();
     }
@@ -92,40 +79,40 @@ public class Problem implements ClusterItem, Parcelable {
     }
 
     public void chooseIcon() {
-        switch (type_id) {
+        switch (typeId) {
             case 1:
-                res_id = R.drawable.type_1;
+                resId = R.drawable.type_1;
                 break;
             case 2:
-                res_id = R.drawable.type_2;
+                resId = R.drawable.type_2;
                 break;
             case 3:
-                res_id = R.drawable.type_3;
+                resId = R.drawable.type_3;
                 break;
             case 4:
-                res_id = R.drawable.type_4;
+                resId = R.drawable.type_4;
                 break;
             case 5:
-                res_id = R.drawable.type_5;
+                resId = R.drawable.type_5;
                 break;
             case 6:
-                res_id = R.drawable.type_6;
+                resId = R.drawable.type_6;
                 break;
             case 7:
-                res_id = R.drawable.type_7;
+                resId = R.drawable.type_7;
                 break;
             default:
-                res_id = R.drawable.type_7;
+                resId = R.drawable.type_7;
                 break;
         }
     }
 
-    public int getRes_id(){
-        return res_id;
+    public int getResId(){
+        return resId;
     }
 
     public int getResBigImage(){
-        switch (type_id) {
+        switch (typeId) {
             case 1:
                 return R.drawable.problem_type_1_3x;
             case 2:
@@ -146,7 +133,7 @@ public class Problem implements ClusterItem, Parcelable {
     }
 
     public String getTypeString(){
-        switch (type_id) {
+        switch (typeId) {
             case 1:
                 return mContext.getString(R.string.problem_type_string_1);
             case 2:
@@ -168,14 +155,14 @@ public class Problem implements ClusterItem, Parcelable {
 
     public String getUserDate(){
 
-        if (this.first_name.isEmpty()&&this.last_name.isEmpty()){
+        if (this.firstName.isEmpty() && this.lastName.isEmpty()){
 
             String no_name = "(" + mContext.getString(R.string.string_anonymous) + ")";
 
             return (no_name + ": " + date);
         }
 
-        return (first_name + " " + last_name + ": " + date);
+        return (firstName + ": " + date);
     }
 
     public String getContent(){
@@ -183,11 +170,11 @@ public class Problem implements ClusterItem, Parcelable {
     }
 
     public String getNumberOfLikes(){
-        return String.valueOf(number_of_votes);
+        return String.valueOf(numberOfVotes);
     }
 
     public void setNumberOfLikes(int numb){
-        number_of_votes += numb;
+        numberOfVotes += numb;
     }
 
     public void setLiked(boolean liked){
@@ -219,18 +206,18 @@ public class Problem implements ClusterItem, Parcelable {
     protected Problem(Parcel in) {
         mPos = (LatLng) in.readValue(LatLng.class.getClassLoader());
         mTitle = in.readString();
-        type_id = in.readInt();
-        res_id = in.readInt();
+        typeId = in.readInt();
+        resId = in.readInt();
         status = in.readString();
-        first_name = in.readString();
-        last_name = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
         severity = in.readString();
-        number_of_votes = in.readInt();
+        numberOfVotes = in.readInt();
         date = in.readString();
         content = in.readString();
         proposal = in.readString();
-        region_id = in.readInt();
-        number_of_comments = in.readInt();
+        regionId = in.readInt();
+        numberOfComments = in.readInt();
         liked = in.readByte() != 0x00;
     }
 
@@ -243,18 +230,18 @@ public class Problem implements ClusterItem, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(mPos);
         dest.writeString(mTitle);
-        dest.writeInt(type_id);
-        dest.writeInt(res_id);
+        dest.writeInt(typeId);
+        dest.writeInt(resId);
         dest.writeString(status);
-        dest.writeString(first_name);
-        dest.writeString(last_name);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
         dest.writeString(severity);
-        dest.writeInt(number_of_votes);
+        dest.writeInt(numberOfVotes);
         dest.writeString(date);
         dest.writeString(content);
         dest.writeString(proposal);
-        dest.writeInt(region_id);
-        dest.writeInt(number_of_comments);
+        dest.writeInt(regionId);
+        dest.writeInt(numberOfComments);
         dest.writeByte((byte) (liked ? 0x01 : 0x00));
     }
 

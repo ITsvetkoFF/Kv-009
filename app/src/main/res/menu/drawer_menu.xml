@@ -22,12 +22,6 @@
             android:title="@string/item_top10" />
 
         <item
-            android:id="@+id/settings"
-            android:checked="false"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/item_settings" />
-
-        <item
             android:id="@+id/resourses"
             android:checked="false"
             android:icon="@drawable/ic_resouces"

@@ -14,7 +14,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -22,11 +21,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,9 +34,6 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.ClusterManager;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
@@ -48,17 +41,15 @@ import org.ecomap.android.app.activities.CommentPhotoActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
-import org.ecomap.android.app.sync.AddProblemTask;
 import org.ecomap.android.app.sync.AddVoteTask;
 import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.sync.GetPhotosTask;
 import org.ecomap.android.app.sync.UploadPhotoTask;
 import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
-import org.ecomap.android.app.ui.components.NonScrollableListView;
-import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
@@ -80,14 +71,12 @@ public class EcoMapFragment extends Fragment {
     MapView mapView;
     private GoogleMap mMap;
     private UiSettings UISettings;
-    private ClusterManager<Problem> mClusterManager;
     private ArrayList<Problem> values;
     private View v;
     public EcoMapSlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
-    private LinearLayout showHead;
     public static CameraPosition cameraPosition;
 
     private static FloatingActionButton fabAddProblem;
@@ -179,9 +168,9 @@ public class EcoMapFragment extends Fragment {
         showContent = (TextView) v.findViewById(R.id.show_content);
         showProposal = (TextView) v.findViewById(R.id.show_proposal);
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
-        showHead = (LinearLayout) v.findViewById(R.id.show_head);
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+        //deleteProblem = (ImageView) v.findViewById(R.id.action_delete_problem);
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
 
@@ -189,12 +178,13 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onOpen() {
                 //If onOpen, we show all lines of title
-                showTitle.setMaxLines(99);
-                showTitle.setEllipsize(null);
+                showTitle.setMaxLines(5);
+                showTitle.setEllipsize(TextUtils.TruncateAt.END);
 
                 //set scroll UP
                 detailedScrollView.fullScroll(View.FOCUS_UP);//if you move at the end of the scroll
                 detailedScrollView.pageScroll(View.FOCUS_UP);//if you move at the middle of the scroll
+                isOpenSlidingLayer = true;
 
             }
 
@@ -204,6 +194,7 @@ public class EcoMapFragment extends Fragment {
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
                 showTitle.setEllipsize(TextUtils.TruncateAt.END);
+                isOpenSlidingLayer = true;
             }
 
             @Override
@@ -223,6 +214,8 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClosed() {
                 isOpenSlidingLayer = false;
+                MainActivity.currentProblem = null;
+                getActivity().invalidateOptionsMenu();
             }
         });
 
@@ -255,7 +248,7 @@ public class EcoMapFragment extends Fragment {
                     intent.setPhotoCount(8);
                     intent.setShowCamera(true);
                     startActivityForResult(intent, REQUEST_CODE);
-                }else{
+                } else {
                     signInAlertDialog();
                 }
             }
@@ -270,10 +263,6 @@ public class EcoMapFragment extends Fragment {
 
         getActivity().setTitle(getString(R.string.item_map));
         mapView.onResume();
-
-        if (cameraPosition != null){
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
 
         getActivity().invalidateOptionsMenu();
 
@@ -317,7 +306,6 @@ public class EcoMapFragment extends Fragment {
                 }
             }
         });
-
     }
 
     // saving map position for restoring after rotation or backstack
@@ -327,6 +315,9 @@ public class EcoMapFragment extends Fragment {
         cameraPosition = mMap.getCameraPosition();
         // unregistering receiver after pausing fragment
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
+
+        //mSlidingLayer.closeLayer(true);
+        MainActivity.currentProblem = null;
 
     }
 
@@ -359,6 +350,10 @@ public class EcoMapFragment extends Fragment {
     private void setUpMap() {
         Log.i(tag, "set up map");
 
+        if (cameraPosition != null){
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
         if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
                 .isNetworkAvailable()) {
             //Start service to get a new number of revision and new data
@@ -375,6 +370,12 @@ public class EcoMapFragment extends Fragment {
         if (filterCondition == null){
             filterCondition = "";
         }
+
+        if (cameraPosition != null){
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+
+
         Log.i(tag, "fillmap with condition" + filterCondition);
 
         values.clear();
@@ -384,7 +385,6 @@ public class EcoMapFragment extends Fragment {
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null);
 
         while (cursor.moveToNext()) {
-
             Problem p = new Problem(cursor, getActivity());
             values.add(p);
         }
@@ -426,7 +426,9 @@ public class EcoMapFragment extends Fragment {
 
     public void fillSlidingPanel(final Problem problem){
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 11.0f));
+        if (mMap.getCameraPosition().zoom < 13.0f) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 13.0f));
+        }
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
@@ -455,24 +457,70 @@ public class EcoMapFragment extends Fragment {
         showLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!problem.isLiked()) {
-                    problem.setNumberOfLikes(1);
-                    problem.setLiked(true);
+                if (MainActivity.isUserIsAuthorized()) {
+                    if (!problem.isLiked()) {
+                        problem.setNumberOfLikes(1);
+                        problem.setLiked(true);
 
-                    new AddVoteTask().execute(problem.getId());
+                        new AddVoteTask().execute(problem.getId());
 
-                    showLike.setImageResource(R.drawable.heart_icon);
+                        showLike.setImageResource(R.drawable.heart_icon);
 
-                    Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
 
-                } else if (problem.isLiked()) {
-                    //problem.setNumberOfLikes(-1);
-                    //problem.setLiked(false);
-                    Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
+                    } else if (problem.isLiked()) {
+                        //problem.setNumberOfLikes(-1);
+                        //problem.setLiked(false);
+                        Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
+                    }
+                    showNumOfLikes.setText(problem.getNumberOfLikes());
+                } else {
+                    SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_vote, Snackbar.LENGTH_SHORT);
                 }
-                showNumOfLikes.setText(problem.getNumberOfLikes());
             }
         });
+
+        MainActivity.currentProblem = problem;
+        MainActivity.slidingLayer = mSlidingLayer;
+        cameraPosition = mMap.getCameraPosition();
+        getActivity().invalidateOptionsMenu();
+
+//        if (User.canUserDeleteProblem(problem)){
+//            deleteProblem.setVisibility(View.VISIBLE);
+//
+//            deleteProblem.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+//
+//                    cameraPosition = mMap.getCameraPosition();
+//
+//                    alert.setMessage(getString(R.string.want_delete_problem));
+//                    alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
+//                                new DeleteTask(mContext).execute(String.valueOf(problem.getId()));
+//                                mSlidingLayer.closeLayer(true);
+//                            }
+//                        }
+//                    });
+//
+//
+//                    alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//
+//                        }
+//                    });
+//                    alert.show();
+//                }
+//            });
+//        } else {
+//            deleteProblem.setVisibility(View.INVISIBLE);
+//        }
+
+
 
         //comments
         FragmentManager chFm = getChildFragmentManager();
