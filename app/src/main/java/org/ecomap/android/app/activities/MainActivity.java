@@ -43,6 +43,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -124,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static Problem currentProblem;
     public static EcoMapSlidingLayer slidingLayer;
 
+    private EcoMapFragment ecoMapFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,9 +143,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         setContentView(R.layout.activity_main);
 
         mContext = this;
-
-
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -227,7 +227,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     protected void onResume() {
         super.onResume();
 
-
+        mFragment = mFragmentManager.findFragmentByTag(EcoMapFragment.class.getSimpleName());
+        ecoMapFragment = (EcoMapFragment)mFragment;
     }
 
     @Override
@@ -351,8 +352,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
             EcoMapFragment frag = (EcoMapFragment)mFragment;
 
-            if (EcoMapFragment.isAddproblemModeIsEnabled()) {
-                EcoMapFragment.disableAddProblemMode();
+            if (frag.isAddproblemModeIsEnabled()) {
+                frag.disableAddProblemMode();
+                return;
             }
 
             if(frag.mSlidingLayer.isOpened()) {
@@ -497,10 +499,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 mFragment = mFragmentManager.findFragmentByTag(tag);
 
                 if (mFragment == null) {
-                    mFragment = AddProblemFragment.newInstance();
+                    mFragment = new AddProblemFragment();
                 }
 
-                AddProblemFragment.setMarkerPosition(EcoMapFragment.getMarkerPosition());
+                ((AddProblemFragment)mFragment).setMarkerPosition(ecoMapFragment.getMarkerPosition());
 
                 invalidateOptionsMenu();
 
@@ -589,6 +591,32 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             Log.e(LOG_TAG, e.getMessage(), e);
         }
     }
+
+    public void deleteAddproblemFragment() {
+        tag = AddProblemFragment.class.getSimpleName();
+
+        mFragment = mFragmentManager.findFragmentByTag(tag);
+
+        if (mFragment != null) {
+
+            if (((AddProblemFragment)mFragment).mustBeRemoved()) {
+
+                FragmentTransaction transaction = mFragmentManager.beginTransaction();
+                transaction.remove(mFragment);
+
+                mFragmentManager.popBackStackImmediate();
+                transaction.commit();
+                mFragmentManager.popBackStackImmediate();
+
+                mFragment = null;
+            }
+        }
+    }
+
+    public void disableAddProblemMode() {
+        ecoMapFragment.disableAddProblemMode();
+    }
+
     private boolean checkPlayServices() {
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (status != ConnectionResult.SUCCESS) {

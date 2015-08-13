@@ -92,13 +92,6 @@ public class MapClustering {
 
 
                     addMarkerToMap(latLng);
-/*
-                    marker = mMap.addMarker(new MarkerOptions().draggable(true).position(latLng));
-                    marker.setTitle(mContext.getString(R.string.have_problem));
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-
-                    EcoMapFragment.setMarkerPosition(latLng);
-*/
                 }
             }
         });
@@ -155,7 +148,7 @@ public class MapClustering {
         if (marker != null) {
             marker.remove();
             marker = null;
-            EcoMapFragment.setMarkerPosition(null);
+            ecoMapFragment.setMarkerPosition(null);
         }
     }
 
@@ -173,6 +166,6 @@ public class MapClustering {
         marker.setTitle(mContext.getString(R.string.have_problem));
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-        EcoMapFragment.setMarkerPosition(marker.getPosition());
+        ecoMapFragment.setMarkerPosition(marker.getPosition());
     }
 }
