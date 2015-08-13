@@ -9,6 +9,13 @@
         <item>Увійти</item>
     </string-array>
 
+    <string-array name="supported_languages">
+        <item>Мова приладу</item>
+        <item>English</item>
+        <item>Русский</item>
+        <item>Українська</item>
+    </string-array>
+
     <string-array name="types">
         <item>Проблеми лісів</item>
         <item>Свалка</item>
@@ -112,4 +119,6 @@
     <string name="nav_titles_top10">Топ 10</string>
     <string name="want_delete_problem">Ви насправді хочете видалити цю проблему?</string>
     <string name="item_addProblem">Додати проблему</string>
+    <string name="message_log_in_to_vote">Увійдіть, щоб голосувати</string>
+    <string name="refresh_database_now">Оновити базу даних</string>
 </resources>

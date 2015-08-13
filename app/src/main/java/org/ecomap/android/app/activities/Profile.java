@@ -67,6 +67,8 @@ public class Profile extends AppCompatActivity {
 
                         SharedPreferencesHelper.onLogOutClearPref(Profile.this);
 
+                        User.deleteUserInstance();
+
                         onBackPressed();
                     }
                 });

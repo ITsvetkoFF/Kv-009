@@ -19,6 +19,13 @@
         <item>Other issues</item>
     </string-array>
 
+    <string-array name="supported_languages">
+        <item>Device language</item>
+        <item>English</item>
+        <item>Русский</item>
+        <item>Українська</item>
+    </string-array>
+
     <string name="message_you_are_logged">You are already logged in</string>
     <string name="first_name_blank">First name cannot be blank</string>
     <string name="second_name_blank">Second name cannot be blank</string>
@@ -29,6 +36,7 @@
     <string name="check_internet">Check internet connection please</string>
     <string name="connecting_server">Connecting Ecomap server</string>
     <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
+    <string name="message_log_in_to_vote">Log in to vote for problems</string>
     <string name="message_isLiked">Vote added</string>
     <string name="message_isAlreadyLiked">You have already vote for this problem</string>
 
@@ -73,6 +81,7 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="post">Post</string>
+    <string name="refresh_database_now">Refresh problem\'s database</string>
 
     <string name="problem_type_string_1">Forestry issues</string>
     <string name="problem_type_string_2">Rubbish dump</string>
@@ -92,13 +101,6 @@
     <!---->
 
     <!--Do not translate!-->
-    <string-array name="supported_languages" translatable="false">
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
-
-
 
     <string name="app_name" translatable="false">EcoMap</string>
     <string name="shared_preferences_title" translatable="false">ecomap</string>

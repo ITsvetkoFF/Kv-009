@@ -101,4 +101,8 @@ public class User {
 
         return false;
     }
+
+    public static void deleteUserInstance(){
+        user = null;
+    }
 }

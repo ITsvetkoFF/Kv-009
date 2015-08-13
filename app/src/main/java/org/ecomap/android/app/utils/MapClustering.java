@@ -47,10 +47,8 @@ public class MapClustering {
 
     public void setUpClusterer() {
         if(cameraPosition != null){
-
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-
         else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
         }
