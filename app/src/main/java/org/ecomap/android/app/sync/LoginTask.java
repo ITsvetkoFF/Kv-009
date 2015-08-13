@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
@@ -16,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Set;
 
 /**
  * Created by Stanislav on 27.07.2015.
@@ -83,14 +85,19 @@ public class LoginTask extends AsyncTask<String, Void, Void> {
 
                     JSONObject data = new JSONObject(responseBody.toString());
 
+                    Set<String> set = User.getSetFromJSONArray(data.getJSONArray("user_perms"));
+
                     SharedPreferencesHelper.onLogInSavePref(mContext, data.get("first_name").toString(),
                             data.get("last_name").toString(),
-                            params[0],
-                            params[1]);
+                            params[0], params[1], data.get("user_roles").toString(),
+                            data.get("user_id").toString(), set);
 
                     MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
 
                     String fileNamePref = loginFragment.getResources().getString(R.string.fileNamePreferences);
+
+                    User.getInstance(data.get("first_name").toString(), data.get("last_name").toString(),
+                            params[0], params[1], data.get("user_roles").toString(), data.get("user_id").toString(), set);
 
                     resMessage = "Hello " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.FIRST_NAME_KEY, "")
                             + " " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.LAST_NAME_KEY, "") + "!";

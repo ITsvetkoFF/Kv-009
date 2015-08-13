@@ -147,6 +147,7 @@ public class EcoMapService extends IntentService {
                 String proposal;
                 int region_id;
                 int number_of_comments;
+                Integer user_id;
 
                 String action;
 
@@ -199,6 +200,12 @@ public class EcoMapService extends IntentService {
                         number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES);
                     }
 
+                    if(obj.isNull(EcoMapAPIContract.USER_ID)){
+                        user_id = -1;
+                    } else {
+                        user_id = obj.getInt(EcoMapAPIContract.USER_ID);
+                    }
+
                     date               = obj.getString(EcoMapAPIContract.DATE);
                     content            = obj.getString(EcoMapAPIContract.CONTENT);
                     proposal           = obj.getString(EcoMapAPIContract.PROPOSAL);
@@ -222,6 +229,7 @@ public class EcoMapService extends IntentService {
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_PROPOSAL, proposal);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID, region_id);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER, number_of_comments);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_USER_ID, user_id);
 
                     cVVector.add(mapValues);
                 }
