@@ -17,6 +17,7 @@
 package org.ecomap.android.app.activities;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,7 +41,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.ecomap.android.app.PersistentCookieStore;
@@ -111,9 +115,11 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private FragmentManager mFragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
+    static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
     private MenuItem filtersMenuItem, deleteMenuItem;
     private boolean savedInstanceStateNull = false;
+    private int firstLoadedFragment;
 
     public static Problem currentProblem;
     public static EcoMapSlidingLayer slidingLayer;
@@ -121,9 +127,22 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(checkPlayServices())
+        {
+            firstLoadedFragment=NAV_MAP;
+        }
+        else
+        {
+            firstLoadedFragment=NAV_FILTERS;
+        }
+
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
+
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -198,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         mFragmentManager = getSupportFragmentManager();
 
         if (savedInstanceState == null) {
-            selectItem(NAV_MAP);
+            selectItem(firstLoadedFragment);
         }
 
         invalidateOptionsMenu();
@@ -207,6 +226,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     protected void onResume() {
         super.onResume();
+
+
     }
 
     @Override
@@ -391,6 +412,19 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         filterCondition = s;
         selectItem(NAV_MAP);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_RECOVER_PLAY_SERVICES:
+                if (resultCode == RESULT_CANCELED) {
+                    Toast.makeText(this, "Google Play Services must be installed.",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     public  void selectItem(int position) {
         // update the main content by replacing fragments
@@ -555,4 +589,31 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             Log.e(LOG_TAG, e.getMessage(), e);
         }
     }
+    private boolean checkPlayServices() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (status != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(status)) {
+                showErrorDialog(status);
+            } else {
+                Toast.makeText(this, "This device is not supported.",
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+    void showErrorDialog(int code) {
+        GooglePlayServicesUtil.getErrorDialog(code, this,
+                REQUEST_CODE_RECOVER_PLAY_SERVICES, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        finish();
+                    }
+                }).show();
+
+    }
+
+
 }
