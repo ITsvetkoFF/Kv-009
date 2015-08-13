@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 import java.util.Random;
@@ -66,6 +67,8 @@ public class Profile extends AppCompatActivity {
 
                         SharedPreferencesHelper.onLogOutClearPref(Profile.this);
 
+                        User.deleteUserInstance();
+
                         onBackPressed();
                     }
                 });
@@ -81,9 +84,10 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        firstName.setText(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.FIRST_NAME_KEY, ""));
-        lastName.setText(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.LAST_NAME_KEY, ""));
-        email.setText(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.EMAIL_KEY, ""));
+        firstName.setText(User.getFirstName());
+        lastName.setText(User.getLastName());
+        email.setText(User.getEmail());
+        role.setText(User.getRole());
     }
 
     @Override

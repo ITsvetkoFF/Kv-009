@@ -9,6 +9,13 @@
         <item>Войти</item>
     </string-array>
 
+    <string-array name="supported_languages">
+        <item>Язык устройства</item>
+        <item>English</item>
+        <item>Русский</item>
+        <item>Українська</item>
+    </string-array>
+
     <string-array name="types">
         <item>Проблемы лесов</item>
         <item>Свалка</item>
@@ -111,4 +118,7 @@
     <string name="nav_titles_statistics">Статистика</string>
     <string name="nav_titles_top10">Топ 10</string>
     <string name="item_addProblem">Добавить проблему</string>
+    <string name="want_delete_problem">Вы действительно хотите удалить эту проблему?</string>
+    <string name="message_log_in_to_vote">Войдите чтобы голосовать</string>
+    <string name="refresh_database_now">Обновить базу данных</string>
 </resources>
