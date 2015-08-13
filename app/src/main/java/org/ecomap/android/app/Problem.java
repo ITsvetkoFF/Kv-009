@@ -169,6 +169,14 @@ public class Problem implements ClusterItem, Parcelable {
         return content;
     }
 
+    public String getSeverity() {
+        return severity;
+    }
+
+    public int getNumber_of_comments() {
+        return numberOfComments;
+    }
+
     public String getNumberOfLikes(){
         return String.valueOf(numberOfVotes);
     }

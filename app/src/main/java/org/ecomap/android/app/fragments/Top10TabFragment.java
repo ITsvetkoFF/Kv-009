@@ -14,12 +14,11 @@ import org.ecomap.android.app.tabs.ViewPagerAdapter;
 
 public class Top10TabFragment extends Fragment {
 
-    private View v2;
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[]={"популярних","важливих ","обговорюваних"};
-    int Numboftabs =3;
+    int Numboftabs = 3;
 
 
     @Override
@@ -34,20 +33,20 @@ public class Top10TabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        v2 = inflater.inflate(R.layout.fragment_top10_tab, container, false);
+        View v = inflater.inflate(R.layout.fragment_top10_tab, container, false);
 
         getActivity().setTitle(getActivity().getString(R.string.nav_titles_top10));
         //getActivity().invalidateOptionsMenu();
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-        adapter = new ViewPagerAdapter(getFragmentManager(), Titles, Numboftabs);
+        adapter = new ViewPagerAdapter(getChildFragmentManager(), Titles, Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
-        pager = (ViewPager) v2.findViewById(R.id.pager);
+        pager = (ViewPager) v.findViewById(R.id.pager);
         pager.setAdapter(adapter);
 
         // Assiging the Sliding Tab Layout View
-        tabs = (SlidingTabLayout) v2.findViewById(R.id.tabs);
+        tabs = (SlidingTabLayout) v.findViewById(R.id.tabs);
         tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
 
         // Setting Custom Color for the Scroll bar indicator of the Tab View
@@ -60,7 +59,7 @@ public class Top10TabFragment extends Fragment {
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
-        return v2;
+        return v;
     }
 
 }
