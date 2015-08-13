@@ -14,7 +14,7 @@ import org.ecomap.android.app.utils.SharedPreferencesHelper;
 public class EcoMapDBHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String DATABASE_NAME = "ecomap.db";
     private Context mContext;
