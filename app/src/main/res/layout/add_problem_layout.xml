@@ -37,7 +37,7 @@
                     android:imeOptions="actionNext"
                     android:ems="10"
                     android:singleLine="true"
-                    android:hint="@string/add_problem_title"/>
+                    android:hint="@string/add_problem_title" />
 
             </android.support.design.widget.TextInputLayout>
 

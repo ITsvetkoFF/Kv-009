@@ -79,25 +79,19 @@ public class EcoMapFragment extends Fragment {
     private ScrollView detailedScrollView;
     public static CameraPosition cameraPosition;
 
-    private static FloatingActionButton fabAddProblem;
-    private FloatingActionButton fabUkraine, fabToMe;
+    private FloatingActionButton fabUkraine, fabToMe, fabAddProblem;
 
-    private static LatLng markerPosition = null;
-    private static MapClustering mapClusterer;
+    private LatLng markerPosition = null;
+    private MapClustering mapClusterer;
     private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
     private static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
-    private static Snackbar addProblemSnackbar;
+    private Snackbar addProblemSnackbar;
 
-    private static boolean addproblemModeIsEnabled = false;
-
-    public static EcoMapFragment newInstance() {
-        EcoMapFragment ecoMapFragment = new EcoMapFragment();
-        return ecoMapFragment;
-    }
+    private boolean addproblemModeIsEnabled = false;
 
     private Button addPhotoButton;
     public static final int REQUEST_CODE = 1;
@@ -293,14 +287,11 @@ public class EcoMapFragment extends Fragment {
                 if (MainActivity.isUserIdSet()) {
 
                     if (mapClusterer.getMarker() == null) {
-
                         enableAddProblemMode();
-
                     } else {
-
                         ((MainActivity) getActivity()).selectItem(MainActivity.NAV_ADD_PROBLEM);
-
                     }
+
                 } else {
                     signInAlertDialog();
                 }
@@ -416,11 +407,11 @@ public class EcoMapFragment extends Fragment {
         return markerClickType;
     }
 
-    public static LatLng getMarkerPosition() {
+    public LatLng getMarkerPosition() {
         return markerPosition;
     }
 
-    public static void setMarkerPosition(LatLng position) {
+    public void setMarkerPosition(LatLng position) {
         markerPosition = position;
     }
 
@@ -593,7 +584,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
     }
 
-    public static void disableAddProblemMode(){
+    public void disableAddProblemMode(){
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
@@ -601,10 +592,14 @@ public class EcoMapFragment extends Fragment {
 
         addProblemSnackbar.dismiss();
         fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
+
+        ((MainActivity) getActivity()).deleteAddproblemFragment();
+
     }
 
-    public static boolean isAddproblemModeIsEnabled() {
+    public boolean isAddproblemModeIsEnabled() {
         return addproblemModeIsEnabled;
     }
+
 }
 

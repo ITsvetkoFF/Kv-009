@@ -11,7 +11,6 @@ import android.widget.Toast;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.AddProblemFragment;
-import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -126,8 +125,8 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         if (responseCode == HttpURLConnection.HTTP_OK) {
 
             new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
-            EcoMapFragment.disableAddProblemMode();
 
+            ((MainActivity) mContext).disableAddProblemMode();
             ((MainActivity) mContext).selectItem(MainActivity.NAV_MAP);
 
             sendPhoto(problemID);

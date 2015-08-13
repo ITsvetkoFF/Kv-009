@@ -19,6 +19,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,13 +73,12 @@ public class AddProblemFragment extends Fragment{
     private int problemType;
     private String[] params;
 
-    // added 03.08.15
     private MapView mapView;
     private GoogleMap mMap;
     private Marker marker;
     private UiSettings uiSettings;
+    private LatLng markerPosition;
 
-    public static LatLng markerPosition;
 
     public static AddProblemFragment newInstance(){
         AddProblemFragment fragment = new AddProblemFragment();
@@ -89,7 +90,6 @@ public class AddProblemFragment extends Fragment{
         super.onResume();
 
         getActivity().setTitle(getString(R.string.item_addProblem));
-
     }
 
     @Override
@@ -182,7 +182,7 @@ public class AddProblemFragment extends Fragment{
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                ((MainActivity) getActivity()).selectItem(MainActivity.NAV_MAP);
+                getActivity().onBackPressed();
             }
         });
 
@@ -251,9 +251,29 @@ public class AddProblemFragment extends Fragment{
         return nonScrollableListView;
     }
 
-    public static void setMarkerPosition(LatLng position){
+    public void setMarkerPosition(LatLng position){
         markerPosition = position;
     }
+
+    public boolean mustBeRemoved() {
+        boolean result;
+
+        if (! problemTitle.getText().toString().isEmpty() || ! problemDescription.getText().toString().isEmpty() || ! problemSolution.getText().toString().isEmpty()) {
+            result = true;
+
+        } else if (! selectedPhotos.isEmpty()) {
+            result = true;
+
+        } else if (problemType != 0) {
+            result = true;
+
+        } else {
+            result = false;
+        }
+
+        return result;
+    }
+
 
 }
 
