@@ -205,6 +205,18 @@ public class Problem implements ClusterItem, Parcelable {
         return status;
     }
 
+    public String getDescription(){
+        return content;
+    }
+
+    public String getSolution(){
+        return proposal;
+    }
+
+    public int getTypeId(){
+        return typeId;
+    }
+
     @Override
     public LatLng getPosition() {
         return mPos;

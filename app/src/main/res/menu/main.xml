@@ -34,4 +34,11 @@
         app:showAsAction="always"
         android:visible="false"
         />
+
+    <item
+        android:id="@+id/edit_menu_item"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="always"
+        android:visible="false"
+        />
 </menu>
