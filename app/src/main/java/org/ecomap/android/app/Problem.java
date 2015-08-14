@@ -195,7 +195,8 @@ public class Problem implements ClusterItem, Parcelable {
         this.liked = liked;
 
         //save this problem into set in SharedPreferences
-        SharedPreferencesHelper.addLikedProblem(mContext,getId());
+        SharedPreferencesHelper.addLikedProblem(mContext, getId());
+
 
     }
 

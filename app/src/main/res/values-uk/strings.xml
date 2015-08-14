@@ -30,7 +30,10 @@
     <string name="connecting_server">З\'єднуємося з сервером Ecomap</string>
     <string name="message_log_in_to_leave_comments">Увійдіть, щоб коментувати</string>
     <string name="message_isLiked">Голос додано</string>
+    <string name="message_log_in_to_leave_the_voke">Увійдіть, щоб голосувати за дану проблему </string>
     <string name="message_isAlreadyLiked">Ви вже голосували за дану проблему</string>
+    <string name="message_isAlreadyLiked_in_the_web">Ви вже проголосували за дану проблему на вебсайті)</string>
+
 
     <string name="register_if_new">Новий користувач? Зареєструйся!</string>
     <string name="want_logout">Ви насправді бажаєте вийти?</string>

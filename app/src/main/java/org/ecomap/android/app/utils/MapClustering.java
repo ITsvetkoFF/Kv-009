@@ -133,9 +133,11 @@ public class MapClustering {
                 ecoMapFragment.mSlidingLayer.openPreview(true);
 
                 //save last open Problem for rotating screen
-                ecoMapFragment.lastOpenProblem = problem;
+                EcoMapFragment.lastOpenProblem = problem;
 
-
+//                EcoMapFragment.lastOpenProblem=problem;
+//                EcoMapFragment eco = new EcoMapFragment();
+//                eco.field = 33;
 
                 return false;
             }

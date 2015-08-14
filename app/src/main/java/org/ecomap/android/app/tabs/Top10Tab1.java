@@ -59,7 +59,7 @@ public class Top10Tab1 extends Fragment {
                 cursor1.moveToPosition(position);
                 ((MainActivity) getActivity()).selectItem(0);
 
-                EcoMapFragment.isOpenSlidingLayer = true;
+               /// EcoMapFragment.isOpenSlidingLayer = true;
 
                 EcoMapFragment.lastOpenProblem = new Problem(cursor1, getActivity());
                 MapClustering.zoomCamera();

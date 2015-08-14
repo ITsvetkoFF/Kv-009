@@ -30,7 +30,9 @@
     <string name="connecting_server">Connecting Ecomap server</string>
     <string name="message_log_in_to_leave_comments">Log in to leave a comment</string>
     <string name="message_isLiked">Vote added</string>
+    <string name="message_log_in_to_leave_the_voke">Log in to leave the voke</string>
     <string name="message_isAlreadyLiked">You have already vote for this problem</string>
+    <string name="message_isAlreadyLiked_in_the_web">You have already vote for this problem in the website)</string>
 
     <string name="register_if_new">New to EcoMap? Register here</string>
     <string name="want_logout">Do you really want to logout?</string>
@@ -133,5 +135,8 @@
     <string name="starting_date">Start date</string>
     <string name="end_date">End date</string>
     <string name="nav_titles_statistics">Statistics</string>
+
+
+
     <!---->
 </resources>

@@ -65,7 +65,7 @@ public class SharedPreferencesHelper {
     public static String getStringPref(Context mContext, String fileNamePreferences, String namePref, String defValue){
 
         sPref = mContext.getSharedPreferences(fileNamePreferences, Context.MODE_PRIVATE);
-        return sPref.getString(namePref,defValue);
+        return sPref.getString(namePref, defValue);
 
     }
 

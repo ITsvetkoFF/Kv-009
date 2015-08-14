@@ -53,7 +53,7 @@ public class Top10Tab3 extends Fragment {
                  cursor3.moveToPosition(position);
                  ((MainActivity) getActivity()).selectItem(0);
 
-                 EcoMapFragment.isOpenSlidingLayer = true;
+               //  EcoMapFragment.isOpenSlidingLayer = true;
                  EcoMapFragment.lastOpenProblem = new Problem(cursor3, getActivity());
 
              }

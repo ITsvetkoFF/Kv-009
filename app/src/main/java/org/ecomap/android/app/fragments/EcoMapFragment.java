@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import org.ecomap.android.app.utils.NetworkAvailability;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,9 +60,11 @@ import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
@@ -74,6 +77,7 @@ public class EcoMapFragment extends Fragment {
     private static int markerClickType;
     private static String filterCondition;
     public ImageAdapter imgAdapter;
+    public int field;
     private Context mContext;
     Cursor cursor;
     EcoMapReceiver receiver;
@@ -84,8 +88,9 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<Problem> values;
     private View v;
     public EcoMapSlidingLayer mSlidingLayer;
-    private ImageView showTypeImage, showLike;
-    private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
+   public static ImageView showTypeImage, showLike;
+    private TextView showTitle, showByTime, showContent, showProposal,  showStatus;
+    public static TextView showNumOfLikes;
     private ScrollView detailedScrollView;
     private LinearLayout showHead;
     public static CameraPosition cameraPosition;
@@ -104,6 +109,11 @@ public class EcoMapFragment extends Fragment {
     private static Snackbar addProblemSnackbar;
 
     private static boolean addproblemModeIsEnabled = false;
+
+    private String TAG = "myTAG";
+
+    public static boolean bVote = true;
+
 
     public static EcoMapFragment newInstance() {
         EcoMapFragment ecoMapFragment = new EcoMapFragment();
@@ -229,7 +239,7 @@ public class EcoMapFragment extends Fragment {
         if (isOpenSlidingLayer) {
             mSlidingLayer.openPreview(true);
             fillSlidingPanel(lastOpenProblem);
-        }
+    }
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -436,9 +446,13 @@ public class EcoMapFragment extends Fragment {
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
 
-        if (problem.isLiked()){
+
+        if (problem.isLiked()&&MainActivity.isUserIsAuthorized()){
+
+            Log.e(TAG, "Проблема уже лайк, картинка сердце");
             showLike.setImageResource(R.drawable.heart_icon);
         }else{
+            Log.e(TAG, "Проблема еще не лайк, картинка снег");
             showLike.setImageResource(R.drawable.heart_empty);
         }
 
@@ -455,21 +469,26 @@ public class EcoMapFragment extends Fragment {
         showLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!problem.isLiked()) {
-                    problem.setNumberOfLikes(1);
-                    problem.setLiked(true);
 
-                    new AddVoteTask().execute(problem.getId());
 
-                    showLike.setImageResource(R.drawable.heart_icon);
 
-                    Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+                if(new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
+                        .isNetworkAvailable()) {
 
-                } else if (problem.isLiked()) {
-                    //problem.setNumberOfLikes(-1);
-                    //problem.setLiked(false);
-                    Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
-                }
+
+                    if (MainActivity.isUserIsAuthorized()) {
+
+                        if (!problem.isLiked()) {
+                            new AddVoteTask(getActivity()).execute(problem.getId());
+                        } else {
+                            Log.e(TAG, "Вы уже проголосовали");
+                            Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.e(TAG, "Нужно авторизоваться");
+                        Toast.makeText(mContext, mContext.getString(R.string.message_log_in_to_leave_the_voke), Toast.LENGTH_SHORT).show();
+                    }
+                }else{Toast.makeText(mContext, mContext.getString(R.string.check_internet), Toast.LENGTH_SHORT).show();}
                 showNumOfLikes.setText(problem.getNumberOfLikes());
             }
         });
@@ -485,6 +504,8 @@ public class EcoMapFragment extends Fragment {
         //photos
         new GetPhotosTask(this).execute(problem.getId());
     }
+
+
 
     private void signInAlertDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
