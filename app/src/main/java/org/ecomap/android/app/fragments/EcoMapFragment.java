@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,6 +79,7 @@ public class EcoMapFragment extends Fragment {
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
     public static CameraPosition cameraPosition;
+    RatingBar problemRating;
 
     private FloatingActionButton fabUkraine, fabToMe, fabAddProblem;
 
@@ -164,6 +166,7 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+        problemRating = (RatingBar) v.findViewById(R.id.problemRating);
         //deleteProblem = (ImageView) v.findViewById(R.id.action_delete_problem);
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
@@ -207,7 +210,6 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClosed() {
                 isOpenSlidingLayer = false;
-                MainActivity.currentProblem = null;
                 getActivity().invalidateOptionsMenu();
             }
         });
@@ -302,7 +304,6 @@ public class EcoMapFragment extends Fragment {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
 
         //mSlidingLayer.closeLayer(true);
-        MainActivity.currentProblem = null;
 
     }
 
@@ -428,6 +429,7 @@ public class EcoMapFragment extends Fragment {
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
+        problemRating.setRating(Float.valueOf(problem.getSeverity()));
 
         if (problem.isLiked()){
             showLike.setImageResource(R.drawable.heart_icon);

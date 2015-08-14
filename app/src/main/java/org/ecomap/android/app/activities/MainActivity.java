@@ -17,7 +17,6 @@
 package org.ecomap.android.app.activities;
 
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,7 +30,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -43,7 +41,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -54,17 +51,17 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.fragments.EditProblemFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.fragments.StaticPagesFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.fragments.Top10TabFragment;
-import org.ecomap.android.app.sync.DeleteTask;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
-import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.utils.SnackBarHelper;
+import org.ecomap.android.app.utils.YesNoAlertDialog;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -94,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private static final int NAV_TOP10 = R.id.top10;
     private static final int NAV_FILTERS = R.id.filters_menu_item;
     public static final int NAV_ADD_PROBLEM = R.id.addProblem;
+    public static final int NAV_EDIT_PROBLEM = R.id.edit_menu_item;
 
     private HashMap<Class, Integer> fragmentsIndexes = new HashMap<>(6);
 
@@ -118,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private long mLastBackPressMillis;
     static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
-    private MenuItem filtersMenuItem, deleteMenuItem;
+    private MenuItem filtersMenuItem, deleteMenuItem, ediMenuItem;
     private boolean savedInstanceStateNull = false;
     private int firstLoadedFragment;
 
@@ -269,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         filtersMenuItem = menu.findItem(R.id.filters_menu_item);
         deleteMenuItem = menu.findItem(R.id.delete_menu_item);
+        ediMenuItem = menu.findItem(R.id.edit_menu_item);
 
 
         if (mFragment != null) {
@@ -287,9 +286,16 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     } else {
                         deleteMenuItem.setVisible(false);
                     }
+
+                    if (User.canUserEditProblem(currentProblem)) {
+                        ediMenuItem.setVisible(true);
+                    } else {
+                        ediMenuItem.setVisible(false);
+                    }
                 }
             } else {
                 deleteMenuItem.setVisible(false);
+                ediMenuItem.setVisible(false);
             }
         }
 
@@ -309,27 +315,14 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             case R.id.filters_menu_item:
                 selectItem(NAV_FILTERS);
                 break;
+
             case R.id.delete_menu_item:
-                final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                new YesNoAlertDialog(getString(R.string.want_delete_problem), this, currentProblem).
+                        showAlertDialogDeleteProblem();
+                break;
 
-                alert.setMessage(getString(R.string.want_delete_problem));
-                alert.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (new NetworkAvailability(getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
-                            new DeleteTask(mContext).execute(String.valueOf(currentProblem.getId()));
-                            slidingLayer.closeLayer(true);
-                        }
-                    }
-                });
-
-                alert.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                alert.show();
+            case R.id.edit_menu_item:
+                selectItem(NAV_EDIT_PROBLEM);
                 break;
 
             default:
@@ -484,6 +477,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     //}
                 }
                 break;
+
             case NAV_FILTERS:
                 tag = FiltersFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
@@ -506,6 +500,19 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
                 invalidateOptionsMenu();
 
+                break;
+
+            case NAV_EDIT_PROBLEM:
+                tag = EditProblemFragment.class.getSimpleName();
+                mFragment = mFragmentManager.findFragmentByTag(tag);
+
+                if (mFragment == null){
+                    mFragment = new EditProblemFragment();
+                }
+
+
+
+                invalidateOptionsMenu();
                 break;
 
             default:
@@ -548,7 +555,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     public void updateNavigationViewPosition(){
 
-        if (mFragment != null && mFragment.getClass() != AddProblemFragment.class) {
+        if (mFragment != null && mFragment.getClass() != AddProblemFragment.class && mFragment.getClass() != EditProblemFragment.class) {
             mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
         }
 
