@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@color/white"
-    android:id="@+id/addProblem"
+    android:id="@+id/editProblem"
     >
 
     <LinearLayout
@@ -25,29 +25,36 @@
             android:orientation="vertical"
             android:paddingBottom="16dp" >
 
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/edit_ratingBar"
+                android:numStars="5"
+                android:layout_gravity="center" />
+
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_problemTitle"
+                android:id="@+id/til_edit_problemTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/problemTitle"
+                    android:id="@+id/edit_problemTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:ems="10"
                     android:singleLine="true"
-                    android:hint="@string/add_problem_title" />
+                    android:hint="@string/add_problem_title"/>
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_problemDescription"
+                android:id="@+id/til_edit_problemDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/problemDescription"
+                    android:id="@+id/edit_problemDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -57,12 +64,12 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_problemSolution"
+                android:id="@+id/til_edit_problemSolution"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/problemSolution"
+                    android:id="@+id/edit_problemSolution"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -75,12 +82,12 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/add_problem_type"
                 android:textColor="@color/blue2" />
 
             <Spinner
-                android:id="@+id/spinner"
+                android:id="@+id/edit_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:entries="@array/types"
@@ -94,64 +101,47 @@
                 android:layout_alignParentBottom="true"
                 android:background="@color/divider" />
 
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/solved_problem"
+                    android:textColor="@android:color/holo_green_light"
+                    android:id="@+id/edit_rb_solved" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/unsolved_problem"
+                    android:textColor="@android:color/holo_red_light"
+                    android:id="@+id/edit_rb_unsolved" />
+            </RadioGroup>
+
+
         </LinearLayout>
 
         <com.google.android.gms.maps.MapView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/littleMap"
+            android:id="@+id/edit_littleMap"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
+            android:layout_margin="16dp"
             map:mapType="normal"
             map:liteMode="true"/>
 
-        <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:orientation="horizontal"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:background="@drawable/dotted_border" >
-
-            <Button
-                android:id="@+id/add_photo"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:text="@string/add_photo"
-                android:textColor="#ff0099cc"
-                android:background="@color/white"
-                style="?android:attr/borderlessButtonStyle" />
-
-        </FrameLayout>
-
-        <org.ecomap.android.app.ui.components.NonScrollableListView
-            android:id="@+id/nonScrollableListView"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/edit_send_problem"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
-        </org.ecomap.android.app.ui.components.NonScrollableListView>
+            android:text="@string/send"
+            android:textColor="@color/white"
+            android:background="@color/blue3"
+            android:layout_margin="16dp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="right"
-            android:layout_marginTop="16dp">
-
-            <Button
-                android:id="@+id/send_problem"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/send"
-                android:textColor="@color/white"
-                android:background="@color/blue3"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
-
-        </RelativeLayout>
     </LinearLayout>
 </ScrollView>

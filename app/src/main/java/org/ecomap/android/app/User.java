@@ -102,6 +102,22 @@ public class User {
         return false;
     }
 
+    public static boolean canUserEditProblem(Problem p){
+        if (user != null) {
+            for (String s : set) {
+                if (s.contains("ProblemHandler:PUT")) {
+                    if (userId == p.userId) {
+                        return (s.contains("OWN") || s.contains("ANY"));
+                    } else {
+                        return s.contains("ANY");
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static void deleteUserInstance(){
         user = null;
     }

@@ -3,18 +3,18 @@ package org.ecomap.android.app.tabs;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
-/**
- * Created by hp1 on 21-01-2015.
- */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+    private String LOG_TAG = ViewPagerAdapter.class.getSimpleName();
 
     CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
-    public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb) {
+    public ViewPagerAdapter(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb) {
         super(fm);
 
         this.Titles = mTitles;
@@ -26,22 +26,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        if(position == 0) // if the position is 0 we are returning the First tab
-        {
-            Top10Tab1 tab1 = new Top10Tab1();
-            return tab1;
-        }
-        if(position == 1) // if the position is 0 we are returning the First tab
-        {
-            Top10Tab2 tab2 = new Top10Tab2();
-            return tab2;
-        }
-        else             // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
-        {
-            Top10Tab3 tab3 = new Top10Tab3();
-            return tab3;
-        }
-
+        Top10Tab tab = Top10Tab.newInstance(position);
+        //Log.d(Top10Tab.class.getSimpleName(),"getItem: " + position);
+        return tab;
 
     }
 

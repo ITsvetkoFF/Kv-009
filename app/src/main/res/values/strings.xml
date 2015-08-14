@@ -41,10 +41,12 @@
     <string name="message_log_in_to_leave_the_voke">Log in to leave the voke</string>
     <string name="message_isAlreadyLiked">You have already vote for this problem</string>
     <string name="message_isAlreadyLiked_in_the_web">You have already vote for this problem in the website)</string>
+    <string name="edit_problem_fragment">Edit problem</string>
 
     <string name="register_if_new">New to EcoMap? Register here</string>
     <string name="want_logout">Do you really want to logout?</string>
     <string name="want_delete_problem">Do you really want to delete this problem?</string>
+    <string name="want_edit_problem">Do you really want to edit this problem?</string>
     <string name="change_password">Forgot your password? Change it!</string>
     <string name="write_comment">Write a comment...</string>
     <string name="have_problem">Houston, we have a problem!</string>
@@ -60,6 +62,7 @@
     <string name="problem_title_blank">Problem title can not be blank</string>
     <string name="exit">Exit</string>
     <string name="problem_added">Problem has been successfully added</string>
+    <string name="problem_edited">Problem has been successfully edited</string>
 
     <string name="string_added_by">"Added by: "</string>
     <string name="string_suggested_solution">Suggested Solution</string>
@@ -138,8 +141,7 @@
     <string name="starting_date">Start date</string>
     <string name="end_date">End date</string>
     <string name="nav_titles_statistics">Statistics</string>
-
-
-
+    <string name="unsolved_problem">UNSOLVED</string>
+    <string name="solved_problem">SOLVED</string>
     <!---->
 </resources>

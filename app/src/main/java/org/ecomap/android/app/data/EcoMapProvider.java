@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class EcoMapProvider extends ContentProvider {
@@ -190,10 +189,16 @@ public class EcoMapProvider extends ContentProvider {
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
-                        long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
+                        String str = String.valueOf(value.get(EcoMapContract.ProblemsEntry._ID));
+                        long _id = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, value, "_id = ?", new String[]{str});
+                        //long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
+
                         if (_id != -1) {
                             returnCount++;
+                        } else {
+                            _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
                         }
+
                     }
                     db.setTransactionSuccessful();
                 } finally {

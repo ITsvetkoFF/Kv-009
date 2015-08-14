@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,26 +82,21 @@ public class EcoMapFragment extends Fragment {
     public static TextView showNumOfLikes;
     private ScrollView detailedScrollView;
     public static CameraPosition cameraPosition;
+    RatingBar problemRating;
 
-    private static FloatingActionButton fabAddProblem;
-    private FloatingActionButton fabUkraine, fabToMe;
+    private FloatingActionButton fabUkraine, fabToMe, fabAddProblem;
 
-    private static LatLng markerPosition = null;
-    private static MapClustering mapClusterer;
+    private LatLng markerPosition = null;
+    private MapClustering mapClusterer;
     private CoordinatorLayout rootLayout;
 
     //for rotating screen - save last position of SlidingPanel
-    private static boolean isOpenSlidingLayer = false;
+    public static boolean isOpenSlidingLayer = false;
     public static Problem lastOpenProblem;
 
-    private static Snackbar addProblemSnackbar;
+    private Snackbar addProblemSnackbar;
 
-    private static boolean addproblemModeIsEnabled = false;
-
-    public static EcoMapFragment newInstance() {
-        EcoMapFragment ecoMapFragment = new EcoMapFragment();
-        return ecoMapFragment;
-    }
+    private boolean addproblemModeIsEnabled = false;
 
     private Button addPhotoButton;
     public static final int REQUEST_CODE = 1;
@@ -173,6 +169,7 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes = (TextView) v.findViewById(R.id.show_numOfLikes);
         showStatus = (TextView) v.findViewById(R.id.show_status);
         detailedScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+        problemRating = (RatingBar) v.findViewById(R.id.problemRating);
         //deleteProblem = (ImageView) v.findViewById(R.id.action_delete_problem);
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
@@ -197,7 +194,6 @@ public class EcoMapFragment extends Fragment {
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
                 showTitle.setEllipsize(TextUtils.TruncateAt.END);
-                isOpenSlidingLayer = true;
             }
 
             @Override
@@ -217,15 +213,9 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClosed() {
                 isOpenSlidingLayer = false;
-                MainActivity.currentProblem = null;
                 getActivity().invalidateOptionsMenu();
             }
         });
-
-        if (isOpenSlidingLayer) {
-            mSlidingLayer.openPreview(true);
-            fillSlidingPanel(lastOpenProblem);
-        }
 
         ExpandableHeightGridView gridview = (ExpandableHeightGridView) v.findViewById(R.id.gridview);
         gridview.setExpanded(true);
@@ -296,14 +286,11 @@ public class EcoMapFragment extends Fragment {
                 if (MainActivity.isUserIdSet()) {
 
                     if (mapClusterer.getMarker() == null) {
-
                         enableAddProblemMode();
-
                     } else {
-
                         ((MainActivity) getActivity()).selectItem(MainActivity.NAV_ADD_PROBLEM);
-
                     }
+
                 } else {
                     signInAlertDialog();
                 }
@@ -320,7 +307,6 @@ public class EcoMapFragment extends Fragment {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
 
         //mSlidingLayer.closeLayer(true);
-        MainActivity.currentProblem = null;
 
     }
 
@@ -405,6 +391,11 @@ public class EcoMapFragment extends Fragment {
         if (addproblemModeIsEnabled) {
             enableAddProblemMode();
         }
+
+        if (isOpenSlidingLayer) {
+            mSlidingLayer.openPreview(true);
+            fillSlidingPanel(lastOpenProblem);
+        }
     }
 
     public static void setFilterCondition(String s) {
@@ -420,11 +411,11 @@ public class EcoMapFragment extends Fragment {
         return markerClickType;
     }
 
-    public static LatLng getMarkerPosition() {
+    public LatLng getMarkerPosition() {
         return markerPosition;
     }
 
-    public static void setMarkerPosition(LatLng position) {
+    public void setMarkerPosition(LatLng position) {
         markerPosition = position;
     }
 
@@ -433,6 +424,7 @@ public class EcoMapFragment extends Fragment {
         if (mMap.getCameraPosition().zoom < 13.0f) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 13.0f));
         }
+        cameraPosition = new CameraPosition(problem.getPosition(),11.0f,0.0f,0.0f);
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
@@ -441,6 +433,7 @@ public class EcoMapFragment extends Fragment {
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
+        problemRating.setRating(Float.valueOf(problem.getSeverity()));
 
         if (problem.isLiked()){
             showLike.setImageResource(R.drawable.heart_icon);
@@ -596,7 +589,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
     }
 
-    public static void disableAddProblemMode(){
+    public void disableAddProblemMode(){
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
@@ -604,10 +597,14 @@ public class EcoMapFragment extends Fragment {
 
         addProblemSnackbar.dismiss();
         fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
+
+        ((MainActivity) getActivity()).deleteAddproblemFragment();
+
     }
 
-    public static boolean isAddproblemModeIsEnabled() {
+    public boolean isAddproblemModeIsEnabled() {
         return addproblemModeIsEnabled;
     }
+
 }
 

@@ -124,4 +124,9 @@
     <string name="item_addProblem">Додати проблему</string>
     <string name="message_log_in_to_vote">Увійдіть, щоб голосувати</string>
     <string name="refresh_database_now">Оновити базу даних</string>
+    <string name="want_edit_problem">Ви насправді хочете редагувати цю проблему?</string>
+    <string name="edit_problem_fragment">Редагувати проблему</string>
+    <string name="solved_problem">ВИРІШЕНА</string>
+    <string name="unsolved_problem">НЕ ВИРІШЕНА</string>
+    <string name="problem_edited">Проблему успішно відредаговано</string>
 </resources>

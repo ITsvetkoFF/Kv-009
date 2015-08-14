@@ -169,6 +169,14 @@ public class Problem implements ClusterItem, Parcelable {
         return content;
     }
 
+    public String getSeverity() {
+        return severity;
+    }
+
+    public int getNumber_of_comments() {
+        return numberOfComments;
+    }
+
     public String getNumberOfLikes(){
         return String.valueOf(numberOfVotes);
     }
@@ -196,6 +204,18 @@ public class Problem implements ClusterItem, Parcelable {
 
     public String getStatus(){
         return status;
+    }
+
+    public String getDescription(){
+        return content;
+    }
+
+    public String getSolution(){
+        return proposal;
+    }
+
+    public int getTypeId(){
+        return typeId;
     }
 
     @Override
