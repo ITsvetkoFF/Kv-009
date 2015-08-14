@@ -27,4 +27,11 @@
         app:showAsAction="always"
         android:visible="false"
         />
+
+    <item
+        android:id="@+id/delete_menu_item"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="always"
+        android:visible="false"
+        />
 </menu>

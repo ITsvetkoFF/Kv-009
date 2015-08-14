@@ -1,8 +1,6 @@
 package org.ecomap.android.app.utils;
 
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -50,10 +48,8 @@ public class MapClustering {
 
     public void setUpClusterer() {
         if(cameraPosition != null){
-
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-
         else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
         }
