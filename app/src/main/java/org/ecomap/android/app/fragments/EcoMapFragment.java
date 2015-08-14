@@ -473,11 +473,9 @@ public class EcoMapFragment extends Fragment {
                         if (!problem.isLiked()) {
                             new AddVoteTask(getActivity()).execute(problem.getId());
                         } else {
-                            Log.e(TAG, "Вы уже проголосовали");
                             Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.e(TAG, "Нужно авторизоваться");
                         Toast.makeText(mContext, mContext.getString(R.string.message_log_in_to_leave_the_voke), Toast.LENGTH_SHORT).show();
                     }
                 }else{Toast.makeText(mContext, mContext.getString(R.string.check_internet), Toast.LENGTH_SHORT).show();}
