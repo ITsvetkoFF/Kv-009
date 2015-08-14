@@ -27,6 +27,7 @@ import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import org.ecomap.android.app.utils.NetworkAvailability;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -77,8 +78,8 @@ public class EcoMapFragment extends Fragment {
     private ArrayList<Problem> values;
     private View v;
     public EcoMapSlidingLayer mSlidingLayer;
-   public static ImageView showTypeImage, showLike;
-    private TextView showTitle, showByTime, showContent, showProposal,  showStatus;
+    public static ImageView showTypeImage, showLike;
+    private TextView showTitle, showByTime, showContent, showProposal, showStatus;
     public static TextView showNumOfLikes;
     private ScrollView detailedScrollView;
     public static CameraPosition cameraPosition;
@@ -339,7 +340,7 @@ public class EcoMapFragment extends Fragment {
     private void setUpMap() {
         Log.i(tag, "set up map");
 
-        if (cameraPosition != null){
+        if (cameraPosition != null) {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
@@ -348,19 +349,18 @@ public class EcoMapFragment extends Fragment {
             //Start service to get a new number of revision and new data
             Intent intent = new Intent(this.getActivity(), EcoMapService.class);
             getActivity().startService(intent);
-        }
-        else{
+        } else {
             fillMap(filterCondition);
         }
     }
 
     //if there is some filter condition, then this method will be called. It will search only needed points
     public void fillMap(String filterCondition) {
-        if (filterCondition == null){
+        if (filterCondition == null) {
             filterCondition = "";
         }
 
-        if (cameraPosition != null){
+        if (cameraPosition != null) {
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
@@ -407,7 +407,7 @@ public class EcoMapFragment extends Fragment {
         markerClickType = type;
     }
 
-    public static int getMarkerClickType(){
+    public static int getMarkerClickType() {
         return markerClickType;
     }
 
@@ -419,12 +419,12 @@ public class EcoMapFragment extends Fragment {
         markerPosition = position;
     }
 
-    public void fillSlidingPanel(final Problem problem){
+    public void fillSlidingPanel(final Problem problem) {
 
         if (mMap.getCameraPosition().zoom < 13.0f) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 13.0f));
         }
-        cameraPosition = new CameraPosition(problem.getPosition(),11.0f,0.0f,0.0f);
+        cameraPosition = new CameraPosition(problem.getPosition(), 11.0f, 0.0f, 0.0f);
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
@@ -435,9 +435,9 @@ public class EcoMapFragment extends Fragment {
         showNumOfLikes.setText(problem.getNumberOfLikes());
         problemRating.setRating(Float.valueOf(problem.getSeverity()));
 
-        if (problem.isLiked()){
+        if (problem.isLiked()) {
             showLike.setImageResource(R.drawable.heart_icon);
-        }else{
+        } else {
             showLike.setImageResource(R.drawable.heart_empty);
         }
 
@@ -456,8 +456,7 @@ public class EcoMapFragment extends Fragment {
             public void onClick(View v) {
 
 
-
-                if(new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
+                if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
                         .isNetworkAvailable()) {
 
 
@@ -471,7 +470,9 @@ public class EcoMapFragment extends Fragment {
                     } else {
                         Toast.makeText(mContext, mContext.getString(R.string.message_log_in_to_leave_the_voke), Toast.LENGTH_SHORT).show();
                     }
-                }else{Toast.makeText(mContext, mContext.getString(R.string.check_internet), Toast.LENGTH_SHORT).show();}
+                } else {
+                    Toast.makeText(mContext, mContext.getString(R.string.check_internet), Toast.LENGTH_SHORT).show();
+                }
                 showNumOfLikes.setText(problem.getNumberOfLikes());
             }
         });
@@ -517,7 +518,6 @@ public class EcoMapFragment extends Fragment {
 //        }
 
 
-
         //comments
         FragmentManager chFm = getChildFragmentManager();
         Fragment f = chFm.findFragmentByTag(CommentsFragment.LOG_TAG);
@@ -560,7 +560,7 @@ public class EcoMapFragment extends Fragment {
                 selectedPhotos.clear();
                 selectedPhotos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
 
-                if (selectedPhotos.size()>0){
+                if (selectedPhotos.size() > 0) {
                     Intent intent = new Intent(mContext, CommentPhotoActivity.class);
                     intent.putExtra("problem_id", lastOpenProblem.getId());
                     intent.putExtra("selectedPhotos", selectedPhotos);
@@ -568,20 +568,20 @@ public class EcoMapFragment extends Fragment {
                 }
 
             }
-        }else if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE_PHOTOS_ADDED) {
-                ArrayList<ProblemPhotoEntry> photos = data.getParcelableArrayListExtra("photos");
-                for (ProblemPhotoEntry photo:photos){
-                    new UploadPhotoTask(mContext, lastOpenProblem.getId(), photo.getImgURL(), photo.getCaption()).execute();
-                }
+        } else if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_CODE_PHOTOS_ADDED) {
+            ArrayList<ProblemPhotoEntry> photos = data.getParcelableArrayListExtra("photos");
+            for (ProblemPhotoEntry photo : photos) {
+                new UploadPhotoTask(mContext, lastOpenProblem.getId(), photo.getImgURL(), photo.getCaption()).execute();
+            }
             new GetPhotosTask(this).execute(lastOpenProblem.getId());
         }
     }
 
-    public static CameraPosition getCameraPosition(){
+    public static CameraPosition getCameraPosition() {
         return cameraPosition;
     }
 
-    private void enableAddProblemMode(){
+    private void enableAddProblemMode() {
         addproblemModeIsEnabled = true;
         setMarkerClickType(2);
 
@@ -589,7 +589,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
     }
 
-    public void disableAddProblemMode(){
+    public void disableAddProblemMode() {
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
