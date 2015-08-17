@@ -5,50 +5,39 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.TextView.BufferType;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.sync.AddProblemTask;
-import org.ecomap.android.app.sync.LoginTask;
+import org.ecomap.android.app.sync.UploadingServiceSession;
 import org.ecomap.android.app.ui.components.NonScrollableListView;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.utils.SnackBarHelper;
 
 import java.util.ArrayList;
 
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 
-public class AddProblemFragment extends Fragment{
+public class AddProblemFragment extends Fragment {
 
     private Context mContext;
     private View view;
@@ -77,10 +66,12 @@ public class AddProblemFragment extends Fragment{
     private GoogleMap mMap;
     private Marker marker;
     private UiSettings uiSettings;
-    private LatLng markerPosition;
 
+    public static LatLng markerPosition;
 
-    public static AddProblemFragment newInstance(){
+    private UploadingServiceSession mServiceSession;
+
+    public static AddProblemFragment newInstance() {
         AddProblemFragment fragment = new AddProblemFragment();
         return fragment;
     }
@@ -90,6 +81,10 @@ public class AddProblemFragment extends Fragment{
         super.onResume();
 
         getActivity().setTitle(getString(R.string.item_addProblem));
+
+        //Connect to service for further uploading
+        mServiceSession.doBindService();
+
     }
 
     @Override
@@ -118,6 +113,8 @@ public class AddProblemFragment extends Fragment{
             marker = mMap.addMarker(new MarkerOptions().draggable(true).position(markerPosition));
             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         }
+
+        mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName());
 
         return view;
     }
@@ -198,7 +195,6 @@ public class AddProblemFragment extends Fragment{
         });
 
 
-
         sendProblemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -220,19 +216,29 @@ public class AddProblemFragment extends Fragment{
 
                     if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
                             .isNetworkAvailable()) {
-                        new AddProblemTask(mContext).execute(params);
+                        if (mServiceSession.isBound()) {
+                            new AddProblemTask(mContext, mServiceSession).execute(params);
+                        }
+
 
                     } else {
-                        Snackbar.make(view, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                        SnackBarHelper.showInfoSnackBar(mContext, view, R.string.check_internet, Snackbar.LENGTH_LONG);
                     }
                 } else {
-                    new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_title_blank), Toast.LENGTH_SHORT).show();
+                    SnackBarHelper.showWarningSnackBar(mContext, view, R.string.problem_title_blank, Snackbar.LENGTH_SHORT);
                 }
 
 
             }
         });
     }
+
+    @Override
+    public void onStop() {
+        mServiceSession.doUnbindService();
+        super.onStop();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -251,17 +257,17 @@ public class AddProblemFragment extends Fragment{
         return nonScrollableListView;
     }
 
-    public void setMarkerPosition(LatLng position){
+    public void setMarkerPosition(LatLng position) {
         markerPosition = position;
     }
 
     public boolean mustBeRemoved() {
         boolean result;
 
-        if (! problemTitle.getText().toString().isEmpty() || ! problemDescription.getText().toString().isEmpty() || ! problemSolution.getText().toString().isEmpty()) {
+        if (!problemTitle.getText().toString().isEmpty() || !problemDescription.getText().toString().isEmpty() || !problemSolution.getText().toString().isEmpty()) {
             result = true;
 
-        } else if (! selectedPhotos.isEmpty()) {
+        } else if (!selectedPhotos.isEmpty()) {
             result = true;
 
         } else if (problemType != 0) {

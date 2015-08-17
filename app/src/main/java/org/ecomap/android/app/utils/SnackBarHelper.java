@@ -1,5 +1,6 @@
 package org.ecomap.android.app.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
@@ -30,33 +31,71 @@ public class SnackBarHelper {
         snackbar.show();
     }
 
+
     /**
+     * INFO SNACK BARS
      * Overrides showInfoSnackBar in order to use strings from xml
      */
+    public static void showInfoSnackBar(Activity activity, String message, int duration) {
+        showSnackBar(activity, activity.getWindow().getDecorView(), message, duration, R.color.snackBarInfo);
+    }
+
+    public static void showInfoSnackBar(Activity activity, int messageResource, int duration) {
+        showInfoSnackBar(activity, activity.getString(messageResource), duration);
+    }
+
+    public static void showInfoSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarInfo);
+    }
+
     public static void showInfoSnackBar(Context context, View view, int messageResource, int duration) {
         showInfoSnackBar(context, view, context.getString(messageResource), duration);
     }
 
-    //Shows information snack bar
-    public static void showInfoSnackBar(Context context, View view, String message, int duration) {
-        showSnackBar(context, view, message, duration, R.color.snackBarInfo);
+
+
+    /**
+     * WARNING SNACK BARS
+     *
+     */
+
+    public static void showWarningSnackBar(Activity activity, String message, int duration) {
+        showSnackBar(activity, activity.getWindow().getDecorView(), message, duration, R.color.snackBarWarning);
+    }
+
+    public static void showWarningSnackBar(Activity activity, int messageResource, int duration) {
+        showWarningSnackBar(activity, activity.getString(messageResource), duration);
     }
 
     public static void showWarningSnackBar(Context context, View view, int messageResource, int duration) {
         showWarningSnackBar(context, view, context.getString(messageResource), duration);
     }
 
-    //Shows warning snack bar
     public static void showWarningSnackBar(Context context, View view, String message, int duration) {
         showSnackBar(context, view, message, duration, R.color.snackBarWarning);
+    }
+
+
+    /**
+     * SUCCESS SNACK BARS
+     */
+
+    public static void showSuccessSnackBar(Activity activity, String message, int duration) {
+        showSnackBar(activity, activity.getWindow().getDecorView(), message, duration, R.color.snackBarSuccess);
+    }
+
+    public static void showSuccessSnackBar(Activity activity, int messageResource, int duration) {
+        showSuccessSnackBar(activity, activity.getString(messageResource), duration);
+    }
+
+    public static void showSuccessSnackBar(Context context, View view, String message, int duration) {
+        showSnackBar(context, view, message, duration, R.color.snackBarSuccess);
     }
 
     public static void showSuccessSnackBar(Context context, View view, int messageResource, int duration) {
         showSuccessSnackBar(context, view, context.getString(messageResource), duration);
     }
 
-    //Shows success snack bar
-    public static void showSuccessSnackBar(Context context, View view, String message, int duration) {
-        showSnackBar(context, view, message, duration, R.color.snackBarSuccess);
-    }
+
+
 }

@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class UploadPhotoTask extends AsyncTask {
+public class UploadPhotoTask extends AsyncTask<Void, Void, Void> {
 
     String resMessage;
     Context mContext;
@@ -36,7 +36,7 @@ public class UploadPhotoTask extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
+    protected Void doInBackground(Void... params) {
 
         Log.e("MYLOG", "Inside background");
 
@@ -143,8 +143,7 @@ public class UploadPhotoTask extends AsyncTask {
     }
 
     @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
+    protected void onPostExecute(Void o) {
         photoProgressBar.dismiss();
 
         new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
