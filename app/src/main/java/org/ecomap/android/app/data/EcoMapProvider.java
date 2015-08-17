@@ -193,7 +193,7 @@ public class EcoMapProvider extends ContentProvider {
                         long _id = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, value, "_id = ?", new String[]{str});
                         //long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
 
-                        if (_id != -1) {
+                        if (_id != -1 && _id != 0) {
                             returnCount++;
                         } else {
                             _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
