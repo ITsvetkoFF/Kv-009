@@ -89,8 +89,6 @@ public class MapClustering {
 
                 } else if (EcoMapFragment.getMarkerClickType() == 2) {
 
-
-
                     addMarkerToMap(latLng);
 /*
                     marker = mMap.addMarker(new MarkerOptions().draggable(true).position(latLng));

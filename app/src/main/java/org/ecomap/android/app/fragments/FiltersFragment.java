@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -15,13 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
 import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.data.EcoMapProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,8 +62,10 @@ public class FiltersFragment extends ListFragment {
     String beginDate;
     String finishDate;
 
-
-
+    private String userID = EcoMapContract.ProblemsEntry.COLUMN_USER_ID + " = ";
+    private String userCondition;
+    private SwitchCompat mSwitch;
+    private int userIDValue;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +111,9 @@ public class FiltersFragment extends ListFragment {
         super.onResume();
 
         Log.i(LOG_TAG, "onResume");
+
+        mSwitch = (SwitchCompat) mainView.findViewById(R.id.switch_compat);
+
         listView = getListView();
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
@@ -174,8 +183,6 @@ public class FiltersFragment extends ListFragment {
         startDate.setText(beginDate);
         endDate.setText(finishDateForTextfield);
 
-
-
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -192,28 +199,40 @@ public class FiltersFragment extends ListFragment {
                     }
                 }
                 if (selectedIdees.size() == 0) {
-                    resultCondition = "("+problemType + 120;
+                    resultCondition = "(" + problemType + 120;
 
                 } else if (selectedIdees.size() == 1) {
-                    resultCondition = "("+problemType + selectedIdees.get(0);
+                    resultCondition = "(" + problemType + selectedIdees.get(0);
 
                 } else {
-                    resultCondition = "("+problemType + selectedIdees.remove(0);
+                    resultCondition = "(" + problemType + selectedIdees.remove(0);
                     for (int i = 0; i < selectedIdees.size(); i++) {
                         resultCondition += " OR " + problemType + selectedIdees.get(i);
                     }
                 }
-                dateCondition=dateInterval + "\'"+beginDate+"\'" + " AND " + "\'"+finishDate+"\')";
-                resultCondition+=dateCondition;
+
+                dateCondition = dateInterval + "\'" + beginDate + "\'" + " AND " + "\'"+finishDate+"\')";
+                resultCondition += dateCondition;
+
+                if (mSwitch.isChecked()) {
+                    userIDValue = User.getUserId();
+                    userCondition = " AND (" + userID + userIDValue + ")";
+                    resultCondition += userCondition;
+                }
+
                 Log.i(LOG_TAG, resultCondition);
 
                 ourActivity.filter(resultCondition);
+
             }
         });
         //set all problems as checked
         resetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mSwitch.setChecked(false);
+
                 for (int i = 0; i < listView.getCount(); i++) {
                     listView.setItemChecked(i, true);
                 }
@@ -273,7 +292,6 @@ public class FiltersFragment extends ListFragment {
                     datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
                             Calendar c = Calendar.getInstance();
                             c.set(year, monthOfYear, dayOfMonth);
                             String dateForTextField;
@@ -313,8 +331,6 @@ public class FiltersFragment extends ListFragment {
     public interface Filterable {
         public void filter(String string);
     }
-
-
 
 }
 

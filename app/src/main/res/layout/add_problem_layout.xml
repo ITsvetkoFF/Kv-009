@@ -16,7 +16,7 @@
 
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:paddingTop="8dp"
+        android:paddingTop="16dp"
         android:paddingBottom="16dp" >
 
         <LinearLayout
@@ -153,5 +153,7 @@
                 android:paddingRight="2dp" />
 
         </RelativeLayout>
+
     </LinearLayout>
+
 </ScrollView>
