@@ -102,6 +102,13 @@
     <string name="ok">Okay</string>
 
     <string name="title_activity_view_photos">Photo viewer</string>
+
+    <string name="notify_photos_loading">Ecomap: loading photos...</string>
+
+    <string name="remote_service_started">remote_service_started</string>
+    <string name="remote_service_stopped">remote_service_stopped</string>
+
+
     <!---->
 
     <!--Do not translate!-->
@@ -142,5 +149,7 @@
     <string name="nav_titles_statistics">Statistics</string>
     <string name="unsolved_problem">UNSOLVED</string>
     <string name="solved_problem">SOLVED</string>
+    
     <!---->
 </resources>
+

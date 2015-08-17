@@ -1,7 +1,6 @@
 package org.ecomap.android.app;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -23,7 +22,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by yridktc on 14.07.2015.
+ * Created by y.ridkous@gmail.com on 14.07.2015.
  * based on
  * https://github.com/loopj/android-async-http/blob/master/library/src/main/java/com/loopj/android/http/PersistentCookieStore.java#L44
  */

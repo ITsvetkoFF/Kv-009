@@ -25,13 +25,15 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
     private int responseCode;
     private int problemID;
     private String resultMessage = null;
+    private UploadingServiceSession mServiceSession;
 
-    public AddProblemTask(Context context){
+    public AddProblemTask(Context context, UploadingServiceSession serviceSession){
         this.mContext = context;
         this.progressBar = null;
         this.responseCode = 0;
         this.problemID = 0;
         this.resultMessage = null;
+        this.mServiceSession = serviceSession;
     }
 
     @Override
@@ -141,6 +143,9 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
         //Checking selected photos
         if (!AddProblemFragment.selectedPhotos.isEmpty()) {
+            if(AddProblemFragment.selectedPhotos.size() > 0 && mServiceSession.isBound()){
+                mServiceSession.doStartService();
+            }
             for(int i = 0; i < AddProblemFragment.selectedPhotos.size(); i++){
                 //Get each ListView item
                 view = AddProblemFragment.getNonScrollableListView().getChildAt(i);
@@ -150,8 +155,12 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 //Get path for each photo
                 path = AddProblemFragment.selectedPhotos.get(i);
                 //Start new AsyncTask for each photo and comment (test problem ID is 361)
-                new UploadPhotoTask(mContext, problemId, path, comment).execute();
+                if(mServiceSession.isBound()){
+                    mServiceSession.sendUploadRequest(problemId, path, comment);
+                }
+                //new UploadPhotoTask(mContext, problemId, path, comment).execute();
             }
+            mServiceSession = null;
         }
     }
 }

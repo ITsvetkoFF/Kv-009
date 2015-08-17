@@ -387,7 +387,7 @@ public class CommentsFragment extends Fragment {
                 JSONObject root = new JSONObject(JSONStr);
                 JSONArray jArr = root.getJSONArray("data");
 
-                List<CommentEntry> syncedList = Collections.synchronizedList(new ArrayList<CommentEntry>(JSONStr.length()));
+                List<CommentEntry> syncedList = Collections.synchronizedList(new ArrayList<CommentEntry>(jArr.length()));
 
                 for (int i = 0; i < jArr.length(); i++) {
                     JSONObject obj = jArr.getJSONObject(i);

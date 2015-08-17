@@ -213,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         changeAuthorizationState();
 
         mFragmentManager = getSupportFragmentManager();
+        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
+            }
+        });
 
         if (savedInstanceState == null) {
             selectItem(firstLoadedFragment);
