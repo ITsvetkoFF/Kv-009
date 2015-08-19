@@ -142,15 +142,12 @@
 
             <Button
                 android:id="@+id/send_problem"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:text="@string/send"
-                android:textColor="@color/white"
-                android:background="@color/blue3"
-                android:layout_alignParentEnd="true"
+                style="@style/RaisedButton"
+                android:layout_alignWithParentIfMissing="false"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:paddingLeft="2dp"
-                android:paddingRight="2dp" />
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
 

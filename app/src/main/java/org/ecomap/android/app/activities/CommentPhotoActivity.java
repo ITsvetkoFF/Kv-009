@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -66,35 +68,38 @@ public class CommentPhotoActivity extends AppCompatActivity {
         imgAdapter = new AddPhotoImageAdapter(this, selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
-        sendProblemButton = (Button) findViewById(R.id.send_problem);
-
-        sendProblemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (selectedPhotos.size()>0) {
-
-                    if (new NetworkAvailability(getSystemService(Context.CONNECTIVITY_SERVICE))
-                            .isNetworkAvailable()) {
-                        sendPhoto();
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_LONG).show();
-                    }
-
-                }
-
-            }
-        });
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == 16908332) {
+        if (item.getItemId() == 16908332) {
             super.onBackPressed();
+            return true;
+
+        } else if (item.getItemId() == R.id.done_menu_item) {
+            if (selectedPhotos.size() > 0) {
+
+                if (new NetworkAvailability(getSystemService(Context.CONNECTIVITY_SERVICE))
+                        .isNetworkAvailable()) {
+                    sendPhoto();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), getString(R.string.check_internet), Toast.LENGTH_LONG).show();
+                }
+
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.comments_photos, menu);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void sendPhoto(){
