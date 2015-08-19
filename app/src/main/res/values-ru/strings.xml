@@ -128,4 +128,5 @@
     <string name="problem_edited">Проблема успешно отредактирована</string>
     <string name="edit_problem_activity">Редактирование проблемы</string>
     <string name="only_my_problems"> Показать только мои проблемы</string>
+    <string name="location">Местоположение</string>
 </resources>

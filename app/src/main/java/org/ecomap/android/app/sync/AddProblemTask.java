@@ -4,13 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.activities.AddProblemActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.AddProblemFragment;
+import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.utils.SnackBarHelper;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -122,16 +126,12 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         Intent intent = new Intent(mContext, EcoMapService.class);
         mContext.startService(intent);
 
-        new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG);
+        new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG).show();
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
-
-            new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_added), Toast.LENGTH_SHORT).show();
-
-            ((MainActivity) mContext).disableAddProblemMode();
-            ((MainActivity) mContext).selectItem(MainActivity.NAV_MAP);
-
             sendPhoto(problemID);
+            EcoMapFragment.disableAddProblemMode();
+            mContext.startActivity(new Intent(mContext, MainActivity.class));
         }
     }
 
@@ -142,18 +142,18 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         String comment;
 
         //Checking selected photos
-        if (!AddProblemFragment.selectedPhotos.isEmpty()) {
-            if(AddProblemFragment.selectedPhotos.size() > 0 && mServiceSession.isBound()){
+        if (!AddProblemActivity.selectedPhotos.isEmpty()) {
+            if(AddProblemActivity.selectedPhotos.size() > 0 && mServiceSession.isBound()){
                 mServiceSession.doStartService();
             }
-            for(int i = 0; i < AddProblemFragment.selectedPhotos.size(); i++){
+            for(int i = 0; i < AddProblemActivity.selectedPhotos.size(); i++){
                 //Get each ListView item
-                view = AddProblemFragment.getNonScrollableListView().getChildAt(i);
+                view = AddProblemActivity.getNonScrollableListView().getChildAt(i);
                 editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
                 //Get comment
                 comment = editText.getText().toString();
                 //Get path for each photo
-                path = AddProblemFragment.selectedPhotos.get(i);
+                path = AddProblemActivity.selectedPhotos.get(i);
                 //Start new AsyncTask for each photo and comment (test problem ID is 361)
                 if(mServiceSession.isBound()){
                     mServiceSession.sendUploadRequest(problemId, path, comment);

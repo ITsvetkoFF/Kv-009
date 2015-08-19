@@ -59,6 +59,9 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".activities.StaticPagesActivity"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppThemeTransparentActionBar">
@@ -79,6 +82,15 @@
         <service android:name=".sync.GetResourcesService" />
         <service android:name=".sync.UploadingService"
             android:process=":uploadService"/>
+
+        <activity
+            android:name=".activities.AddProblemActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:label="@string/title_activity_add_problem" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
 
     </application>
 

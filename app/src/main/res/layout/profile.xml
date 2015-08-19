@@ -234,4 +234,5 @@
                 android:layout_margin="16dp" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
 </android.support.design.widget.CoordinatorLayout>
