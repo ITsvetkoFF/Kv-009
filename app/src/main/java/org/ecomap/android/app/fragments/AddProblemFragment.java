@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 
-public class AddProblemFragment extends Fragment {
+public class AddProblemFragment extends Fragment implements UploadingServiceSession.Callbacks {
 
     private Context mContext;
     private View view;
@@ -114,7 +114,7 @@ public class AddProblemFragment extends Fragment {
             marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         }
 
-        mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName());
+        mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName(), this);
 
         return view;
     }
@@ -278,6 +278,11 @@ public class AddProblemFragment extends Fragment {
         }
 
         return result;
+    }
+
+    @Override
+    public void allTasksFinished() {
+        //TODO: Show successful snack bar here
     }
 
 

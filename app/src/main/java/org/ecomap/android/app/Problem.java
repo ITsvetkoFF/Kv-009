@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
@@ -11,10 +12,19 @@ import com.google.maps.android.clustering.ClusterItem;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by Stanislav on 23.06.2015.
  */
 public class Problem implements ClusterItem, Parcelable {
+
+    private static final String LOG_TAG = Problem.class.getSimpleName();
+
     LatLng mPos;
 
     int id, typeId, resId, numberOfVotes, regionId, numberOfComments, userId;
@@ -155,14 +165,31 @@ public class Problem implements ClusterItem, Parcelable {
 
     public String getUserDate(){
 
+        //Parse and localize date
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date localDate = null;
+        try {
+
+            final long currentTimeMillis = System.currentTimeMillis();
+            final long tzOffset = TimeZone.getDefault().getOffset(currentTimeMillis);
+
+            localDate = new Date(format.parse(date).getTime() + tzOffset);
+
+        } catch (ParseException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
+
+        //java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(mContext);
+        String formattedCurrentDate = null != localDate ? format.format(localDate) : "";
+
         if (this.firstName.isEmpty() && this.lastName.isEmpty()){
 
             String no_name = "(" + mContext.getString(R.string.string_anonymous) + ")";
 
-            return (no_name + ": " + date);
+            return (no_name + ": " + formattedCurrentDate);
         }
 
-        return (firstName + ": " + date);
+        return (firstName + ": " + formattedCurrentDate);
     }
 
     public String getContent(){

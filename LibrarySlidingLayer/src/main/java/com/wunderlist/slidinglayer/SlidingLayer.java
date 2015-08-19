@@ -1172,7 +1172,20 @@ public class SlidingLayer extends FrameLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         // Make sure scroll position is set correctly.
-        if (w != oldw) {
+        boolean needToScroll;
+        switch (mScreenSide) {
+            case STICK_TO_LEFT:
+            case STICK_TO_RIGHT:
+                needToScroll = w != oldw;
+                break;
+            case STICK_TO_TOP:
+            case STICK_TO_BOTTOM:
+                needToScroll = h != oldh;
+                break;
+            default:
+                needToScroll = (w != oldw) || (h != oldh);
+        }
+        if (needToScroll) {
             completeScroll();
             int[] pos = getDestScrollPosForState(mCurrentState);
             scrollToAndNotify(pos[0], pos[1]);

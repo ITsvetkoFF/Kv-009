@@ -24,6 +24,7 @@ public class UploadingServiceSession {
 
     private Context mContext;
     private final String mHostToken;
+    private Callbacks callbackListner;
 
     /** Messenger for communicating with service. */
     private Messenger mService = null;
@@ -37,9 +38,10 @@ public class UploadingServiceSession {
     private final Messenger mMessenger = new Messenger(new IncomingHandler());
     private String LOG = UploadingServiceSession.class.getSimpleName();
 
-    public UploadingServiceSession(Context context, String hostToken){
+    public UploadingServiceSession(Context context, String hostToken, Callbacks callbackListner){
         this.mContext = context;
         this.mHostToken = hostToken;
+        this.callbackListner = callbackListner;
     }
 
     /**
@@ -52,6 +54,9 @@ public class UploadingServiceSession {
                 case UploadingService.MSG_TASK_FINISHED:
                     Bundle data = msg.getData();
                     SnackBarHelper.showSuccessSnackBar((Activity)mContext, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
+                    break;
+                case UploadingService.MSG_ALL_TASKS_FINISHED:
+                    callbackListner.allTasksFinished();
                     break;
                 default:
                     super.handleMessage(msg);
@@ -158,5 +163,10 @@ public class UploadingServiceSession {
         }
     }
 
+    public interface Callbacks{
+
+        void allTasksFinished();
+
+    }
 
 }

@@ -2,7 +2,6 @@ package org.ecomap.android.app.ui.components;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,7 +32,7 @@ public class EcoMapSlidingLayer extends SlidingLayer{
         return super.onTouchEvent(ev);
     }
 
-     private void hideKeyBoard() {
+    private void hideKeyBoard() {
 
         if (super.isOpened()) {
 
