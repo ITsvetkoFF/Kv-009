@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.DeleteTask;
 
 /**
@@ -38,6 +39,7 @@ public class YesNoAlertDialog {
                 if (new NetworkAvailability(mContext.getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
                     new DeleteTask(mContext).execute(String.valueOf(problem.getId()));
                     MainActivity.slidingLayer.closeLayer(true);
+                    EcoMapFragment.isOpenSlidingLayer = false;
                 }
             }
         });

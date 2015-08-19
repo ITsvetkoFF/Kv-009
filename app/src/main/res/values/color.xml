@@ -6,4 +6,6 @@
     <color name="ColorPrimary">#ff1db800</color>
     <color name="ColorPrimaryDarkTab">#ff157401</color>
     <color name="tabsScrollColorTab">#ff157401</color>
+
+    <color name="transparent">#00FFFFFF</color>
 </resources>
