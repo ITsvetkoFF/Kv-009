@@ -28,16 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"></org.ecomap.android.app.ui.components.NonScrollableListView>
 
-        <Button
-            android:id="@+id/send_problem"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/send"
-            android:textColor="#ff0099cc" />
-
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

@@ -142,7 +142,7 @@
 
                 <!-- SUGN UP BUTTON start -->
                 <Button
-                    android:id="@+id/email_sign_up_button" style="?android:textAppearanceSmall"
+                    android:id="@+id/email_sign_up_button" style="@style/RaisedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
