@@ -30,9 +30,10 @@ import java.util.HashMap;
 
 /**
  * Created by y.ridkous@gmail.com on 03.07.2015.
+ * It's just attempt to implement a service in separate process.
+ * Isn't finished yet.
  */
 public class UploadingService extends Service {
-
 
     private boolean DEBUG = true;
 
@@ -49,7 +50,7 @@ public class UploadingService extends Service {
     public static final int MSG_SET_VALUE = 3;
     public static final int MSG_GET_TASKS_LIST = 5;
     public static final int MSG_TASK_FINISHED = 6;
-
+    public static final int MSG_ALL_TASKS_FINISHED = 7;
 
     public static final String ACTION_DISMISS = "ACTION_DISMISS";
     /**
@@ -65,10 +66,6 @@ public class UploadingService extends Service {
      */
     NotificationManager mNM;
 
-    /**
-     * Keeps track of all current registered clients.
-     */
-    ArrayList<Messenger> mClients = new ArrayList<Messenger>();
 
     /**
      * Holds last value set by a messenger.
@@ -118,6 +115,7 @@ public class UploadingService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
+        if(DEBUG) Log.v(LOG, "onUnbind: " + intent.toString());
         return super.onUnbind(intent);
     }
 
@@ -235,14 +233,14 @@ public class UploadingService extends Service {
             }
         }
 
-        public void onTaskFinished() {
+        public void onTaskFinished(String className) {
             finishedTasks++;
             if (mIsForeground) {
                 foregroundNotificationBuilder.setContentInfo("" + finishedTasks + "/" + pendingTasks);
                 mNM.notify(UPLOADING_NOTIFICATION_ID, getForegroundNotification());
             }
             if(finishedTasks == pendingTasks){
-                allTasksFinished();
+                allTasksFinished(className);
             }
         }
 
@@ -256,7 +254,11 @@ public class UploadingService extends Service {
             }
         }
 
-        public void allTasksFinished(){
+        public void allTasksFinished(String className){
+
+            final Message message = Message.obtain(null, MSG_ALL_TASKS_FINISHED, null);
+            sendMessageToClient(className, message);
+
             stopForeground(true);
             stopSelf();
         }
@@ -331,7 +333,7 @@ public class UploadingService extends Service {
                 protected void onPostExecute(Void o) {
                     if(DEBUG) Log.d(LOG_TAG, "onPostExecute ");
 
-                    onTaskFinished();
+                    onTaskFinished(className);
 
                     final Message message = Message.obtain(null, MSG_TASK_FINISHED, null);
                     Bundle params = new Bundle();
@@ -340,6 +342,7 @@ public class UploadingService extends Service {
                     message.setData(params);
                     sendMessageToClient(className, message);
 
+                    clientHandler.asyncTasks.remove(this);
                 }
             };
             clientHandler.asyncTasks.add(asyncTask);
@@ -357,7 +360,7 @@ public class UploadingService extends Service {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_REGISTER_CLIENT: {
-                    mClients.add(msg.replyTo);
+
                     Bundle data = msg.getData();
                     String className = data.getString("CLASS_NAME");
                     scManager.registerClient(className, msg.replyTo);
@@ -365,15 +368,14 @@ public class UploadingService extends Service {
                     break;
                 }
                 case MSG_UNREGISTER_CLIENT:
-                    mClients.remove(msg.replyTo);
                     break;
 
                 case MSG_GET_TASKS_LIST: {
                     Bundle data = msg.getData();
                     String className = data.getString("CLASS_NAME");
                     scManager.getTaskList(className, msg.replyTo);
-                }
-
+                    }
+                    break;
                 case MSG_UPLOAD_PHOTO:
                     Bundle data = msg.getData();
                     String className = data.getString("CLASS_NAME");
