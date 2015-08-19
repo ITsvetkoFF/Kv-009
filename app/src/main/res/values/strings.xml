@@ -50,6 +50,7 @@
     <string name="have_problem">Houston, we have a problem!</string>
     <string name="action_add_polygon">Add polygon</string>
     <string name="profile">Profile</string>
+    <string name="edit_problem_activity">Edit problem</string>
     <string name="choose_location">Choose problem location</string>
     <string name="add_photo">Add photo</string>
     <string name="send">Send</string>

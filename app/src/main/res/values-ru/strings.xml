@@ -126,5 +126,6 @@
     <string name="solved_problem">РЕШЕНА</string>
     <string name="unsolved_problem">НЕ РЕШЕНА</string>
     <string name="problem_edited">Проблема успешно отредактирована</string>
+    <string name="edit_problem_activity">Редактирование проблемы</string>
     <string name="only_my_problems"> Показать только мои проблемы</string>
 </resources>

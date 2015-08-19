@@ -49,7 +49,7 @@ public class Profile extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_toolbar);
-        collapsingToolbar.setTitle("Profile");
+        collapsingToolbar.setTitle(getString(R.string.profile));
         final ImageView profileBackdrop = (ImageView)findViewById(R.id.profile_backdrop);
         profileBackdrop.setImageResource(setRandomHead());
 
