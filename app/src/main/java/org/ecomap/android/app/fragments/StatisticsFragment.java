@@ -2,6 +2,7 @@ package org.ecomap.android.app.fragments;
 
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,30 +65,36 @@ public class StatisticsFragment extends Fragment {
         one_day.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                underlineButton(v);
                 setData(1);
             }
         });
         one_week.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                underlineButton(v);
                 setData(7);
             }
         });
         one_month.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                underlineButton(v);
                 setData(30);
             }
         });
         one_year.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                underlineButton(v);
                 setData(365);
             }
         });
         one_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                underlineButton(v);
                 setData(0);
             }
         });
@@ -115,6 +122,36 @@ public class StatisticsFragment extends Fragment {
         setData(0);
 
         return view;
+    }
+
+    private void underlineButton(View view) {
+
+        //reset all
+        one_day.setPaintFlags(one_day.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+        one_week.setPaintFlags(one_week.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+        one_month.setPaintFlags(one_month.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+        one_year.setPaintFlags(one_year.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+        one_reset.setPaintFlags(one_reset.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+
+        switch (view.getId()) {
+            case R.id.one_day:
+                one_day.setPaintFlags(one_day.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                break;
+            case R.id.one_week:
+                one_week.setPaintFlags(one_week.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                break;
+            case R.id.one_month:
+                one_month.setPaintFlags(one_month.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                break;
+            case R.id.one_year:
+                one_year.setPaintFlags(one_year.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                break;
+            case R.id.one_reset:
+                one_reset.setPaintFlags(one_reset.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                break;
+
+        }
+
     }
 
     private void setData(int time){
