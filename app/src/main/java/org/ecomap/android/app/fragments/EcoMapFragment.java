@@ -172,6 +172,7 @@ public class EcoMapFragment extends Fragment {
         //deleteProblem = (ImageView) v.findViewById(R.id.action_delete_problem);
 
         mSlidingLayer = (EcoMapSlidingLayer) v.findViewById(R.id.show_problem_sliding_layer);
+        MainActivity.slidingLayer = mSlidingLayer;
 
         mSlidingLayer.setOnInteractListener(new EcoMapSlidingLayer.OnInteractListener() {
             @Override
@@ -193,11 +194,12 @@ public class EcoMapFragment extends Fragment {
                 //If onPreview, we show only 1 line of title
                 showTitle.setMaxLines(1);
                 showTitle.setEllipsize(TextUtils.TruncateAt.END);
+                isOpenSlidingLayer = true;
             }
 
             @Override
             public void onClose() {
-
+                isOpenSlidingLayer = false;
             }
 
             @Override
@@ -472,7 +474,6 @@ public class EcoMapFragment extends Fragment {
         });
 
         MainActivity.currentProblem = problem;
-        MainActivity.slidingLayer = mSlidingLayer;
         cameraPosition = mMap.getCameraPosition();
         getActivity().invalidateOptionsMenu();
 

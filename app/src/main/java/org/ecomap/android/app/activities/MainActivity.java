@@ -51,7 +51,6 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
 import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.fragments.EditProblemFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
 import org.ecomap.android.app.fragments.StaticPagesFragment;
@@ -286,19 +285,24 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         if (mFragment != null) {
             if (mFragment.getClass().equals(EcoMapFragment.class)) {
-                if (currentProblem != null) {
-                    if (User.canUserDeleteProblem(currentProblem)) {
-                        deleteMenuItem.setVisible(true);
-                    } else {
-                        deleteMenuItem.setVisible(false);
-                    }
 
-                    if (User.canUserEditProblem(currentProblem)) {
-                        ediMenuItem.setVisible(true);
-                    } else {
-                        ediMenuItem.setVisible(false);
+                //currentProblem != null
+                if (slidingLayer != null) {
+                    if (!slidingLayer.isClosed()) {
+                        if (User.canUserDeleteProblem(currentProblem)) {
+                            deleteMenuItem.setVisible(true);
+                        } else {
+                            deleteMenuItem.setVisible(false);
+                        }
+
+                        if (User.canUserEditProblem(currentProblem)) {
+                            ediMenuItem.setVisible(true);
+                        } else {
+                            ediMenuItem.setVisible(false);
+                        }
                     }
                 }
+
             } else {
                 deleteMenuItem.setVisible(false);
                 ediMenuItem.setVisible(false);
@@ -328,6 +332,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
 
             case R.id.edit_menu_item:
+                slidingLayer.closeLayer(true);
                 selectItem(NAV_EDIT_PROBLEM);
                 break;
 
@@ -501,16 +506,13 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
 
             case NAV_EDIT_PROBLEM:
-                tag = EditProblemFragment.class.getSimpleName();
-                mFragment = mFragmentManager.findFragmentByTag(tag);
+                Intent i = new Intent(this, EditProblem.class);
+                i.putExtra("problem", currentProblem);
 
-                if (mFragment == null){
-                    mFragment = new EditProblemFragment();
-                }
+                startActivity(i);
 
+                stop = true;
 
-
-                invalidateOptionsMenu();
                 break;
 
             default:
@@ -553,7 +555,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     public void updateNavigationViewPosition(){
 
-        if (mFragment != null && mFragment.getClass() != AddProblemFragment.class && mFragment.getClass() != EditProblemFragment.class) {
+        if (mFragment != null && mFragment.getClass() != AddProblemFragment.class) {
             mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
         }
 
@@ -622,6 +624,4 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 }).show();
 
     }
-
-
 }

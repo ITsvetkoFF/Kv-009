@@ -55,12 +55,12 @@ public class EditProblemTask extends AsyncTask<String, Void, Void> {
             request.put("status", params[0]);
             request.put("severity", params[1]);
             request.put("title", params[2]);
-            request.put("problem_type_id", params[3]);
+            request.put("problem_type_id", Integer.valueOf(params[3]));
             request.put("content", params[4]);
             request.put("proposal", params[5]);
-            request.put("region_id", params[6]);
-            request.put("latitude", params[7]);
-            request.put("longitude", params[8]);
+            request.put("region_id", Integer.valueOf(params[6]));
+            request.put("latitude", Double.valueOf(params[7]));
+            request.put("longitude", Double.valueOf(params[8]));
 
             //sending request
             urlConnection.getOutputStream().write(request.toString().getBytes("UTF-8"));
@@ -88,7 +88,7 @@ public class EditProblemTask extends AsyncTask<String, Void, Void> {
 
             new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_edited), Toast.LENGTH_SHORT).show();
 
-            ((MainActivity) mContext).selectItem(MainActivity.NAV_MAP);
+            mContext.startActivity(new Intent(mContext, MainActivity.class));
 
         }
     }

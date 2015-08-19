@@ -217,6 +217,10 @@ public class Problem implements ClusterItem, Parcelable {
         return typeId;
     }
 
+    public void setTypeId(int typeId){
+        this.typeId = typeId;
+    }
+
     @Override
     public LatLng getPosition() {
         return mPos;
