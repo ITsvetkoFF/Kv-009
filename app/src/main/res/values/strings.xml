@@ -51,9 +51,10 @@
     <string name="action_add_polygon">Add polygon</string>
     <string name="profile">Profile</string>
     <string name="choose_location">Choose problem location</string>
+    <string name="location">Location</string>
     <string name="add_photo">Add photo</string>
     <string name="send">Send</string>
-    <string name="add_problem_description">Add Problem Description</string>
+    <string name="add_problem_description">Description</string>
     <string name="uploading_photo">Uploading Photo...</string>
     <string name="photos_uploaded">Photo Uploaded</string>
     <string name="uploading_error">Uploading Error</string>
@@ -64,10 +65,10 @@
     <string name="problem_edited">Problem has been successfully edited</string>
 
     <string name="string_added_by">"Added by: "</string>
-    <string name="string_suggested_solution">Suggested Solution</string>
+    <string name="string_suggested_solution">Solution</string>
     <string name="string_description">Description: </string>
-    <string name="add_problem_title">Problem Title</string>
-    <string name="add_problem_type">Problem Type</string>
+    <string name="add_problem_title">Title</string>
+    <string name="add_problem_type">Type</string>
     <string name="add_problem_add_button">Add</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
@@ -149,7 +150,10 @@
     <string name="nav_titles_statistics">Statistics</string>
     <string name="unsolved_problem">UNSOLVED</string>
     <string name="solved_problem">SOLVED</string>
-    
+    <string name="title_activity_add_problem">AddProblemActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
     <!---->
 </resources>
 

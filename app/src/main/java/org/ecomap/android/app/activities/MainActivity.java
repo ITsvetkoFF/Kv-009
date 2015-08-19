@@ -495,16 +495,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 break;
 
             case NAV_ADD_PROBLEM:
-                tag = AddProblemFragment.class.getSimpleName();
-                mFragment = mFragmentManager.findFragmentByTag(tag);
-
-                if (mFragment == null) {
-                    mFragment = new AddProblemFragment();
-                }
-
-                ((AddProblemFragment)mFragment).setMarkerPosition(ecoMapFragment.getMarkerPosition());
-
-                invalidateOptionsMenu();
+                startActivity(new Intent(getApplicationContext(), AddProblemActivity.class));
+                stop = true;
 
                 break;
 
@@ -603,31 +595,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         } catch (URISyntaxException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
-    }
-
-    public void deleteAddproblemFragment() {
-        tag = AddProblemFragment.class.getSimpleName();
-
-        mFragment = mFragmentManager.findFragmentByTag(tag);
-
-        if (mFragment != null) {
-
-            if (((AddProblemFragment)mFragment).mustBeRemoved()) {
-
-                FragmentTransaction transaction = mFragmentManager.beginTransaction();
-                transaction.remove(mFragment);
-
-                mFragmentManager.popBackStackImmediate();
-                transaction.commit();
-                mFragmentManager.popBackStackImmediate();
-
-                mFragment = null;
-            }
-        }
-    }
-
-    public void disableAddProblemMode() {
-        ecoMapFragment.disableAddProblemMode();
     }
 
     private boolean checkPlayServices() {

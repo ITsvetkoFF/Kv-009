@@ -45,6 +45,11 @@ public class MapClustering {
         this.ecoMapFragment = ecoMapFragment;
     }
 
+    public MapClustering (GoogleMap mMap, Context mContext) {
+        this.mMap = mMap;
+        this.mContext = mContext;
+    }
+
     public void setUpClusterer() {
         if(cameraPosition != null){
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -90,13 +95,7 @@ public class MapClustering {
                 } else if (EcoMapFragment.getMarkerClickType() == 2) {
 
                     addMarkerToMap(latLng);
-/*
-                    marker = mMap.addMarker(new MarkerOptions().draggable(true).position(latLng));
-                    marker.setTitle(mContext.getString(R.string.have_problem));
-                    marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-                    EcoMapFragment.setMarkerPosition(latLng);
-*/
                 }
             }
         });

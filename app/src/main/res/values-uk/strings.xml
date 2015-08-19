@@ -127,4 +127,5 @@
     <string name="unsolved_problem">НЕ ВИРІШЕНА</string>
     <string name="problem_edited">Проблему успішно відредаговано</string>
     <string name="only_my_problems">Показати лише мої проблеми</string>
+    <string name="location">Місцезнаходження</string>
 </resources>
