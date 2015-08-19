@@ -2,10 +2,10 @@ package org.ecomap.android.app.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -42,7 +42,7 @@ import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 
 
-public class AddProblemActivity extends AppCompatActivity {
+public class AddProblemActivity extends AppCompatActivity implements UploadingServiceSession.Callbacks {
 
     private EditText problemTitle;
     private EditText problemDescription;
@@ -111,7 +111,7 @@ public class AddProblemActivity extends AppCompatActivity {
             mapClusterer.addMarkerToMap(markerPosition);
         }
 
-        mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName());
+        mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName(), this);
 
         problemTitle = (EditText) findViewById(R.id.problemTitle);
         problemDescription = (EditText) findViewById(R.id.problemDescription);
@@ -312,5 +312,10 @@ public class AddProblemActivity extends AppCompatActivity {
         } else {
             SnackBarHelper.showWarningSnackBar(this, R.string.problem_title_blank, Snackbar.LENGTH_SHORT);
         }
+    }
+
+    @Override
+    public void allTasksFinished() {
+
     }
 }
