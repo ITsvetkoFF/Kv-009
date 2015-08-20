@@ -214,7 +214,7 @@ public class EcoMapFragment extends Fragment {
 
             @Override
             public void onClosed() {
-                isOpenSlidingLayer = false;
+                //isOpenSlidingLayer = false;
                 getActivity().invalidateOptionsMenu();
             }
         });
