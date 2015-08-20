@@ -23,6 +23,7 @@ public class CommentEntry {
     private static final String CONTENT = "content";
     private static final String CREATEDDATE = "created_date";
     private static final String ID = "id";
+    private static final String USER_ID="user_id";
 
     private String modifiedDate;
     private String modifiedBy;
@@ -30,6 +31,7 @@ public class CommentEntry {
     private String content;
     private String createdDate;
     private long id;
+    private int userId;
 
     public static CommentEntry fromJSON(JSONObject obj){
 
@@ -40,8 +42,9 @@ public class CommentEntry {
             String content = obj.getString(CONTENT);
             String createdDate = obj.getString(CREATEDDATE);
             long id = obj.getLong(ID);
+            int userId=obj.getInt(USER_ID);
 
-            return new CommentEntry(modifiedDate, modifiedBy, createdBy, content, createdDate, id);
+            return new CommentEntry(modifiedDate, modifiedBy, createdBy, content, createdDate, id, userId);
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -51,13 +54,14 @@ public class CommentEntry {
     }
 
 
-    public CommentEntry(final String modifiedDate, final String modifiedBy, final String createdBy, final String content, final String createdDate, final long id) {
+    public CommentEntry(final String modifiedDate, final String modifiedBy, final String createdBy, final String content, final String createdDate, final long id, final int userId) {
         this.modifiedDate = modifiedDate;
         this.modifiedBy = modifiedBy;
         this.createdBy = createdBy;
         this.content = content;
         this.createdDate = createdDate;
         this.id = id;
+        this.userId=userId;
     }
 
     public String getModifiedDate() {
@@ -83,6 +87,8 @@ public class CommentEntry {
     public long getId() {
         return id;
     }
+
+    public int getUserId(){return userId;}
 
     public Date getCreatedDate(){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");

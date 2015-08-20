@@ -2,6 +2,8 @@ package org.ecomap.android.app;
 
 import android.util.Log;
 
+
+import org.ecomap.android.app.utils.UserSubscriber;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -17,10 +19,16 @@ public class User {
     private static String firstName, lastName, email, password, role;
     private static int userId;
     private static Set<String> set;
+    private static final String LOG_TAG="test";
 
     private static final int NONE = 0;
     private static final int OWN = 1;
     private static final int ALL = 2;
+
+    private static Set<UserSubscriber> subscribers;
+
+
+
 
     private User(String firstName, String lastName, String email, String password, String role, String userId, Set<String> set){
         User.firstName = firstName;
@@ -30,6 +38,10 @@ public class User {
         User.role = role;
         User.userId = Integer.valueOf(userId);
         User.set = set;
+        if(subscribers==null){
+        subscribers=new HashSet<UserSubscriber>();}
+        else{ notifySubscribers();}
+
     }
 
     //getInstance method that initialize and return new user
@@ -37,6 +49,11 @@ public class User {
 
         if (user == null){
             user = new User(firstName, lastName, email, password, role, userId, set);
+
+        }
+        else{
+            notifySubscribers();
+
         }
 
         return user;
@@ -44,6 +61,7 @@ public class User {
 
     //getInstance method that return current user
     public static User getInstance(){
+        notifySubscribers();
         return user;
     }
 
@@ -69,6 +87,24 @@ public class User {
 
     public static Integer getUserId(){
         return userId;
+    }
+
+    //User class and UserSubscriber interface implement Observer pattern. When userInstance is created it will notify all the subscribers that means User logged in.
+    //To implement this pattern correctly in your fragment, first implement the interface, then call addSubscriber when created or resumed your fragment and removeSubscriber when stopped or detached.
+    //You will also need to have a refference on user instance, so call getInstance() with nullable check.
+
+    public  static void addSubscriber(UserSubscriber sub){
+        if(subscribers!=null)subscribers.add(sub);
+    }
+
+    public static void removeSubscriber(UserSubscriber sub){
+        if(subscribers!=null)subscribers.remove(sub);
+    }
+    public static void notifySubscribers(){
+        Log.i(LOG_TAG, "subscribers are notified");
+        for(UserSubscriber sub:subscribers){
+            sub.changeState();
+        }
     }
 
     public static Set<String> getSetFromJSONArray(JSONArray jArr){
@@ -101,6 +137,24 @@ public class User {
 
         return false;
     }
+    public static boolean canUserDeleteComment(int whoseComment){
+        if(user!=null){
+            for(String s: set){
+                if(s.contains("CommentHandler:DELETE")){
+                    if(userId==whoseComment)
+                    {
+                        return (s.contains("OWN") || s.contains("ANY"));
+                    }
+                    else
+                    {
+                        return s.contains("ANY");
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
 
     public static boolean canUserEditProblem(Problem p){
         if (user != null) {
@@ -120,5 +174,10 @@ public class User {
 
     public static void deleteUserInstance(){
         user = null;
+        notifySubscribers();
+
     }
+
+
+
 }

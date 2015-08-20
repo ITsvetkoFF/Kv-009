@@ -121,6 +121,7 @@
     <string name="want_delete_problem">Вы действительно хотите удалить эту проблему?</string>
     <string name="message_log_in_to_vote">Войдите чтобы голосовать</string>
     <string name="refresh_database_now">Обновить базу данных</string>
+    <string name="delete_comment_message">Вы уверены, что хотете удалить комментарий?</string>
     <string name="want_edit_problem">Вы действительно хотите редактировать эту проблему?</string>
     <string name="edit_problem_fragment">Редактировать проблему</string>
     <string name="solved_problem">РЕШЕНА</string>
