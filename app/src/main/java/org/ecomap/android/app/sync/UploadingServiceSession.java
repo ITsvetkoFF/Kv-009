@@ -1,6 +1,7 @@
 package org.ecomap.android.app.sync;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -121,9 +122,11 @@ public class UploadingServiceSession {
         // Establish a connection with the service.  We use an explicit
         // class name because there is no reason to be able to let other
         // applications replace our component.
-        final Intent intent = new Intent(mContext, UploadingService.class);
+        //if(!mIsBound) {
+            final Intent intent = new Intent(mContext, UploadingService.class);
 //        intent.setAction("org.ecomap.android.app.PHOTOS_UPLOADING");
-        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        //}
 
     }
 
@@ -142,8 +145,11 @@ public class UploadingServiceSession {
                 }
             }
 
+
             // Detach our existing connection.
-            mContext.unbindService(mConnection);
+            if(isMyServiceRunning(UploadingService.class)) {
+                mContext.unbindService(mConnection);
+            }
             //mIsBound = false;
         }
     }
@@ -161,6 +167,16 @@ public class UploadingServiceSession {
         return mIsBound;
     }
 
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void sendUploadRequest(int problemId, String photoURL, String comment){
         Bundle params = new Bundle();
