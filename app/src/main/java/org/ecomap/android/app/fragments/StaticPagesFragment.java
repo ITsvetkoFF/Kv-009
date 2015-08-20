@@ -17,9 +17,6 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.StaticPagesActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 
-/**
- * Created by yura on 7/31/15.
- */
 public class StaticPagesFragment extends Fragment {
     View view;
     Cursor resourcesCusor;

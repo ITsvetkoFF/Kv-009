@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import org.ecomap.android.app.R;
 
-/**
- * Created by y.ridkous@gmail.com on 26.07.2015.
- */
 public class SnackBarHelper {
     /**
      * SnackBar stencils

@@ -11,9 +11,6 @@ import java.util.List;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
-/**
- * Created by y.ridkous@gmail.com on 06.07.2015.
- */
 public class ZoomableImageView extends ImageViewTouch {
 
     private long mDeBounce = 0;

@@ -29,9 +29,6 @@ import com.wunderlist.slidinglayer.LayerTransformer;
 import com.wunderlist.slidinglayer.SlidingLayer;
 import com.wunderlist.slidinglayer.utils.Transitions;
 
-/**
- * Created by joseluisugia on 16/03/15.
- */
 public final class SlideJoyTransformer extends LayerTransformer {
 
     private final float[] mCuePoints = new float[] { 0.7f, 0.9f, 1 };

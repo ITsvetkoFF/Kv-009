@@ -10,9 +10,6 @@ import org.json.JSONException;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created by Stanislav on 06.08.2015.
- */
 public class User {
     private static User user;
 

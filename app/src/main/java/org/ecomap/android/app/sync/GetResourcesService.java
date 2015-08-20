@@ -18,9 +18,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by yura on 7/31/15.
- */
 public class GetResourcesService extends IntentService {
 
     private final String LOG_TAG = getClass().getSimpleName();

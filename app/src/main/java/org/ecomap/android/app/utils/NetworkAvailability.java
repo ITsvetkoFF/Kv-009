@@ -3,9 +3,6 @@ package org.ecomap.android.app.utils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
 public class NetworkAvailability {
 
     private ConnectivityManager connectivityManager;

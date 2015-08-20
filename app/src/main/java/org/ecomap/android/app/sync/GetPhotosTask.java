@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
 public class GetPhotosTask extends AsyncTask<Integer, Integer, List<ProblemPhotoEntry>> {
 
     public EcoMapFragment ecoMapFragment;
