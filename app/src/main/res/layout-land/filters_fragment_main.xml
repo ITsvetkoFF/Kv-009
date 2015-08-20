@@ -65,7 +65,6 @@
                         android:layout_margin="6dp"
                         android:clickable="true"
                         android:gravity="center"
-                        android:text="New Text"
                         android:textColor="@color/primary_text" />
                 </LinearLayout>
 
@@ -92,7 +91,6 @@
                         android:layout_margin="6dp"
                         android:clickable="true"
                         android:gravity="center"
-                        android:text="New Text"
                         android:textColor="@color/primary_text" />
 
                 </LinearLayout>
