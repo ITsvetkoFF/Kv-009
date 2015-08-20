@@ -117,6 +117,8 @@
     <string name="filters_menu_item_title">Фільтри</string>
     <string name="nav_titles_statistics">Статистика</string>
     <string name="nav_titles_top10">Топ 10</string>
+    <string name="google_login">Увійти з Google+</string>
+    <string name="facebook_login">Увійти з Facebook</string>
     <string name="want_delete_problem">Ви насправді хочете видалити цю проблему?</string>
     <string name="item_addProblem">Додати проблему</string>
     <string name="message_log_in_to_vote">Увійдіть, щоб голосувати</string>

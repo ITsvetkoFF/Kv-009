@@ -76,6 +76,26 @@
             android:layout_marginTop="16dp"
             android:text="@string/login"
             style="@style/RaisedButton"/>
+        <Button
+            android:id="@+id/facebook_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/facebook_login"
+            android:drawableStart="@drawable/facebook_logo"
+            android:drawableLeft="@drawable/facebook_logo"
+            android:background="@color/com_facebook_button_background_color"
+            style="@style/RaisedButton"/>
+        <Button
+            android:id="@+id/google_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/google_login"
+            android:drawableStart="@drawable/google_logo"
+            android:drawableLeft="@drawable/google_logo"
+            android:background="@color/textRed"
+            style="@style/RaisedButton"/>
         <!-- LOGIN BUTTON end -->
 
         <!--LINK TO REGISTER start -->

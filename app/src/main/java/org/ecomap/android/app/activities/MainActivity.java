@@ -420,15 +420,22 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
+            case LoginFragment.RC_SIGN_IN:
+                Fragment loginFragment = mFragmentManager.findFragmentByTag("login_layout");
+                if(loginFragment != null){
+                    loginFragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
             case REQUEST_CODE_RECOVER_PLAY_SERVICES:
                 if (resultCode == RESULT_CANCELED) {
                     Toast.makeText(this, "Google Play Services must be installed.",
                             Toast.LENGTH_SHORT).show();
                     finish();
                 }
-                return;
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void selectItem(int position) {
