@@ -19,12 +19,11 @@ import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
+
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.EcoMapFragment;
@@ -51,34 +50,32 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     private TextInputLayout tilProblemTitle;
     private TextInputLayout tilProblemDescription;
     private TextInputLayout tilProblemSolution;
+
     private Spinner spinner;
+    private Button addPhotoButton;
+    private MenuItem doneMenu;
 
     private static NonScrollableListView nonScrollableListView;
-    public AddPhotoImageAdapter imgAdapter;
     public static ArrayList<String> selectedPhotos = new ArrayList<>();
-
-    private Button addPhotoButton;
+    public AddPhotoImageAdapter imgAdapter;
 
     public static final int REQUEST_CODE = 1;
     private int problemType;
     private String[] params;
 
-    private MapView mapView;
     private GoogleMap mMap;
-    private Marker marker;
+    private SupportMapFragment mapFragment;
+    private MapClustering mapClusterer;
+
     private UiSettings uiSettings;
     private LatLng markerPosition;
-
-    private static Context mContext;
-
-    private MenuItem doneMenu;
-
-    private UploadingServiceSession mServiceSession;
-
-    private MapClustering mapClusterer;
     private CameraPosition cameraPosition;
 
-    SupportMapFragment mapFragment;
+    private static Context mContext;
+    private UploadingServiceSession mServiceSession;
+
+    private CollapsingToolbarLayout collapsingToolbar;
+    private Toolbar toolbar;
 
     @Override
     protected void onResume() {
@@ -101,15 +98,10 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         uiSettings.setMapToolbarEnabled(false);
 
         mapClusterer = new MapClustering(mMap, mContext);
-
         markerPosition = EcoMapFragment.getMarkerPosition();
         cameraPosition = EcoMapFragment.getCameraPosition();
 
-        if (markerPosition != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, cameraPosition.zoom));
-
-            mapClusterer.addMarkerToMap(markerPosition);
-        }
+        setMarkerToMap();
 
         mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName(), this);
 
@@ -117,11 +109,36 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         problemDescription = (EditText) findViewById(R.id.problemDescription);
         problemSolution = (EditText) findViewById(R.id.problemSolution);
 
+        tilProblemTitle = (TextInputLayout) findViewById(R.id.til_problemTitle);
+        tilProblemTitle.setErrorEnabled(true);
+
+
+        tilProblemDescription = (TextInputLayout) findViewById(R.id.til_problemDescription);
+        tilProblemDescription.setErrorEnabled(true);
+
+        tilProblemSolution = (TextInputLayout) findViewById(R.id.til_problemSolution);
+        tilProblemSolution.setErrorEnabled(true);
+
         spinner = (Spinner) findViewById(R.id.spinner);
         addPhotoButton = (Button) findViewById(R.id.add_photo);
 
-        tilProblemTitle = (TextInputLayout) findViewById(R.id.til_problemTitle);
-        tilProblemTitle.setErrorEnabled(true);
+        nonScrollableListView = (NonScrollableListView) findViewById(R.id.add_problem_non_scrollable_list_view);
+        imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
+        nonScrollableListView.setAdapter(imgAdapter);
+
+        toolbar = (Toolbar) findViewById(R.id.add_problem_toolbar);
+        setSupportActionBar(toolbar);
+
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.add_problem_collapsing_toolbar);
+        collapsingToolbar.setTitle(getString(R.string.item_addProblem));
+        collapsingToolbar.setExpandedTitleColor(android.R.color.transparent);
+
         problemTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -141,32 +158,6 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 }
             }
         });
-
-        tilProblemDescription = (TextInputLayout) findViewById(R.id.til_problemDescription);
-        tilProblemDescription.setErrorEnabled(true);
-
-        tilProblemSolution = (TextInputLayout) findViewById(R.id.til_problemSolution);
-        tilProblemSolution.setErrorEnabled(true);
-
-        nonScrollableListView = (NonScrollableListView) findViewById(R.id.add_problem_non_scrollable_list_view);
-        imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
-        nonScrollableListView.setAdapter(imgAdapter);
-
-        // TOOLBAR
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.add_problem_toolbar);
-        setSupportActionBar(toolbar);
-
-        try {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout)findViewById(R.id.add_problem_collapsing_toolbar);
-        collapsingToolbar.setTitle(getString(R.string.item_addProblem));
-        collapsingToolbar.setExpandedTitleColor(android.R.color.transparent);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -209,7 +200,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         //Getting photo paths from lib
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (data != null) {
-                //selectedPhotos.clear();
+                selectedPhotos.clear();
                 selectedPhotos.addAll(data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS));
                 imgAdapter.updateDataSet(selectedPhotos);
             }
@@ -220,14 +211,12 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_problem, menu);
+        doneMenu = menu.findItem(R.id.add_problem_done_menu_item);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
-        doneMenu = menu.findItem(R.id.add_problem_done_menu_item);
-
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -239,12 +228,13 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             case android.R.id.home:
 
                 EcoMapFragment.disableAddProblemMode();
-                //NavUtils.navigateUpFromSameTask(this);
-                //this.finish();
                 startActivity(new Intent(mContext, MainActivity.class));
+                selectedPhotos.clear();
+
                 return true;
 
             case R.id.add_problem_done_menu_item:
+
                 sendProblemToServer();
                 hideSoftInput();
 
@@ -260,19 +250,25 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onBackPressed() {
         EcoMapFragment.disableAddProblemMode();
+        selectedPhotos.clear();
         super.onBackPressed();
+    }
+
+    @Override
+    public void allTasksFinished() {
+
     }
 
     public static NonScrollableListView getNonScrollableListView() {
@@ -284,9 +280,19 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
     }
 
+    private void setMarkerToMap() {
+        if (markerPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markerPosition, cameraPosition.zoom));
+
+            mapClusterer.addMarkerToMap(markerPosition);
+        }
+    }
+
     private void sendProblemToServer() {
 
         if (!problemTitle.getText().toString().isEmpty()) {
+
+            tilProblemTitle.setErrorEnabled(false);
             params = new String[9];
 
             params[0] = "UNSOLVED";
@@ -294,13 +300,13 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             params[2] = problemTitle.getText().toString();
             params[3] = String.valueOf(problemType);
             params[4] = problemDescription.getText().toString();
+
             params[5] = problemSolution.getText().toString();
             params[6] = "1";
             params[7] = String.valueOf(markerPosition.latitude);
             params[8] = String.valueOf(markerPosition.longitude);
 
-            if (new NetworkAvailability(mContext.getSystemService(Context.CONNECTIVITY_SERVICE))
-                    .isNetworkAvailable()) {
+            if (new NetworkAvailability(mContext.getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
 
                 if (mServiceSession.isBound()) {
                     new AddProblemTask(mContext, mServiceSession).execute(params);
@@ -310,12 +316,9 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 SnackBarHelper.showInfoSnackBar(this, R.string.check_internet, Snackbar.LENGTH_LONG);
             }
         } else {
+            tilProblemTitle.setError(getString(R.string.problem_title_blank));
             SnackBarHelper.showWarningSnackBar(this, R.string.problem_title_blank, Snackbar.LENGTH_SHORT);
         }
     }
 
-    @Override
-    public void allTasksFinished() {
-
-    }
 }
