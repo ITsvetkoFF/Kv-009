@@ -68,7 +68,6 @@
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="onStartDateClicked"
-                        android:text="New Text"
                         android:textColor="@color/primary_text" />
                 </LinearLayout>
 
@@ -96,7 +95,6 @@
                         android:clickable="true"
                         android:gravity="center"
                         android:onClick="onEndDateClicked"
-                        android:text="New Text"
                         android:textColor="@color/primary_text" />
 
                 </LinearLayout>

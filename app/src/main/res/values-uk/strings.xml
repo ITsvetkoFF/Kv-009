@@ -42,7 +42,7 @@
     <string name="register_if_new">Новий користувач? Зареєструйся!</string>
     <string name="want_logout">Ви насправді бажаєте вийти?</string>
     <string name="change_password">Забули пароль? Змініть його!</string>
-    <string name="write_comment">Напишіть коментар...</string>
+    <string name="write_comment">Напишіть коментар…</string>
     <string name="have_problem">Хьюстон, у нас проблема!</string>
     <string name="action_add_polygon">Додати полігон</string>
     <string name="profile">Профіль</string>
@@ -94,7 +94,7 @@
     <string name="item_settings">Налаштування</string>
     <string name="item_resources">Ресурси</string>
     <string name="item_login">Увійти</string>
-    <string name="uploading_photo">Завантаження фото...</string>
+    <string name="uploading_photo">Завантаження фото…</string>
     <string name="photos_uploaded">Фото успішно завантажено</string>
     <string name="uploading_error">Помілка під час завантаження фото</string>
     <string name="problem_title_blank">Заголовок не може бути порожнім</string>
@@ -130,4 +130,5 @@
     <string name="only_my_problems">Показати лише мої проблеми</string>
     <string name="location">Місцезнаходження</string>
     <string name="notify_photos_loading">Ecomap: завантаження фотографій</string>
+    <string name="done">Готово</string>
 </resources>

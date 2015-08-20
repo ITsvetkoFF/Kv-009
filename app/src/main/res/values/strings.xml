@@ -46,7 +46,7 @@
     <string name="want_delete_problem">Do you really want to delete this problem?</string>
     <string name="want_edit_problem">Do you really want to edit this problem?</string>
     <string name="change_password">Forgot your password? Change it!</string>
-    <string name="write_comment">Write a comment...</string>
+    <string name="write_comment">Write a comment…</string>
     <string name="have_problem">Houston, we have a problem!</string>
     <string name="action_add_polygon">Add polygon</string>
     <string name="profile">Profile</string>
@@ -56,7 +56,7 @@
     <string name="add_photo">Add photo</string>
     <string name="send">Send</string>
     <string name="add_problem_description">Description</string>
-    <string name="uploading_photo">Uploading Photo...</string>
+    <string name="uploading_photo">Uploading Photo…</string>
     <string name="photos_uploaded">Photo Uploaded</string>
     <string name="uploading_error">Uploading Error</string>
     <string name="problem_title_blank">Problem title can not be blank</string>
@@ -105,7 +105,7 @@
 
     <string name="title_activity_view_photos">Photo viewer</string>
 
-    <string name="notify_photos_loading">Ecomap: loading photos...</string>
+    <string name="notify_photos_loading">Ecomap: loading photos…</string>
 
     <string name="remote_service_started" translatable="false">remote_service_started</string>
     <string name="remote_service_stopped" translatable="false">remote_service_stopped</string>
@@ -153,6 +153,7 @@
     <string name="solved_problem">SOLVED</string>
     <string name="title_activity_add_problem" translatable="false">AddProblemActivity</string>
     <string name="only_my_problems">Show only my problems</string>
+    <string name="done">Done</string>
     <!---->
 </resources>
 
