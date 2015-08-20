@@ -41,8 +41,8 @@ public class EditProblemTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
 
-        URL url = null;
-        HttpURLConnection urlConnection = null;
+        URL url;
+        HttpURLConnection urlConnection;
 
         try {
             url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + Integer.valueOf(params[9]));

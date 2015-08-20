@@ -62,7 +62,6 @@
     <string name="problem_title_blank">Problem title can not be blank</string>
     <string name="exit">Exit</string>
     <string name="problem_added">Problem has been successfully added</string>
-    <string name="show_only_my_problems">Show only my problems</string>
     <string name="problem_edited">Problem has been successfully edited</string>
 
     <string name="string_added_by">"Added by: "</string>
@@ -107,8 +106,8 @@
 
     <string name="notify_photos_loading">Ecomap: loading photos...</string>
 
-    <string name="remote_service_started">remote_service_started</string>
-    <string name="remote_service_stopped">remote_service_stopped</string>
+    <string name="remote_service_started" translatable="false">remote_service_started</string>
+    <string name="remote_service_stopped" translatable="false">remote_service_stopped</string>
 
 
     <!---->
@@ -151,10 +150,8 @@
     <string name="nav_titles_statistics">Statistics</string>
     <string name="unsolved_problem">UNSOLVED</string>
     <string name="solved_problem">SOLVED</string>
-    <string name="title_activity_add_problem">AddProblemActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="title_activity_add_problem" translatable="false">AddProblemActivity</string>
+    <string name="only_my_problems">Show only my problems</string>
     <!---->
 </resources>
 

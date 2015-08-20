@@ -41,7 +41,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -158,8 +157,6 @@ public class CommentsFragment extends Fragment {
             public void onClick(View v) {
 
                 YoYo.with(Techniques.RotateIn).duration(500).playOn(addButton);
-
-                final String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
 
                 //small validation
                 String comment = mTxtComment.getText().toString();
@@ -287,7 +284,6 @@ public class CommentsFragment extends Fragment {
 
                 final TextView txtCommentDate = (TextView) view.findViewById(R.id.textDate);
                 final long currentTimeMillis = new Date().getTime();
-                final String currentDateTimeString = DateFormat.getDateTimeInstance().format(currentTimeMillis);
                 final Date createdDate = currentItem.getCreatedDate();
 
                 final String relativeTimeString = DateUtils.getRelativeTimeSpanString(createdDate.getTime(), currentTimeMillis, DateUtils.SECOND_IN_MILLIS).toString();
@@ -420,7 +416,7 @@ public class CommentsFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(String... params) {
-            URL url = null;
+            URL url;
             Boolean result = Boolean.FALSE;
             problem_id = Integer.parseInt(params[1]);
 

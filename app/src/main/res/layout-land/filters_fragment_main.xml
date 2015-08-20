@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:layout_margin="6dp"
                 android:checked="false"
-                android:text="@string/show_only_my_problems"
+                android:text="@string/only_my_problems"
                 android:textOff=""
                 android:textOn=""
                 android:textSize="18sp"

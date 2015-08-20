@@ -129,4 +129,5 @@
     <string name="edit_problem_activity">Редагування проблеми</string>
     <string name="only_my_problems">Показати лише мої проблеми</string>
     <string name="location">Місцезнаходження</string>
+    <string name="notify_photos_loading">Завантаження фото</string>
 </resources>

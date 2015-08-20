@@ -2,7 +2,6 @@ package org.ecomap.android.app.sync;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -47,8 +46,8 @@ public class LoginTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String[] params) {
-        URL url = null;
-        HttpURLConnection connection = null;
+        URL url;
+        HttpURLConnection connection;
 
         try {
             url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/login");
@@ -77,7 +76,7 @@ public class LoginTask extends AsyncTask<String, Void, Void> {
                     StringBuilder responseBody = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         responseBody.append(line + "\n");
                     }
@@ -107,7 +106,7 @@ public class LoginTask extends AsyncTask<String, Void, Void> {
                     StringBuilder responseBody = new StringBuilder();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         responseBody.append(line + "\n");
                     }
@@ -140,5 +139,7 @@ public class LoginTask extends AsyncTask<String, Void, Void> {
         loginFragment.dismiss();
 
         Toast.makeText(mContext, resMessage, Toast.LENGTH_LONG).show();
+
+        ((MainActivity) mContext).invalidateOptionsMenu();
     }
 }

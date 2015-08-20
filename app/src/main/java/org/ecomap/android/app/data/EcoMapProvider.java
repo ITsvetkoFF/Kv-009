@@ -149,8 +149,6 @@ public class EcoMapProvider extends ContentProvider {
     private void normalizeDate(ContentValues values) {
         // normalize the date value
         if (values.containsKey(EcoMapContract.ProblemsEntry.COLUMN_DATE)) {
-            long dateValue = values.getAsLong(EcoMapContract.ProblemsEntry.COLUMN_DATE);
-         //TODO    values.put(EcoMapContract.ProblemsEntry.COLUMN_DATE, EcoMapContract.normalizeDate(dateValue));
         }
     }
 

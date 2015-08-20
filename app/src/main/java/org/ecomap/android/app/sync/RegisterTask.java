@@ -47,7 +47,7 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String[] params) {
-        URL url = null;
+        URL url;
         HttpURLConnection connection = null;
 
         try {
@@ -79,7 +79,7 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
                     BufferedReader reader = new BufferedReader
                             (new InputStreamReader(connection.getInputStream()));
 
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         responseBody.append(line + "\n");
                     }
@@ -109,7 +109,7 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
                     StringBuilder responseBody = new StringBuilder();
                     BufferedReader reader
                             = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
-                    String line = null;
+                    String line;
                     while ((line = reader.readLine()) != null) {
                         responseBody.append(line + "\n");
                     }
