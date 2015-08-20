@@ -24,7 +24,7 @@ public class UploadingServiceSession {
 
     private Context mContext;
     private final String mHostToken;
-    private Callbacks callbackListner;
+    private Callbacks callbackListener;
 
     /** Messenger for communicating with service. */
     private Messenger mService = null;
@@ -35,19 +35,29 @@ public class UploadingServiceSession {
     /**
      * Target we publish for clients to send messages to IncomingHandler.
      */
-    private final Messenger mMessenger = new Messenger(new IncomingHandler());
+    private final Messenger mMessenger;
     private String LOG = UploadingServiceSession.class.getSimpleName();
 
-    public UploadingServiceSession(Context context, String hostToken, Callbacks callbackListner){
+    public UploadingServiceSession(Context context, String hostToken, Callbacks callbackListener){
         this.mContext = context;
         this.mHostToken = hostToken;
-        this.callbackListner = callbackListner;
+        this.callbackListener = callbackListener;
+        this.mMessenger = new Messenger(new IncomingHandler(context, this.callbackListener));
     }
 
     /**
      * Handler of incoming messages from service.
      */
-    private class IncomingHandler extends Handler {
+    private static class IncomingHandler extends Handler {
+
+        private Callbacks callbackListener;
+        private Context mContext;
+
+        public IncomingHandler(Context mContext, Callbacks callbackListener) {
+            this.callbackListener = callbackListener;
+            this.mContext = mContext;
+        }
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -56,7 +66,7 @@ public class UploadingServiceSession {
                     SnackBarHelper.showSuccessSnackBar((Activity)mContext, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
                     break;
                 case UploadingService.MSG_ALL_TASKS_FINISHED:
-                    callbackListner.allTasksFinished();
+                    callbackListener.allTasksFinished();
                     break;
                 default:
                     super.handleMessage(msg);
@@ -94,6 +104,7 @@ public class UploadingServiceSession {
                 // so there is no need to do anything here.
             }
 
+            mIsBound = true;
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -101,6 +112,7 @@ public class UploadingServiceSession {
             // unexpectedly disconnected -- that is, its process crashed.
             mService = null;
             //mCallbackText.setText("Disconnected.");
+            mIsBound = false;
         }
     };
 
@@ -112,7 +124,7 @@ public class UploadingServiceSession {
         final Intent intent = new Intent(mContext, UploadingService.class);
 //        intent.setAction("org.ecomap.android.app.PHOTOS_UPLOADING");
         mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
+
     }
 
     public void doUnbindService() {
@@ -132,11 +144,15 @@ public class UploadingServiceSession {
 
             // Detach our existing connection.
             mContext.unbindService(mConnection);
-            mIsBound = false;
+            //mIsBound = false;
         }
     }
 
     public void doStartService(){
+        if(!mIsBound){
+            doBindService();
+            //while (!mIsBound);
+        }
         Intent intent = new Intent(mContext, UploadingService.class);
         mContext.startService(intent);
     }

@@ -35,7 +35,7 @@ import java.util.HashMap;
  */
 public class UploadingService extends Service {
 
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     public static final String LOG = UploadingService.class.getSimpleName();
 
@@ -234,12 +234,14 @@ public class UploadingService extends Service {
         }
 
         public void onTaskFinished(String className) {
+            final ClientActivityHolder clientHandler = clientsMap.get(className);
+
             finishedTasks++;
             if (mIsForeground) {
                 foregroundNotificationBuilder.setContentInfo("" + finishedTasks + "/" + pendingTasks);
                 mNM.notify(UPLOADING_NOTIFICATION_ID, getForegroundNotification());
             }
-            if(finishedTasks == pendingTasks){
+            if(finishedTasks == pendingTasks && clientHandler.asyncTasks.isEmpty()){
                 allTasksFinished(className);
             }
         }
@@ -333,8 +335,6 @@ public class UploadingService extends Service {
                 protected void onPostExecute(Void o) {
                     if(DEBUG) Log.d(LOG_TAG, "onPostExecute ");
 
-                    onTaskFinished(className);
-
                     final Message message = Message.obtain(null, MSG_TASK_FINISHED, null);
                     Bundle params = new Bundle();
                     params.putInt("PROBLEM_ID", problemId);
@@ -343,6 +343,8 @@ public class UploadingService extends Service {
                     sendMessageToClient(className, message);
 
                     clientHandler.asyncTasks.remove(this);
+
+                    onTaskFinished(className);
                 }
             };
             clientHandler.asyncTasks.add(asyncTask);
