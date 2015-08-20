@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context="org.ecomap.android.app.activities.AddProblemActivity"
     android:id="@+id/add_problem"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true" >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/add_problem_appbar"
@@ -30,7 +32,8 @@
                 android:id="@+id/add_problem_map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/add_problem_toolbar"
@@ -143,8 +146,8 @@
             </LinearLayout>
 
             <FrameLayout
-                android:layout_width="110dp"
-                android:layout_height="110dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
@@ -152,10 +155,11 @@
 
                 <Button
                     android:id="@+id/add_photo"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:text="@string/add_photo"
                     android:textColor="#ff0099cc"
+                    android:textSize="16sp"
                     android:background="@color/white"
                     style="?android:attr/borderlessButtonStyle" />
 

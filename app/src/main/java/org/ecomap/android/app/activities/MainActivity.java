@@ -49,7 +49,6 @@ import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.fragments.FiltersFragment;
 import org.ecomap.android.app.fragments.LoginFragment;
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final int NAV_PROFILE = R.id.login;
     private static final int NAV_TOP10 = R.id.top10;
     private static final int NAV_FILTERS = R.id.filters_menu_item;
-    public static final int NAV_ADD_PROBLEM = R.id.addProblem;
+    public static final int NAV_ADD_PROBLEM = R.id.add_problem;
     public static final int NAV_EDIT_PROBLEM = R.id.edit_menu_item;
 
     private HashMap<Class, Integer> fragmentsIndexes = new HashMap<>(6);
@@ -555,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     public void updateNavigationViewPosition(){
 
-        if (mFragment != null && mFragment.getClass() != AddProblemFragment.class) {
+        if (mFragment != null) {
             mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
         }
 
