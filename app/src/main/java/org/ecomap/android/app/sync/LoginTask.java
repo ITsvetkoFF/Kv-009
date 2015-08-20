@@ -2,6 +2,7 @@ package org.ecomap.android.app.sync;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 

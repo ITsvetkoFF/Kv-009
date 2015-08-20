@@ -5,7 +5,11 @@
     android:orientation="horizontal"
     android:clickable="false"
     android:paddingTop="20dp"
-    android:paddingBottom="20dp">
+    android:paddingBottom="20dp"
+    android:id="@+id/lin_horizontal"
+    android:focusable="false"
+
+    >
 
     <ImageView
         android:layout_width="wrap_content"
@@ -34,7 +38,8 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="false" />
+                android:layout_alignParentRight="false"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,20 +47,46 @@
                 android:id="@+id/textDate"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
                 android:layout_toRightOf="@+id/textUserName"
                 android:gravity="top|right"
-                android:maxLines="2" />
+                android:maxLines="2"
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/txtCaption"
-            android:textSize="14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1">
-        </TextView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/txtCaption"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_toLeftOf="@+id/delete_comment_button"
+                android:layout_toStartOf="@id/delete_comment_button"
+                android:layout_alignParentStart="true">
+            </TextView>
+            <!--View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                /-->
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/delete_comment_button"
+                android:src="@drawable/ic_delete_photo"
+                android:gravity="end|top"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/image_cross"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+
+                android:layout_alignTop="@+id/txtCaption" />
+        </RelativeLayout>
 
     </LinearLayout>
 
