@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,9 +11,7 @@ import android.widget.Toast;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.AddProblemActivity;
 import org.ecomap.android.app.activities.MainActivity;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.utils.SnackBarHelper;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -93,7 +90,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 JSONObject data = new JSONObject(responseBody.toString());
 
                 problemID = data.getInt("id");
-                resultMessage = "Problem Successfully Added";
+                resultMessage = mContext.getString(R.string.problem_added);
 
             } else {
                 StringBuilder responseBody = new StringBuilder();

@@ -209,8 +209,8 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         //Getting photo paths from lib
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (data != null) {
-                selectedPhotos.clear();
-                selectedPhotos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
+                //selectedPhotos.clear();
+                selectedPhotos.addAll(data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS));
                 imgAdapter.updateDataSet(selectedPhotos);
             }
         }
