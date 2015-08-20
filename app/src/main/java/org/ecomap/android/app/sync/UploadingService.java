@@ -35,7 +35,7 @@ import java.util.HashMap;
  */
 public class UploadingService extends Service {
 
-    private boolean DEBUG = true;
+    private boolean DEBUG = false;
 
     public static final String LOG = UploadingService.class.getSimpleName();
 
@@ -183,7 +183,7 @@ public class UploadingService extends Service {
         PendingIntent piDismiss = PendingIntent.getService(this, 0, dismissIntent, 0);
 
         //builder.setStyle(new NotificationCompat.BigTextStyle().setBigContentTitle(getString(R.string.notify_photos_loading)));
-        builder.addAction(R.drawable.ic_clear_white_24dp, "Cancel", piDismiss);
+        builder.addAction(R.drawable.ic_clear_white_24dp, getString(R.string.cancel), piDismiss);
 
         //builder.
 

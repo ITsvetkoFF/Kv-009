@@ -90,7 +90,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 JSONObject data = new JSONObject(responseBody.toString());
 
                 problemID = data.getInt("id");
-                resultMessage = "Problem Successfully Added";
+                resultMessage = mContext.getString(R.string.problem_added);
 
             } else {
                 StringBuilder responseBody = new StringBuilder();
