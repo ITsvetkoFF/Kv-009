@@ -85,7 +85,6 @@
                         android:id="@+id/edit_problem_switch_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="UNSOLVED"
                         android:textColor="@color/error_color"
                         android:textSize="16sp"
                         android:layout_below="@+id/edit_ratingBar"

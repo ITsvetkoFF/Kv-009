@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -12,7 +13,6 @@ import com.google.maps.android.clustering.ClusterItem;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -165,31 +165,14 @@ public class Problem implements ClusterItem, Parcelable {
 
     public String getUserDate(){
 
-        //Parse and localize date
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date localDate = null;
-        try {
-
-            final long currentTimeMillis = System.currentTimeMillis();
-            final long tzOffset = TimeZone.getDefault().getOffset(currentTimeMillis);
-
-            localDate = new Date(format.parse(date).getTime() + tzOffset);
-
-        } catch (ParseException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
-        }
-
-        //java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(mContext);
-        String formattedCurrentDate = null != localDate ? format.format(localDate) : "";
-
         if (this.firstName.isEmpty() && this.lastName.isEmpty()){
 
             String no_name = "(" + mContext.getString(R.string.string_anonymous) + ")";
 
-            return (no_name + ": " + formattedCurrentDate);
+            return (no_name + ": " + date);
         }
 
-        return (firstName + ": " + formattedCurrentDate);
+        return (firstName + ": " + date);
     }
 
     public String getContent(){
@@ -308,4 +291,24 @@ public class Problem implements ClusterItem, Parcelable {
             return new Problem[size];
         }
     };
+
+    public String getRelativeTime(){
+        return DateUtils.getRelativeTimeSpanString(getCreatedDate().getTime(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
+    }
+
+    public Date getCreatedDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date d = null;
+        try {
+
+            long currentTimeMillis = System.currentTimeMillis();
+            long tzOffset = TimeZone.getDefault().getOffset(currentTimeMillis);
+
+            d = new Date(format.parse(date).getTime() + tzOffset);
+
+        } catch (ParseException e) {
+            Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
+        }
+        return d;
+    }
 }

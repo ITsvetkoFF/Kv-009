@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,9 +11,7 @@ import android.widget.Toast;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.AddProblemActivity;
 import org.ecomap.android.app.activities.MainActivity;
-import org.ecomap.android.app.fragments.AddProblemFragment;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.utils.SnackBarHelper;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -54,8 +51,8 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
 
-        URL url = null;
-        HttpURLConnection urlConnection = null;
+        URL url;
+        HttpURLConnection urlConnection;
 
         try {
             url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems");
@@ -84,7 +81,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 StringBuilder responseBody = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
                     responseBody.append(line + "\n");
                 }
@@ -99,7 +96,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 StringBuilder responseBody = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getErrorStream()));
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
                     responseBody.append(line + "\n");
                 }

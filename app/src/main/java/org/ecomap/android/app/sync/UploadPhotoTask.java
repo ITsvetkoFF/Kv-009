@@ -40,14 +40,14 @@ public class UploadPhotoTask extends AsyncTask<Void, Void, Void> {
 
         Log.e("MYLOG", "Inside background");
 
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
+        HttpURLConnection conn;
+        DataOutputStream dos;
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
+        int maxBufferSize = 1024 * 1024;
         File sourceFile = new File(imagePath);
 
         if (!MainActivity.isUserIsAuthorized()) {

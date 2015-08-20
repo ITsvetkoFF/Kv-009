@@ -15,5 +15,5 @@
         android:icon="@drawable/ic_done_white_24dp"
         android:visible="true"
         app:showAsAction="always"
-        android:title="TITLE" />
+        android:title="" />
 </menu>

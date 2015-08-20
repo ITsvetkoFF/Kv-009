@@ -19,7 +19,7 @@ public class AddVoteTask extends AsyncTask<Integer, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Integer... params) {
-        URL url = null;
+        URL url;
         Boolean result = Boolean.FALSE;
         problem_id = params[0];
 

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.LayerDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -107,7 +109,6 @@ public class EcoMapFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(tag, "onCreate");
         setRetainInstance(true);
-
     }
 
     @Override
@@ -429,7 +430,10 @@ public class EcoMapFragment extends Fragment {
         showContent.setText(problem.getContent());
         showProposal.setText(problem.getProposal());
         showNumOfLikes.setText(problem.getNumberOfLikes());
+
         problemRating.setRating(Float.valueOf(problem.getSeverity()));
+        LayerDrawable stars = (LayerDrawable) problemRating.getProgressDrawable();
+        stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
 
         if (problem.isLiked()){
             showLike.setImageResource(R.drawable.heart_icon);
@@ -439,10 +443,10 @@ public class EcoMapFragment extends Fragment {
 
         //Check problem status and choose color fo text
         if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
-            showStatus.setText(problem.getStatus());
+            showStatus.setText(getString(R.string.solved_problem));
             showStatus.setTextColor(Color.RED);
         } else {
-            showStatus.setText(problem.getStatus());
+            showStatus.setText(getString(R.string.unsolved_problem));
             showStatus.setTextColor(Color.GREEN);
         }
 
@@ -516,7 +520,7 @@ public class EcoMapFragment extends Fragment {
 
         //comments
         FragmentManager chFm = getChildFragmentManager();
-        Fragment f = chFm.findFragmentByTag(CommentsFragment.LOG_TAG);
+        Fragment f;
         //if (f == null) {
         f = CommentsFragment.newInstance(problem);
         //}
