@@ -153,6 +153,8 @@
     <string name="solved_problem">SOLVED</string>
     <string name="title_activity_add_problem" translatable="false">AddProblemActivity</string>
     <string name="only_my_problems">Show only my problems</string>
+    <string name="delete_comment_message">Are you sure that you want to delete this comment?</string>
+    <string name="image_cross">image cross</string>
     <string name="done">Done</string>
     <!---->
 </resources>

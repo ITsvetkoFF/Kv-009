@@ -1,7 +1,10 @@
 package org.ecomap.android.app.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,8 +19,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -25,10 +31,13 @@ import com.google.android.gms.plus.PlusOneButton;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.utils.SnackBarHelper;
+import org.ecomap.android.app.utils.UserSubscriber;
 import org.ecomap.android.app.widget.ExpandableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +50,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -78,8 +88,18 @@ public class CommentsFragment extends Fragment {
     private ViewGroup mRootView;
     private EditText mTxtComment;
 
+    public CommentsAdapter getCommentsAdapter(){
+        return mCommentsAdapter;
+    }
+
+
     public CommentsFragment() {
         // Required empty public constructor
+    }
+    public void changeState(){
+        Log.i(LOG_TAG, "change state is called");
+        mCommentsAdapter.notifyDataSetChanged();
+
     }
 
     /**
@@ -192,6 +212,9 @@ public class CommentsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+
+
+
         // Refresh the state of the +1 button each time the activity receives focus.
         //mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
     }
@@ -239,7 +262,7 @@ public class CommentsFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private static class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
+    private class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
 
         private final Context mContext;
         private List<T> mCommentsArray;
@@ -286,11 +309,58 @@ public class CommentsFragment extends Fragment {
                 final long currentTimeMillis = new Date().getTime();
                 final Date createdDate = currentItem.getCreatedDate();
 
+                final int userId=currentItem.getUserId();
+
                 final String relativeTimeString = DateUtils.getRelativeTimeSpanString(createdDate.getTime(), currentTimeMillis, DateUtils.SECOND_IN_MILLIS).toString();
                 txtCommentDate.setText(relativeTimeString);
 
                 final TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
                 txtListItem.setText(currentItem.getContent());
+
+                ImageView deleteCommentButton=(ImageView)view.findViewById(R.id.delete_comment_button);
+                deleteCommentButton.setVisibility(View.GONE);
+
+                boolean b = User.canUserDeleteComment(userId);
+
+                if(b){
+
+                deleteCommentButton.setVisibility(View.VISIBLE);
+                deleteCommentButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
+                        builder.setMessage(mContext.getString(R.string.delete_comment_message));
+
+                        builder.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.dismiss();
+                                new AsyncDeleteComment().execute(currentItem.getId());
+
+                            }
+                        });
+                        builder.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setCancelable(true);
+                        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+
+                }
+
+
             }
 
             return view;
@@ -309,6 +379,47 @@ public class CommentsFragment extends Fragment {
             mCommentsArray = data;
             notifyDataSetChanged();
 
+        }
+
+    }
+
+    private  class AsyncDeleteComment extends AsyncTask<Long, Void, Void> {
+
+        private int responseCode;
+
+        @Override
+        protected Void doInBackground(Long... params) {
+            Long id = params[0];
+            String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/comments/" + id;
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(ECOMAP_COMMENTS_URL);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("DELETE");
+                urlConnection.connect();
+
+                responseCode = urlConnection.getResponseCode();
+
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+
+                return null;
+            }
+        }
+        @Override
+        protected void onPostExecute(Void avoid){
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                new AsyncRequestComments().execute(mProblem.getId());
+                mCommentsAdapter.notifyDataSetChanged();
+            }
         }
     }
 
