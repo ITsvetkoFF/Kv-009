@@ -42,7 +42,7 @@
     <string name="register_if_new">Совсем зелёный? Регистрируйся!</string>
     <string name="want_logout">Вы действительно хотите выйти?</string>
     <string name="change_password">Забыли пароль? Смените в два клика!</string>
-    <string name="write_comment">Напишите комментарий...</string>
+    <string name="write_comment">Напишите комментарий…</string>
     <string name="have_problem">Хьюстон, у нас проблема!</string>
     <string name="action_add_polygon">Добавить полигон</string>
     <string name="profile">Профиль</string>
@@ -94,7 +94,7 @@
     <string name="item_settings">Настройки</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
-    <string name="uploading_photo">Загрузка фото...</string>
+    <string name="uploading_photo">Загрузка фото…</string>
     <string name="photos_uploaded">Фото успешно загружено</string>
     <string name="uploading_error">Ошибка во время загрузки фото</string>
     <string name="problem_title_blank">Заголовок проблемы не может быть пустым</string>
@@ -130,4 +130,5 @@
     <string name="only_my_problems"> Показать только мои проблемы</string>
     <string name="location">Местоположение</string>
     <string name="notify_photos_loading">Ecomap: загрузка фотографий</string>
+    <string name="done">Готово</string>
 </resources>
