@@ -34,7 +34,7 @@ public class SharedPreferencesHelper {
 
         SharedPreferences.Editor editor = sPref.edit();
         editor.putStringSet(mContext.getString(R.string.prefLikedProblems),set);
-        editor.commit();
+        editor.apply();
 
         Log.d(LOG_TAG,"Problem was added to set LikedProblem into SharedPreferences");
 
@@ -173,7 +173,7 @@ public class SharedPreferencesHelper {
         sPref = mContext.getSharedPreferences(mContext.getString(R.string.fileNamePreferences), Context.MODE_PRIVATE);
         SharedPreferences.Editor ed = sPref.edit();
         ed.putInt(mContext.getString(R.string.prefNumRevision), numNewRevision);
-        ed.commit();
+        ed.apply();
 
     }
 

@@ -27,9 +27,6 @@ import android.view.View;
 
 import com.wunderlist.slidinglayer.LayerTransformer;
 
-/**
- * Created by joseluisugia on 16/03/15.
- */
 public final class AlphaTransformer extends LayerTransformer {
 
     private static final int DEFAULT_MULTIPLIER = 1;

@@ -13,9 +13,6 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by Stanislav on 13.08.2015.
- */
 public class EditProblemTask extends AsyncTask<String, Void, Void> {
 
     private ProgressDialog progressBar;

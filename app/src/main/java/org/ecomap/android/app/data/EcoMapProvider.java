@@ -148,8 +148,8 @@ public class EcoMapProvider extends ContentProvider {
 
     private void normalizeDate(ContentValues values) {
         // normalize the date value
-        if (values.containsKey(EcoMapContract.ProblemsEntry.COLUMN_DATE)) {
-        }
+        /*if (values.containsKey(EcoMapContract.ProblemsEntry.COLUMN_DATE)) {
+        }*/
     }
 
     @Override
@@ -194,7 +194,7 @@ public class EcoMapProvider extends ContentProvider {
                         if (_id != -1 && _id != 0) {
                             returnCount++;
                         } else {
-                            _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
+                            db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
                         }
 
                     }

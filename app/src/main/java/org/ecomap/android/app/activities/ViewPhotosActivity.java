@@ -60,7 +60,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int position = intent.getIntExtra(IMAGE_POSITION, 0);
-        Parcelable[] photoEntries = (Parcelable[]) intent.getParcelableArrayExtra(PHOTO_ENTRY);
+        Parcelable[] photoEntries = intent.getParcelableArrayExtra(PHOTO_ENTRY);
         ArrayList<Parcelable> mImagesURLArray = new ArrayList<Parcelable>(Arrays.asList(photoEntries));
 
         if (savedInstanceState == null) {

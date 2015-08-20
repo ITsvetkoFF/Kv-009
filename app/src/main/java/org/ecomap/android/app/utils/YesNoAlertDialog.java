@@ -10,9 +10,6 @@ import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.DeleteTask;
 
-/**
- * Created by Stanislav on 13.08.2015.
- */
 public class YesNoAlertDialog {
     private String message;
     private Context mContext;

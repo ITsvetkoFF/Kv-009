@@ -1,9 +1,5 @@
 package org.ecomap.android.app.fragments;
 
-/**
- * Created by izhaltc on 13.07.2015.
- */
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -16,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -25,7 +20,6 @@ import android.widget.TextView;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
 import org.ecomap.android.app.data.EcoMapContract;
-import org.ecomap.android.app.data.EcoMapProvider;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -280,8 +274,6 @@ public class FiltersFragment extends ListFragment {
                             startDateInitialized=true;
                             startDate.setText(beginDate);
 
-                                ;
-
                             }
 
 
@@ -329,7 +321,7 @@ public class FiltersFragment extends ListFragment {
 
 
     public interface Filterable {
-        public void filter(String string);
+        void filter(String string);
     }
 
 }

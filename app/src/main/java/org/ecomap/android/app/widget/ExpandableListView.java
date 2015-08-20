@@ -5,9 +5,6 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-/**
- * Created by y.ridkous@gmail.com on 16.07.2015.
- */
 public class ExpandableListView extends ListView {
 
     boolean expanded = false;
