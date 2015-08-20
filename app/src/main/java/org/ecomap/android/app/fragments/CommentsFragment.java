@@ -275,7 +275,7 @@ public class CommentsFragment extends Fragment {
 
             view.setClickable(false);
 
-            final CommentEntry currentItem = (CommentEntry) getItem(position);
+            final CommentEntry currentItem = getItem(position);
 
             if (currentItem != null) {
 

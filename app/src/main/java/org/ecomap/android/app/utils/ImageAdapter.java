@@ -23,9 +23,6 @@ import org.ecomap.android.app.sync.EcoMapAPIContract;
 
 import java.util.List;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
 public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;

@@ -9,9 +9,6 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
 public class AddVoteTask extends AsyncTask<Integer, Void, Boolean> {
 
     private final String LOG_TAG = AddVoteTask.class.getSimpleName();

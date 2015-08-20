@@ -113,7 +113,7 @@
                     android:id="@id/android:list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"></org.ecomap.android.app.ui.components.NonScrollableListView>
+                    android:layout_alignParentTop="true"/>
 
             </LinearLayout>
 

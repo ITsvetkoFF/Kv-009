@@ -10,9 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-/**
- * Created by y.ridkous@gmail.com on 15.07.2015.
- */
+
 public class CommentEntry {
 
     public static final String LOG_TAG = CommentEntry.class.getSimpleName();

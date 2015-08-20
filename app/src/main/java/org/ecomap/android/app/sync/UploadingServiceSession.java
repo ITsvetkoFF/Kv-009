@@ -16,10 +16,6 @@ import android.util.Log;
 
 import org.ecomap.android.app.utils.SnackBarHelper;
 
-/**
- * Created by y.ridkous@gmail.com on 13.08.2015.
- */
-
 public class UploadingServiceSession {
 
     private Context mContext;
