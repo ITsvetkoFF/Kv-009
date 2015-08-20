@@ -19,9 +19,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
 public class LoginTask extends AsyncTask<String, Void, Void> {
     private LoginFragment loginFragment;
     String resMessage;

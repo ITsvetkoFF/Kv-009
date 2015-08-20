@@ -137,7 +137,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
 
         collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.add_problem_collapsing_toolbar);
         collapsingToolbar.setTitle(getString(R.string.item_addProblem));
-        collapsingToolbar.setExpandedTitleColor(android.R.color.transparent);
+        collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         problemTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

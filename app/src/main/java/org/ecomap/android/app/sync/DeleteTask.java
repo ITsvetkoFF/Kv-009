@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by Stanislav on 10.08.2015.
- */
 public class DeleteTask extends AsyncTask<String, Void, Void> {
 
     private final String LOG_TAG = DeleteTask.class.getSimpleName();

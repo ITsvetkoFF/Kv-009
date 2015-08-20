@@ -7,9 +7,6 @@ import android.widget.TextView;
 
 import org.ecomap.android.app.R;
 
-/**
- * Created by yura on 8/3/15.
- */
 public class StaticPagesActivity extends AppCompatActivity {
 
     WebView webView;

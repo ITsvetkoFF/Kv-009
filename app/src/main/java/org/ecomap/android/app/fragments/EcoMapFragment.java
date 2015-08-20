@@ -225,7 +225,7 @@ public class EcoMapFragment extends Fragment {
         imgAdapter = new ImageAdapter(mContext, new ArrayList<ProblemPhotoEntry>());
         gridview.setAdapter(imgAdapter);
 
-        final ScrollView mScrollView = (ScrollView) v.findViewById(R.id.details_scrollview);
+        final ScrollView mScrollView = detailedScrollView;
         mScrollView.post(new Runnable() {
             public void run() {
                 mScrollView.scrollTo(0, 0);

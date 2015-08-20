@@ -25,9 +25,6 @@ package com.wunderlist.slidinglayer;
 
 import android.view.View;
 
-/**
- * Created by joseluisugia on 16/03/15.
- */
 public abstract class LayerTransformer {
 
     /**

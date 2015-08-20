@@ -8,9 +8,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
-/**
- * Created by Stanislav on 27.06.2015.
- */
 public class MyIconRendered extends DefaultClusterRenderer<Problem> {
     public MyIconRendered(Context context, GoogleMap map, ClusterManager<Problem> clusterManager) {
         super(context, map, clusterManager);

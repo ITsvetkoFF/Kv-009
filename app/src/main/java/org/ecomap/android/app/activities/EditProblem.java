@@ -36,9 +36,6 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.sync.EditProblemTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
 
-/**
- * Created by Stanislav on 17.08.2015.
- */
 public class EditProblem extends AppCompatActivity {
     private EditText problemTitle, problemDescription, problemSolution;
     private TextInputLayout tilProblemTitle, tilProblemDescription, tilProblemSolution;
@@ -74,7 +71,7 @@ public class EditProblem extends AppCompatActivity {
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout)findViewById(R.id.edit_problem_collapsing_toolbar);
         collapsingToolbar.setTitle(getString(R.string.edit_problem_activity));
-        collapsingToolbar.setExpandedTitleColor(android.R.color.transparent);
+        collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
         mapView = (MapView) findViewById(R.id.edit_backdrop_littleMap);
         mapView.onCreate(null);

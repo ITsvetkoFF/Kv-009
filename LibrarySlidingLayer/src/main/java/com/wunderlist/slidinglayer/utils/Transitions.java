@@ -23,9 +23,6 @@
 
 package com.wunderlist.slidinglayer.utils;
 
-/**
- * Created by joseluisugia on 17/03/15.
- */
 public class Transitions {
 
 

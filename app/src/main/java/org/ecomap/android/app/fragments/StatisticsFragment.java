@@ -30,9 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-/**
- * Created by yura on 7/24/15.
- */
 public class StatisticsFragment extends Fragment {
 
     private View view;
