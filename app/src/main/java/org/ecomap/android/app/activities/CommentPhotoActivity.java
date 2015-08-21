@@ -1,12 +1,9 @@
 package org.ecomap.android.app.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,10 +17,7 @@ import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
-import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.fragments.LoginFragment;
-import org.ecomap.android.app.sync.AddProblemTask;
-import org.ecomap.android.app.sync.UploadPhotoTask;
+import org.ecomap.android.app.sync.UploadingServiceSession;
 import org.ecomap.android.app.ui.components.NonScrollableListView;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.NetworkAvailability;
@@ -37,6 +31,8 @@ public class CommentPhotoActivity extends AppCompatActivity {
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private int problem_id;
     private Button sendProblemButton;
+
+    private UploadingServiceSession uploadingSession;
 
     public CommentPhotoActivity() {
     }
@@ -68,6 +64,26 @@ public class CommentPhotoActivity extends AppCompatActivity {
         imgAdapter = new AddPhotoImageAdapter(this, selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
+        uploadingSession = new UploadingServiceSession(this, getClass().getCanonicalName(), new UploadingServiceSession.Callbacks() {
+            @Override
+            public void allTasksFinished() {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        uploadingSession.doBindService();
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        uploadingSession.doUnbindService();
+        super.onStop();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -112,6 +128,8 @@ public class CommentPhotoActivity extends AppCompatActivity {
 
         nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
 
+        uploadingSession.doStartService();
+
         //Checking selected photos
         for (int i = 0; i < selectedPhotos.size(); i++) {
             //Get each ListView item
@@ -123,6 +141,10 @@ public class CommentPhotoActivity extends AppCompatActivity {
             path = selectedPhotos.get(i);
 
             photos.add(new ProblemPhotoEntry(comment,path));
+
+            if(uploadingSession.isBound()){
+                uploadingSession.sendUploadRequest(problem_id, path, comment);
+            }
 
         }
 

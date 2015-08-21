@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
+        android:theme="@style/ToolbarStyle"
         android:maxHeight="?attr/actionBarSize" />
 
     <FrameLayout
