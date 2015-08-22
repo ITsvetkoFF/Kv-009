@@ -1,8 +1,11 @@
 package org.ecomap.android.app;
 
+import android.content.Context;
 import android.util.Log;
 
 
+import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.utils.UserSubscriber;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,8 +28,6 @@ public class User {
     private static Set<UserSubscriber> subscribers;
 
 
-
-
     private User(String firstName, String lastName, String email, String password, String role, String userId, Set<String> set){
         User.firstName = firstName;
         User.lastName = lastName;
@@ -39,6 +40,20 @@ public class User {
         subscribers=new HashSet<UserSubscriber>();}
         else{ notifySubscribers();}
 
+    }
+
+    public static void init(Context context){
+
+        final String preferenceFileName = context.getResources().getString(R.string.fileNamePreferences);
+        if(user == null) {
+            getInstance(SharedPreferencesHelper.getStringPref(context, preferenceFileName, MainActivity.FIRST_NAME_KEY, ""),
+                    SharedPreferencesHelper.getStringPref(context, preferenceFileName, MainActivity.LAST_NAME_KEY, ""),
+                    SharedPreferencesHelper.getStringPref(context, preferenceFileName, MainActivity.EMAIL_KEY, ""),
+                    SharedPreferencesHelper.getStringPref(context, preferenceFileName, MainActivity.PASSWORD_KEY, ""),
+                    SharedPreferencesHelper.getStringPref(context, preferenceFileName, MainActivity.ROLE_KEY, ""),
+                    SharedPreferencesHelper.getStringPref(context, preferenceFileName, MainActivity.USER_ID_KEY, ""),
+                    SharedPreferencesHelper.getStringSetPref(context, preferenceFileName, MainActivity.USER_PERMISSION_SET_KEY, null));
+        }
     }
 
     //getInstance method that initialize and return new user

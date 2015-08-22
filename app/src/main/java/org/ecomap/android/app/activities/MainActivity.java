@@ -174,13 +174,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         initUserIdFromCookies();
 
         if (isUserIdSet()){
-            User.getInstance(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.FIRST_NAME_KEY, ""),
-                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.LAST_NAME_KEY, ""),
-                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.EMAIL_KEY, ""),
-                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.PASSWORD_KEY, ""),
-                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.ROLE_KEY, ""),
-                    SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.USER_ID_KEY, ""),
-                    SharedPreferencesHelper.getStringSetPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.USER_PERMISSION_SET_KEY, null));
+            try {
+                User.init(this);
+            }catch (NumberFormatException e){
+                Log.e(LOG_TAG, e.getMessage(), e);
+                //TODO: Shall we do something else in this case?
+            }
         }
 
         // set a custom shadow that overlays the main content when the drawer opens

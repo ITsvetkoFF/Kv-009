@@ -22,7 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
-public class SocialLoginTask extends AsyncTask {
+public class SocialLoginTask extends AsyncTask<String, Void, Void> {
 
     LoginFragment loginFragment;
     String resMessage;
@@ -36,7 +36,7 @@ public class SocialLoginTask extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
+    protected Void doInBackground(String[] params) {
 
         String urlType = (String) params[0];
         String firstName = (String) params[1];
@@ -143,7 +143,7 @@ public class SocialLoginTask extends AsyncTask {
     }
 
     @Override
-    protected void onPostExecute(Object o) {
+    protected void onPostExecute(Void o) {
         super.onPostExecute(o);
         MainActivity.changeAuthorizationState();
 

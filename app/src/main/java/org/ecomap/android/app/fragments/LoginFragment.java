@@ -142,11 +142,11 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                                 try {
                                     new SocialLoginTask(LoginFragment.this, getActivity())
-                                            .execute(new String[]{"facebook",
+                                            .execute("facebook",
                                                     jsonObject.getString("first_name"),
                                                     jsonObject.getString("last_name"),
                                                     jsonObject.getString("id"),
-                                                    jsonObject.getString("email")});
+                                                    jsonObject.getString("email"));
                                 } catch (Exception e) {
                                     Log.e(this.getClass().getSimpleName(), e.getMessage());
                                 }
