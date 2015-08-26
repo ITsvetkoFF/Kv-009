@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
+import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.sync.GetPhotosTask;
 import org.ecomap.android.app.sync.UploadingServiceSession;
 import org.ecomap.android.app.ui.components.NonScrollableListView;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
@@ -27,7 +29,6 @@ import java.util.ArrayList;
 public class CommentPhotoActivity extends AppCompatActivity {
 
     private NonScrollableListView nonScrollableListView;
-    private AddPhotoImageAdapter imgAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private int problem_id;
     private Button sendProblemButton;
@@ -45,7 +46,9 @@ public class CommentPhotoActivity extends AppCompatActivity {
         Toolbar mToolbar = (Toolbar)this.findViewById(R.id.comments_toolbar);
         this.setSupportActionBar(mToolbar);
         ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setTitle(me.iwf.photopicker.R.string.images);
+        if (actionBar != null) {
+            actionBar.setTitle(me.iwf.photopicker.R.string.images);
+        }
         try {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
@@ -61,13 +64,13 @@ public class CommentPhotoActivity extends AppCompatActivity {
         }
 
         nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
-        imgAdapter = new AddPhotoImageAdapter(this, selectedPhotos);
+        AddPhotoImageAdapter imgAdapter = new AddPhotoImageAdapter(this, selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
         uploadingSession = new UploadingServiceSession(this, getClass().getCanonicalName(), new UploadingServiceSession.Callbacks() {
             @Override
             public void allTasksFinished() {
-
+                new GetPhotosTask(MainActivity.getEcoMapFragment()).execute(EcoMapFragment.getLastOpenProblem().getId());
             }
         });
 

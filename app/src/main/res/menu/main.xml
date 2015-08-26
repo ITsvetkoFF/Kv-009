@@ -24,21 +24,21 @@
         android:id="@+id/filters_menu_item"
         android:title="@string/filters_menu_item_title"
         android:icon="@drawable/ic_filters"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:visible="false"
         />
 
     <item
         android:id="@+id/delete_menu_item"
         android:icon="@drawable/ic_delete"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:visible="false"
         />
 
     <item
         android:id="@+id/edit_menu_item"
         android:icon="@drawable/ic_edit"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:visible="false"
         />
 </menu>

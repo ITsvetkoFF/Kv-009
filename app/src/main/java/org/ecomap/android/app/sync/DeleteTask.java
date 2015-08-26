@@ -12,7 +12,7 @@ import java.net.URL;
 public class DeleteTask extends AsyncTask<String, Void, Void> {
 
     private final String LOG_TAG = DeleteTask.class.getSimpleName();
-    private Context mContext;
+    private final Context mContext;
     private int responseCode;
 
     public DeleteTask(Context mContext){

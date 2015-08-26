@@ -20,13 +20,11 @@ public class top10Adapter extends BaseAdapter {
 
     private String LOG_TAG = top10Adapter.class.getSimpleName();
 
-    Context context;
-    List<Problem> rowItems;
-    LayoutInflater lInflater;
-    int tabId; //0 - votes, 1 - rates, 2 - comments
+    private final List<Problem> rowItems;
+    private final LayoutInflater lInflater;
+    private final int tabId; //0 - votes, 1 - rates, 2 - comments
 
     public top10Adapter(Context context, List<Problem> rowItems, int tabId) {
-        this.context = context;
         this.rowItems = rowItems;
         this.tabId = tabId;
         lInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

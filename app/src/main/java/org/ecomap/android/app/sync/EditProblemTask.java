@@ -16,8 +16,8 @@ import java.net.URL;
 public class EditProblemTask extends AsyncTask<String, Void, Void> {
 
     private ProgressDialog progressBar;
-    private Context mContext;
-    int responseCode;
+    private final Context mContext;
+    private int responseCode;
 
     public EditProblemTask(Context context){
         this.mContext = context;
@@ -83,7 +83,7 @@ public class EditProblemTask extends AsyncTask<String, Void, Void> {
             Intent intent = new Intent(mContext, EcoMapService.class);
             mContext.startService(intent);
 
-            new Toast(mContext).makeText(mContext, mContext.getString(R.string.problem_edited), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.problem_edited), Toast.LENGTH_SHORT).show();
 
             mContext.startActivity(new Intent(mContext, MainActivity.class));
 

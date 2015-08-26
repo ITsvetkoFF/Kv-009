@@ -53,10 +53,11 @@ public class ViewPhotosActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setHomeButtonEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setHomeButtonEnabled(false);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         int position = intent.getIntExtra(IMAGE_POSITION, 0);
@@ -79,6 +80,19 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                this.onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public static class ImagePagerFragment extends Fragment implements ZoomableImageView.OnSingleTouchListener {
@@ -133,13 +147,6 @@ public class ViewPhotosActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-
-            return super.onOptionsItemSelected(item);
-        }
-
-        @Override
         public void OnSingleTouch() {
             if (mActionBar.isShowing())
                 mActionBar.hide();
@@ -151,7 +158,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
     private static class ImageAdapter extends PagerAdapter {
 
         private final LayoutInflater inflater;
-        private DisplayImageOptions options;
+        private final DisplayImageOptions options;
         private final Context mContext;
         private final ImagePagerFragment fragment;
         private final List<Parcelable> mImagesURLArray;

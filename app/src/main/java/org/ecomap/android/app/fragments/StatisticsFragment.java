@@ -32,13 +32,12 @@ import java.util.Locale;
 
 public class StatisticsFragment extends Fragment {
 
-    private View view;
-    PieChart pieChart;
-    TextView one_day;
-    TextView one_week;
-    TextView one_month;
-    TextView one_year;
-    TextView one_reset;
+    private PieChart pieChart;
+    private TextView one_day;
+    private TextView one_week;
+    private TextView one_month;
+    private TextView one_year;
+    private TextView one_reset;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class StatisticsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.statistics_layout, container, false);
+        View view = inflater.inflate(R.layout.statistics_layout, container, false);
 
         getActivity().setTitle(getString(R.string.nav_titles_statistics));
         //getActivity().invalidateOptionsMenu();
@@ -162,9 +161,6 @@ public class StatisticsFragment extends Fragment {
         //Current date
         Calendar currentDate = Calendar.getInstance();
 
-        //Init problemDate
-        Calendar problemDate = currentDate;
-
         //Current time
         int currentDay = currentDate.get(Calendar.DAY_OF_MONTH);
         int currentWeek = currentDate.get(Calendar.WEEK_OF_MONTH);
@@ -199,11 +195,11 @@ public class StatisticsFragment extends Fragment {
 
             try{
                 //Getting each problem's time
-                problemDate.setTime(dateFormat.parse(problemDateFromBase));
-                problemDay = problemDate.get(Calendar.DAY_OF_MONTH);
-                problemWeek = problemDate.get(Calendar.WEEK_OF_MONTH);
-                problemMonth = problemDate.get(Calendar.MONTH);
-                problemYear = problemDate.get(Calendar.YEAR);
+                currentDate.setTime(dateFormat.parse(problemDateFromBase));
+                problemDay = currentDate.get(Calendar.DAY_OF_MONTH);
+                problemWeek = currentDate.get(Calendar.WEEK_OF_MONTH);
+                problemMonth = currentDate.get(Calendar.MONTH);
+                problemYear = currentDate.get(Calendar.YEAR);
 
                 //Switch for 1day 1week 1month 1year sorting
                 switch (time){

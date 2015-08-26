@@ -23,10 +23,10 @@ import java.util.Set;
  */
 public class RegisterTask extends AsyncTask<String, Void, Void> {
 
-    private RegistrationFragment registrationFragment;
-    Context mContext;
-    String resMessage;
-    ProgressDialog progressBar;
+    private final RegistrationFragment registrationFragment;
+    private final Context mContext;
+    private String resMessage;
+    private ProgressDialog progressBar;
 
     public RegisterTask(RegistrationFragment registrationFragment, Context context) {
         this.registrationFragment = registrationFragment;
@@ -122,7 +122,9 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            connection.disconnect();
+            if (connection != null) {
+                connection.disconnect();
+            }
         }
         return null;
     }

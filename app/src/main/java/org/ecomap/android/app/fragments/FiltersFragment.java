@@ -24,39 +24,38 @@ import org.ecomap.android.app.data.EcoMapContract;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class FiltersFragment extends ListFragment {
 
-    //these are never used. Though we need them to understand the type of problems.
-
+    /*these are never used. Though we need them to understand the type of problems.
     public static final int WOODS_PROBLEM = 1;
     public static final int TRASH_PROBLEM = 2;
     public static final int BUILDING_PROBLEM = 3;
     public static final int WATER_PROBLEM = 4;
     public static final int LIFEFORMS_PROBLEM = 5;
     public static final int POACHING_PROBLEM = 6;
-    public static final int OTHER_PROBLEM = 7;
+    public static final int OTHER_PROBLEM = 7;*/
+
     private final String LOG_TAG = "FilterFragment";
-    public String problemType = EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " = ";
-    public String dateInterval=") AND ("+ EcoMapContract.ProblemsEntry.COLUMN_DATE+" BETWEEN ";
-    public String resultCondition;
-    Button okBtn;
-    Button resetBtn;
-    ListView listView;
-    TextView startDate,endDate;
-    ArrayList<Integer> selectedIdees;
+    private final String problemType = EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " = ";
+    private final String dateInterval=") AND ("+ EcoMapContract.ProblemsEntry.COLUMN_DATE+" BETWEEN ";
+    private String resultCondition;
+    private ListView listView;
+    private TextView startDate, endDate;
+    private ArrayList<Integer> selectedIdees;
     private View mainView;
     private Filterable ourActivity;
     private SparseBooleanArray sbArray;
-    int startYear,startMonth, startDay, endYear, endMonth, endDay;
+    private int startYear,startMonth, startDay, endYear, endMonth, endDay;
     private String dateCondition;
     private boolean startDateInitialized;
     private boolean endDateInitialized;
 
-    String beginDate;
-    String finishDate;
+    private String beginDate;
+    private String finishDate;
 
-    private String userID = EcoMapContract.ProblemsEntry.COLUMN_USER_ID + " = ";
+    private final String userID = EcoMapContract.ProblemsEntry.COLUMN_USER_ID + " = ";
     private String userCondition;
     private SwitchCompat mSwitch;
     private int userIDValue;
@@ -136,8 +135,8 @@ public class FiltersFragment extends ListFragment {
                 }
             }
         }
-        okBtn = (Button) mainView.findViewById(R.id.ok);
-        resetBtn = (Button) mainView.findViewById(R.id.reset);
+        Button okBtn = (Button) mainView.findViewById(R.id.ok);
+        Button resetBtn = (Button) mainView.findViewById(R.id.reset);
         startDate=(TextView) mainView.findViewById(R.id.start_date);
         endDate=(TextView)mainView.findViewById(R.id.end_date);
         String finishDateForTextfield="";
@@ -163,7 +162,7 @@ public class FiltersFragment extends ListFragment {
             //So we increase the day to see all the problems from the last day.
             c.set(endYear, endMonth, endDay );
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
             finishDateForTextfield = sdf.format(c.getTime());
 
             //make a finish date for query. Need to make it one day more, to see the problems added today.
@@ -205,7 +204,7 @@ public class FiltersFragment extends ListFragment {
                     }
                 }
 
-                dateCondition = dateInterval + "\'" + beginDate + "\'" + " AND " + "\'"+finishDate+"\')";
+                dateCondition = dateInterval + "\'" + beginDate + "\'" + " AND " + "\'" + finishDate + "\')";
                 resultCondition += dateCondition;
 
                 if (mSwitch.isChecked()) {
@@ -232,20 +231,20 @@ public class FiltersFragment extends ListFragment {
                 }
                 //aaand delete our previous choises
                 sbArray = null;
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 finishDate = sdf.format(c.getTime());
 
-                endYear=c.get(Calendar.YEAR);
-                endMonth=c.get(Calendar.MONTH);
-                endDay=c.get(Calendar.DAY_OF_MONTH);
+                endYear = c.get(Calendar.YEAR);
+                endMonth = c.get(Calendar.MONTH);
+                endDay = c.get(Calendar.DAY_OF_MONTH);
 
                 startDate.setText(beginDate);
                 endDate.setText(finishDate);
 
-                beginDate="2014-02-18";
-                startYear=2014;
-                startMonth=1;
-                startDay=18;
+                beginDate = "2014-02-18";
+                startYear = 2014;
+                startMonth = 1;
+                startDay = 18;
 
 
             }
@@ -254,10 +253,9 @@ public class FiltersFragment extends ListFragment {
         View.OnClickListener showDatePicker = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final View vv = v;
                 DatePickerDialog datePickerDialog;
 
-                if(vv.getId()==R.id.start_date){
+                if(v.getId()==R.id.start_date){
                     datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -268,7 +266,7 @@ public class FiltersFragment extends ListFragment {
                             startMonth=monthOfYear;
                             startDay=dayOfMonth;
 
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                             beginDate = sdf.format(c.getTime());
 
                             startDateInitialized=true;
@@ -288,7 +286,7 @@ public class FiltersFragment extends ListFragment {
                             c.set(year, monthOfYear, dayOfMonth);
                             String dateForTextField;
 
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                             dateForTextField = sdf.format(c.getTime());
                             c.set(year, monthOfYear, dayOfMonth+1);
 

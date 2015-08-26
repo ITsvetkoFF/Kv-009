@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/editComment"
         android:layout_alignParentBottom="false"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:background="@color/slidinglayer_background"
         android:src="@drawable/ic_action_send" />
 

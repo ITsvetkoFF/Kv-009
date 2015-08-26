@@ -106,7 +106,7 @@
             android:layout_marginBottom="40dip"
             android:text="@string/register_if_new"
             android:gravity="center"
-            android:textSize="15dip"
+            android:textSize="15sp"
             android:textColor="#0b84aa"/>
         <!-- LINK TO REGISTER end -->
 

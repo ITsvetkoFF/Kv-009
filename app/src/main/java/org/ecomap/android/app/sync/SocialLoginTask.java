@@ -22,12 +22,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
-public class SocialLoginTask extends AsyncTask {
+public class SocialLoginTask extends AsyncTask<String, Void, Void> {
 
-    LoginFragment loginFragment;
-    String resMessage;
-    Context mContext;
-    ProgressDialog progressBar;
+    private final LoginFragment loginFragment;
+    private String resMessage;
+    private final Context mContext;
+    private ProgressDialog progressBar;
 
     public SocialLoginTask(LoginFragment loginFragment, Context context) {
         this.loginFragment = loginFragment;
@@ -36,13 +36,13 @@ public class SocialLoginTask extends AsyncTask {
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
+    protected Void doInBackground(String[] params) {
 
-        String urlType = (String) params[0];
-        String firstName = (String) params[1];
-        String lastName = (String) params[2];
-        String id = (String) params[3];
-        String email = (String) params[4];
+        String urlType = params[0];
+        String firstName = params[1];
+        String lastName = params[2];
+        String id = params[3];
+        String email = params[4];
         URL url = null;
         HttpURLConnection connection = null;
 
@@ -143,8 +143,8 @@ public class SocialLoginTask extends AsyncTask {
     }
 
     @Override
-    protected void onPostExecute(Object o) {
-        super.onPostExecute(o);
+    protected void onPostExecute(Void v) {
+        super.onPostExecute(v);
         MainActivity.changeAuthorizationState();
 
         progressBar.dismiss();

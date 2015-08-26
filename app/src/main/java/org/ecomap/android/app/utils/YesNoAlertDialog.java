@@ -11,8 +11,8 @@ import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.DeleteTask;
 
 public class YesNoAlertDialog {
-    private String message;
-    private Context mContext;
+    private final String message;
+    private final Context mContext;
     private Problem problem;
 
     public YesNoAlertDialog(String message, Context mContext, Problem problem){

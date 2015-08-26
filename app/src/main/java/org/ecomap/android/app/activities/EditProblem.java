@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -38,18 +39,13 @@ import org.ecomap.android.app.utils.NetworkAvailability;
 
 public class EditProblem extends AppCompatActivity {
     private EditText problemTitle, problemDescription, problemSolution;
-    private TextInputLayout tilProblemTitle, tilProblemDescription, tilProblemSolution;
+    private TextInputLayout tilProblemTitle;
     private SwitchCompat switchProblemStatus;
     private RatingBar ratingBar;
-    private Spinner spinner;
-    TextView switcherText;
+    private TextView switcherText;
     private int problemType;
-    private MapView mapView;
-    private GoogleMap mMap;
     private Marker marker;
-    private UiSettings uiSettings;
     private Problem problem;
-    String [] params;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +59,12 @@ public class EditProblem extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.edit_problem_toolbar);
         setSupportActionBar(toolbar);
         try {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setDisplayHomeAsUpEnabled(true);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,23 +74,23 @@ public class EditProblem extends AppCompatActivity {
         collapsingToolbar.setTitle(getString(R.string.edit_problem_activity));
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
-        mapView = (MapView) findViewById(R.id.edit_backdrop_littleMap);
+        MapView mapView = (MapView) findViewById(R.id.edit_backdrop_littleMap);
         mapView.onCreate(null);
 
         MapsInitializer.initialize(this);
 
-        mMap = mapView.getMap();
+        GoogleMap map = mapView.getMap();
 
-        uiSettings = mMap.getUiSettings();
+        UiSettings uiSettings = map.getUiSettings();
         uiSettings.setMapToolbarEnabled(false);
         uiSettings.setMyLocationButtonEnabled(false);
 
         problem = MainActivity.currentProblem;
 
         if (problem != null){
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 16));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 16));
 
-            marker = mMap.addMarker(new MarkerOptions().draggable(true).position(problem.getPosition()));
+            marker = map.addMarker(new MarkerOptions().draggable(true).position(problem.getPosition()));
             marker.setIcon(BitmapDescriptorFactory.fromResource(problem.getResId()));
         }
 
@@ -131,17 +132,12 @@ public class EditProblem extends AppCompatActivity {
         Drawable progress = ratingBar.getProgressDrawable();
         DrawableCompat.setTint(progress, Color.GRAY);
 
-        spinner = (Spinner) findViewById(R.id.edit_spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.edit_spinner);
         spinner.setSelection(problem.getTypeId() - 1);
 
         tilProblemTitle = (TextInputLayout) findViewById(R.id.til_edit_problemTitle);
         tilProblemTitle.setErrorEnabled(true);
         problemTitle.setText(problem.getTitle());
-
-
-        tilProblemDescription = (TextInputLayout) findViewById(R.id.til_edit_problemDescription);
-
-        tilProblemSolution = (TextInputLayout) findViewById(R.id.til_edit_problemSolution);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -158,7 +154,7 @@ public class EditProblem extends AppCompatActivity {
             }
         });
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
 
@@ -182,7 +178,7 @@ public class EditProblem extends AppCompatActivity {
             case R.id.done_edit_problem_menu_item:
                 if (new NetworkAvailability(getSystemService(Context.CONNECTIVITY_SERVICE)).
                         isNetworkAvailable()){
-                    params = new String[10];
+                    String[] params = new String[10];
 
                     params[0] = getStatus();
                     params[1] = String.valueOf(Math.round(ratingBar.getRating()));

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,7 +20,6 @@ import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -48,34 +48,22 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     private EditText problemSolution;
 
     private TextInputLayout tilProblemTitle;
-    private TextInputLayout tilProblemDescription;
-    private TextInputLayout tilProblemSolution;
-
-    private Spinner spinner;
-    private Button addPhotoButton;
-    private MenuItem doneMenu;
 
     private static NonScrollableListView nonScrollableListView;
-    public static ArrayList<String> selectedPhotos = new ArrayList<>();
-    public AddPhotoImageAdapter imgAdapter;
+    public static final ArrayList<String> selectedPhotos = new ArrayList<>();
+    private AddPhotoImageAdapter imgAdapter;
 
-    public static final int REQUEST_CODE = 1;
+    private final int REQUEST_CODE = 1;
     private int problemType;
-    private String[] params;
 
     private GoogleMap mMap;
-    private SupportMapFragment mapFragment;
     private MapClustering mapClusterer;
 
-    private UiSettings uiSettings;
     private LatLng markerPosition;
     private CameraPosition cameraPosition;
 
     private static Context mContext;
     private UploadingServiceSession mServiceSession;
-
-    private CollapsingToolbarLayout collapsingToolbar;
-    private Toolbar toolbar;
 
     @Override
     protected void onResume() {
@@ -91,10 +79,10 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
 
         mContext = this;
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.add_problem_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.add_problem_map);
         mMap = mapFragment.getMap();
 
-        uiSettings = mMap.getUiSettings();
+        UiSettings uiSettings = mMap.getUiSettings();
         uiSettings.setMapToolbarEnabled(false);
 
         mapClusterer = new MapClustering(mMap, mContext);
@@ -112,30 +100,32 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         tilProblemTitle = (TextInputLayout) findViewById(R.id.til_problemTitle);
         tilProblemTitle.setErrorEnabled(true);
 
-
-        tilProblemDescription = (TextInputLayout) findViewById(R.id.til_problemDescription);
+        TextInputLayout tilProblemDescription = (TextInputLayout) findViewById(R.id.til_problemDescription);
         tilProblemDescription.setErrorEnabled(true);
 
-        tilProblemSolution = (TextInputLayout) findViewById(R.id.til_problemSolution);
+        TextInputLayout tilProblemSolution = (TextInputLayout) findViewById(R.id.til_problemSolution);
         tilProblemSolution.setErrorEnabled(true);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-        addPhotoButton = (Button) findViewById(R.id.add_photo);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        Button addPhotoButton = (Button) findViewById(R.id.add_photo);
 
         nonScrollableListView = (NonScrollableListView) findViewById(R.id.add_problem_non_scrollable_list_view);
         imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
-        toolbar = (Toolbar) findViewById(R.id.add_problem_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.add_problem_toolbar);
         setSupportActionBar(toolbar);
 
         try {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        } catch (Exception e) {
+            ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setDisplayHomeAsUpEnabled(true);
+            }
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
-        collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.add_problem_collapsing_toolbar);
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.add_problem_collapsing_toolbar);
         collapsingToolbar.setTitle(getString(R.string.item_addProblem));
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -150,6 +140,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                     } else {
                         tilProblemTitle.setErrorEnabled(false);
                     }
+
                 } else {
 
                     if (!problemTitle.getText().toString().isEmpty()) {
@@ -211,7 +202,6 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_problem, menu);
-        doneMenu = menu.findItem(R.id.add_problem_done_menu_item);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -268,16 +258,17 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
 
     @Override
     public void allTasksFinished() {
-
+        selectedPhotos.clear();
     }
 
     public static NonScrollableListView getNonScrollableListView() {
         return nonScrollableListView;
     }
 
-    private void hideSoftInput () {
-        InputMethodManager inputMethodManager = (InputMethodManager)  this.getSystemService(this.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+    private void hideSoftInput() {
+        InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
+        View v = this.getCurrentFocus();
+        inputMethodManager.hideSoftInputFromWindow(v != null ? v.getWindowToken() : null, 0);
     }
 
     private void setMarkerToMap() {
@@ -293,7 +284,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         if (!problemTitle.getText().toString().isEmpty()) {
 
             tilProblemTitle.setErrorEnabled(false);
-            params = new String[9];
+            String[] params = new String[9];
 
             params[0] = "UNSOLVED";
             params[1] = "3";

@@ -27,8 +27,8 @@ public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;
     private List<ProblemPhotoEntry> mImagesURLArray;
-    private LayoutInflater inflater;
-    private DisplayImageOptions options;
+    private final LayoutInflater inflater;
+    private final DisplayImageOptions options;
 
 
     public ImageAdapter(Context c, List<ProblemPhotoEntry> titledPhotos) {

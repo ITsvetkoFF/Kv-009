@@ -27,7 +27,7 @@ import java.util.Locale;
  * https://github.com/loopj/android-async-http/blob/master/library/src/main/java/com/loopj/android/http/PersistentCookieStore.java#L44
  */
 public class PersistentCookieStore implements CookieStore {
-    private CookieStore store;
+    private final CookieStore store;
 
     private static final String LOG_TAG = PersistentCookieStore.class.getSimpleName();
 
@@ -35,7 +35,7 @@ public class PersistentCookieStore implements CookieStore {
     public static final String COOKIE_NAME_STORE = "names";
     public static final String COOKIE_NAME_PREFIX = "cookie_";
 
-    private Context mContext;
+    private final Context mContext;
 
     private boolean omitNonPersistentCookies = false;
 
@@ -117,7 +117,7 @@ public class PersistentCookieStore implements CookieStore {
      * @param cookie cookie to be encoded, can be null
      * @return cookie encoded as String
      */
-    protected String encodeCookie(SerializableUriCookiePair cookie) {
+    private String encodeCookie(SerializableUriCookiePair cookie) {
         if (cookie == null)
             return null;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -138,7 +138,7 @@ public class PersistentCookieStore implements CookieStore {
      * @param cookieString string of cookie as returned from http request
      * @return decoded cookie or null if exception occurred
      */
-    protected Pair<URI, HttpCookie> decodeCookie(String cookieString) {
+    private Pair<URI, HttpCookie> decodeCookie(String cookieString) {
         byte[] bytes = hexStringToByteArray(cookieString);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         Pair<URI, HttpCookie> pairUriCookie = null;
@@ -161,7 +161,7 @@ public class PersistentCookieStore implements CookieStore {
      * @param bytes byte array to be converted
      * @return string containing hex values
      */
-    protected String byteArrayToHexString(byte[] bytes) {
+    private String byteArrayToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (byte element : bytes) {
             int v = element & 0xff;
@@ -179,7 +179,7 @@ public class PersistentCookieStore implements CookieStore {
      * @param hexString string of hex-encoded values
      * @return decoded byte array
      */
-    protected byte[] hexStringToByteArray(String hexString) {
+    private byte[] hexStringToByteArray(String hexString) {
         int len = hexString.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {

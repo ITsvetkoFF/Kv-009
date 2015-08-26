@@ -69,21 +69,17 @@ public class EcoMapFragment extends Fragment {
     private static String filterCondition;
     public ImageAdapter imgAdapter;
     private Context mContext;
-    Cursor cursor;
-    EcoMapReceiver receiver;
-    MapView mapView;
+    private EcoMapReceiver receiver;
+    private MapView mapView;
     private GoogleMap mMap;
-    private UiSettings UISettings;
     private ArrayList<Problem> values;
-    private View v;
     public EcoMapSlidingLayer mSlidingLayer;
     private ImageView showTypeImage, showLike;
     private TextView showTitle, showByTime, showContent, showProposal, showNumOfLikes, showStatus;
     private ScrollView detailedScrollView;
-    public static CameraPosition cameraPosition;
-    RatingBar problemRating;
+    private static CameraPosition cameraPosition;
+    private RatingBar problemRating;
 
-    private FloatingActionButton fabUkraine, fabToMe;
     private static FloatingActionButton fabAddProblem;
 
     private static LatLng markerPosition = null;
@@ -99,12 +95,9 @@ public class EcoMapFragment extends Fragment {
 
     private static boolean addproblemModeIsEnabled = false;
 
-    private Button addPhotoButton;
-    public static final int REQUEST_CODE = 1;
-    public static final int REQUEST_CODE_PHOTOS_ADDED = 2;
-    public static ArrayList<String> selectedPhotos = new ArrayList<>();
-
-
+    private static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_PHOTOS_ADDED = 2;
+    private static ArrayList<String> selectedPhotos = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -120,7 +113,7 @@ public class EcoMapFragment extends Fragment {
 
         //getActivity().invalidateOptionsMenu();
 
-        v = inflater.inflate(R.layout.map_layout_main, container, false);
+        View v = inflater.inflate(R.layout.map_layout_main, container, false);
         mapView = (MapView) v.findViewById(R.id.mapview);
 
         //Temporary is to initialize mapView by null to get rotation works without exceptions.
@@ -131,7 +124,7 @@ public class EcoMapFragment extends Fragment {
         MapsInitializer.initialize(getActivity());
 
 
-        UISettings = mMap.getUiSettings();
+        UiSettings UISettings = mMap.getUiSettings();
         UISettings.setMapToolbarEnabled(false);
         UISettings.setMyLocationButtonEnabled(false);
 
@@ -141,7 +134,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem = (FloatingActionButton) v.findViewById(R.id.fabAddProblem);
         rootLayout = (CoordinatorLayout) v.findViewById(R.id.rootLayout);
 
-        fabUkraine = (FloatingActionButton) v.findViewById(R.id.fabUkraine);
+        FloatingActionButton fabUkraine = (FloatingActionButton) v.findViewById(R.id.fabUkraine);
         fabUkraine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +143,7 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        fabToMe = (FloatingActionButton) v.findViewById(R.id.fabToMe);
+        FloatingActionButton fabToMe = (FloatingActionButton) v.findViewById(R.id.fabToMe);
         fabToMe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,7 +227,7 @@ public class EcoMapFragment extends Fragment {
             }
         });
 
-        addPhotoButton = (Button) v.findViewById(R.id.add_photo);
+        Button addPhotoButton = (Button) v.findViewById(R.id.add_photo);
 
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -325,7 +318,6 @@ public class EcoMapFragment extends Fragment {
             getActivity().finish();
         }
         Log.i(tag, "mapView onDestroy");
-
     }
 
     @Override
@@ -344,7 +336,7 @@ public class EcoMapFragment extends Fragment {
     private void setUpMap() {
         Log.i(tag, "set up map");
 
-        if (cameraPosition != null) {
+        if (cameraPosition != null){
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
@@ -353,18 +345,19 @@ public class EcoMapFragment extends Fragment {
             //Start service to get a new number of revision and new data
             Intent intent = new Intent(this.getActivity(), EcoMapService.class);
             getActivity().startService(intent);
-        } else {
+        }
+        else{
             fillMap(filterCondition);
         }
     }
 
     //if there is some filter condition, then this method will be called. It will search only needed points
-    public void fillMap(String filterCondition) {
-        if (filterCondition == null) {
+    private void fillMap(String filterCondition) {
+        if (filterCondition == null){
             filterCondition = "";
         }
 
-        if (cameraPosition != null) {
+        if (cameraPosition != null){
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
 
@@ -373,15 +366,19 @@ public class EcoMapFragment extends Fragment {
         values.clear();
         mMap.clear();
 
-        cursor = getActivity().getContentResolver()
+        Cursor cursor = getActivity().getContentResolver()
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null);
 
-        while (cursor.moveToNext()) {
-            Problem p = new Problem(cursor, getActivity());
-            values.add(p);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Problem p = new Problem(cursor, getActivity());
+                values.add(p);
+            }
         }
 
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
         mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, this);
         mapClusterer.setUpClusterer();
 
@@ -406,7 +403,7 @@ public class EcoMapFragment extends Fragment {
         markerClickType = type;
     }
 
-    public static int getMarkerClickType() {
+    public static int getMarkerClickType(){
         return markerClickType;
     }
 
@@ -418,12 +415,12 @@ public class EcoMapFragment extends Fragment {
         markerPosition = position;
     }
 
-    public void fillSlidingPanel(final Problem problem) {
+    public void fillSlidingPanel(final Problem problem){
 
         if (mMap.getCameraPosition().zoom < 13.0f) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 13.0f));
         }
-        cameraPosition = new CameraPosition(problem.getPosition(), 11.0f, 0.0f, 0.0f);
+        cameraPosition = new CameraPosition(problem.getPosition(),11.0f,0.0f,0.0f);
 
         //Set Problem object parameters to a view at show problem fragment
         showTypeImage.setImageResource(problem.getResBigImage());
@@ -437,19 +434,19 @@ public class EcoMapFragment extends Fragment {
         LayerDrawable stars = (LayerDrawable) problemRating.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
 
-        if (problem.isLiked()) {
+        if (problem.isLiked()){
             showLike.setImageResource(R.drawable.heart_icon);
-        } else {
+        }else{
             showLike.setImageResource(R.drawable.heart_empty);
         }
 
         //Check problem status and choose color fo text
         if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
-            showStatus.setText(getString(R.string.unsolved_problem));
-            showStatus.setTextColor(Color.RED);
-        } else {
             showStatus.setText(getString(R.string.solved_problem));
             showStatus.setTextColor(Color.GREEN);
+        } else {
+            showStatus.setText(getString(R.string.unsolved_problem));
+            showStatus.setTextColor(Color.RED);
         }
 
         //Mechanism for likes ++ when click on heart
@@ -458,8 +455,8 @@ public class EcoMapFragment extends Fragment {
             public void onClick(View v) {
                 if (MainActivity.isUserIsAuthorized()) {
                     if (!problem.isLiked()) {
-                        problem.setNumberOfLikes(1);
-                        problem.setLiked(true);
+                        problem.addLike();
+                        problem.setLiked();
 
                         new AddVoteTask().execute(problem.getId());
 
@@ -519,6 +516,7 @@ public class EcoMapFragment extends Fragment {
 //        }
 
 
+
         //comments
         FragmentManager chFm = getChildFragmentManager();
         Fragment f;
@@ -561,7 +559,7 @@ public class EcoMapFragment extends Fragment {
                 selectedPhotos.clear();
                 selectedPhotos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
 
-                if (selectedPhotos.size() > 0) {
+                if (selectedPhotos.size()>0){
                     Intent intent = new Intent(mContext, CommentPhotoActivity.class);
                     intent.putExtra("problem_id", lastOpenProblem.getId());
                     intent.putExtra("selectedPhotos", selectedPhotos);
@@ -569,20 +567,20 @@ public class EcoMapFragment extends Fragment {
                 }
 
             }
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_PHOTOS_ADDED) {
-            ArrayList<ProblemPhotoEntry> photos = data.getParcelableArrayListExtra("photos");
-            for (ProblemPhotoEntry photo : photos) {
-                //new UploadPhotoTask(mContext, lastOpenProblem.getId(), photo.getImgURL(), photo.getCaption()).execute();
-            }
+        }else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_PHOTOS_ADDED) {
+                ArrayList<ProblemPhotoEntry> photos = data.getParcelableArrayListExtra("photos");
+                /*for (ProblemPhotoEntry photo:photos){
+                    new UploadPhotoTask(mContext, lastOpenProblem.getId(), photo.getImgURL(), photo.getCaption()).execute();
+                }*/
             new GetPhotosTask(this).execute(lastOpenProblem.getId());
         }
     }
 
-    public static CameraPosition getCameraPosition() {
+    public static CameraPosition getCameraPosition(){
         return cameraPosition;
     }
 
-    private void enableAddProblemMode() {
+    private void enableAddProblemMode(){
         addproblemModeIsEnabled = true;
         setMarkerClickType(2);
 
@@ -590,7 +588,7 @@ public class EcoMapFragment extends Fragment {
         fabAddProblem.setImageResource(R.drawable.ic_done_white_24dp);
     }
 
-    public static void disableAddProblemMode() {
+    public static void disableAddProblemMode(){
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
@@ -606,6 +604,10 @@ public class EcoMapFragment extends Fragment {
 
     public static MapClustering getMapClusterer() {
         return mapClusterer;
+    }
+
+    public static Problem getLastOpenProblem() {
+        return lastOpenProblem;
     }
 
 }

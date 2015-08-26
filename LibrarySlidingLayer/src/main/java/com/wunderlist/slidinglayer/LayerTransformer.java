@@ -60,5 +60,5 @@ public abstract class LayerTransformer {
      * @param previewProgress The progress of the layer relative to the preview mode [0 - 1]. 0 fixed if no preview
      * @param layerProgress   The progress of the layer relative to its total size [0 - 1]
      */
-    public abstract void transform(View layerView, float previewProgress, float layerProgress);
+    protected abstract void transform(View layerView, float previewProgress, float layerProgress);
 }

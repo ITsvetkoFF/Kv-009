@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,10 +19,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -35,9 +32,7 @@ import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.model.CommentEntry;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.sync.EcoMapService;
 import org.ecomap.android.app.utils.SnackBarHelper;
-import org.ecomap.android.app.utils.UserSubscriber;
 import org.ecomap.android.app.widget.ExpandableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +45,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,10 +76,8 @@ public class CommentsFragment extends Fragment {
     private Problem mProblem;
     private PlusOneButton mPlusOneButton;
 
-    private OnFragmentInteractionListener mListener;
     private CommentsAdapter<CommentEntry> mCommentsAdapter;
 
-    private ViewGroup mRootView;
     private EditText mTxtComment;
 
     public CommentsAdapter getCommentsAdapter(){
@@ -131,7 +123,7 @@ public class CommentsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_comments, container, false);
+        ViewGroup mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_comments, container, false);
         ExpandableListView lstComments = new ExpandableListView(getActivity(), null, 0);
 
         lstComments.setId(R.id.email_login);
@@ -244,7 +236,7 @@ public class CommentsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        OnFragmentInteractionListener mListener = null;
     }
 
 
@@ -258,7 +250,7 @@ public class CommentsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    private interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
 
@@ -393,7 +385,6 @@ public class CommentsFragment extends Fragment {
             String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/comments/" + id;
 
             HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
 
             try {
                 URL url = new URL(ECOMAP_COMMENTS_URL);

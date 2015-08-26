@@ -110,8 +110,7 @@
                 <org.ecomap.android.app.ui.components.NonScrollableListView
                     android:id="@id/android:list"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
 
@@ -129,7 +128,7 @@
             <Button
                 android:id="@+id/reset"
                 style="@style/FlatButton"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:enabled="false"
                 android:focusable="false"
@@ -138,7 +137,7 @@
             <Button
                 android:id="@+id/ok"
                 style="@style/RaisedButton"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="@string/ok" />
         </LinearLayout>

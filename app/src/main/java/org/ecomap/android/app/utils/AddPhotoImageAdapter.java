@@ -22,16 +22,14 @@ import java.util.List;
 
 public class AddPhotoImageAdapter extends BaseAdapter {
 
-    private final Context mContext;
     private List<String> mImagesURLArray;
-    private LayoutInflater inflater;
-    private DisplayImageOptions options;
+    private final LayoutInflater inflater;
+    private final DisplayImageOptions options;
 
     public AddPhotoImageAdapter(Context c, List<String> titledPhotos) {
 
         this.mImagesURLArray = titledPhotos;
-        this.mContext = c;
-        this.inflater = LayoutInflater.from(mContext);
+        this.inflater = LayoutInflater.from(c);
 
         this.options = new DisplayImageOptions.Builder()
                 //.showImageOnLoading(R.drawable.ic_stub)

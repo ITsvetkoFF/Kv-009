@@ -80,30 +80,30 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     public static final String PASSWORD_KEY = "password";
     public static final String USER_ID_KEY = "user_id";
     public static final String USER_PERMISSION_SET_KEY = "permissions_set";
-    private String tag;
 
-    public static final int NAV_MAP = R.id.map;
-    public static final int NAV_STATISTICS = R.id.statistics;
-    public static final int NAV_RESOURCES = R.id.resourses;
-    public static final int NAV_PROFILE = R.id.login;
+    private static final int NAV_MAP = R.id.map;
+    private static final int NAV_STATISTICS = R.id.statistics;
+    private static final int NAV_RESOURCES = R.id.resourses;
+    private static final int NAV_PROFILE = R.id.login;
     private static final int NAV_TOP10 = R.id.top10;
     private static final int NAV_FILTERS = R.id.filters_menu_item;
     public static final int NAV_ADD_PROBLEM = R.id.add_problem;
-    public static final int NAV_EDIT_PROBLEM = R.id.edit_menu_item;
+    private static final int NAV_EDIT_PROBLEM = R.id.edit_menu_item;
 
-    private HashMap<Class, Integer> fragmentsIndexes = new HashMap<>(6);
+    private final HashMap<Class, Integer> fragmentsIndexes = new HashMap<>(6);
 
     public static CookieManager cookieManager;
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final String LAST_FRAGMENT_TAG = "LAST_FRAGMENT_TAG";
     private static String userId;
-    private static boolean userIsAuthorized = false;
     private static String filterCondition = "";
     private static Context mContext;
 
     private DrawerLayout mDrawerLayout;
     private static NavigationView mNavigationView;
+
+    private static EcoMapFragment ecoMapFragment;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mTitle;
@@ -112,28 +112,23 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private FragmentManager mFragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
-    static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
-
-    private MenuItem filtersMenuItem, deleteMenuItem, ediMenuItem;
-    private boolean savedInstanceStateNull = false;
-    private int firstLoadedFragment;
+    private static final int REQUEST_CODE_RECOVER_PLAY_SERVICES = 1001;
 
     public static Problem currentProblem;
     public static EcoMapSlidingLayer slidingLayer;
-
-    private EcoMapFragment ecoMapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        int firstLoadedFragment;
         if(checkPlayServices())
         {
-            firstLoadedFragment=NAV_MAP;
+            firstLoadedFragment = NAV_MAP;
         }
         else
         {
-            firstLoadedFragment=NAV_FILTERS;
+            firstLoadedFragment =NAV_FILTERS;
         }
 
         setContentView(R.layout.activity_main);
@@ -269,9 +264,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        filtersMenuItem = menu.findItem(R.id.filters_menu_item);
-        deleteMenuItem = menu.findItem(R.id.delete_menu_item);
-        ediMenuItem = menu.findItem(R.id.edit_menu_item);
+        MenuItem filtersMenuItem = menu.findItem(R.id.filters_menu_item);
+        MenuItem deleteMenuItem = menu.findItem(R.id.delete_menu_item);
+        MenuItem ediMenuItem = menu.findItem(R.id.edit_menu_item);
 
 
         if (mFragment != null) {
@@ -356,7 +351,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             EcoMapFragment frag = (EcoMapFragment)mFragment;
 
             if (frag.isAddproblemModeIsEnabled()) {
-                frag.disableAddProblemMode();
+                EcoMapFragment.disableAddProblemMode();
                 return;
             }
 
@@ -442,7 +437,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         // update the main content by replacing fragments
 
         boolean stop = false;
-        tag = null;
+        String tag = null;
 
         switch (position) {
             case NAV_MAP:
@@ -547,11 +542,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             mFragment = new EcoMapFragment();
         }
 
-        EcoMapFragment frag = (EcoMapFragment) mFragment;
-        frag.setFilterCondition(s);
+        EcoMapFragment.setFilterCondition(s);
     }
 
-    public static String getUserId() {
+    private static String getUserId() {
         return userId;
     }
 
@@ -577,6 +571,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     }
 
     public static boolean isUserIsAuthorized() {
+        boolean userIsAuthorized = false;
         return userIsAuthorized || getUserId() != null;
     }
 
@@ -620,7 +615,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         return true;
     }
 
-    void showErrorDialog(int code) {
+    private void showErrorDialog(int code) {
         GooglePlayServicesUtil.getErrorDialog(code, this,
                 REQUEST_CODE_RECOVER_PLAY_SERVICES, new DialogInterface.OnCancelListener() {
                     @Override
@@ -629,5 +624,9 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     }
                 }).show();
 
+    }
+
+    public static EcoMapFragment getEcoMapFragment(){
+        return ecoMapFragment;
     }
 }

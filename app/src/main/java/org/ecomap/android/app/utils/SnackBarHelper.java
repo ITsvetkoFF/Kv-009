@@ -19,7 +19,7 @@ public class SnackBarHelper {
      * @param duration
      * @param backgroundColor
      */
-    public static void showSnackBar(Context context, View view, String message, int duration, int backgroundColor) {
+    private static void showSnackBar(Context context, View view, String message, int duration, int backgroundColor) {
         Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(context.getResources().getColor(backgroundColor));
@@ -33,7 +33,7 @@ public class SnackBarHelper {
      * INFO SNACK BARS
      * Overrides showInfoSnackBar in order to use strings from xml
      */
-    public static void showInfoSnackBar(Activity activity, String message, int duration) {
+    private static void showInfoSnackBar(Activity activity, String message, int duration) {
         showSnackBar(activity, activity.getWindow().getDecorView(), message, duration, R.color.snackBarInfo);
     }
 
@@ -56,7 +56,7 @@ public class SnackBarHelper {
      *
      */
 
-    public static void showWarningSnackBar(Activity activity, String message, int duration) {
+    private static void showWarningSnackBar(Activity activity, String message, int duration) {
         showSnackBar(activity, activity.getWindow().getDecorView(), message, duration, R.color.snackBarWarning);
     }
 
@@ -68,7 +68,7 @@ public class SnackBarHelper {
         showWarningSnackBar(context, view, context.getString(messageResource), duration);
     }
 
-    public static void showWarningSnackBar(Context context, View view, String message, int duration) {
+    private static void showWarningSnackBar(Context context, View view, String message, int duration) {
         showSnackBar(context, view, message, duration, R.color.snackBarWarning);
     }
 
@@ -85,7 +85,7 @@ public class SnackBarHelper {
         showSuccessSnackBar(activity, activity.getString(messageResource), duration);
     }
 
-    public static void showSuccessSnackBar(Context context, View view, String message, int duration) {
+    private static void showSuccessSnackBar(Context context, View view, String message, int duration) {
         showSnackBar(context, view, message, duration, R.color.snackBarSuccess);
     }
 

@@ -2,11 +2,14 @@ package org.ecomap.android.app.data;
 
 import android.annotation.TargetApi;
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 public class EcoMapProvider extends ContentProvider {
 
@@ -16,10 +19,10 @@ public class EcoMapProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private EcoMapDBHelper mOpenHelper;
 
-    static final int PROBLEMS = 100;
-    static final int RESOURCES = 103;
+    private static final int PROBLEMS = 100;
+    private static final int RESOURCES = 103;
 
-    static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = EcoMapContract.CONTENT_AUTHORITY;
@@ -37,7 +40,7 @@ public class EcoMapProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "problems"
@@ -69,12 +72,18 @@ public class EcoMapProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        Context c = getContext();
+        if (c != null){
+            ContentResolver cr = c.getContentResolver();
+            retCursor.setNotificationUri(cr, uri);
+        }
+
         return retCursor;
     }
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
 
         final int match = sUriMatcher.match(uri);
 
@@ -90,7 +99,7 @@ public class EcoMapProvider extends ContentProvider {
 
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -116,12 +125,18 @@ public class EcoMapProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+
+        Context c = getContext();
+        if (c != null){
+            ContentResolver cr = c.getContentResolver();
+            cr.notifyChange(uri, null);
+        }
+
         return returnUri;
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
@@ -141,7 +156,13 @@ public class EcoMapProvider extends ContentProvider {
         }
         // Because a null deletes all rows
         if (rowsDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+
+            Context c = getContext();
+            if (c != null){
+                ContentResolver cr = c.getContentResolver();
+                cr.notifyChange(uri, null);
+            }
+
         }
         return rowsDeleted;
     }
@@ -153,7 +174,7 @@ public class EcoMapProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
@@ -173,12 +194,18 @@ public class EcoMapProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         if (rowsUpdated != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+
+            Context c = getContext();
+            if (c != null){
+                ContentResolver cr = c.getContentResolver();
+                cr.notifyChange(uri, null);
+            }
+
         }
         return rowsUpdated;
     }
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         switch (match) {
@@ -202,7 +229,13 @@ public class EcoMapProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+
+                Context c = getContext();
+                if (c != null){
+                    ContentResolver cr = c.getContentResolver();
+                    cr.notifyChange(uri, null);
+                }
+
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);

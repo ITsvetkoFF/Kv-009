@@ -21,7 +21,7 @@ public class ProblemPhotoEntry implements Parcelable {
         return imgURL;
     }
 
-    protected ProblemPhotoEntry(Parcel in) {
+    private ProblemPhotoEntry(Parcel in) {
         title = in.readString();
         imgURL = in.readString();
     }

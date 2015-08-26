@@ -21,10 +21,10 @@ import java.util.List;
 
 public class GetPhotosTask extends AsyncTask<Integer, Integer, List<ProblemPhotoEntry>> {
 
-    public EcoMapFragment ecoMapFragment;
+    private final EcoMapFragment ecoMapFragment;
     private final String LOG_TAG = GetPhotosTask.class.getSimpleName();
 
-    String JSONStr = null;
+    private String JSONStr;
 
     public GetPhotosTask(EcoMapFragment ecoMapFragment) {
         this.ecoMapFragment = ecoMapFragment;

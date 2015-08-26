@@ -16,6 +16,7 @@ import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -25,14 +26,27 @@ public class Problem implements ClusterItem, Parcelable {
 
     private static final String LOG_TAG = Problem.class.getSimpleName();
 
-    LatLng mPos;
+    private final LatLng mPos;
 
-    int id, typeId, resId, numberOfVotes, regionId, numberOfComments, userId;
-    String mTitle, status, firstName, lastName, severity, date, content, proposal;
+    private int id;
+    private int typeId;
+    int resId;
+    private int numberOfVotes;
+    private final int regionId;
+    private final int numberOfComments;
+    int userId;
+    private final String mTitle;
+    private final String status;
+    private final String firstName;
+    private final String lastName;
+    private final String severity;
+    private final String date;
+    private final String content;
+    private final String proposal;
 
-    boolean liked;
+    private boolean liked;
 
-    Context mContext;
+    private Context mContext;
 
     public Problem(Cursor cursor, Context mContext) {
 
@@ -191,13 +205,13 @@ public class Problem implements ClusterItem, Parcelable {
         return String.valueOf(numberOfVotes);
     }
 
-    public void setNumberOfLikes(int numb){
-        numberOfVotes += numb;
+    public void addLike(){
+        numberOfVotes += 1;
     }
 
-    public void setLiked(boolean liked){
+    public void setLiked(){
 
-        this.liked = liked;
+        this.liked = true;
 
         //save this problem into set in SharedPreferences
         SharedPreferencesHelper.addLikedProblem(mContext,getId());
@@ -237,7 +251,7 @@ public class Problem implements ClusterItem, Parcelable {
     }
 
     
-    protected Problem(Parcel in) {
+    private Problem(Parcel in) {
         mPos = (LatLng) in.readValue(LatLng.class.getClassLoader());
         mTitle = in.readString();
         typeId = in.readInt();
@@ -296,8 +310,8 @@ public class Problem implements ClusterItem, Parcelable {
         return DateUtils.getRelativeTimeSpanString(getCreatedDate().getTime(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
     }
 
-    public Date getCreatedDate(){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private Date getCreatedDate(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date d = null;
         try {
 

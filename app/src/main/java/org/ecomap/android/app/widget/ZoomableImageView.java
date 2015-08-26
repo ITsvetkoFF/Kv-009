@@ -14,7 +14,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 public class ZoomableImageView extends ImageViewTouch {
 
     private long mDeBounce = 0;
-    private List<OnSingleTouchListener> observers = new ArrayList<OnSingleTouchListener>();
+    private final List<OnSingleTouchListener> observers = new ArrayList<OnSingleTouchListener>();
     private int intStartX;
     private int intStartY;
 
@@ -79,7 +79,7 @@ public class ZoomableImageView extends ImageViewTouch {
     }
 
 
-    public void fireOnSingleTouch() {
+    private void fireOnSingleTouch() {
         for (OnSingleTouchListener observer : observers) {
             observer.OnSingleTouch();
         }

@@ -26,11 +26,9 @@ public class Top10Tab extends Fragment {
 
     private String LOG_TAG = Top10Tab.class.getSimpleName();
 
-    ArrayList<Problem> top10Problems;
     private Activity mActivity;
-    private int tabId;
 
-    public static final Top10Tab newInstance(int tabId) {
+    public static Top10Tab newInstance(int tabId) {
         Top10Tab f = new Top10Tab();
         Bundle bdl = new Bundle(tabId);
         bdl.putInt("tabID", tabId);
@@ -51,7 +49,7 @@ public class Top10Tab extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.top10_tab, container, false);
 
-        tabId = getArguments().getInt("tabID");
+        int tabId = getArguments().getInt("tabID");
 
         //Log.d(Top10Tab.class.getSimpleName(), "onCreateView: " + tabId);
 
@@ -69,19 +67,20 @@ public class Top10Tab extends Fragment {
                 break;
         }
 
-        top10Problems = new ArrayList<Problem>(10);
+        ArrayList<Problem> top10Problems = new ArrayList<Problem>(10);
 
         //get data
         Cursor cursor = mActivity.getContentResolver()
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, sortOrder);
 
-        while (cursor.moveToNext()) {
+        if (cursor != null) {
 
-            top10Problems.add(new Problem(cursor, getActivity()));
+            while (cursor.moveToNext()) {
+                top10Problems.add(new Problem(cursor, getActivity()));
+            }
 
+            cursor.close();
         }
-
-        cursor.close();
 
         ListView lvTopPop = (ListView) v.findViewById(R.id.lvPop);
 
@@ -94,10 +93,8 @@ public class Top10Tab extends Fragment {
             public void onItemClick(AdapterView<?> parent, View viewClicked,
                                     int position, long id) {
 
-                Problem problem = (Problem) adapter.getItem(position);
-
                 //to open the problem on a map, set lastOpenProblem and open SlidingPanel
-                EcoMapFragment.lastOpenProblem = problem;
+                EcoMapFragment.lastOpenProblem = (Problem) adapter.getItem(position);
                 EcoMapFragment.isOpenSlidingLayer = true;
 
                 //to open the map, we use empty filter

@@ -98,12 +98,11 @@ public class SlidingLayer extends FrameLayout {
      * Sentinel value for no current active pointer. Used by {@link #mActivePointerId}.
      */
     private static final int INVALID_VALUE = -1;
-    protected int mActivePointerId = INVALID_VALUE;
-    protected VelocityTracker mVelocityTracker;
-    protected int mMaximumVelocity;
+    private int mActivePointerId = INVALID_VALUE;
+    private VelocityTracker mVelocityTracker;
+    private int mMaximumVelocity;
 
-    private Random mRandom;
-    protected Bundle mState;
+    private Bundle mState;
 
     private Scroller mScroller;
 
@@ -245,7 +244,7 @@ public class SlidingLayer extends FrameLayout {
         final float density = context.getResources().getDisplayMetrics().density;
         mFlingDistance = (int) (MIN_DISTANCE_FOR_FLING * density);
 
-        mRandom = new Random();
+        Random mRandom = new Random();
     }
 
     /**
@@ -359,7 +358,7 @@ public class SlidingLayer extends FrameLayout {
      * @see #setShadowDrawable(Drawable)
      * @see #setShadowDrawable(int)
      */
-    public void setShadowSize(final int shadowSize) {
+    private void setShadowSize(final int shadowSize) {
         mShadowSize = shadowSize;
         invalidate(getLeft(), getTop(), getRight(), getBottom());
     }
@@ -387,7 +386,7 @@ public class SlidingLayer extends FrameLayout {
      *
      * @param d Drawable append as a shadow
      */
-    public void setShadowDrawable(final Drawable d) {
+    private void setShadowDrawable(final Drawable d) {
         mShadowDrawable = d;
         refreshDrawableState();
         setWillNotDraw(false);
@@ -400,7 +399,7 @@ public class SlidingLayer extends FrameLayout {
      *
      * @param resId Resource ID of a drawable
      */
-    public void setShadowDrawable(int resId) {
+    private void setShadowDrawable(int resId) {
         setShadowDrawable(getContext().getResources().getDrawable(resId));
     }
 
@@ -419,7 +418,7 @@ public class SlidingLayer extends FrameLayout {
      * @param offsetDistance Size of the offset in pixels
      * @see #getOffsetDistance()
      */
-    public void setOffsetDistance(int offsetDistance) {
+    private void setOffsetDistance(int offsetDistance) {
         mOffsetDistance = offsetDistance;
         checkPreviewModeConsistency();
         invalidate(getLeft(), getTop(), getRight(), getBottom());
@@ -447,7 +446,7 @@ public class SlidingLayer extends FrameLayout {
      * @param previewOffsetDistance Size of the offset in pixels
      * @see #getOffsetDistance()
      */
-    public void setPreviewOffsetDistance(int previewOffsetDistance) {
+    private void setPreviewOffsetDistance(int previewOffsetDistance) {
         mPreviewOffsetDistance = previewOffsetDistance;
         checkPreviewModeConsistency();
         invalidate(getLeft(), getTop(), getRight(), getBottom());
@@ -516,7 +515,7 @@ public class SlidingLayer extends FrameLayout {
         restoreState(savedState.mState);
     }
 
-    public void restoreState(Parcelable in) {
+    private void restoreState(Parcelable in) {
         mState = (Bundle) in;
         int state = mState.getInt(STATE_KEY);
         setLayerState(state, true);
@@ -840,7 +839,7 @@ public class SlidingLayer extends FrameLayout {
         }
     }
 
-    protected boolean canScroll(View v, boolean checkV, int dx, int dy, int x, int y) {
+    private boolean canScroll(View v, boolean checkV, int dx, int dy, int x, int y) {
 
         if (v instanceof ViewGroup) {
             final ViewGroup group = (ViewGroup) v;
@@ -970,7 +969,7 @@ public class SlidingLayer extends FrameLayout {
      * @param velocity the velocity associated with a fling, if applicable. (0
      *                 otherwise)
      */
-    void smoothScrollTo(int x, int y, int velocity) {
+    private void smoothScrollTo(int x, int y, int velocity) {
 
         if (getChildCount() == 0) {
             setDrawingCacheEnabled(false);
@@ -1017,7 +1016,7 @@ public class SlidingLayer extends FrameLayout {
     // purely linear fashion. Instead, we use this method to moderate the effect
     // that the distance
     // of travel has on the overall snap duration.
-    float distanceInfluenceForSnapDuration(float f) {
+    private float distanceInfluenceForSnapDuration(float f) {
         f -= 0.5f; // center the values about 0.
         f *= 0.3f * Math.PI / 2.0f;
         return (float) Math.sin(f);
@@ -1126,7 +1125,7 @@ public class SlidingLayer extends FrameLayout {
      *                   {@link #STICK_TO_BOTTOM}, {@link #STICK_TO_LEFT}
      *                   {@link #STICK_TO_RIGHT}, {@link #STICK_TO_TOP}
      */
-    public void setStickTo(int screenSide) {
+    private void setStickTo(int screenSide) {
         mForceLayout = true;
         mScreenSide = screenSide;
         setLayerState(STATE_CLOSED, false, true);
@@ -1231,10 +1230,10 @@ public class SlidingLayer extends FrameLayout {
                 layoutParams.gravity = Gravity.BOTTOM;
                 break;
             case STICK_TO_LEFT:
-                layoutParams.gravity = Gravity.LEFT;
+                layoutParams.gravity = Gravity.START;
                 break;
             case STICK_TO_RIGHT:
-                layoutParams.gravity = Gravity.RIGHT;
+                layoutParams.gravity = Gravity.END;
                 break;
             case STICK_TO_TOP:
                 layoutParams.gravity = Gravity.TOP;

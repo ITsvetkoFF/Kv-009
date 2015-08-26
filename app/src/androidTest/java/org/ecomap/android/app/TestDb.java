@@ -15,7 +15,7 @@ import java.util.HashSet;
  */
 public class TestDb extends AndroidTestCase {
 
-    void deleteTheDatabase() {
+    private void deleteTheDatabase() {
         mContext.deleteDatabase(EcoMapDBHelper.DATABASE_NAME);
     }
 

@@ -37,7 +37,7 @@ public final class AlphaTransformer extends LayerTransformer {
         this(DEFAULT_MULTIPLIER);
     }
 
-    public AlphaTransformer(float multiplier) {
+    private AlphaTransformer(float multiplier) {
         mMultiplier = multiplier;
     }
 

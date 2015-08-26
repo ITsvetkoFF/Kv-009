@@ -22,7 +22,7 @@ import java.net.URL;
 public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
     private ProgressDialog progressBar;
-    private Context mContext;
+    private final Context mContext;
     private int responseCode;
     private int problemID;
     private String resultMessage = null;
@@ -123,7 +123,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         Intent intent = new Intent(mContext, EcoMapService.class);
         mContext.startService(intent);
 
-        new Toast(mContext).makeText(mContext, resultMessage, Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, resultMessage, Toast.LENGTH_LONG).show();
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
             sendPhoto(problemID);

@@ -7,7 +7,7 @@ import android.widget.ListView;
 
 public class ExpandableListView extends ListView {
 
-    boolean expanded = false;
+    private boolean expanded = false;
 
     public ExpandableListView(Context context) {
         super(context);
@@ -21,7 +21,7 @@ public class ExpandableListView extends ListView {
         super(context, attrs, defaultStyle);
     }
 
-    public boolean isExpanded() {
+    private boolean isExpanded() {
         return expanded;
     }
 

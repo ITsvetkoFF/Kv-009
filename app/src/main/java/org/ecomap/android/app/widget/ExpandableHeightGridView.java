@@ -21,7 +21,7 @@ public class ExpandableHeightGridView extends GridView {
         super(context, attrs, defStyle);
     }
 
-    public boolean isExpanded() {
+    private boolean isExpanded() {
         return expanded;
     }
 

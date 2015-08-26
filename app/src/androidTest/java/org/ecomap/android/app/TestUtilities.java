@@ -21,19 +21,19 @@ import java.util.Set;
  * Created by yura on 7/7/15.
  */
 public class TestUtilities extends AndroidTestCase{
-    static final int TEST_COMMENTS_NUMBER = 1;
-    static final String TEST_TITLE = "Problem 1";
-    static final String TEST_CONTENT = "Problem 1 content";
-    static final long TEST_DATE = 1419033600L;  // December 20th, 2014
-    static final double TEST_LATITUDE = 50.231;
-    static final double TEST_LONGITUDE = 30.2134;
-    static final int TEST_PROBLEM_TYPE_ID = 1;
-    static final String TEST_PROPOSAL = "Problem 1 proposal";
-    static final int TEST_REGION_ID = 1;
-    static final int TEST_SEVERITY = 1;
-    static final String TEST_STATUS = "UNSOLVED";
+    private static final int TEST_COMMENTS_NUMBER = 1;
+    private static final String TEST_TITLE = "Problem 1";
+    private static final String TEST_CONTENT = "Problem 1 content";
+    private static final long TEST_DATE = 1419033600L;  // December 20th, 2014
+    private static final double TEST_LATITUDE = 50.231;
+    private static final double TEST_LONGITUDE = 30.2134;
+    private static final int TEST_PROBLEM_TYPE_ID = 1;
+    private static final String TEST_PROPOSAL = "Problem 1 proposal";
+    private static final int TEST_REGION_ID = 1;
+    private static final int TEST_SEVERITY = 1;
+    private static final String TEST_STATUS = "UNSOLVED";
     static final String TEST_USER_NAME = "Ivan Ivanenko";
-    static final int TEST_VOTES_NUMBER = 1;
+    private static final int TEST_VOTES_NUMBER = 1;
 
     static void validateCursor(String error, Cursor valueCursor, ContentValues expectedValues) {
         assertTrue("Empty cursor returned. " + error, valueCursor.moveToFirst());

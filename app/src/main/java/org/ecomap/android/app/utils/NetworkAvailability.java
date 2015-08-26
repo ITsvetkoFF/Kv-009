@@ -5,7 +5,7 @@ import android.net.NetworkInfo;
 
 public class NetworkAvailability {
 
-    private ConnectivityManager connectivityManager;
+    private final ConnectivityManager connectivityManager;
 
     public NetworkAvailability(Object systemService){
         this.connectivityManager = (ConnectivityManager) systemService;

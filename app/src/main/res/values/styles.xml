@@ -4,27 +4,14 @@
     <color name="polygonEdges">#0D47A1</color>
     <color name="textRed">#D50000</color>
 
-    <color name="yellow1">#fff7ff16</color>
-    <color name="yellow2">#ffd8e119</color>
-    <color name="orange1">#fff0bc20</color>
-    <color name="orange2">#ffe6a335</color>
-    <color name="grey1">#30000000</color>
-    <color name="grey2">#6D8383</color>
-    <color name="blue2">#ff134371</color>
     <color name="blue3">#2196F3</color>
     <color name="green1">#008E00</color>
-    <color name="green2">#1E541E</color>
-    <color name="white2">#FCFCFC</color>
-    <color name="white3">#E2E2E2</color>
     <color name="white">#FFFFFF</color>
 
     <color name="primary">#8BC34A</color>
-    <color name="primary_dark">#689F38</color>
-    <color name="primary_light">#DCEDC8</color>
     <color name="accent">#3D5AFE</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
-    <color name="icons">#212121</color>
     <color name="divider">#B6B6B6</color>
 
     <color name="snackBarInfo">#2196F3</color>

@@ -23,15 +23,15 @@ import java.util.ArrayList;
 
 public class MapClustering {
     private CameraPosition cameraPosition;
-    private GoogleMap mMap;
-    private Context mContext;
+    private final GoogleMap mMap;
+    private final Context mContext;
     private ArrayList<Problem> values;
     private Marker marker;
     private EcoMapFragment ecoMapFragment;
 
     private ArrayList<LatLng> points;
     private ArrayList<Marker> markers;
-    private ClusterManager mClusterManager;
+    private ClusterManager<Problem> mClusterManager;
 
     public MapClustering(CameraPosition cameraPosition, GoogleMap mMap, Context mContext
             , ArrayList<Problem> values, EcoMapFragment ecoMapFragment){
@@ -125,13 +125,13 @@ public class MapClustering {
                 ecoMapFragment.mSlidingLayer.openPreview(true);
 
                 //save last open Problem for rotating screen
-                ecoMapFragment.lastOpenProblem = problem;
+                EcoMapFragment.lastOpenProblem = problem;
 
                 return false;
             }
         });
 
-        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm());
+        mClusterManager.setAlgorithm(new NonHierarchicalDistanceBasedAlgorithm<Problem>());
     }
 
     private void countPolygonPoints() {
@@ -152,7 +152,7 @@ public class MapClustering {
         if (marker != null) {
             marker.remove();
             marker = null;
-            ecoMapFragment.setMarkerPosition(null);
+            EcoMapFragment.setMarkerPosition(null);
         }
     }
 
@@ -170,6 +170,6 @@ public class MapClustering {
         marker.setTitle(mContext.getString(R.string.have_problem));
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
-        ecoMapFragment.setMarkerPosition(marker.getPosition());
+        EcoMapFragment.setMarkerPosition(marker.getPosition());
     }
 }

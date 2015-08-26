@@ -23,7 +23,7 @@
             android:id="@+id/iv_error"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_gravity="top|right"
+            android:layout_gravity="top|end"
             android:background="@drawable/ic_delete_photo"
             android:scaleType="centerCrop" />
 

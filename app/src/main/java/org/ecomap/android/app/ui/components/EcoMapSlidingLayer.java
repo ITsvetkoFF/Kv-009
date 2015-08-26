@@ -11,7 +11,7 @@ import com.wunderlist.slidinglayer.SlidingLayer;
 
 public class EcoMapSlidingLayer extends SlidingLayer{
 
-    private Context mContext;
+    private final Context mContext;
 
     public EcoMapSlidingLayer(Context context) {
         this(context, null);

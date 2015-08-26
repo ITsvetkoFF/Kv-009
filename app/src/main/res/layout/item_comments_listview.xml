@@ -38,7 +38,7 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:textStyle="bold"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="false"
+                android:layout_alignParentEnd="false"
                 android:layout_alignParentStart="true" />
 
             <TextView
@@ -47,8 +47,8 @@
                 android:id="@+id/textDate"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/textUserName"
-                android:gravity="top|right"
+                android:layout_toEndOf="@+id/textUserName"
+                android:gravity="top|end"
                 android:maxLines="2"
                 android:layout_alignParentEnd="true" />
 
@@ -81,7 +81,6 @@
                 android:gravity="end|top"
                 android:clickable="true"
                 android:focusable="true"
-                android:contentDescription="@string/image_cross"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
 

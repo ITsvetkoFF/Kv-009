@@ -2,7 +2,6 @@ package org.ecomap.android.app.sync;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -20,10 +19,10 @@ import java.net.URL;
 import java.util.Set;
 
 public class LoginTask extends AsyncTask<String, Void, Void> {
-    private LoginFragment loginFragment;
-    String resMessage;
-    Context mContext;
-    ProgressDialog progressBar;
+    private final LoginFragment loginFragment;
+    private String resMessage;
+    private final Context mContext;
+    private ProgressDialog progressBar;
 
     public LoginTask(LoginFragment loginFragment, Context context) {
         this.loginFragment = loginFragment;

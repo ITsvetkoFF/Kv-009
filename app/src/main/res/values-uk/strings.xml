@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="navigation_array">
-        <item>Мапа</item>
-        <item>Статистика</item>
-        <item>ТОП 10</item>
-        <item>Фільтри</item>
-        <item>Ресурси</item>
-        <item>Увійти</item>
-    </string-array>
-
-    <string-array name="supported_languages">
-        <item>Мова приладу</item>
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
-
     <string-array name="types">
         <item>Проблеми лісів</item>
         <item>Свалка</item>
@@ -26,7 +10,6 @@
         <item>Інші проблеми</item>
     </string-array>
 
-    <string name="message_you_are_logged">Ви вже увійшли до системи</string>
     <string name="first_name_blank">Ім\'я не може бути порожнім</string>
     <string name="second_name_blank">Прізвище не може бути порожнім</string>
     <string name="incorrect_email">Введіть правильну едектронну адресу</string>
@@ -44,15 +27,12 @@
     <string name="change_password">Забули пароль? Змініть його!</string>
     <string name="write_comment">Напишіть коментар…</string>
     <string name="have_problem">Хьюстон, у нас проблема!</string>
-    <string name="action_add_polygon">Додати полігон</string>
     <string name="profile">Профіль</string>
 
-    <string name="string_added_by">"Створено: "</string>
     <string name="string_suggested_solution">Пропозиції щодо вирішення</string>
     <string name="string_description">Опис: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблеми</string>
-    <string name="add_problem_add_button">Додати</string>
     <string name="first_name">Ім\'я</string>
     <string name="last_name">Прізвище</string>
     <string name="role">Роль</string>
@@ -68,7 +48,6 @@
     <string name="sign_up">Зареєструватися</string>
     <string name="login">Увійти</string>
     <string name="logout">Вийти</string>
-    <string name="post">Запостити</string>
 
     <string name="problem_type_string_1">Проблеми лісів</string>
     <string name="problem_type_string_2">Свалка</string>
@@ -78,20 +57,16 @@
     <string name="problem_type_string_6">Браконьєрство</string>
     <string name="problem_type_string_7">Інші проблеми</string>
 
-    <string name="language">Мова</string>
-    <string name="choose_language">Оберіть мову</string>
     <string name="error_need_to_sign_in">Лише авторизовані користувачі можуть додавати проблеми. Увійдіть або зареєструйтеся</string>
     <string name="reset">Скинути</string>
     <string name="ok">Окей</string>
     <string name="title_activity_view_photos">Переглядач фото</string>
     <string name="choose_location">Оберіть місцезнаходження проблеми</string>
     <string name="add_photo">Додати фото</string>
-    <string name="send">Відправити</string>
     <string name="add_problem_description">Опис проблеми</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
-    <string name="item_settings">Налаштування</string>
     <string name="item_resources">Ресурси</string>
     <string name="item_login">Увійти</string>
     <string name="uploading_photo">Завантаження фото…</string>
@@ -99,7 +74,6 @@
     <string name="uploading_error">Помілка під час завантаження фото</string>
     <string name="problem_title_blank">Заголовок не може бути порожнім</string>
     <string name="add_comment">Додайте Ваші коментарі</string>
-    <string name="exit">Вихід</string>
     <string name="string_anonymous">Анонім</string>
 
     <string name="starting_date">початкова дата</string>
@@ -113,7 +87,6 @@
     <string name="all_sort">Всього</string>
     <string name="problem_added"> Проблему успішно додано</string>
 
-    <string name="nav_titles_underconstraction">У розробці</string>
     <string name="filters_menu_item_title">Фільтри</string>
     <string name="nav_titles_statistics">Статистика</string>
     <string name="nav_titles_top10">Топ 10</string>
@@ -122,16 +95,13 @@
     <string name="want_delete_problem">Ви насправді хочете видалити цю проблему?</string>
     <string name="item_addProblem">Додати проблему</string>
     <string name="message_log_in_to_vote">Увійдіть, щоб голосувати</string>
-    <string name="refresh_database_now">Оновити базу даних</string>
     <string name="delete_comment_message">Чи Ви впевнені, що бажаєте видалити коментар?</string>
-    <string name="want_edit_problem">Ви насправді хочете редагувати цю проблему?</string>
     <string name="edit_problem_fragment">Редагувати проблему</string>
     <string name="solved_problem">ВИРІШЕНА</string>
     <string name="unsolved_problem">НЕ ВИРІШЕНА</string>
     <string name="problem_edited">Проблему успішно відредаговано</string>
     <string name="edit_problem_activity">Редагування проблеми</string>
     <string name="only_my_problems">Показати лише мої проблеми</string>
-    <string name="location">Місцезнаходження</string>
     <string name="notify_photos_loading">Ecomap: завантаження фотографій</string>
     <string name="done">Готово</string>
 </resources>

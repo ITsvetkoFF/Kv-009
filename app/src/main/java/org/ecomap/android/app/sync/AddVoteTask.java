@@ -12,13 +12,12 @@ import java.net.URL;
 public class AddVoteTask extends AsyncTask<Integer, Void, Boolean> {
 
     private final String LOG_TAG = AddVoteTask.class.getSimpleName();
-    private Integer problem_id;
 
     @Override
     protected Boolean doInBackground(Integer... params) {
         URL url;
         Boolean result = Boolean.FALSE;
-        problem_id = params[0];
+        Integer problem_id = params[0];
 
         //validation
         if (MainActivity.isUserIsAuthorized()) {

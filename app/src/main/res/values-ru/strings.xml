@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="navigation_array">
-        <item>Карта</item>
-        <item>Статистика</item>
-        <item>ТОП 10</item>
-        <item>Фильтры</item>
-        <item>Ресурсы</item>
-        <item>Войти</item>
-    </string-array>
-
-    <string-array name="supported_languages">
-        <item>Язык устройства</item>
-        <item>English</item>
-        <item>Русский</item>
-        <item>Українська</item>
-    </string-array>
-
     <string-array name="types">
         <item>Проблемы лесов</item>
         <item>Свалка</item>
@@ -26,7 +10,6 @@
         <item>Прочие проблемы</item>
     </string-array>
 
-    <string name="message_you_are_logged">Вы уже вошли в систему</string>
     <string name="first_name_blank">Имя не может быть пустым</string>
     <string name="second_name_blank">Фамилия не может быть пустой</string>
     <string name="incorrect_email">Введите корректный почтовый адрес</string>
@@ -44,15 +27,12 @@
     <string name="change_password">Забыли пароль? Смените в два клика!</string>
     <string name="write_comment">Напишите комментарий…</string>
     <string name="have_problem">Хьюстон, у нас проблема!</string>
-    <string name="action_add_polygon">Добавить полигон</string>
     <string name="profile">Профиль</string>
 
-    <string name="string_added_by">"Добавлено: "</string>
     <string name="string_suggested_solution">Предлагаемое решение</string>
     <string name="string_description">Описание: </string>
     <string name="add_problem_title">Заголовок</string>
     <string name="add_problem_type">Тип проблемы</string>
-    <string name="add_problem_add_button">Добавить</string>
     <string name="first_name">Имя</string>
     <string name="last_name">Фамилия</string>
     <string name="role">Роль</string>
@@ -68,7 +48,6 @@
     <string name="sign_up">Зарегестрироваться</string>
     <string name="login">Войти</string>
     <string name="logout">Выйти</string>
-    <string name="post">Запостить</string>
 
     <string name="problem_type_string_1">Проблемы лесов</string>
     <string name="problem_type_string_2">Свалка</string>
@@ -78,20 +57,16 @@
     <string name="problem_type_string_6">Браконьерство</string>
     <string name="problem_type_string_7">Прочие проблемы</string>
 
-    <string name="language">Язык</string>
-    <string name="choose_language">Выберите язык</string>
     <string name="error_need_to_sign_in">Только авторизированые пользователи могут добавлять проблему. Войдите либо зарегестрируйтесь</string>
     <string name="reset">Сброс</string>
     <string name="ok">Окей</string>
     <string name="title_activity_view_photos">Просмотрщик фотографий</string>
     <string name="choose_location">Выберите месторасположение проблемы</string>
     <string name="add_photo">Добавить фото</string>
-    <string name="send">Отправить</string>
     <string name="add_problem_description">Описание проблемы</string>
     <string name="item_map">Карта</string>
     <string name="item_statistics">Статистика</string>
     <string name="item_top10">ТОП 10</string>
-    <string name="item_settings">Настройки</string>
     <string name="item_resources">Ресурсы</string>
     <string name="item_login">Войти</string>
     <string name="uploading_photo">Загрузка фото…</string>
@@ -99,7 +74,6 @@
     <string name="uploading_error">Ошибка во время загрузки фото</string>
     <string name="problem_title_blank">Заголовок проблемы не может быть пустым</string>
     <string name="add_comment">Добавьте Ваши комментарии</string>
-    <string name="exit">Выход</string>
     <string name="string_anonymous">Аноним</string>
 
     <string name="starting_date">начальная дата</string>
@@ -113,7 +87,6 @@
     <string name="all_sort">Всего</string>
     <string name="problem_added">Проблема успешно добавлена</string>
 
-    <string name="nav_titles_underconstraction">В разработке</string>
     <string name="filters_menu_item_title">Фильтры</string>
     <string name="nav_titles_statistics">Статистика</string>
     <string name="nav_titles_top10">Топ 10</string>
@@ -122,16 +95,13 @@
     <string name="item_addProblem">Добавить проблему</string>
     <string name="want_delete_problem">Вы действительно хотите удалить эту проблему?</string>
     <string name="message_log_in_to_vote">Войдите чтобы голосовать</string>
-    <string name="refresh_database_now">Обновить базу данных</string>
     <string name="delete_comment_message">Вы уверены, что хотете удалить комментарий?</string>
-    <string name="want_edit_problem">Вы действительно хотите редактировать эту проблему?</string>
     <string name="edit_problem_fragment">Редактировать проблему</string>
     <string name="solved_problem">РЕШЕНА</string>
     <string name="unsolved_problem">НЕ РЕШЕНА</string>
     <string name="problem_edited">Проблема успешно отредактирована</string>
     <string name="edit_problem_activity">Редактирование проблемы</string>
     <string name="only_my_problems"> Показать только мои проблемы</string>
-    <string name="location">Местоположение</string>
     <string name="notify_photos_loading">Ecomap: загрузка фотографий</string>
     <string name="done">Готово</string>
 </resources>

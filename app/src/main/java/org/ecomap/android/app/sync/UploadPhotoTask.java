@@ -18,14 +18,12 @@ import java.net.URL;
 
 public class UploadPhotoTask extends AsyncTask<Void, Void, Void> {
 
-    String resMessage;
-    Context mContext;
-    int problemID;
-    String imagePath;
-    String comment;
-    int serverResponseCode;
-    String serverResponseMessage;
-    ProgressDialog photoProgressBar;
+    private String resMessage;
+    private final Context mContext;
+    private final int problemID;
+    private final String imagePath;
+    private final String comment;
+    private ProgressDialog photoProgressBar;
 
     public UploadPhotoTask(Context context, int problemID, String imagePath, String comment) {
         this.mContext = context;
@@ -102,8 +100,8 @@ public class UploadPhotoTask extends AsyncTask<Void, Void, Void> {
 
                 Log.e("MYLOG", "File is written");
 
-                serverResponseCode = conn.getResponseCode();
-                serverResponseMessage = conn.getResponseMessage();
+                int serverResponseCode = conn.getResponseCode();
+                String serverResponseMessage = conn.getResponseMessage();
 
                 Log.i("MYLOG", "HTTP Response is : "+ serverResponseMessage + ": " + serverResponseCode);
 
@@ -146,7 +144,7 @@ public class UploadPhotoTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void o) {
         photoProgressBar.dismiss();
 
-        new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
 
     }
 }

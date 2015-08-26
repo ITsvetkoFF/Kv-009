@@ -46,14 +46,22 @@ public class RegistrationFragment extends DialogFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        firstName = (EditText) getView().findViewById(R.id.first_name);
-        secondName = (EditText) getView().findViewById(R.id.second_name);
-        email = (AutoCompleteTextView) getView().findViewById(R.id.email_registration);
-        password = (EditText) getView().findViewById(R.id.password);
-        confirmPassword = (EditText) getView().findViewById(R.id.confirm_password);
-        signUp = (Button) getView().findViewById(R.id.email_sign_up_button);
+        View v = getView();
 
-        tilFirstName = (TextInputLayout) getView().findViewById(R.id.til_first_name_reg);
+        if (v != null) {
+            firstName = (EditText) v.findViewById(R.id.first_name);
+            secondName = (EditText) v.findViewById(R.id.second_name);
+            email = (AutoCompleteTextView) v.findViewById(R.id.email_registration);
+            password = (EditText) v.findViewById(R.id.password);
+            confirmPassword = (EditText) v.findViewById(R.id.confirm_password);
+            signUp = (Button) v.findViewById(R.id.email_sign_up_button);
+            tilFirstName = (TextInputLayout) v.findViewById(R.id.til_first_name_reg);
+            tilSecondName = (TextInputLayout) v.findViewById(R.id.til_second_name_reg);
+            tilEmail = (TextInputLayout) v.findViewById(R.id.til_email_reg);
+            tilPassword = (TextInputLayout) v.findViewById(R.id.til_password_reg);
+            tilConfirmPassword = (TextInputLayout) v.findViewById(R.id.til_confirm_password_reg);
+        }
+
         tilFirstName.setErrorEnabled(true);
         firstName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -70,7 +78,6 @@ public class RegistrationFragment extends DialogFragment {
             }
         });
 
-        tilSecondName = (TextInputLayout) getView().findViewById(R.id.til_second_name_reg);
         tilSecondName.setErrorEnabled(true);
         secondName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -87,7 +94,6 @@ public class RegistrationFragment extends DialogFragment {
             }
         });
 
-        tilEmail = (TextInputLayout) getView().findViewById(R.id.til_email_reg);
         tilEmail.setErrorEnabled(true);
         email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -112,7 +118,6 @@ public class RegistrationFragment extends DialogFragment {
             }
         });
 
-        tilPassword = (TextInputLayout) getView().findViewById(R.id.til_password_reg);
         tilPassword.setErrorEnabled(true);
         password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -129,7 +134,6 @@ public class RegistrationFragment extends DialogFragment {
             }
         });
 
-        tilConfirmPassword = (TextInputLayout) getView().findViewById(R.id.til_confirm_password_reg);
         tilConfirmPassword.setErrorEnabled(true);
         confirmPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -146,6 +150,7 @@ public class RegistrationFragment extends DialogFragment {
                 }
             }
         });
+
         confirmPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

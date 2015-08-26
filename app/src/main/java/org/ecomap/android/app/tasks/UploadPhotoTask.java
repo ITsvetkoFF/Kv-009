@@ -1,10 +1,8 @@
 package org.ecomap.android.app.tasks;
 
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,16 +18,11 @@ import java.net.URL;
 
 public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
 
-    String resMessage;
-    Context mContext;
-    int problemID;
-    String imagePath;
-    String comment;
-    int serverResponseCode;
-    String serverResponseMessage;
-    ProgressDialog photoProgressBar;
-    private NotificationCompat.Builder notification;
-    private NotificationManager mNM;
+    private String resMessage;
+    private final Context mContext;
+    private final int problemID;
+    private final String imagePath;
+    private final String comment;
     private static final String LOG_TAG = UploadPhotoTask.class.getSimpleName();
 
 
@@ -40,7 +33,7 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
         this.comment = comment;
         //this.notification = notification;
         resMessage = null;
-        mNM = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager mNM = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Override
@@ -112,8 +105,8 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
 
             Log.i(LOG_TAG, "File is written");
 
-            serverResponseCode = conn.getResponseCode();
-            serverResponseMessage = conn.getResponseMessage();
+            int serverResponseCode = conn.getResponseCode();
+            String serverResponseMessage = conn.getResponseMessage();
 
             Log.i(LOG_TAG, "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
 
@@ -140,14 +133,9 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
 
 
     @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
     protected void onPostExecute(Void o) {
 
-        new Toast(mContext).makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
 
     }
 }

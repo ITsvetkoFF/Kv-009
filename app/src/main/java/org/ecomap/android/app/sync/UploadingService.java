@@ -37,7 +37,7 @@ public class UploadingService extends Service {
 
     private boolean DEBUG = true;
 
-    public static final String LOG = UploadingService.class.getSimpleName();
+    private static final String LOG = UploadingService.class.getSimpleName();
 
     /**
      * Command to the service to register a messenger, receiving callbacks
@@ -47,37 +47,26 @@ public class UploadingService extends Service {
     public static final int MSG_REGISTER_CLIENT = 1;
     public static final int MSG_UPLOAD_PHOTO = 4;
     public static final int MSG_UNREGISTER_CLIENT = 2;
-    public static final int MSG_SET_VALUE = 3;
-    public static final int MSG_GET_TASKS_LIST = 5;
+    private static final int MSG_GET_TASKS_LIST = 5;
     public static final int MSG_TASK_FINISHED = 6;
     public static final int MSG_ALL_TASKS_FINISHED = 7;
 
-    public static final String ACTION_DISMISS = "ACTION_DISMISS";
+    private static final String ACTION_DISMISS = "ACTION_DISMISS";
     /**
      * Target we publish for clients to send messages to IncomingHandler.
      */
-    final Messenger mMessenger = new Messenger(new IncomingHandler());
-    public static final int UPLOADING_NOTIFICATION_ID = 1;
+    private final Messenger mMessenger = new Messenger(new IncomingHandler());
+    private static final int UPLOADING_NOTIFICATION_ID = 1;
 
-    ServiceClientManager scManager = new ServiceClientManager();
+    private final ServiceClientManager scManager = new ServiceClientManager();
 
     /**
      * For showing and hiding our notification.
      */
-    NotificationManager mNM;
-
-
-    /**
-     * Holds last value set by a messenger.
-     */
-    int mValue = 0;
+    private NotificationManager mNM;
 
     private NotificationCompat.Builder foregroundNotificationBuilder;
 
-    /**
-     * If service runs in dedicated process it needs to load cookies from shared preferences
-     */
-    private CookieManager cookieManager;
     private boolean mIsForeground;
 
 
@@ -127,7 +116,10 @@ public class UploadingService extends Service {
 
         foregroundNotificationBuilder = getNotification();
 
-        cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        /*
+      If service runs in dedicated process it needs to load cookies from shared preferences
+     */
+        CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 
     }
@@ -144,13 +136,9 @@ public class UploadingService extends Service {
         DEBUG = flag;
     }
 
-
-
     private Notification getForegroundNotification(){
 
-        final Notification notification = foregroundNotificationBuilder.build();
-
-/*
+        /*
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_uploading);
         contentView.setImageViewResource(R.id.image, R.drawable.ic_launcher);
         contentView.setTextViewText(R.id.title, "Custom notification");
@@ -158,7 +146,7 @@ public class UploadingService extends Service {
         notification.bigContentView = contentView;
 */
 
-        return notification;
+        return foregroundNotificationBuilder.build();
     }
 
     /**
@@ -198,7 +186,7 @@ public class UploadingService extends Service {
      */
     private static class ClientActivityHolder {
         Messenger messenger;
-        ArrayList<AsyncTask> asyncTasks;
+        final ArrayList<AsyncTask> asyncTasks;
 
         public ClientActivityHolder(Messenger clientMessenger) {
             this.messenger = clientMessenger;
@@ -219,7 +207,7 @@ public class UploadingService extends Service {
 
         public final String TAG = getClass().getSimpleName();
 
-        private HashMap<String, ClientActivityHolder> clientsMap = new HashMap<>();
+        private final HashMap<String, ClientActivityHolder> clientsMap = new HashMap<>();
         private int pendingTasks;
         private int finishedTasks;
         private int globalProgress;
@@ -268,24 +256,19 @@ public class UploadingService extends Service {
         /**
          * Register messenger's messengers into the map. If messenger already exists,
          * updates link to messenger on case caller activity was recreated.
-         *
-         * @param className Activity class name
+         *  @param className Activity class name
          * @param msn       Activity incoming messenger for callbacks
          */
-        public boolean registerClient(String className, Messenger msn) {
+        public void registerClient(String className, Messenger msn) {
             if (!clientsMap.containsKey(className)) {
                 clientsMap.put(className, new ClientActivityHolder(msn));
-                return true;
+                return;
             } else {
                 final ClientActivityHolder activityHandler = clientsMap.get(className);
                 activityHandler.messenger = msn;
-                return false;
+                return;
             }
 
-        }
-
-        public String[] getTaskList(String className, Messenger replyTo) {
-            return null;
         }
 
         /**
@@ -313,7 +296,6 @@ public class UploadingService extends Service {
 
                 public final String LOG_TAG = getClass().getSimpleName();
 
-                @Override
                 protected void onPreExecute() {
                     Log.d(LOG_TAG, "onPreExecute");
                     if (!mIsForeground) {
@@ -357,7 +339,7 @@ public class UploadingService extends Service {
     /**
      * Handler of incoming messages from clients.
      */
-    class IncomingHandler extends Handler {
+    private class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -372,12 +354,6 @@ public class UploadingService extends Service {
                 case MSG_UNREGISTER_CLIENT:
                     break;
 
-                case MSG_GET_TASKS_LIST: {
-                    Bundle data = msg.getData();
-                    String className = data.getString("CLASS_NAME");
-                    scManager.getTaskList(className, msg.replyTo);
-                    }
-                    break;
                 case MSG_UPLOAD_PHOTO:
                     Bundle data = msg.getData();
                     String className = data.getString("CLASS_NAME");

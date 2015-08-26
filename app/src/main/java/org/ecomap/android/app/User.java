@@ -97,7 +97,7 @@ public class User {
     public static void removeSubscriber(UserSubscriber sub){
         if(subscribers!=null)subscribers.remove(sub);
     }
-    public static void notifySubscribers(){
+    private static void notifySubscribers(){
         Log.i(LOG_TAG, "subscribers are notified");
         for(UserSubscriber sub:subscribers){
             sub.changeState();

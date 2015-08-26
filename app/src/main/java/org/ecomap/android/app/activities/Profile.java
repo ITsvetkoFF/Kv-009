@@ -3,6 +3,7 @@ package org.ecomap.android.app.activities;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,9 +21,6 @@ import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import java.util.Random;
 
 public class Profile extends AppCompatActivity {
-    //private FrameLayout head;
-    private TextView firstName, lastName, role, email, resetPassword;
-    private Button logout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,17 +30,20 @@ public class Profile extends AppCompatActivity {
         setTitle(getString(R.string.profile));
 
         //head = (FrameLayout) view.findViewById(R.id.profile_head);
-        firstName = (TextView) findViewById(R.id.profile_firstname);
-        lastName = (TextView) findViewById(R.id.profile_lastname);
-        role = (TextView) findViewById(R.id.profile_role);
-        email = (TextView) findViewById(R.id.profile_email);
-        resetPassword = (TextView) findViewById(R.id.profile_change_password);
-        logout = (Button) findViewById(R.id.profile_logout);
+        TextView firstName = (TextView) findViewById(R.id.profile_firstname);
+        TextView lastName = (TextView) findViewById(R.id.profile_lastname);
+        TextView role = (TextView) findViewById(R.id.profile_role);
+        TextView email = (TextView) findViewById(R.id.profile_email);
+        TextView resetPassword = (TextView) findViewById(R.id.profile_change_password);
+        Button logout = (Button) findViewById(R.id.profile_logout);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         setSupportActionBar(toolbar);
         try {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setDisplayHomeAsUpEnabled(true);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

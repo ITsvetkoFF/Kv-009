@@ -18,10 +18,7 @@ import org.ecomap.android.app.activities.StaticPagesActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 
 public class StaticPagesFragment extends Fragment {
-    View view;
-    Cursor resourcesCusor;
-    ListView listView;
-    ListCursorAdapter listCursorAdapter;
+    private Cursor resourcesCusor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,9 +29,9 @@ public class StaticPagesFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.static_pages_fragment, container, false);
-        listView = (ListView) view.findViewById(R.id.static_pages_list);
-        listCursorAdapter = new ListCursorAdapter(getActivity(), resourcesCusor);
+        View view = inflater.inflate(R.layout.static_pages_fragment, container, false);
+        ListView listView = (ListView) view.findViewById(R.id.static_pages_list);
+        ListCursorAdapter listCursorAdapter = new ListCursorAdapter(getActivity(), resourcesCusor);
         listView.setAdapter(listCursorAdapter);
         getActivity().setTitle(getString(R.string.item_resources));
         return view;
@@ -49,7 +46,7 @@ public class StaticPagesFragment extends Fragment {
     class ListCursorAdapter extends CursorAdapter{
 
         public ListCursorAdapter(Context context, Cursor c) {
-            super(context, c);
+            super(context, c, true);
         }
 
         @Override

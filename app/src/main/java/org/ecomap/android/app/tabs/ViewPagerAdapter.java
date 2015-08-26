@@ -8,8 +8,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private String LOG_TAG = ViewPagerAdapter.class.getSimpleName();
 
-    CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
-    int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
+    private final CharSequence[] Titles; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
+    private final int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
 
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
@@ -25,9 +25,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        Top10Tab tab = Top10Tab.newInstance(position);
         //Log.d(Top10Tab.class.getSimpleName(),"getItem: " + position);
-        return tab;
+        return Top10Tab.newInstance(position);
 
     }
 

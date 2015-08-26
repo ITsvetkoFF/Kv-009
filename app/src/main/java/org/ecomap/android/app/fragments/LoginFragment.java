@@ -51,16 +51,14 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     private EditText email;
     private EditText password;
     private Button signIn;
-    private TextView signUpLink;
     private TextInputLayout tilEmail, tilPass;
     private InputMethodManager imm;
     private Context mContext;
     private Activity mActivity;
+    private TextView signUpLink;
 
-    //Facebook
-    Button facebookLoginButton;
-    CallbackManager callbackManager;
-    LoginManager loginManager;
+    private CallbackManager callbackManager;
+    private LoginManager loginManager;
 
     //Google
     public static final int RC_SIGN_IN = 101;
@@ -69,7 +67,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     private boolean mIntentInProgress;
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
-    private Button googleLoginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +112,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
         getDialog().setTitle(getString(R.string.sign_in));
 
         //Google
-        googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
+        Button googleLoginButton = (Button) view.findViewById(R.id.google_login_button);
         googleLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +120,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             }
         });
 
-        facebookLoginButton = (Button) view.findViewById(R.id.facebook_login_button);
+        Button facebookLoginButton = (Button) view.findViewById(R.id.facebook_login_button);
         facebookLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,11 +139,11 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                             public void onCompleted(JSONObject jsonObject, GraphResponse graphResponse) {
                                 try {
                                     new SocialLoginTask(LoginFragment.this, getActivity())
-                                            .execute(new String[]{"facebook",
+                                            .execute("facebook",
                                                     jsonObject.getString("first_name"),
                                                     jsonObject.getString("last_name"),
                                                     jsonObject.getString("id"),
-                                                    jsonObject.getString("email")});
+                                                    jsonObject.getString("email"));
                                 } catch (Exception e) {
                                     Log.e(this.getClass().getSimpleName(), e.getMessage());
                                 }
@@ -193,14 +190,22 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        email = (EditText) getView().findViewById(R.id.email_login);
-        password = (EditText) getView().findViewById(R.id.password);
-        signIn = (Button) getView().findViewById(R.id.email_sign_in_button);
-        signUpLink = (TextView) getView().findViewById(R.id.link_to_register);
+        View v = getView();
+
+        if (v != null) {
+            email = (EditText) v.findViewById(R.id.email_login);
+            password = (EditText) v.findViewById(R.id.password);
+
+            signIn = (Button) v.findViewById(R.id.email_sign_in_button);
+            signUpLink = (TextView) v.findViewById(R.id.link_to_register);
+
+            tilEmail = (TextInputLayout) v.findViewById(R.id.til_email);
+            tilPass = (TextInputLayout) v.findViewById(R.id.til_password);
+        }
 
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        tilEmail = (TextInputLayout) getView().findViewById(R.id.til_email);
+
         tilEmail.setErrorEnabled(true);
         email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -227,7 +232,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             }
         });
 
-        tilPass = (TextInputLayout) getView().findViewById(R.id.til_password);
         tilPass.setErrorEnabled(true);
         password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -244,6 +248,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                 }
             }
         });
+
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -367,11 +372,11 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                 String personGooglePlusProfile = currentPerson.getUrl();
                 String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
                 new SocialLoginTask(LoginFragment.this, getActivity())
-                        .execute(new String[]{"google",
+                        .execute("google",
                                 firstName,
                                 lastName,
                                 personGooglePlusProfile,
-                                email});
+                                email);
             } else {
                 Toast.makeText(mContext,
                         "Person information is null", Toast.LENGTH_LONG).show();

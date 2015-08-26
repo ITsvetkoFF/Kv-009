@@ -42,7 +42,7 @@ public final class RotationTransformer extends LayerTransformer {
         this(DEFAULT_ANGLE);
     }
 
-    public RotationTransformer(float maxAngle) {
+    private RotationTransformer(float maxAngle) {
         mMaxAngle = maxAngle;
     }
 
