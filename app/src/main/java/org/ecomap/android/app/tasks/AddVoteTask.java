@@ -1,9 +1,10 @@
-package org.ecomap.android.app.sync;
+package org.ecomap.android.app.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;

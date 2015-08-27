@@ -29,12 +29,11 @@ public class Profile extends AppCompatActivity {
 
         setTitle(getString(R.string.profile));
 
-        //head = (FrameLayout) view.findViewById(R.id.profile_head);
         TextView firstName = (TextView) findViewById(R.id.profile_firstname);
         TextView lastName = (TextView) findViewById(R.id.profile_lastname);
         TextView role = (TextView) findViewById(R.id.profile_role);
         TextView email = (TextView) findViewById(R.id.profile_email);
-        TextView resetPassword = (TextView) findViewById(R.id.profile_change_password);
+        //TextView resetPassword = (TextView) findViewById(R.id.profile_change_password);
         Button logout = (Button) findViewById(R.id.profile_logout);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
@@ -49,9 +48,9 @@ public class Profile extends AppCompatActivity {
         }
 
         CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout)findViewById(R.id.profile_collapsing_toolbar);
+                (CollapsingToolbarLayout) findViewById(R.id.profile_collapsing_toolbar);
         collapsingToolbar.setTitle(getString(R.string.profile));
-        final ImageView profileBackdrop = (ImageView)findViewById(R.id.profile_backdrop);
+        final ImageView profileBackdrop = (ImageView) findViewById(R.id.profile_backdrop);
         profileBackdrop.setImageResource(setRandomHead());
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -105,11 +104,11 @@ public class Profile extends AppCompatActivity {
         }
     }
 
-    private int setRandomHead(){
+    private int setRandomHead() {
         Random random = new Random();
         int id = random.nextInt((12 - 1) + 1) + 1;
 
-        switch (id){
+        switch (id) {
             case 1:
                 return R.drawable.profile_head_0;
             case 2:

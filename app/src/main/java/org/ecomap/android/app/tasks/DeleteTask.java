@@ -1,9 +1,12 @@
-package org.ecomap.android.app.sync;
+package org.ecomap.android.app.tasks;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.sync.EcoMapService;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -15,7 +18,7 @@ public class DeleteTask extends AsyncTask<String, Void, Void> {
     private final Context mContext;
     private int responseCode;
 
-    public DeleteTask(Context mContext){
+    public DeleteTask(Context mContext) {
         this.mContext = mContext;
     }
 
@@ -23,7 +26,7 @@ public class DeleteTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
 
-        try{
+        try {
             URL url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + Integer.valueOf(params[0]));
 
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -32,7 +35,7 @@ public class DeleteTask extends AsyncTask<String, Void, Void> {
 
             responseCode = urlConnection.getResponseCode();
 
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.e(LOG_TAG, e.getMessage());
         } finally {
             if (urlConnection != null) {

@@ -11,16 +11,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.sync.GetPhotosTask;
+import org.ecomap.android.app.tasks.GetPhotosTask;
 import org.ecomap.android.app.sync.UploadingServiceSession;
-import org.ecomap.android.app.ui.components.NonScrollableListView;
+import org.ecomap.android.app.widget.NonScrollableListView;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.NetworkAvailability;
 
@@ -31,7 +30,6 @@ public class CommentPhotoActivity extends AppCompatActivity {
     private NonScrollableListView nonScrollableListView;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private int problem_id;
-    private Button sendProblemButton;
 
     private UploadingServiceSession uploadingSession;
 
@@ -43,17 +41,14 @@ public class CommentPhotoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.comment_photos_layout);
 
-        Toolbar mToolbar = (Toolbar)this.findViewById(R.id.comments_toolbar);
+        Toolbar mToolbar = (Toolbar) this.findViewById(R.id.comments_toolbar);
         this.setSupportActionBar(mToolbar);
         ActionBar actionBar = this.getSupportActionBar();
+
         if (actionBar != null) {
             actionBar.setTitle(me.iwf.photopicker.R.string.images);
-        }
-        try {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         }
 
         Bundle extras = getIntent().getExtras();
@@ -121,13 +116,13 @@ public class CommentPhotoActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void sendPhoto(){
+    private void sendPhoto() {
         View view;
         EditText editText;
         String path;
         String comment;
 
-        ArrayList<ProblemPhotoEntry> photos = new ArrayList<ProblemPhotoEntry>();
+        ArrayList<ProblemPhotoEntry> photos = new ArrayList<>();
 
         nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
 
@@ -143,9 +138,9 @@ public class CommentPhotoActivity extends AppCompatActivity {
             //Get path for each photo
             path = selectedPhotos.get(i);
 
-            photos.add(new ProblemPhotoEntry(comment,path));
+            photos.add(new ProblemPhotoEntry(comment, path));
 
-            if(uploadingSession.isBound()){
+            if (uploadingSession.isBound()) {
                 uploadingSession.sendUploadRequest(problem_id, path, comment);
             }
 
@@ -161,8 +156,8 @@ public class CommentPhotoActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent();
-        intent.putParcelableArrayListExtra("photos",photos);
-        setResult(RESULT_OK,intent);
+        intent.putParcelableArrayListExtra("photos", photos);
+        setResult(RESULT_OK, intent);
         finish();
 
     }

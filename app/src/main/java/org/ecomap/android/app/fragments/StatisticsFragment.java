@@ -150,7 +150,7 @@ public class StatisticsFragment extends Fragment {
 
     }
 
-    private void setData(int time){
+    private void setData(int time) {
 
         //Animating loading of chart
         pieChart.animateY(1500, Easing.EasingOption.EaseInOutQuad);
@@ -188,12 +188,12 @@ public class StatisticsFragment extends Fragment {
                 .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, null, null, null);
 
         //Cursor iteration
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
 
             //Each problem string
             String problemDateFromBase = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_DATE));
 
-            try{
+            try {
                 //Getting each problem's time
                 currentDate.setTime(dateFormat.parse(problemDateFromBase));
                 problemDay = currentDate.get(Calendar.DAY_OF_MONTH);
@@ -202,32 +202,27 @@ public class StatisticsFragment extends Fragment {
                 problemYear = currentDate.get(Calendar.YEAR);
 
                 //Switch for 1day 1week 1month 1year sorting
-                switch (time){
+                switch (time) {
                     case 1:
-                        if(problemYear == currentYear && problemMonth == currentMonth && problemDay == currentDay){
+                        if (problemYear == currentYear && problemMonth == currentMonth && problemDay == currentDay) {
                             break;
-                        }
-                        else continue;
+                        } else continue;
                     case 7:
-                        if(problemYear == currentYear && problemMonth == currentMonth && problemWeek == currentWeek) {
+                        if (problemYear == currentYear && problemMonth == currentMonth && problemWeek == currentWeek) {
                             break;
-                        }
-                        else continue;
+                        } else continue;
                     case 30:
-                        if(problemYear == currentYear && problemMonth == currentMonth){
+                        if (problemYear == currentYear && problemMonth == currentMonth) {
                             break;
-                        }
-                        else continue;
+                        } else continue;
                     case 365:
-                        if(problemYear == currentYear){
+                        if (problemYear == currentYear) {
                             break;
-                        }
-                        else continue;
+                        } else continue;
                     default:
                         break;
                 }
-            }
-            catch (ParseException e){
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
 
@@ -235,7 +230,7 @@ public class StatisticsFragment extends Fragment {
             ++whole_result;
 
             //Getting type of problem and incrementing each type
-            switch (cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID))){
+            switch (cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID))) {
                 case 1:
                     ++woods_problem_count;
                     break;
@@ -263,35 +258,35 @@ public class StatisticsFragment extends Fragment {
         cursor.close();
 
         //Creating dataset
-        ArrayList<Entry> problemsResults = new ArrayList<Entry>();
-        ArrayList<String> problemsNames = new ArrayList<String>();
+        ArrayList<Entry> problemsResults = new ArrayList<>();
+        ArrayList<String> problemsNames = new ArrayList<>();
 
-        if(woods_problem_count != 0) {
-            problemsResults.add(new Entry((woods_problem_count/whole_result)*100, 0));
+        if (woods_problem_count != 0) {
+            problemsResults.add(new Entry((woods_problem_count / whole_result) * 100, 0));
             problemsNames.add(getString(R.string.problem_type_string_1) + ": " + woods_problem_count);
         }
-        if(trash_problem_count != 0) {
-            problemsResults.add(new Entry((trash_problem_count/whole_result)*100, 1));
+        if (trash_problem_count != 0) {
+            problemsResults.add(new Entry((trash_problem_count / whole_result) * 100, 1));
             problemsNames.add(getString(R.string.problem_type_string_2) + ": " + trash_problem_count);
         }
-        if(building_problem_count != 0) {
-            problemsResults.add(new Entry((building_problem_count/whole_result)*100, 2));
+        if (building_problem_count != 0) {
+            problemsResults.add(new Entry((building_problem_count / whole_result) * 100, 2));
             problemsNames.add(getString(R.string.problem_type_string_3) + ": " + building_problem_count);
         }
-        if(water_problem_count != 0) {
-            problemsResults.add(new Entry((water_problem_count/whole_result)*100, 3));
+        if (water_problem_count != 0) {
+            problemsResults.add(new Entry((water_problem_count / whole_result) * 100, 3));
             problemsNames.add(getString(R.string.problem_type_string_4) + ": " + water_problem_count);
         }
-        if(lifeforms_problem_count != 0) {
-            problemsResults.add(new Entry((lifeforms_problem_count/whole_result)*100, 4));
+        if (lifeforms_problem_count != 0) {
+            problemsResults.add(new Entry((lifeforms_problem_count / whole_result) * 100, 4));
             problemsNames.add(getString(R.string.problem_type_string_5) + ": " + lifeforms_problem_count);
         }
-        if(poaching_problem_count != 0) {
-            problemsResults.add(new Entry((poaching_problem_count/whole_result)*100, 5));
+        if (poaching_problem_count != 0) {
+            problemsResults.add(new Entry((poaching_problem_count / whole_result) * 100, 5));
             problemsNames.add(getString(R.string.problem_type_string_6) + ": " + poaching_problem_count);
         }
-        if(other_problem_count != 0) {
-            problemsResults.add(new Entry((other_problem_count/whole_result)*100, 6));
+        if (other_problem_count != 0) {
+            problemsResults.add(new Entry((other_problem_count / whole_result) * 100, 6));
             problemsNames.add(getString(R.string.problem_type_string_7) + ": " + other_problem_count);
         }
 
@@ -301,7 +296,7 @@ public class StatisticsFragment extends Fragment {
         dataSet.setSelectionShift(5f);
 
         // add a colors
-        ArrayList<Integer> colors = new ArrayList<Integer>();
+        ArrayList<Integer> colors = new ArrayList<>();
 
         for (int c : ColorTemplate.COLORFUL_COLORS) colors.add(c);
         for (int c : ColorTemplate.LIBERTY_COLORS) colors.add(c);

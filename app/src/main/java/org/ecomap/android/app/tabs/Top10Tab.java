@@ -23,9 +23,6 @@ import java.util.ArrayList;
 
 
 public class Top10Tab extends Fragment {
-
-    private String LOG_TAG = Top10Tab.class.getSimpleName();
-
     private Activity mActivity;
 
     public static Top10Tab newInstance(int tabId) {
@@ -67,7 +64,7 @@ public class Top10Tab extends Fragment {
                 break;
         }
 
-        ArrayList<Problem> top10Problems = new ArrayList<Problem>(10);
+        ArrayList<Problem> top10Problems = new ArrayList<>(10);
 
         //get data
         Cursor cursor = mActivity.getContentResolver()

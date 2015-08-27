@@ -30,6 +30,7 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
          */
         getReadableDatabase();
     }
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 

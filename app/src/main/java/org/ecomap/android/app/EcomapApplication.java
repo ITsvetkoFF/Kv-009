@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011-2013 Sergey Tarasevich
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,36 +26,36 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class EcomapApplication extends Application {
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
-	@SuppressWarnings("unused")
-	@Override
-	public void onCreate() {
-		super.onCreate();
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+    @SuppressWarnings("unused")
+    @Override
+    public void onCreate() {
+        super.onCreate();
 
-		initImageLoader(getApplicationContext());
-	}
+        initImageLoader(getApplicationContext());
+    }
 
-	public static void initImageLoader(Context context) {
-		// This configuration tuning is custom. You can tune every option, you may tune some of them,
-		// or you can create default configuration by
-		//  ImageLoaderConfiguration.createDefault(this);
-		// method.
-		ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
-		config.threadPriority(Thread.NORM_PRIORITY - 2);
-		config.denyCacheImageMultipleSizesInMemory();
-		config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
-		config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
-		config.tasksProcessingOrder(QueueProcessingType.LIFO);
-		config.writeDebugLogs(); // Remove for release app
+    public static void initImageLoader(Context context) {
+        // This configuration tuning is custom. You can tune every option, you may tune some of them,
+        // or you can create default configuration by
+        //  ImageLoaderConfiguration.createDefault(this);
+        // method.
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs(); // Remove for release app
 
-		// Initialize ImageLoader with configuration.
-		ImageLoader.getInstance().init(config.build());
+        // Initialize ImageLoader with configuration.
+        ImageLoader.getInstance().init(config.build());
 
 		/* uncomment in test purposes only to erase cache all time app starts
-		ImageLoader.getInstance().clearDiskCache();
+        ImageLoader.getInstance().clearDiskCache();
 		ImageLoader.getInstance().clearMemoryCache();
 		*/
 
-	}
+    }
 
 }

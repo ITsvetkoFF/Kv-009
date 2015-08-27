@@ -1,4 +1,4 @@
-package org.ecomap.android.app.sync;
+package org.ecomap.android.app.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,7 +8,8 @@ import android.widget.Toast;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.MainActivity;
-import org.ecomap.android.app.fragments.RegistrationFragment;
+import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONObject;
 
@@ -18,18 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
-/**
- * Created by Stanislav on 27.07.2015.
- */
-public class RegisterTask extends AsyncTask<String, Void, Void> {
-
-    private final RegistrationFragment registrationFragment;
-    private final Context mContext;
+public class LoginTask extends AsyncTask<String, Void, Void> {
+    private final LoginFragment loginFragment;
     private String resMessage;
+    private final Context mContext;
     private ProgressDialog progressBar;
 
-    public RegisterTask(RegistrationFragment registrationFragment, Context context) {
-        this.registrationFragment = registrationFragment;
+    public LoginTask(LoginFragment loginFragment, Context context) {
+        this.loginFragment = loginFragment;
         this.mContext = context;
         resMessage = null;
     }
@@ -39,7 +36,7 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
         super.onPreExecute();
 
         progressBar = new ProgressDialog(mContext);
-        progressBar.setMessage(registrationFragment.getString(R.string.connecting_server));
+        progressBar.setMessage(loginFragment.getString(R.string.connecting_server));
         progressBar.setIndeterminate(true);
         progressBar.setCancelable(true);
         progressBar.show();
@@ -48,40 +45,37 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String[] params) {
         URL url;
-        HttpURLConnection connection = null;
+        HttpURLConnection connection;
 
         try {
-            url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/register");
+            url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/login");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             connection.setDoOutput(true);
             connection.connect();
 
-            //validation step
-            if (!params[0].isEmpty() && !params[1].isEmpty()
-                    && !params[3].isEmpty() &&
-                    params[3].equals(params[4])
-                    && MainActivity.isEmailValid(params[2])) {
+            //validation
+            if (MainActivity.isEmailValid(params[0]) && (!params[1].isEmpty())) {
 
+                //creating JSONObject for request
                 JSONObject request = new JSONObject();
-                request.put("first_name", params[0]);
-                request.put("last_name", params[1]);
-                request.put("email", params[2]);
-                request.put("password", params[3]);
+                request.put("email", params[0]);
+                request.put("password", params[1]);
 
-                //sending request to server
+                //sending request
                 connection.getOutputStream().write(request.toString().getBytes("UTF-8"));
 
-                //handling response
+                //handling result from server
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+
                     StringBuilder responseBody = new StringBuilder();
-                    BufferedReader reader = new BufferedReader
-                            (new InputStreamReader(connection.getInputStream()));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        responseBody.append(line + "\n");
+                        responseBody.append(line).append("\n");
                     }
                     reader.close();
 
@@ -91,53 +85,58 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
 
                     SharedPreferencesHelper.onLogInSavePref(mContext, data.get("first_name").toString(),
                             data.get("last_name").toString(),
-                            params[2], params[3], data.get("user_roles").toString(), data.get("user_id").toString(),
-                            set);
+                            params[0], params[1], data.get("user_roles").toString(),
+                            data.get("user_id").toString(), set);
 
                     MainActivity.setUserId(MainActivity.cookieManager.getCookieStore().getCookies().toString());
 
-                    String fileNamePref = registrationFragment.getResources().getString(R.string.fileNamePreferences);
+                    String fileNamePref = loginFragment.getResources().getString(R.string.fileNamePreferences);
 
                     User.getInstance(data.get("first_name").toString(), data.get("last_name").toString(),
-                            params[2], params[3], data.get("user_roles").toString(), data.get("user_id").toString(),
-                            set);
+                            params[0], params[1], data.get("user_roles").toString(), data.get("user_id").toString(), set);
 
                     resMessage = "Hello " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.FIRST_NAME_KEY, "")
                             + " " + SharedPreferencesHelper.getStringPref(mContext, fileNamePref, MainActivity.LAST_NAME_KEY, "") + "!";
 
                 } else {
+
                     StringBuilder responseBody = new StringBuilder();
-                    BufferedReader reader
-                            = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        responseBody.append(line + "\n");
+                        responseBody.append(line).append("\n");
                     }
                     reader.close();
 
                     JSONObject data = new JSONObject(responseBody.toString());
                     resMessage = data.get("message").toString();
                 }
+
             }
+
+            connection.disconnect();
+
+            return null;
+
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
         }
+
         return null;
     }
 
     @Override
     protected void onPostExecute(Void v) {
         super.onPostExecute(v);
+
+        MainActivity.changeAuthorizationState();
+
         progressBar.dismiss();
+        loginFragment.dismiss();
 
-        Toast.makeText(mContext, resMessage, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, resMessage, Toast.LENGTH_LONG).show();
 
-        if (MainActivity.isUserIsAuthorized()) {
-            registrationFragment.dismiss();
-        }
+        ((MainActivity) mContext).invalidateOptionsMenu();
     }
 }

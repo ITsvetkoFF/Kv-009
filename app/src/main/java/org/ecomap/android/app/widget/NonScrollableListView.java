@@ -1,4 +1,4 @@
-package org.ecomap.android.app.ui.components;
+package org.ecomap.android.app.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -9,12 +9,15 @@ public class NonScrollableListView extends ListView {
     public NonScrollableListView(Context context) {
         super(context);
     }
+
     public NonScrollableListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
     public NonScrollableListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightMeasureSpec_custom = MeasureSpec.makeMeasureSpec(

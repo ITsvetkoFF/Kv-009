@@ -104,4 +104,7 @@
     <string name="only_my_problems"> Показать только мои проблемы</string>
     <string name="notify_photos_loading">Ecomap: загрузка фотографий</string>
     <string name="done">Готово</string>
+    <string name="top_discussed">Обсуждаемые</string>
+    <string name="top_important">Важные</string>
+    <string name="top_popular">Популярные</string>
 </resources>

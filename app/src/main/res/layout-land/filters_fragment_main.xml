@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <org.ecomap.android.app.ui.components.NonScrollableListView
+                <org.ecomap.android.app.widget.NonScrollableListView
                     android:id="@id/android:list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

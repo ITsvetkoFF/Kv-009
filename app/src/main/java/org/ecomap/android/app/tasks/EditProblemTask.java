@@ -1,4 +1,4 @@
-package org.ecomap.android.app.sync;
+package org.ecomap.android.app.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.sync.EcoMapService;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
@@ -19,7 +21,7 @@ public class EditProblemTask extends AsyncTask<String, Void, Void> {
     private final Context mContext;
     private int responseCode;
 
-    public EditProblemTask(Context context){
+    public EditProblemTask(Context context) {
         this.mContext = context;
         this.progressBar = null;
     }
@@ -79,7 +81,7 @@ public class EditProblemTask extends AsyncTask<String, Void, Void> {
         progressBar.dismiss();
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            EcoMapService.firstStart=true;
+            EcoMapService.firstStart = true;
             Intent intent = new Intent(mContext, EcoMapService.class);
             mContext.startService(intent);
 

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
-import org.ecomap.android.app.sync.RegisterTask;
+import org.ecomap.android.app.tasks.RegisterTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
 
 
@@ -185,6 +185,6 @@ public class RegistrationFragment extends DialogFragment {
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        ((MainActivity)getActivity()).updateNavigationViewPosition();
+        ((MainActivity) getActivity()).updateNavigationViewPosition();
     }
 }

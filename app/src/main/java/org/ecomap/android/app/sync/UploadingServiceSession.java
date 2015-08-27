@@ -22,10 +22,14 @@ public class UploadingServiceSession {
     private final Context mContext;
     private final String mHostToken;
 
-    /** Messenger for communicating with service. */
+    /**
+     * Messenger for communicating with service.
+     */
     private Messenger mService = null;
 
-    /** Flag indicating whether we have called bind on the service. */
+    /**
+     * Flag indicating whether we have called bind on the service.
+     */
     private boolean mIsBound;
 
     /**
@@ -34,7 +38,7 @@ public class UploadingServiceSession {
     private final Messenger mMessenger;
     private final String LOG = UploadingServiceSession.class.getSimpleName();
 
-    public UploadingServiceSession(Context context, String hostToken, Callbacks callbackListener){
+    public UploadingServiceSession(Context context, String hostToken, Callbacks callbackListener) {
         this.mContext = context;
         this.mHostToken = hostToken;
         this.mMessenger = new Messenger(new IncomingHandler(context, callbackListener));
@@ -58,7 +62,7 @@ public class UploadingServiceSession {
             switch (msg.what) {
                 case UploadingService.MSG_TASK_FINISHED:
                     Bundle data = msg.getData();
-                    SnackBarHelper.showSuccessSnackBar((Activity)mContext, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
+                    SnackBarHelper.showSuccessSnackBar((Activity) mContext, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
                     break;
                 case UploadingService.MSG_ALL_TASKS_FINISHED:
                     callbackListener.allTasksFinished();
@@ -117,9 +121,9 @@ public class UploadingServiceSession {
         // class name because there is no reason to be able to let other
         // applications replace our component.
         //if(!mIsBound) {
-            final Intent intent = new Intent(mContext, UploadingService.class);
+        final Intent intent = new Intent(mContext, UploadingService.class);
 //        intent.setAction("org.ecomap.android.app.PHOTOS_UPLOADING");
-            mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        mContext.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         //}
 
     }
@@ -141,15 +145,15 @@ public class UploadingServiceSession {
 
 
             // Detach our existing connection.
-            if(isMyServiceRunning(UploadingService.class)) {
+            if (isMyServiceRunning(UploadingService.class)) {
                 mContext.unbindService(mConnection);
             }
             //mIsBound = false;
         }
     }
 
-    public void doStartService(){
-        if(!mIsBound){
+    public void doStartService() {
+        if (!mIsBound) {
             doBindService();
             //while (!mIsBound);
         }
@@ -172,7 +176,7 @@ public class UploadingServiceSession {
         return false;
     }
 
-    public void sendUploadRequest(int problemId, String photoURL, String comment){
+    public void sendUploadRequest(int problemId, String photoURL, String comment) {
         Bundle params = new Bundle();
         params.putString("CLASS_NAME", mHostToken);
         params.putInt("PROBLEM_ID", problemId);
@@ -189,7 +193,7 @@ public class UploadingServiceSession {
         }
     }
 
-    public interface Callbacks{
+    public interface Callbacks {
 
         void allTasksFinished();
 

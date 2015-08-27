@@ -19,9 +19,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-/**
- * Created by Stanislav on 23.06.2015.
- */
 public class Problem implements ClusterItem, Parcelable {
 
     private static final String LOG_TAG = Problem.class.getSimpleName();
@@ -90,7 +87,7 @@ public class Problem implements ClusterItem, Parcelable {
         chooseIcon();
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
@@ -98,7 +95,7 @@ public class Problem implements ClusterItem, Parcelable {
         return mTitle;
     }
 
-    public String getProposal(){
+    public String getProposal() {
         return proposal;
     }
 
@@ -131,11 +128,11 @@ public class Problem implements ClusterItem, Parcelable {
         }
     }
 
-    public int getResId(){
+    public int getResId() {
         return resId;
     }
 
-    public int getResBigImage(){
+    public int getResBigImage() {
         switch (typeId) {
             case 1:
                 return R.drawable.problem_type_1_3x;
@@ -156,30 +153,9 @@ public class Problem implements ClusterItem, Parcelable {
         }
     }
 
-    public String getTypeString(){
-        switch (typeId) {
-            case 1:
-                return mContext.getString(R.string.problem_type_string_1);
-            case 2:
-                return mContext.getString(R.string.problem_type_string_2);
-            case 3:
-                return mContext.getString(R.string.problem_type_string_3);
-            case 4:
-                return mContext.getString(R.string.problem_type_string_4);
-            case 5:
-                return mContext.getString(R.string.problem_type_string_5);
-            case 6:
-                return mContext.getString(R.string.problem_type_string_6);
-            case 7:
-                return mContext.getString(R.string.problem_type_string_7);
-            default:
-                return mContext.getString(R.string.problem_type_string_7);
-        }
-    }
+    public String getUserDate() {
 
-    public String getUserDate(){
-
-        if (this.firstName.isEmpty() && this.lastName.isEmpty()){
+        if (this.firstName.isEmpty() && this.lastName.isEmpty()) {
 
             String no_name = "(" + mContext.getString(R.string.string_anonymous) + ")";
 
@@ -189,7 +165,7 @@ public class Problem implements ClusterItem, Parcelable {
         return (firstName + ": " + date);
     }
 
-    public String getContent(){
+    public String getContent() {
         return content;
     }
 
@@ -201,47 +177,47 @@ public class Problem implements ClusterItem, Parcelable {
         return numberOfComments;
     }
 
-    public String getNumberOfLikes(){
+    public String getNumberOfLikes() {
         return String.valueOf(numberOfVotes);
     }
 
-    public void addLike(){
+    public void addLike() {
         numberOfVotes += 1;
     }
 
-    public void setLiked(){
+    public void setLiked() {
 
         this.liked = true;
 
         //save this problem into set in SharedPreferences
-        SharedPreferencesHelper.addLikedProblem(mContext,getId());
+        SharedPreferencesHelper.addLikedProblem(mContext, getId());
 
     }
 
-    public boolean isLiked(){
+    public boolean isLiked() {
 
         //check if this problem is in set of SharedPreferences
-        return liked||SharedPreferencesHelper.isLikedProblem(mContext,getId());
+        return liked || SharedPreferencesHelper.isLikedProblem(mContext, getId());
 
     }
 
-    public String getStatus(){
+    public String getStatus() {
         return status;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return content;
     }
 
-    public String getSolution(){
+    public String getSolution() {
         return proposal;
     }
 
-    public int getTypeId(){
+    public int getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(int typeId){
+    public void setTypeId(int typeId) {
         this.typeId = typeId;
     }
 
@@ -250,7 +226,7 @@ public class Problem implements ClusterItem, Parcelable {
         return mPos;
     }
 
-    
+
     private Problem(Parcel in) {
         mPos = (LatLng) in.readValue(LatLng.class.getClassLoader());
         mTitle = in.readString();
@@ -306,11 +282,11 @@ public class Problem implements ClusterItem, Parcelable {
         }
     };
 
-    public String getRelativeTime(){
+    public String getRelativeTime() {
         return DateUtils.getRelativeTimeSpanString(getCreatedDate().getTime(), new Date().getTime(), DateUtils.SECOND_IN_MILLIS).toString();
     }
 
-    private Date getCreatedDate(){
+    private Date getCreatedDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         Date d = null;
         try {

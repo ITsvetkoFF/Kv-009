@@ -1,6 +1,5 @@
 package org.ecomap.android.app.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.plus.PlusOneButton;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
@@ -65,22 +63,13 @@ public class CommentsFragment extends Fragment {
 
     private static final String ARG_PROBLEM = "problem";
 
-    private static int PROBLEM_NUMBER = 185;
-
-    // The request code must be 0 or greater.
-    private static final int PLUS_ONE_REQUEST_CODE = 0;
-
-    // The URL to +1.  Must be a valid URL.
-    private final String PLUS_ONE_URL = "http://developer.android.com";
-
     private Problem mProblem;
-    private PlusOneButton mPlusOneButton;
 
     private CommentsAdapter<CommentEntry> mCommentsAdapter;
 
     private EditText mTxtComment;
 
-    public CommentsAdapter getCommentsAdapter(){
+    public CommentsAdapter getCommentsAdapter() {
         return mCommentsAdapter;
     }
 
@@ -88,10 +77,10 @@ public class CommentsFragment extends Fragment {
     public CommentsFragment() {
         // Required empty public constructor
     }
-    public void changeState(){
+
+    public void changeState() {
         Log.i(LOG_TAG, "change state is called");
         mCommentsAdapter.notifyDataSetChanged();
-
     }
 
     /**
@@ -183,9 +172,9 @@ public class CommentsFragment extends Fragment {
                 //Set TextView unfocused
                 mTxtComment.setFocusableInTouchMode(false);
 
-                if(!MainActivity.isUserIsAuthorized()){
+                if (!MainActivity.isUserIsAuthorized()) {
                     SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_leave_comments, Snackbar.LENGTH_SHORT);
-                }else if(comment.isEmpty()){
+                } else if (comment.isEmpty()) {
                     SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.write_comment, Snackbar.LENGTH_SHORT);
                 }
 
@@ -199,46 +188,6 @@ public class CommentsFragment extends Fragment {
 
         return mRootView;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-
-
-
-        // Refresh the state of the +1 button each time the activity receives focus.
-        //mPlusOneButton.initialize(PLUS_ONE_URL, PLUS_ONE_REQUEST_CODE);
-    }
-
-/*
-    // T O D O: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-*/
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-/*
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-*/
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        OnFragmentInteractionListener mListener = null;
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -301,7 +250,7 @@ public class CommentsFragment extends Fragment {
                 final long currentTimeMillis = new Date().getTime();
                 final Date createdDate = currentItem.getCreatedDate();
 
-                final int userId=currentItem.getUserId();
+                final int userId = currentItem.getUserId();
 
                 final String relativeTimeString = DateUtils.getRelativeTimeSpanString(createdDate.getTime(), currentTimeMillis, DateUtils.SECOND_IN_MILLIS).toString();
                 txtCommentDate.setText(relativeTimeString);
@@ -309,46 +258,46 @@ public class CommentsFragment extends Fragment {
                 final TextView txtListItem = (TextView) view.findViewById(R.id.txtCaption);
                 txtListItem.setText(currentItem.getContent());
 
-                ImageView deleteCommentButton=(ImageView)view.findViewById(R.id.delete_comment_button);
+                ImageView deleteCommentButton = (ImageView) view.findViewById(R.id.delete_comment_button);
                 deleteCommentButton.setVisibility(View.GONE);
 
                 boolean b = User.canUserDeleteComment(userId);
 
-                if(b){
+                if (b) {
 
-                deleteCommentButton.setVisibility(View.VISIBLE);
-                deleteCommentButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    deleteCommentButton.setVisibility(View.VISIBLE);
+                    deleteCommentButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                        AlertDialog.Builder builder=new AlertDialog.Builder(mContext);
-                        builder.setMessage(mContext.getString(R.string.delete_comment_message));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                            builder.setMessage(mContext.getString(R.string.delete_comment_message));
 
-                        builder.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            builder.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                dialog.dismiss();
-                                new AsyncDeleteComment().execute(currentItem.getId());
+                                    dialog.dismiss();
+                                    new AsyncDeleteComment().execute(currentItem.getId());
 
-                            }
-                        });
-                        builder.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.setCancelable(true);
-                        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                dialog.dismiss();
-                            }
-                        });
-                        builder.show();
-                    }
-                });
+                                }
+                            });
+                            builder.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.setCancelable(true);
+                            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                @Override
+                                public void onCancel(DialogInterface dialog) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
 
                 }
 
@@ -375,7 +324,7 @@ public class CommentsFragment extends Fragment {
 
     }
 
-    private  class AsyncDeleteComment extends AsyncTask<Long, Void, Void> {
+    private class AsyncDeleteComment extends AsyncTask<Long, Void, Void> {
 
         private int responseCode;
 
@@ -398,15 +347,18 @@ public class CommentsFragment extends Fragment {
             } catch (IOException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             } finally {
+
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
 
-                return null;
             }
+
+            return null;
         }
+
         @Override
-        protected void onPostExecute(Void avoid){
+        protected void onPostExecute(Void avoid) {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 new AsyncRequestComments().execute(mProblem.getId());
                 mCommentsAdapter.notifyDataSetChanged();
@@ -427,7 +379,7 @@ public class CommentsFragment extends Fragment {
             String ECOMAP_COMMENTS_URL = EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + id + "/comments";
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            List<CommentEntry> ret = new ArrayList<CommentEntry>();
+            List<CommentEntry> ret = new ArrayList<>();
 
             try {
                 // Getting input stream from URL
@@ -501,7 +453,7 @@ public class CommentsFragment extends Fragment {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
-            return new ArrayList<CommentEntry>();
+            return new ArrayList<>();
         }
 
 

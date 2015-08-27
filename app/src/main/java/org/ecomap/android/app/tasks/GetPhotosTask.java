@@ -1,10 +1,11 @@
-package org.ecomap.android.app.sync;
+package org.ecomap.android.app.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +59,7 @@ public class GetPhotosTask extends AsyncTask<Integer, Integer, List<ProblemPhoto
 
             String line;
             while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
 
             if (buffer.length() == 0) {
@@ -114,7 +115,7 @@ public class GetPhotosTask extends AsyncTask<Integer, Integer, List<ProblemPhoto
             e.printStackTrace();
         }
 
-        return new ArrayList<ProblemPhotoEntry>();
+        return new ArrayList<>();
     }
 
 

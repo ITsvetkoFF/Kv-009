@@ -25,15 +25,13 @@ public class EcoMapContract {
     public static final String PATH_RESOURCES = "resources";
 
     /* Inner class that defines the table contents of the problems table */
-    public static final class ProblemsEntry implements BaseColumns{
+    public static final class ProblemsEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_PROBLEMS).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROBLEMS;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PROBLEMS;
 
         // Table name
         public static final String TABLE_NAME = "problems";
@@ -75,15 +73,13 @@ public class EcoMapContract {
         }
     }
 
-    public static final class ResourcesEntry implements BaseColumns{
+    public static final class ResourcesEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_RESOURCES).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RESOURCES;
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_RESOURCES;
 
         //TABLE NAME
         public static final String TABLE_NAME = "resources";
@@ -93,7 +89,7 @@ public class EcoMapContract {
         //description, String
         public static final String COLUMN_CONTENT = "content";
 
-        public static Uri buildResourcesUri(long id){
+        public static Uri buildResourcesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 

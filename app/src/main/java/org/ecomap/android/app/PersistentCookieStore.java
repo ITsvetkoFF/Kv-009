@@ -37,8 +37,6 @@ public class PersistentCookieStore implements CookieStore {
 
     private final Context mContext;
 
-    private boolean omitNonPersistentCookies = false;
-
     public PersistentCookieStore(Context context) {
 
         this.mContext = context;

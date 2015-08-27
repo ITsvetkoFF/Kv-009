@@ -1,4 +1,4 @@
-package org.ecomap.android.app.sync;
+package org.ecomap.android.app.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,6 +12,9 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.AddProblemActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.EcoMapFragment;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
+import org.ecomap.android.app.sync.EcoMapService;
+import org.ecomap.android.app.sync.UploadingServiceSession;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -28,7 +31,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
     private String resultMessage = null;
     private UploadingServiceSession mServiceSession;
 
-    public AddProblemTask(Context context, UploadingServiceSession serviceSession){
+    public AddProblemTask(Context context, UploadingServiceSession serviceSession) {
         this.mContext = context;
         this.progressBar = null;
         this.responseCode = 0;
@@ -83,7 +86,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    responseBody.append(line + "\n");
+                    responseBody.append(line).append("\n");
                 }
                 reader.close();
 
@@ -98,7 +101,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    responseBody.append(line + "\n");
+                    responseBody.append(line).append("\n");
                 }
                 reader.close();
 
@@ -118,7 +121,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         super.onPostExecute(aVoid);
 
         progressBar.dismiss();
-        EcoMapService.firstStart=true;
+        EcoMapService.firstStart = true;
 
         Intent intent = new Intent(mContext, EcoMapService.class);
         mContext.startService(intent);
@@ -132,7 +135,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         }
     }
 
-    private void sendPhoto(int problemId){
+    private void sendPhoto(int problemId) {
         View view;
         EditText editText;
         String path;
@@ -140,10 +143,10 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
         //Checking selected photos
         if (!AddProblemActivity.selectedPhotos.isEmpty()) {
-            if(AddProblemActivity.selectedPhotos.size() > 0 && mServiceSession.isBound()){
+            if (AddProblemActivity.selectedPhotos.size() > 0 && mServiceSession.isBound()) {
                 mServiceSession.doStartService();
             }
-            for(int i = 0; i < AddProblemActivity.selectedPhotos.size(); i++){
+            for (int i = 0; i < AddProblemActivity.selectedPhotos.size(); i++) {
                 //Get each ListView item
                 view = AddProblemActivity.getNonScrollableListView().getChildAt(i);
                 editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
@@ -152,10 +155,9 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 //Get path for each photo
                 path = AddProblemActivity.selectedPhotos.get(i);
                 //Start new AsyncTask for each photo and comment (test problem ID is 361)
-                if(mServiceSession.isBound()){
+                if (mServiceSession.isBound()) {
                     mServiceSession.sendUploadRequest(problemId, path, comment);
                 }
-                //new UploadPhotoTask(mContext, problemId, path, comment).execute();
             }
             mServiceSession = null;
         }

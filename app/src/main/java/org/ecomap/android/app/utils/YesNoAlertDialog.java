@@ -8,7 +8,7 @@ import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.sync.DeleteTask;
+import org.ecomap.android.app.tasks.DeleteTask;
 
 public class YesNoAlertDialog {
     private final String message;

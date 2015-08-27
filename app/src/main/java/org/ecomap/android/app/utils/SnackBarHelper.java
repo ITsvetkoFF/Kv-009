@@ -10,15 +10,7 @@ import android.widget.TextView;
 import org.ecomap.android.app.R;
 
 public class SnackBarHelper {
-    /**
-     * SnackBar stencils
-     *
-     * @param context
-     * @param view
-     * @param message
-     * @param duration
-     * @param backgroundColor
-     */
+
     private static void showSnackBar(Context context, View view, String message, int duration, int backgroundColor) {
         Snackbar snackbar = Snackbar.make(view.findViewById(android.R.id.content), message, duration);
         View snackBarView = snackbar.getView();

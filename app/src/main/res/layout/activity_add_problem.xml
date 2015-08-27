@@ -164,13 +164,13 @@
 
             </FrameLayout>
 
-            <org.ecomap.android.app.ui.components.NonScrollableListView
+            <org.ecomap.android.app.widget.NonScrollableListView
                 android:id="@+id/add_problem_non_scrollable_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp">
-            </org.ecomap.android.app.ui.components.NonScrollableListView>
+            </org.ecomap.android.app.widget.NonScrollableListView>
 
         </LinearLayout>
 

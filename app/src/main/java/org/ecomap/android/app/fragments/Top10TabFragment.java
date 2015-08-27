@@ -14,16 +14,7 @@ import org.ecomap.android.app.tabs.ViewPagerAdapter;
 
 public class Top10TabFragment extends Fragment {
 
-    private final CharSequence[] Titles={"популярних","важливих ","обговорюваних"};
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-
-        }*/
-    }
+    private final CharSequence[] Titles = {getString(R.string.top_popular), getString(R.string.top_important), getString(R.string.top_discussed)};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

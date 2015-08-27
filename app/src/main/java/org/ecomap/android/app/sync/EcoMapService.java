@@ -38,15 +38,15 @@ public class EcoMapService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         // if it's first start of app we're need to check revision and fetch data @see line 107
-        if(firstStart){
+        if (firstStart) {
             HttpURLConnection urlConnection = null;
 
             BufferedReader reader = null;
 
             try {
 
-                numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(),getString(R.string.fileNamePreferences),getString(R.string.prefNumRevision), 0);
-                if(numCurrentRevision == 0){
+                numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(), getString(R.string.fileNamePreferences), getString(R.string.prefNumRevision), 0);
+                if (numCurrentRevision == 0) {
                     startService(new Intent(this, GetResourcesService.class));
                 }
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
@@ -72,7 +72,7 @@ public class EcoMapService extends IntentService {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
@@ -130,7 +130,7 @@ public class EcoMapService extends IntentService {
             }
 
             JSONArray jArr = data.getJSONArray("data");
-            Vector<ContentValues> cVVector = new Vector<ContentValues>(JSONStr.length());
+            Vector<ContentValues> cVVector = new Vector<>(JSONStr.length());
 
             for (int i = 0; i < jArr.length(); i++) {
                 int problem_id;
@@ -167,18 +167,18 @@ public class EcoMapService extends IntentService {
                         problem_id = obj.getInt(EcoMapAPIContract.ID);
                         number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES_UPDATE);
                         ContentValues cv = new ContentValues();
-                        cv.put(EcoMapAPIContract.NUMBER_OF_VOTES,number_of_votes);
-                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI,cv,"_id = " + problem_id, null);
+                        cv.put(EcoMapAPIContract.NUMBER_OF_VOTES, number_of_votes);
+                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI, cv, "_id = " + problem_id, null);
                     }
 
                 } else {
                     //NEW PROBLEM
-                    problem_id         = obj.getInt(EcoMapAPIContract.ID);
-                    title              = obj.getString(EcoMapAPIContract.TITLE);
-                    latitude           = obj.getDouble(EcoMapAPIContract.LATITUDE);
-                    longitude          = obj.getDouble(EcoMapAPIContract.LONGITUDE);
-                    type_id            = obj.getInt(EcoMapAPIContract.PROBLEMS_TYPES_ID);
-                    status             = obj.getString(EcoMapAPIContract.STATUS);
+                    problem_id = obj.getInt(EcoMapAPIContract.ID);
+                    title = obj.getString(EcoMapAPIContract.TITLE);
+                    latitude = obj.getDouble(EcoMapAPIContract.LATITUDE);
+                    longitude = obj.getDouble(EcoMapAPIContract.LONGITUDE);
+                    type_id = obj.getInt(EcoMapAPIContract.PROBLEMS_TYPES_ID);
+                    status = obj.getString(EcoMapAPIContract.STATUS);
 
                     if (obj.isNull(EcoMapAPIContract.FIRST_NAME)) {
                         first_name = "";
@@ -200,16 +200,16 @@ public class EcoMapService extends IntentService {
                         number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES);
                     }
 
-                    if(obj.isNull(EcoMapAPIContract.USER_ID)){
+                    if (obj.isNull(EcoMapAPIContract.USER_ID)) {
                         user_id = -1;
                     } else {
                         user_id = obj.getInt(EcoMapAPIContract.USER_ID);
                     }
 
-                    date               = obj.getString(EcoMapAPIContract.DATE);
-                    content            = obj.getString(EcoMapAPIContract.CONTENT);
-                    proposal           = obj.getString(EcoMapAPIContract.PROPOSAL);
-                    region_id          = obj.getInt(EcoMapAPIContract.REGION_ID);
+                    date = obj.getString(EcoMapAPIContract.DATE);
+                    content = obj.getString(EcoMapAPIContract.CONTENT);
+                    proposal = obj.getString(EcoMapAPIContract.PROPOSAL);
+                    region_id = obj.getInt(EcoMapAPIContract.REGION_ID);
                     number_of_comments = obj.getInt(EcoMapAPIContract.NUMBER_OF_COMMENTS);
 
                     ContentValues mapValues = new ContentValues();
@@ -242,7 +242,7 @@ public class EcoMapService extends IntentService {
                 this.getContentResolver().bulkInsert(EcoMapContract.ProblemsEntry.CONTENT_URI, cvArray);
             }
             //update pnumCurrentRevisionreferences
-            SharedPreferencesHelper.updateNumRevision(getApplicationContext(),numNewRevision);
+            SharedPreferencesHelper.updateNumRevision(getApplicationContext(), numNewRevision);
 
             Log.i(LOG_TAG, "revision was updated!");
 

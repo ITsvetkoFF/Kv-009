@@ -43,7 +43,7 @@ public class StaticPagesFragment extends Fragment {
         resourcesCusor.close();
     }
 
-    class ListCursorAdapter extends CursorAdapter{
+    class ListCursorAdapter extends CursorAdapter {
 
         public ListCursorAdapter(Context context, Cursor c) {
             super(context, c, true);

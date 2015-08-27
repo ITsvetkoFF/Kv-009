@@ -39,8 +39,8 @@ import com.google.android.gms.plus.model.people.Person;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
-import org.ecomap.android.app.sync.LoginTask;
-import org.ecomap.android.app.sync.SocialLoginTask;
+import org.ecomap.android.app.tasks.LoginTask;
+import org.ecomap.android.app.tasks.SocialLoginTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.json.JSONObject;
 
@@ -96,12 +96,12 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     public void onStop() {
         super.onStop();
         //Google
-        if(mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient.isConnected()) {
             Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
             mGoogleApiClient.disconnect();
         }
         //Facebook
-        if (loginManager != null){
+        if (loginManager != null) {
             loginManager.logOut();
         }
     }
@@ -174,20 +174,20 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
         if (callbackManager.onActivityResult(requestCode, resultCode, data))
             return;
 
-        if(requestCode == RC_SIGN_IN){
-            if(resultCode != MainActivity.RESULT_OK){
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode != MainActivity.RESULT_OK) {
                 mSignInClicked = false;
             }
             mIntentInProgress = false;
 
-            if(!mGoogleApiClient.isConnected()){
+            if (!mGoogleApiClient.isConnected()) {
                 mGoogleApiClient.connect();
             }
         }
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         View v = getView();
@@ -292,12 +292,12 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     @Override
     public void onCancel(DialogInterface dialog) {
         super.onCancel(dialog);
-        ((MainActivity)getActivity()).updateNavigationViewPosition();
+        ((MainActivity) getActivity()).updateNavigationViewPosition();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        if(!connectionResult.hasResolution()){
+        if (!connectionResult.hasResolution()) {
             GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), mActivity, 0).show();
             Log.e(TAG, "" + connectionResult.getErrorCode());
             return;
@@ -315,6 +315,7 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             }
         }
     }
+
     @Override
     public void onConnected(Bundle bundle) {
         mSignInClicked = false;
@@ -325,9 +326,10 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     public void onConnectionSuspended(int i) {
         mGoogleApiClient.connect();
     }
+
     /**
      * Sign-in into google
-     * */
+     */
     private void signInWithGplus() {
         if (!mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
@@ -335,17 +337,9 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
         }
     }
 
-    public void signOutWithGplus(){
-        if(mGoogleApiClient.isConnected()){
-            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-            mGoogleApiClient.disconnect();
-            mGoogleApiClient.connect();
-        }
-    }
-
     /**
-     * Method to resolve any signin errors
-     * */
+     * Method to resolve any sign-in errors
+     */
     private void resolveSignInError() {
         if (mConnectionResult.hasResolution()) {
             try {
@@ -357,9 +351,10 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             }
         }
     }
+
     /**
      * Fetching user's information name, email, profile pic
-     * */
+     */
     private void getProfileInformation() {
         try {
             if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {

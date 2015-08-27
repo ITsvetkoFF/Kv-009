@@ -47,7 +47,6 @@ public class UploadingService extends Service {
     public static final int MSG_REGISTER_CLIENT = 1;
     public static final int MSG_UPLOAD_PHOTO = 4;
     public static final int MSG_UNREGISTER_CLIENT = 2;
-    private static final int MSG_GET_TASKS_LIST = 5;
     public static final int MSG_TASK_FINISHED = 6;
     public static final int MSG_ALL_TASKS_FINISHED = 7;
 
@@ -104,7 +103,7 @@ public class UploadingService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        if(DEBUG) Log.v(LOG, "onUnbind: " + intent.toString());
+        if (DEBUG) Log.v(LOG, "onUnbind: " + intent.toString());
         return super.onUnbind(intent);
     }
 
@@ -136,7 +135,7 @@ public class UploadingService extends Service {
         DEBUG = flag;
     }
 
-    private Notification getForegroundNotification(){
+    private Notification getForegroundNotification() {
 
         /*
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_uploading);
@@ -229,22 +228,23 @@ public class UploadingService extends Service {
                 foregroundNotificationBuilder.setContentInfo("" + finishedTasks + "/" + pendingTasks);
                 mNM.notify(UPLOADING_NOTIFICATION_ID, getForegroundNotification());
             }
-            if(finishedTasks == pendingTasks && clientHandler.asyncTasks.isEmpty()){
+            if (finishedTasks == pendingTasks && clientHandler.asyncTasks.isEmpty()) {
                 allTasksFinished(className);
             }
         }
 
 
-        public void updateGlobalProgress(int progress){
+        public void updateGlobalProgress(int progress) {
             globalProgress += progress;
-            if(DEBUG) Log.v(LOG, "pending task: " + (100 * pendingTasks) + " | globalProgress: " + globalProgress);
-            if(mIsForeground) {
+            if (DEBUG)
+                Log.v(LOG, "pending task: " + (100 * pendingTasks) + " | globalProgress: " + globalProgress);
+            if (mIsForeground) {
                 foregroundNotificationBuilder.setProgress(100 * pendingTasks, globalProgress, false);
                 mNM.notify(UploadingService.UPLOADING_NOTIFICATION_ID, getForegroundNotification());
             }
         }
 
-        public void allTasksFinished(String className){
+        public void allTasksFinished(String className) {
 
             final Message message = Message.obtain(null, MSG_ALL_TASKS_FINISHED, null);
             sendMessageToClient(className, message);
@@ -256,17 +256,16 @@ public class UploadingService extends Service {
         /**
          * Register messenger's messengers into the map. If messenger already exists,
          * updates link to messenger on case caller activity was recreated.
-         *  @param className Activity class name
+         *
+         * @param className Activity class name
          * @param msn       Activity incoming messenger for callbacks
          */
         public void registerClient(String className, Messenger msn) {
             if (!clientsMap.containsKey(className)) {
                 clientsMap.put(className, new ClientActivityHolder(msn));
-                return;
             } else {
                 final ClientActivityHolder activityHandler = clientsMap.get(className);
                 activityHandler.messenger = msn;
-                return;
             }
 
         }
@@ -275,8 +274,8 @@ public class UploadingService extends Service {
          * Send message to the client, if client was killed while AsyncTask
          * was doing its job, find and send message to the current client.
          *
-         * @param className
-         * @param msg
+         * @param className is a class name
+         * @param msg       is a message
          */
         private void sendMessageToClient(String className, Message msg) {
             try {
@@ -308,14 +307,14 @@ public class UploadingService extends Service {
 
                 @Override
                 protected void onProgressUpdate(Integer... values) {
-                    if(DEBUG) Log.d(LOG_TAG, "onProgressUpdate " + values[0]);
+                    if (DEBUG) Log.d(LOG_TAG, "onProgressUpdate " + values[0]);
                     updateGlobalProgress(values[0]);
                 }
 
 
                 @Override
                 protected void onPostExecute(Void o) {
-                    if(DEBUG) Log.d(LOG_TAG, "onPostExecute ");
+                    if (DEBUG) Log.d(LOG_TAG, "onPostExecute ");
 
                     final Message message = Message.obtain(null, MSG_TASK_FINISHED, null);
                     Bundle params = new Bundle();
@@ -348,7 +347,7 @@ public class UploadingService extends Service {
                     Bundle data = msg.getData();
                     String className = data.getString("CLASS_NAME");
                     scManager.registerClient(className, msg.replyTo);
-                    if(DEBUG) Log.v("MSG_REGISTER_CLIENT", msg.replyTo.toString());
+                    if (DEBUG) Log.v("MSG_REGISTER_CLIENT", msg.replyTo.toString());
                     break;
                 }
                 case MSG_UNREGISTER_CLIENT:
@@ -363,7 +362,7 @@ public class UploadingService extends Service {
 
                     scManager.addAndStartUploadingTask(className, msg.replyTo, problemId, photoURL, comment);
 
-                    if(DEBUG) Log.v("MSG_UPLOAD_PHOTO", photoURL);
+                    if (DEBUG) Log.v("MSG_UPLOAD_PHOTO", photoURL);
 
                     break;
                 default:

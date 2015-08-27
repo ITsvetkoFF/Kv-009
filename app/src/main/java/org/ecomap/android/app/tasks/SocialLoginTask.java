@@ -1,8 +1,4 @@
-package org.ecomap.android.app.sync;
-
-/**
- * Created by yura on 8/7/15.
- */
+package org.ecomap.android.app.tasks;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,6 +9,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.fragments.LoginFragment;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONObject;
 
@@ -43,8 +40,8 @@ public class SocialLoginTask extends AsyncTask<String, Void, Void> {
         String lastName = params[2];
         String id = params[3];
         String email = params[4];
-        URL url = null;
-        HttpURLConnection connection = null;
+        URL url;
+        HttpURLConnection connection;
 
         try {
             url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/auth/" + urlType);
@@ -70,9 +67,9 @@ public class SocialLoginTask extends AsyncTask<String, Void, Void> {
                 StringBuilder responseBody = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
-                    responseBody.append(line + "\n");
+                    responseBody.append(line).append("\n");
                 }
                 reader.close();
 
@@ -110,9 +107,9 @@ public class SocialLoginTask extends AsyncTask<String, Void, Void> {
                 StringBuilder responseBody = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
-                String line = null;
+                String line;
                 while ((line = reader.readLine()) != null) {
-                    responseBody.append(line + "\n");
+                    responseBody.append(line).append("\n");
                 }
                 reader.close();
 

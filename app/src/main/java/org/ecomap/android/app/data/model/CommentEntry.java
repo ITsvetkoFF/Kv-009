@@ -22,7 +22,7 @@ public class CommentEntry {
     private static final String CONTENT = "content";
     private static final String CREATEDDATE = "created_date";
     private static final String ID = "id";
-    private static final String USER_ID="user_id";
+    private static final String USER_ID = "user_id";
 
     private final String modifiedDate;
     private final String modifiedBy;
@@ -32,7 +32,7 @@ public class CommentEntry {
     private final long id;
     private final int userId;
 
-    public static CommentEntry fromJSON(JSONObject obj){
+    public static CommentEntry fromJSON(JSONObject obj) {
 
         try {
             String modifiedDate = obj.getString(MODIFIEDDATE);
@@ -41,7 +41,7 @@ public class CommentEntry {
             String content = obj.getString(CONTENT);
             String createdDate = obj.getString(CREATEDDATE);
             long id = obj.getLong(ID);
-            int userId=obj.getInt(USER_ID);
+            int userId = obj.getInt(USER_ID);
 
             return new CommentEntry(modifiedDate, modifiedBy, createdBy, content, createdDate, id, userId);
 
@@ -60,7 +60,7 @@ public class CommentEntry {
         this.content = content;
         this.createdDate = createdDate;
         this.id = id;
-        this.userId=userId;
+        this.userId = userId;
     }
 
     public String getModifiedDate() {
@@ -87,9 +87,11 @@ public class CommentEntry {
         return id;
     }
 
-    public int getUserId(){return userId;}
+    public int getUserId() {
+        return userId;
+    }
 
-    public Date getCreatedDate(){
+    public Date getCreatedDate() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.US);
         Date date = null;
         try {

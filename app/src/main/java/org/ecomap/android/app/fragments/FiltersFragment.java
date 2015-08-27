@@ -39,7 +39,7 @@ public class FiltersFragment extends ListFragment {
 
     private final String LOG_TAG = "FilterFragment";
     private final String problemType = EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID + " = ";
-    private final String dateInterval=") AND ("+ EcoMapContract.ProblemsEntry.COLUMN_DATE+" BETWEEN ";
+    private final String dateInterval = ") AND (" + EcoMapContract.ProblemsEntry.COLUMN_DATE + " BETWEEN ";
     private String resultCondition;
     private ListView listView;
     private TextView startDate, endDate;
@@ -47,7 +47,7 @@ public class FiltersFragment extends ListFragment {
     private View mainView;
     private Filterable ourActivity;
     private SparseBooleanArray sbArray;
-    private int startYear,startMonth, startDay, endYear, endMonth, endDay;
+    private int startYear, startMonth, startDay, endYear, endMonth, endDay;
     private String dateCondition;
     private boolean startDateInitialized;
     private boolean endDateInitialized;
@@ -88,17 +88,12 @@ public class FiltersFragment extends ListFragment {
         getActivity().setTitle(getActivity().getString(R.string.filters_menu_item_title));
         //getActivity().invalidateOptionsMenu();
 
-        ScrollView scrollView=(ScrollView)mainView.findViewById(R.id.scroll_view);
+        ScrollView scrollView = (ScrollView) mainView.findViewById(R.id.scroll_view);
         scrollView.scrollTo(0, 0);
 
         return mainView;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedState) {
-        super.onActivityCreated(savedState);
-
-    }
     @Override
     public void onResume() {
         super.onResume();
@@ -137,38 +132,36 @@ public class FiltersFragment extends ListFragment {
         }
         Button okBtn = (Button) mainView.findViewById(R.id.ok);
         Button resetBtn = (Button) mainView.findViewById(R.id.reset);
-        startDate=(TextView) mainView.findViewById(R.id.start_date);
-        endDate=(TextView)mainView.findViewById(R.id.end_date);
-        String finishDateForTextfield="";
+        startDate = (TextView) mainView.findViewById(R.id.start_date);
+        endDate = (TextView) mainView.findViewById(R.id.end_date);
+        String finishDateForTextfield = "";
 
         final Calendar c = Calendar.getInstance();
 
-       if(!startDateInitialized)
-       {
+        if (!startDateInitialized) {
 
-           beginDate="2014-02-18";
-           startYear=2014;
-           startMonth=1;
-           startDay=18;
-       }
+            beginDate = "2014-02-18";
+            startYear = 2014;
+            startMonth = 1;
+            startDay = 18;
+        }
 
-        if(!endDateInitialized) {
+        if (!endDateInitialized) {
 
-            endYear=c.get(Calendar.YEAR);
-            endMonth=c.get(Calendar.MONTH);
-            endDay=c.get(Calendar.DAY_OF_MONTH);
+            endYear = c.get(Calendar.YEAR);
+            endMonth = c.get(Calendar.MONTH);
+            endDay = c.get(Calendar.DAY_OF_MONTH);
 
             //this is needed because user will want to see problems what were added today.
             //So we increase the day to see all the problems from the last day.
-            c.set(endYear, endMonth, endDay );
+            c.set(endYear, endMonth, endDay);
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
             finishDateForTextfield = sdf.format(c.getTime());
 
             //make a finish date for query. Need to make it one day more, to see the problems added today.
-            c.set(endYear, endMonth, endDay+1);
-            finishDate=sdf.format(c.getTime());
-
+            c.set(endYear, endMonth, endDay + 1);
+            finishDate = sdf.format(c.getTime());
 
 
         }
@@ -255,30 +248,29 @@ public class FiltersFragment extends ListFragment {
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog;
 
-                if(v.getId()==R.id.start_date){
+                if (v.getId() == R.id.start_date) {
                     datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             Calendar c = Calendar.getInstance();
                             c.set(year, monthOfYear, dayOfMonth);
 
-                            startYear=year;
-                            startMonth=monthOfYear;
-                            startDay=dayOfMonth;
+                            startYear = year;
+                            startMonth = monthOfYear;
+                            startDay = dayOfMonth;
 
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                             beginDate = sdf.format(c.getTime());
 
-                            startDateInitialized=true;
+                            startDateInitialized = true;
                             startDate.setText(beginDate);
 
-                            }
+                        }
 
 
                     }, startYear, startMonth, startDay);
 
-                }
-                else{
+                } else {
                     datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -288,13 +280,13 @@ public class FiltersFragment extends ListFragment {
 
                             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                             dateForTextField = sdf.format(c.getTime());
-                            c.set(year, monthOfYear, dayOfMonth+1);
+                            c.set(year, monthOfYear, dayOfMonth + 1);
 
-                            endYear=year;
-                            endMonth=monthOfYear;
-                            endDay=dayOfMonth;
+                            endYear = year;
+                            endMonth = monthOfYear;
+                            endDay = dayOfMonth;
 
-                            endDateInitialized=true;
+                            endDateInitialized = true;
                             endDate.setText(dateForTextField);
 
                         }
@@ -302,20 +294,20 @@ public class FiltersFragment extends ListFragment {
                 }
 
 
-        datePickerDialog.show();
-    }
-};      startDate.setOnClickListener(showDatePicker);
+                datePickerDialog.show();
+            }
+        };
+        startDate.setOnClickListener(showDatePicker);
         endDate.setOnClickListener(showDatePicker);
 
 
     }
+
     @Override
     public void onPause() {
         super.onPause();
         Log.i(LOG_TAG, "on pause");
     }
-
-
 
 
     public interface Filterable {

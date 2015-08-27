@@ -34,7 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
-import org.ecomap.android.app.sync.EditProblemTask;
+import org.ecomap.android.app.tasks.EditProblemTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
 
 public class EditProblem extends AppCompatActivity {
@@ -70,7 +70,7 @@ public class EditProblem extends AppCompatActivity {
         }
 
         CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout)findViewById(R.id.edit_problem_collapsing_toolbar);
+                (CollapsingToolbarLayout) findViewById(R.id.edit_problem_collapsing_toolbar);
         collapsingToolbar.setTitle(getString(R.string.edit_problem_activity));
         collapsingToolbar.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -87,7 +87,7 @@ public class EditProblem extends AppCompatActivity {
 
         problem = MainActivity.currentProblem;
 
-        if (problem != null){
+        if (problem != null) {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 16));
 
             marker = map.addMarker(new MarkerOptions().draggable(true).position(problem.getPosition()));
@@ -117,7 +117,7 @@ public class EditProblem extends AppCompatActivity {
                 }
             }
         });
-        if (problem.getStatus().equalsIgnoreCase("SOLVED")){
+        if (problem.getStatus().equalsIgnoreCase("SOLVED")) {
             switchProblemStatus.setChecked(true);
             switcherText.setText(getString(R.string.solved_problem));
             switcherText.setTextColor(getResources().getColor(R.color.green1));
@@ -177,7 +177,7 @@ public class EditProblem extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.done_edit_problem_menu_item:
                 if (new NetworkAvailability(getSystemService(Context.CONNECTIVITY_SERVICE)).
-                        isNetworkAvailable()){
+                        isNetworkAvailable()) {
                     String[] params = new String[10];
 
                     params[0] = getStatus();
@@ -236,8 +236,8 @@ public class EditProblem extends AppCompatActivity {
         });
     }
 
-    private String getStatus(){
-        if (switchProblemStatus.isChecked()){
+    private String getStatus() {
+        if (switchProblemStatus.isChecked()) {
             return "SOLVED";
         } else {
             return "UNSOLVED";

@@ -5,9 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-
-    private String LOG_TAG = ViewPagerAdapter.class.getSimpleName();
-
     private final CharSequence[] Titles; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     private final int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
 

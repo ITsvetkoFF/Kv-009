@@ -27,7 +27,7 @@ public class SharedPreferencesHelper {
         Set<String> set = sPref.getStringSet(mContext.getString(R.string.prefLikedProblems), null);
 
         if (set == null) {
-            set = new HashSet<String>();
+            set = new HashSet<>();
         }
 
         set.add(String.valueOf(problem_id));

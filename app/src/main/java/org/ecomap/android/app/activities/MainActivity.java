@@ -56,7 +56,7 @@ import org.ecomap.android.app.fragments.StaticPagesFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.ui.components.EcoMapSlidingLayer;
+import org.ecomap.android.app.widget.EcoMapSlidingLayer;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.utils.YesNoAlertDialog;
@@ -122,13 +122,10 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         super.onCreate(savedInstanceState);
 
         int firstLoadedFragment;
-        if(checkPlayServices())
-        {
+        if (checkPlayServices()) {
             firstLoadedFragment = NAV_MAP;
-        }
-        else
-        {
-            firstLoadedFragment =NAV_FILTERS;
+        } else {
+            firstLoadedFragment = NAV_FILTERS;
         }
 
         setContentView(R.layout.activity_main);
@@ -168,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         CookieHandler.setDefault(cookieManager);
         initUserIdFromCookies();
 
-        if (isUserIdSet()){
+        if (isUserIdSet()) {
             User.getInstance(SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.FIRST_NAME_KEY, ""),
                     SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.LAST_NAME_KEY, ""),
                     SharedPreferencesHelper.getStringPref(this, getResources().getString(R.string.fileNamePreferences), MainActivity.EMAIL_KEY, ""),
@@ -225,12 +222,12 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         super.onResume();
 
         mFragment = mFragmentManager.findFragmentByTag(EcoMapFragment.class.getSimpleName());
-        ecoMapFragment = (EcoMapFragment)mFragment;
+        ecoMapFragment = (EcoMapFragment) mFragment;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        if(mFragment != null) {
+        if (mFragment != null) {
             outState.putString(LAST_FRAGMENT_TAG, mFragment.getTag());
         }
         super.onSaveInstanceState(outState);
@@ -239,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         String tag = savedInstanceState.getString(LAST_FRAGMENT_TAG, null);
-        if(tag != null){
+        if (tag != null) {
             mFragment = mFragmentManager.findFragmentByTag(tag);
         }
         super.onRestoreInstanceState(savedInstanceState);
@@ -340,31 +337,31 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     @Override
     public void onBackPressed() {
 
-        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return;
         }
 
         mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
 
-        if(mFragment != null && mFragment.getClass() == EcoMapFragment.class){
-            EcoMapFragment frag = (EcoMapFragment)mFragment;
+        if (mFragment != null && mFragment.getClass() == EcoMapFragment.class) {
+            EcoMapFragment frag = (EcoMapFragment) mFragment;
 
             if (frag.isAddproblemModeIsEnabled()) {
                 EcoMapFragment.disableAddProblemMode();
                 return;
             }
 
-            if(frag.mSlidingLayer.isOpened()) {
+            if (frag.mSlidingLayer.isOpened()) {
                 frag.mSlidingLayer.openPreview(true);
                 return;
-            }else if(frag.mSlidingLayer.isInPreviewMode()){
+            } else if (frag.mSlidingLayer.isInPreviewMode()) {
                 frag.mSlidingLayer.closeLayer(true);
                 return;
             }
         }
 
-        if (mFragmentManager.getBackStackEntryCount() > 1 ) {
+        if (mFragmentManager.getBackStackEntryCount() > 1) {
             super.onBackPressed();
 
             mFragment = mFragmentManager.findFragmentById(R.id.content_frame);
@@ -373,7 +370,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 updateNavigationViewPosition();
             }
 
-        } else{
+        } else {
 
             mBackPressingCount++;
             if (System.currentTimeMillis() - mLastBackPressMillis > 1500) {
@@ -412,12 +409,13 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         filterCondition = s;
         selectItem(NAV_MAP);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case LoginFragment.RC_SIGN_IN:
                 Fragment loginFragment = mFragmentManager.findFragmentByTag("login_layout");
-                if(loginFragment != null){
+                if (loginFragment != null) {
                     loginFragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
@@ -450,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 tag = StatisticsFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
 
-                if(mFragment == null) {
+                if (mFragment == null) {
                     mFragment = new StatisticsFragment();
                 }
                 invalidateOptionsMenu();
@@ -469,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 tag = Top10TabFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
 
-                if(mFragment == null){
+                if (mFragment == null) {
                     mFragment = new Top10TabFragment();
                 }
                 invalidateOptionsMenu();
@@ -484,8 +482,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                     break;
                 } else {
                     //if (mFragment.getClass() != LoginFragment.class) {
-                        new LoginFragment().show(mFragmentManager, "login_layout");
-                        stop = true;
+                    new LoginFragment().show(mFragmentManager, "login_layout");
+                    stop = true;
                     //}
                 }
                 break;
@@ -494,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
                 tag = FiltersFragment.class.getSimpleName();
                 mFragment = mFragmentManager.findFragmentByTag(tag);
 
-                if(mFragment == null) {
+                if (mFragment == null) {
                     mFragment = new FiltersFragment();
                 }
                 invalidateOptionsMenu();
@@ -553,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         MainActivity.userId = userId;
     }
 
-    public void updateNavigationViewPosition(){
+    public void updateNavigationViewPosition() {
 
         if (mFragment != null) {
             mNavigationView.getMenu().getItem(fragmentsIndexes.get(mFragment.getClass())).setChecked(true);
@@ -571,8 +569,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     }
 
     public static boolean isUserIsAuthorized() {
-        boolean userIsAuthorized = false;
-        return userIsAuthorized || getUserId() != null;
+        return getUserId() != null;
     }
 
     public static void changeAuthorizationState() {
@@ -626,7 +623,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
     }
 
-    public static EcoMapFragment getEcoMapFragment(){
+    public static EcoMapFragment getEcoMapFragment() {
         return ecoMapFragment;
     }
 }

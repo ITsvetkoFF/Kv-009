@@ -27,9 +27,9 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.sync.AddProblemTask;
+import org.ecomap.android.app.tasks.AddProblemTask;
 import org.ecomap.android.app.sync.UploadingServiceSession;
-import org.ecomap.android.app.ui.components.NonScrollableListView;
+import org.ecomap.android.app.widget.NonScrollableListView;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
@@ -237,11 +237,6 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     protected void onStop() {
         mServiceSession.doUnbindService();
         super.onStop();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
     @Override

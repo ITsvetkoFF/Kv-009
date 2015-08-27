@@ -1,4 +1,4 @@
-package org.ecomap.android.app.ui.components;
+package org.ecomap.android.app.widget;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.wunderlist.slidinglayer.SlidingLayer;
 
-public class EcoMapSlidingLayer extends SlidingLayer{
+public class EcoMapSlidingLayer extends SlidingLayer {
 
     private final Context mContext;
 

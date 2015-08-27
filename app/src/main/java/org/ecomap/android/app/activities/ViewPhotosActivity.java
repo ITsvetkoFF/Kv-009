@@ -62,7 +62,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int position = intent.getIntExtra(IMAGE_POSITION, 0);
         Parcelable[] photoEntries = intent.getParcelableArrayExtra(PHOTO_ENTRY);
-        ArrayList<Parcelable> mImagesURLArray = new ArrayList<Parcelable>(Arrays.asList(photoEntries));
+        ArrayList<Parcelable> mImagesURLArray = new ArrayList<>(Arrays.asList(photoEntries));
 
         if (savedInstanceState == null) {
 
@@ -96,8 +96,6 @@ public class ViewPhotosActivity extends AppCompatActivity {
     }
 
     public static class ImagePagerFragment extends Fragment implements ZoomableImageView.OnSingleTouchListener {
-
-        ViewPager mViewPager;
         ActionBar mActionBar;
 
         @Override
@@ -242,7 +240,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
             if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
 
-                final ProblemPhotoEntry problemPhotoEntry = (ProblemPhotoEntry)mImagesURLArray.get(position);
+                final ProblemPhotoEntry problemPhotoEntry = (ProblemPhotoEntry) mImagesURLArray.get(position);
                 final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/photos/" + problemPhotoEntry.getImgURL();
 
                 final String caption = problemPhotoEntry.getCaption() == null ? "" : problemPhotoEntry.getCaption();

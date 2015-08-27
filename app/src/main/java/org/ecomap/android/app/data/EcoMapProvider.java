@@ -74,7 +74,7 @@ public class EcoMapProvider extends ContentProvider {
         }
 
         Context c = getContext();
-        if (c != null){
+        if (c != null) {
             ContentResolver cr = c.getContentResolver();
             retCursor.setNotificationUri(cr, uri);
         }
@@ -106,9 +106,8 @@ public class EcoMapProvider extends ContentProvider {
 
         switch (match) {
             case PROBLEMS: {
-                normalizeDate(values);
                 long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = EcoMapContract.ProblemsEntry.buildProblemsUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
@@ -116,7 +115,7 @@ public class EcoMapProvider extends ContentProvider {
             }
             case RESOURCES: {
                 long _id = db.insert(EcoMapContract.ResourcesEntry.TABLE_NAME, null, values);
-                if ( _id > 0 )
+                if (_id > 0)
                     returnUri = EcoMapContract.ResourcesEntry.buildResourcesUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
@@ -127,7 +126,7 @@ public class EcoMapProvider extends ContentProvider {
         }
 
         Context c = getContext();
-        if (c != null){
+        if (c != null) {
             ContentResolver cr = c.getContentResolver();
             cr.notifyChange(uri, null);
         }
@@ -141,7 +140,7 @@ public class EcoMapProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
         // this makes delete all rows return the number of rows deleted
-        if ( null == selection ) selection = "1";
+        if (null == selection) selection = "1";
         switch (match) {
             case PROBLEMS:
                 rowsDeleted = db.delete(
@@ -158,19 +157,13 @@ public class EcoMapProvider extends ContentProvider {
         if (rowsDeleted != 0) {
 
             Context c = getContext();
-            if (c != null){
+            if (c != null) {
                 ContentResolver cr = c.getContentResolver();
                 cr.notifyChange(uri, null);
             }
 
         }
         return rowsDeleted;
-    }
-
-    private void normalizeDate(ContentValues values) {
-        // normalize the date value
-        /*if (values.containsKey(EcoMapContract.ProblemsEntry.COLUMN_DATE)) {
-        }*/
     }
 
     @Override
@@ -181,7 +174,6 @@ public class EcoMapProvider extends ContentProvider {
 
         switch (match) {
             case PROBLEMS:
-                normalizeDate(values);
                 rowsUpdated = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
@@ -196,7 +188,7 @@ public class EcoMapProvider extends ContentProvider {
         if (rowsUpdated != 0) {
 
             Context c = getContext();
-            if (c != null){
+            if (c != null) {
                 ContentResolver cr = c.getContentResolver();
                 cr.notifyChange(uri, null);
             }
@@ -204,6 +196,7 @@ public class EcoMapProvider extends ContentProvider {
         }
         return rowsUpdated;
     }
+
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -231,7 +224,7 @@ public class EcoMapProvider extends ContentProvider {
                 }
 
                 Context c = getContext();
-                if (c != null){
+                if (c != null) {
                     ContentResolver cr = c.getContentResolver();
                     cr.notifyChange(uri, null);
                 }
@@ -241,6 +234,7 @@ public class EcoMapProvider extends ContentProvider {
                 return super.bulkInsert(uri, values);
         }
     }
+
     @Override
     @TargetApi(11)
     public void shutdown() {
