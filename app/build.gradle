@@ -51,7 +51,22 @@ dependencies {
         mavenCentral()
         maven { url "https://jitpack.io" }
     }
-    compile 'com.github.donglua:PhotoPicker:v0.2.0'
+
+    compile 'me.iwf.photopicker:PhotoPicker:0.2.7@aar'
+    /**
+     * PhotoPicker relies on these:
+     *     compile 'com.android.support:appcompat-v7:22.2.0'
+     *     compile 'com.android.support:recyclerview-v7:22.2.0'
+     *     compile 'com.nineoldandroids:library:2.4.0'
+     *     compile 'com.android.support:design:22.2.0'
+     *     compile 'com.github.bumptech.glide:glide:3.6.0'
+     *
+     * https://github.com/donglua/PhotoPicker
+     */
+    compile 'com.github.bumptech.glide:glide:3.6.0'
+    compile 'com.android.support:recyclerview-v7:22.2.1'
+    /**/
+
     //pie chart
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
