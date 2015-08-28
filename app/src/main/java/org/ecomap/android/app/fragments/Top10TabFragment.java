@@ -14,7 +14,6 @@ import org.ecomap.android.app.tabs.ViewPagerAdapter;
 
 public class Top10TabFragment extends Fragment {
 
-    private final CharSequence[] Titles = {getString(R.string.top_popular), getString(R.string.top_important), getString(R.string.top_discussed)};
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,7 +26,8 @@ public class Top10TabFragment extends Fragment {
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         int numboftabs = 3;
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), Titles, numboftabs);
+        final CharSequence[] titles = {getString(R.string.top_popular), getString(R.string.top_important), getString(R.string.top_discussed)};
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), titles, numboftabs);
 
         // Assigning ViewPager View and setting the adapter
         ViewPager pager = (ViewPager) v.findViewById(R.id.pager);

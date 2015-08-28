@@ -64,21 +64,23 @@ public class ViewPhotosActivity extends AppCompatActivity {
         Parcelable[] photoEntries = intent.getParcelableArrayExtra(PHOTO_ENTRY);
         ArrayList<Parcelable> mImagesURLArray = new ArrayList<>(Arrays.asList(photoEntries));
 
-        if (savedInstanceState == null) {
+        FragmentManager fm = getSupportFragmentManager();
+        ImagePagerFragment fragment = (ImagePagerFragment) fm.findFragmentByTag(ImagePagerFragment.class.getSimpleName());
 
-            ImagePagerFragment fragment = new ImagePagerFragment();
+        if (fragment == null) {
+
+            fragment = new ImagePagerFragment();
 
             Bundle args = new Bundle();
             args.putInt(IMAGE_POSITION, position);
             args.putParcelableArrayList(PHOTO_ENTRY, mImagesURLArray);
             fragment.setArguments(args);
 
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction()
-                    .add(R.id.content_frame, fragment, ImagePagerFragment.class.getSimpleName())
-                    .commit();
-
         }
+
+        fm.beginTransaction()
+                .replace(R.id.content_frame, fragment, ImagePagerFragment.class.getSimpleName())
+                .commit();
 
     }
 
@@ -167,11 +169,11 @@ public class ViewPhotosActivity extends AppCompatActivity {
             this.options = new DisplayImageOptions.Builder()
                     .showImageForEmptyUri(R.drawable.ic_empty)
                     .showImageOnFail(R.drawable.ic_error)
-                    .resetViewBeforeLoading(true)
+                    //.resetViewBeforeLoading(true)
                     .cacheOnDisk(true)
                     .cacheInMemory(false)
                     .imageScaleType(ImageScaleType.EXACTLY)
-                    .bitmapConfig(Bitmap.Config.ARGB_8888)
+                    .bitmapConfig(Bitmap.Config.RGB_565)
                     .considerExifParams(true)
                     .displayer(new FadeInBitmapDisplayer(300))
                     .build();

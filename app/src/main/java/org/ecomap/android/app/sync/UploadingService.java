@@ -26,7 +26,6 @@ import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//import org.ecomap.android.app.IRemoteServiceCallback;
 
 /**
  * Created by y.ridkous@gmail.com on 03.07.2015.
@@ -35,7 +34,7 @@ import java.util.HashMap;
  */
 public class UploadingService extends Service {
 
-    private boolean DEBUG = true;
+    private static boolean DEBUG = true;
 
     private static final String LOG = UploadingService.class.getSimpleName();
 
@@ -54,10 +53,11 @@ public class UploadingService extends Service {
     /**
      * Target we publish for clients to send messages to IncomingHandler.
      */
-    private final Messenger mMessenger = new Messenger(new IncomingHandler());
+
     private static final int UPLOADING_NOTIFICATION_ID = 1;
 
     private final ServiceClientManager scManager = new ServiceClientManager();
+    private final Messenger mMessenger = new Messenger(new IncomingHandler(scManager));
 
     /**
      * For showing and hiding our notification.
@@ -338,7 +338,13 @@ public class UploadingService extends Service {
     /**
      * Handler of incoming messages from clients.
      */
-    private class IncomingHandler extends Handler {
+    private static class IncomingHandler extends Handler {
+        private ServiceClientManager scManager;
+
+        public IncomingHandler(ServiceClientManager scManager) {
+            this.scManager = scManager;
+        }
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
