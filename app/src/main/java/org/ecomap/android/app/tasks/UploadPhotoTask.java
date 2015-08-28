@@ -2,8 +2,6 @@ package org.ecomap.android.app.tasks;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -53,22 +51,22 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
         int maxBufferSize = 1024 * 1024;
         File sourceFile = new File(imagePath);
 
-        Bitmap b = BitmapFactory.decodeFile(imagePath);
-
-        int width, height;
-
-        if (b.getHeight() > b.getWidth() && b.getHeight() > 1600 && b.getWidth() > 1200){
-            height = 1600;
-            width = 1200;
-        } else if (b.getHeight() > 1200 && b.getWidth() > 1600) {
-            height = 1200;
-            width = 1600;
-        } else {
-            width = b.getWidth();
-            height = b.getHeight();
-        }
-
-        Bitmap sb = Bitmap.createScaledBitmap(b, width, height, true);
+//        Bitmap b = BitmapFactory.decodeFile(imagePath);
+//
+//        int width, height;
+//
+//        if (b.getHeight() > b.getWidth() && b.getHeight() > 1600 && b.getWidth() > 1200){
+//            height = 1600;
+//            width = 1200;
+//        } else if (b.getHeight() > 1200 && b.getWidth() > 1600) {
+//            height = 1200;
+//            width = 1600;
+//        } else {
+//            width = b.getWidth();
+//            height = b.getHeight();
+//        }
+//
+//        Bitmap sb = Bitmap.createScaledBitmap(b, width, height, true);
 
         try {
             FileInputStream fileInputStream = new FileInputStream(sourceFile);

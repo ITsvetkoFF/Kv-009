@@ -33,8 +33,15 @@ public class StaticPagesFragment extends Fragment {
         ListView listView = (ListView) view.findViewById(R.id.static_pages_list);
         ListCursorAdapter listCursorAdapter = new ListCursorAdapter(getActivity(), resourcesCusor);
         listView.setAdapter(listCursorAdapter);
-        getActivity().setTitle(getString(R.string.item_resources));
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getString(R.string.item_resources));
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

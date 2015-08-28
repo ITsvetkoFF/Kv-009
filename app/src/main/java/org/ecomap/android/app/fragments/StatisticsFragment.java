@@ -44,12 +44,19 @@ public class StatisticsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getString(R.string.nav_titles_statistics));
+        getActivity().invalidateOptionsMenu();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.statistics_layout, container, false);
 
-        getActivity().setTitle(getString(R.string.nav_titles_statistics));
         //getActivity().invalidateOptionsMenu();
 
         one_day = (TextView) view.findViewById(R.id.one_day);

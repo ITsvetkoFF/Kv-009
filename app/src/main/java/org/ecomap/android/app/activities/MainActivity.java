@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mTitle;
     private Toolbar toolbar;
-    private Fragment mFragment;
+    private Fragment mFragment, tmpFragment;
     private FragmentManager mFragmentManager;
     private int mBackPressingCount;
     private long mLastBackPressMillis;
@@ -221,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
     protected void onResume() {
         super.onResume();
 
-        mFragment = mFragmentManager.findFragmentByTag(EcoMapFragment.class.getSimpleName());
-        ecoMapFragment = (EcoMapFragment) mFragment;
+        tmpFragment = mFragmentManager.findFragmentByTag(EcoMapFragment.class.getSimpleName());
+        ecoMapFragment = (EcoMapFragment) tmpFragment;
     }
 
     @Override
@@ -369,6 +369,8 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
             if (mFragment.getClass() != FiltersFragment.class) {
                 updateNavigationViewPosition();
             }
+
+            invalidateOptionsMenu();
 
         } else {
 

@@ -22,9 +22,6 @@ public class Top10TabFragment extends Fragment {
 
         CharSequence[] titles = new CharSequence[]{getString(R.string.top_popular), getString(R.string.top_important), getString(R.string.top_discussed)};
 
-        getActivity().setTitle(getActivity().getString(R.string.nav_titles_top10));
-        //getActivity().invalidateOptionsMenu();
-
         // Creating The ViewPagerAdapter and Passing Fragment Manager, titles fot the Tabs and Number Of Tabs.
         int numboftabs = 3;
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager(), titles, numboftabs);
@@ -50,4 +47,11 @@ public class Top10TabFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getActivity().setTitle(getActivity().getString(R.string.nav_titles_top10));
+        getActivity().invalidateOptionsMenu();
+    }
 }
