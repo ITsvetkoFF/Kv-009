@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -64,21 +64,23 @@ public class ViewPhotosActivity extends AppCompatActivity {
         Parcelable[] photoEntries = intent.getParcelableArrayExtra(PHOTO_ENTRY);
         ArrayList<Parcelable> mImagesURLArray = new ArrayList<>(Arrays.asList(photoEntries));
 
-        if (savedInstanceState == null) {
+        FragmentManager fm = getSupportFragmentManager();
+        ImagePagerFragment fragment = (ImagePagerFragment) fm.findFragmentByTag(ImagePagerFragment.class.getSimpleName());
 
-            ImagePagerFragment fragment = new ImagePagerFragment();
+        if (fragment == null) {
+
+            fragment = new ImagePagerFragment();
 
             Bundle args = new Bundle();
             args.putInt(IMAGE_POSITION, position);
             args.putParcelableArrayList(PHOTO_ENTRY, mImagesURLArray);
             fragment.setArguments(args);
 
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction()
-                    .add(R.id.content_frame, fragment, ImagePagerFragment.class.getSimpleName())
-                    .commit();
-
         }
+
+        fm.beginTransaction()
+                .replace(R.id.content_frame, fragment, ImagePagerFragment.class.getSimpleName())
+                .commit();
 
     }
 
@@ -132,7 +134,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
             ArrayList<Parcelable> mImagesURLArray = getArguments().getParcelableArrayList(PHOTO_ENTRY);
 
             ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
-            pager.setAdapter(new ImageAdapter(getActivity(), this, mImagesURLArray));
+            pager.setAdapter(new ImageAdapter(this, mImagesURLArray));
             pager.setCurrentItem(getArguments().getInt(IMAGE_POSITION, 0));
             pager.setPageMargin(getResources().getDimensionPixelOffset(R.dimen.space_between_photos)); ///---------- replace with dimension
             return rootView;
@@ -155,28 +157,25 @@ public class ViewPhotosActivity extends AppCompatActivity {
 
     private static class ImageAdapter extends PagerAdapter {
 
-        private final LayoutInflater inflater;
+        private static final String LOG_TAG = ViewPhotosActivity.class.getSimpleName() + "/" + ImageAdapter.class.getSimpleName();
         private final DisplayImageOptions options;
-        private final Context mContext;
         private final ImagePagerFragment fragment;
         private final List<Parcelable> mImagesURLArray;
 
-        ImageAdapter(Context context, ImagePagerFragment fragment, List<Parcelable> titledPhotos) {
-            this.inflater = LayoutInflater.from(context);
+        ImageAdapter(ImagePagerFragment fragment, List<Parcelable> titledPhotos) {
 
             this.options = new DisplayImageOptions.Builder()
                     .showImageForEmptyUri(R.drawable.ic_empty)
                     .showImageOnFail(R.drawable.ic_error)
-                    .resetViewBeforeLoading(true)
+                    //.resetViewBeforeLoading(true)
                     .cacheOnDisk(true)
                     .cacheInMemory(false)
                     .imageScaleType(ImageScaleType.EXACTLY)
-                    .bitmapConfig(Bitmap.Config.ARGB_8888)
+                    .bitmapConfig(Bitmap.Config.RGB_565)
                     .considerExifParams(true)
                     .displayer(new FadeInBitmapDisplayer(300))
                     .build();
 
-            this.mContext = context;
             this.fragment = fragment;
             this.mImagesURLArray = titledPhotos;
 
@@ -192,19 +191,40 @@ public class ViewPhotosActivity extends AppCompatActivity {
             return mImagesURLArray.size();
         }
 
+
+
+
         @Override
         public Object instantiateItem(ViewGroup view, int position) {
-            View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
-            assert imageLayout != null;
-            final ZoomableImageView imageView = (ZoomableImageView) imageLayout.findViewById(R.id.image);
-            imageView.registerOnSingleTouchListener(fragment);
-            final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
-            final TextView txtImgCaption = (TextView) imageLayout.findViewById(R.id.photoDescription);
+
+            class ViewHolder {
+                ZoomableImageView imageView;
+                ProgressBar spinner;
+                TextView txtImgCaption;
+            }
+
+            final ViewHolder holder;
+            final Context context = view.getContext();
+            //if (view.getTag() == null) {
+
+                View imageLayout = LayoutInflater.from(context).inflate(R.layout.item_pager_image, view, false);
+                assert imageLayout != null;
+                holder = new ViewHolder();
+                holder.imageView = (ZoomableImageView) imageLayout.findViewById(R.id.image);
+                holder.imageView.registerOnSingleTouchListener(fragment);
+                holder.spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
+                holder.txtImgCaption = (TextView) imageLayout.findViewById(R.id.photoDescription);
+
+            //    view.setTag(holder);
+
+            //} else {
+            //    holder = (ViewHolder) view.getTag();
+            //}
 
             SimpleImageLoadingListener MyImageLoadingListener = new SimpleImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
-                    spinner.setVisibility(View.VISIBLE);
+                    holder.spinner.setVisibility(View.VISIBLE);
                 }
 
                 @Override
@@ -227,14 +247,15 @@ public class ViewPhotosActivity extends AppCompatActivity {
                             message = "Unknown error";
                             break;
                     }
-                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-                    spinner.setVisibility(View.GONE);
+                    //Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                    Log.d(LOG_TAG, message);
+                    holder.spinner.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    spinner.setVisibility(View.GONE);
-                    imageView.setImageBitmap(loadedImage);
+                    holder.spinner.setVisibility(View.GONE);
+                    holder.imageView.setImageBitmap(loadedImage);
                 }
             };
 
@@ -244,7 +265,7 @@ public class ViewPhotosActivity extends AppCompatActivity {
                 final String imgURL = EcoMapAPIContract.ECOMAP_HTTP_BASE_URL + "/static/photos/" + problemPhotoEntry.getImgURL();
 
                 final String caption = problemPhotoEntry.getCaption() == null ? "" : problemPhotoEntry.getCaption();
-                txtImgCaption.setText(caption);
+                holder.txtImgCaption.setText(caption);
 
                 ImageLoader.getInstance().loadImage(imgURL, options, MyImageLoadingListener);
             }

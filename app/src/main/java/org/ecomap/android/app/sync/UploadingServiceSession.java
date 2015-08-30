@@ -17,9 +17,11 @@ import android.util.Log;
 
 import org.ecomap.android.app.utils.SnackBarHelper;
 
+import java.lang.ref.WeakReference;
+
 public class UploadingServiceSession {
 
-    private final Context mContext;
+    public Context mContext;
     private final String mHostToken;
 
     /**
@@ -38,10 +40,10 @@ public class UploadingServiceSession {
     private final Messenger mMessenger;
     private final String LOG = UploadingServiceSession.class.getSimpleName();
 
-    public UploadingServiceSession(Context context, String hostToken, Callbacks callbackListener) {
-        this.mContext = context;
+    public UploadingServiceSession(Activity activity, String hostToken, Callbacks callbackListener) {
+        this.mContext = activity.getApplicationContext();
         this.mHostToken = hostToken;
-        this.mMessenger = new Messenger(new IncomingHandler(context, callbackListener));
+        this.mMessenger = new Messenger(new IncomingHandler(new WeakReference<>(activity), new WeakReference<>(callbackListener)));
     }
 
     /**
@@ -49,10 +51,10 @@ public class UploadingServiceSession {
      */
     private static class IncomingHandler extends Handler {
 
-        private final Callbacks callbackListener;
-        private final Context mContext;
+        private final WeakReference<Callbacks> callbackListener;
+        private final WeakReference<Activity> mContext;
 
-        public IncomingHandler(Context mContext, Callbacks callbackListener) {
+        public IncomingHandler(WeakReference<Activity> mContext, WeakReference<Callbacks> callbackListener) {
             this.callbackListener = callbackListener;
             this.mContext = mContext;
         }
@@ -62,10 +64,17 @@ public class UploadingServiceSession {
             switch (msg.what) {
                 case UploadingService.MSG_TASK_FINISHED:
                     Bundle data = msg.getData();
-                    SnackBarHelper.showSuccessSnackBar((Activity) mContext, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
+
+                    if (mContext != null) {
+                        final Activity activity = mContext.get();
+                        if(activity != null)
+                            SnackBarHelper.showSuccessSnackBar(activity, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
+                    }
                     break;
                 case UploadingService.MSG_ALL_TASKS_FINISHED:
-                    callbackListener.allTasksFinished();
+                    if(callbackListener != null && callbackListener.get() != null) {
+                        callbackListener.get().allTasksFinished();
+                    }
                     break;
                 default:
                     super.handleMessage(msg);
