@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.ecomap.android.app.Problem;
+import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.EcoMapDBHelper;
 import org.ecomap.android.app.utils.RESTRequestsHelper;
+
+import java.net.HttpURLConnection;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -62,12 +64,15 @@ public class SendPendingProblemService extends IntentService {
      * request.put("latitude", params[7]);
      * request.put("longitude", params[8]);
      */
-    private void handleActionUploadingProblem(
-            String title, String problem_type_id, String content, String proposal, String latitude, String longitude) {
+    //private void handleActionUploadingProblem(String title, String problem_type_id, String content, String proposal, String latitude, String longitude) {
+    private boolean handleActionUploadingProblem(String[] params) {
 
+        RESTRequestsHelper.Response resp = RESTRequestsHelper.sendProblem(params);
+        if (resp.responseCode == HttpURLConnection.HTTP_OK) {
+            return true;
+        }
 
-        RESTRequestsHelper.Response resp = RESTRequestsHelper.sendProblem("UNSOLVED", "3", title, problem_type_id, content, proposal, "1", latitude, longitude);
-
+        return false;
     }
 
 
@@ -82,7 +87,25 @@ public class SendPendingProblemService extends IntentService {
         if (cursor != null) {
             while (cursor.moveToNext()) {
 
-                Problem p = new Problem(cursor, getApplicationContext());
+                String[] params = new String[10];
+
+                params[0] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_STATUS));
+                params[1] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY));
+                params[2] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_TITLE));
+                params[3] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID));
+                params[4] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_CONTENT));
+                params[5] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROPOSAL));
+                params[6] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID));
+                params[7] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));
+                params[8] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE));
+                params[9] = cursor.getString(cursor.getColumnIndex(EcoMapContract.PendingProblemsEntry.COLUMN_PHOTOS));
+
+                if(handleActionUploadingProblem(params)){
+
+                    //TODO: delete record from pending problems
+
+                }
+
             }
         }
 

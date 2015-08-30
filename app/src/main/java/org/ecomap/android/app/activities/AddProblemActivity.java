@@ -299,6 +299,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 }
 
             } else {
+                //TODO: If network is unavailable add problem in pending tasks
                 SnackBarHelper.showInfoSnackBar(this, R.string.check_internet, Snackbar.LENGTH_LONG);
             }
         } else {
