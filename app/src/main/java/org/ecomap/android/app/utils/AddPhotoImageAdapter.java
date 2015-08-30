@@ -1,6 +1,5 @@
 package org.ecomap.android.app.utils;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.ProgressBar;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -23,18 +23,17 @@ import java.util.List;
 public class AddPhotoImageAdapter extends BaseAdapter {
 
     private List<String> mImagesURLArray;
-    private final LayoutInflater inflater;
     private final DisplayImageOptions options;
 
-    public AddPhotoImageAdapter(Context c, List<String> titledPhotos) {
+    public AddPhotoImageAdapter(List<String> titledPhotos) {
 
         this.mImagesURLArray = titledPhotos;
-        this.inflater = LayoutInflater.from(c);
 
         this.options = new DisplayImageOptions.Builder()
-                //.showImageOnLoading(R.drawable.ic_stub)
                 .showImageForEmptyUri(R.drawable.ic_empty)
-                //.showImageOnFail(R.drawable.ic_action_refresh)
+                .showImageOnFail(R.drawable.ic_error)
+                .resetViewBeforeLoading(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
                 .cacheInMemory(false)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
@@ -74,7 +73,7 @@ public class AddPhotoImageAdapter extends BaseAdapter {
 
         if (view == null) {
 
-            view = inflater.inflate(R.layout.add_problem_photo_item, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.add_problem_photo_item, parent, false);
             holder = new ViewHolder();
 
             assert view != null;

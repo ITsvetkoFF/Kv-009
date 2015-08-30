@@ -21,7 +21,8 @@ public class NonScrollableListView extends ListView {
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int heightMeasureSpec_custom = MeasureSpec.makeMeasureSpec(
-                Integer.MAX_VALUE >> 2, MeasureSpec.AT_MOST);
+                MEASURED_SIZE_MASK //Integer.MAX_VALUE >> 2
+                , MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec_custom);
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = getMeasuredHeight();

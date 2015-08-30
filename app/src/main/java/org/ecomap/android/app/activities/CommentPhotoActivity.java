@@ -17,24 +17,34 @@ import android.widget.Toast;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.tasks.GetPhotosTask;
 import org.ecomap.android.app.sync.UploadingServiceSession;
-import org.ecomap.android.app.widget.NonScrollableListView;
+import org.ecomap.android.app.tasks.GetPhotosTask;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.widget.NonScrollableListView;
 
 import java.util.ArrayList;
 
 public class CommentPhotoActivity extends AppCompatActivity {
 
-    private NonScrollableListView nonScrollableListView;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private int problem_id;
 
     private UploadingServiceSession uploadingSession;
 
+
+    private static class CallbackListener implements UploadingServiceSession.Callbacks {
+
+        @Override
+        public void allTasksFinished() {
+            new GetPhotosTask(MainActivity.getEcoMapFragment()).execute(EcoMapFragment.getLastOpenProblem().getId());
+        }
+
+    }
+
     public CommentPhotoActivity() {
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,16 +68,14 @@ public class CommentPhotoActivity extends AppCompatActivity {
             selectedPhotos = extras.getStringArrayList("selectedPhotos");
         }
 
-        nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
-        AddPhotoImageAdapter imgAdapter = new AddPhotoImageAdapter(this, selectedPhotos);
+//        NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
+//        nestedScrollView.setFillViewport(true);
+//        nestedScrollView.setMeasureAllChildren(true);
+        NonScrollableListView nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
+        AddPhotoImageAdapter imgAdapter = new AddPhotoImageAdapter(selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
-        uploadingSession = new UploadingServiceSession(this, getClass().getCanonicalName(), new UploadingServiceSession.Callbacks() {
-            @Override
-            public void allTasksFinished() {
-                new GetPhotosTask(MainActivity.getEcoMapFragment()).execute(EcoMapFragment.getLastOpenProblem().getId());
-            }
-        });
+        uploadingSession = new UploadingServiceSession(this, getClass().getCanonicalName(), new CallbackListener());
 
 
     }
@@ -81,6 +89,7 @@ public class CommentPhotoActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         uploadingSession.doUnbindService();
+        uploadingSession.mContext = null;
         super.onStop();
     }
 
@@ -124,7 +133,7 @@ public class CommentPhotoActivity extends AppCompatActivity {
 
         ArrayList<ProblemPhotoEntry> photos = new ArrayList<>();
 
-        nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
+        NonScrollableListView nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
 
         uploadingSession.doStartService();
 

@@ -181,7 +181,7 @@ public class CommentsFragment extends Fragment {
             }
         });
 
-        mCommentsAdapter = new CommentsAdapter<>(getActivity(), new ArrayList<CommentEntry>());
+        mCommentsAdapter = new CommentsAdapter<>(new ArrayList<CommentEntry>());
 
         lstComments.setAdapter(mCommentsAdapter);
         new AsyncRequestComments().execute(mProblem.getId());
@@ -205,11 +205,9 @@ public class CommentsFragment extends Fragment {
 
     private class CommentsAdapter<T extends CommentEntry> extends BaseAdapter {
 
-        private final Context mContext;
         private List<T> mCommentsArray;
 
-        public CommentsAdapter(Context mContext, List<T> commentsArray) {
-            this.mContext = mContext;
+        public CommentsAdapter(List<T> commentsArray) {
             updateDataSet(commentsArray);
         }
 
@@ -231,8 +229,10 @@ public class CommentsFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View view;
+            final Context context = parent.getContext();
+
             if (convertView == null) {
-                view = LayoutInflater.from(mContext).inflate(R.layout.item_comments_listview, parent, false);
+                view = LayoutInflater.from(context).inflate(R.layout.item_comments_listview, parent, false);
             } else {
                 view = convertView;
             }
@@ -270,10 +270,10 @@ public class CommentsFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                            builder.setMessage(mContext.getString(R.string.delete_comment_message));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setMessage(context.getString(R.string.delete_comment_message));
 
-                            builder.setPositiveButton(mContext.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            builder.setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
@@ -282,7 +282,7 @@ public class CommentsFragment extends Fragment {
 
                                 }
                             });
-                            builder.setNegativeButton(mContext.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            builder.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();

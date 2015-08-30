@@ -27,13 +27,13 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.fragments.EcoMapFragment;
-import org.ecomap.android.app.tasks.AddProblemTask;
 import org.ecomap.android.app.sync.UploadingServiceSession;
-import org.ecomap.android.app.widget.NonScrollableListView;
+import org.ecomap.android.app.tasks.AddProblemTask;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.SnackBarHelper;
+import org.ecomap.android.app.widget.NonScrollableListView;
 
 import java.util.ArrayList;
 
@@ -91,7 +91,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
 
         setMarkerToMap();
 
-        mServiceSession = new UploadingServiceSession(mContext, getClass().getCanonicalName(), this);
+        mServiceSession = new UploadingServiceSession(this, getClass().getCanonicalName(), this);
 
         problemTitle = (EditText) findViewById(R.id.problemTitle);
         problemDescription = (EditText) findViewById(R.id.problemDescription);
@@ -110,7 +110,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         Button addPhotoButton = (Button) findViewById(R.id.add_photo);
 
         nonScrollableListView = (NonScrollableListView) findViewById(R.id.add_problem_non_scrollable_list_view);
-        imgAdapter = new AddPhotoImageAdapter(mContext, selectedPhotos);
+        imgAdapter = new AddPhotoImageAdapter(selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.add_problem_toolbar);
@@ -295,7 +295,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             if (new NetworkAvailability(mContext.getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
 
                 if (mServiceSession.isBound()) {
-                    new AddProblemTask(mContext, mServiceSession).execute(params);
+                    new AddProblemTask(getApplicationContext(), mServiceSession).execute(params);
                 }
 
             } else {
