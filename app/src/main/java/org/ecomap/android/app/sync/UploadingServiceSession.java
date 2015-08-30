@@ -43,7 +43,7 @@ public class UploadingServiceSession {
     public UploadingServiceSession(Activity activity, String hostToken, Callbacks callbackListener) {
         this.mContext = activity.getApplicationContext();
         this.mHostToken = hostToken;
-        this.mMessenger = new Messenger(new IncomingHandler(new WeakReference<Activity>(activity), callbackListener));
+        this.mMessenger = new Messenger(new IncomingHandler(new WeakReference<>(activity), new WeakReference<>(callbackListener)));
     }
 
     /**
@@ -51,10 +51,10 @@ public class UploadingServiceSession {
      */
     private static class IncomingHandler extends Handler {
 
-        private final Callbacks callbackListener;
-        private WeakReference<Activity> mContext;
+        private final WeakReference<Callbacks> callbackListener;
+        private final WeakReference<Activity> mContext;
 
-        public IncomingHandler(WeakReference<Activity> mContext, Callbacks callbackListener) {
+        public IncomingHandler(WeakReference<Activity> mContext, WeakReference<Callbacks> callbackListener) {
             this.callbackListener = callbackListener;
             this.mContext = mContext;
         }
@@ -64,13 +64,17 @@ public class UploadingServiceSession {
             switch (msg.what) {
                 case UploadingService.MSG_TASK_FINISHED:
                     Bundle data = msg.getData();
-                    final Activity activity = mContext.get();
-                    if (mContext != null && activity != null) {
-                        SnackBarHelper.showSuccessSnackBar(activity, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
+
+                    if (mContext != null) {
+                        final Activity activity = mContext.get();
+                        if(activity != null)
+                            SnackBarHelper.showSuccessSnackBar(activity, data.getString("PHOTO_URL") + " uploaded.", Snackbar.LENGTH_SHORT);
                     }
                     break;
                 case UploadingService.MSG_ALL_TASKS_FINISHED:
-                    callbackListener.allTasksFinished();
+                    if(callbackListener != null && callbackListener.get() != null) {
+                        callbackListener.get().allTasksFinished();
+                    }
                     break;
                 default:
                     super.handleMessage(msg);

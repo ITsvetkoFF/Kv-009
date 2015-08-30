@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,13 +23,13 @@ import java.util.List;
 
 public class GetPhotosTask extends AsyncTask<Integer, Integer, List<ProblemPhotoEntry>> {
 
-    private final EcoMapFragment ecoMapFragment;
+    private final WeakReference<EcoMapFragment> mEcoMapFragment;
     private final String LOG_TAG = GetPhotosTask.class.getSimpleName();
 
     private String JSONStr;
 
     public GetPhotosTask(EcoMapFragment ecoMapFragment) {
-        this.ecoMapFragment = ecoMapFragment;
+        this.mEcoMapFragment = new WeakReference<>(ecoMapFragment);
     }
 
     @Override
@@ -121,6 +122,8 @@ public class GetPhotosTask extends AsyncTask<Integer, Integer, List<ProblemPhoto
 
     @Override
     protected void onPostExecute(List<ProblemPhotoEntry> imgagesArray) {
-        ecoMapFragment.imgAdapter.updateDataSet(imgagesArray);
+        if(mEcoMapFragment != null && mEcoMapFragment.get() != null) {
+            mEcoMapFragment.get().imgAdapter.updateDataSet(imgagesArray);
+        }
     }
 }

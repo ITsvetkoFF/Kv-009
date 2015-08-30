@@ -45,14 +45,14 @@ import org.ecomap.android.app.activities.CommentPhotoActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
-import org.ecomap.android.app.tasks.AddVoteTask;
 import org.ecomap.android.app.sync.EcoMapService;
+import org.ecomap.android.app.tasks.AddVoteTask;
 import org.ecomap.android.app.tasks.GetPhotosTask;
-import org.ecomap.android.app.widget.EcoMapSlidingLayer;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.SnackBarHelper;
+import org.ecomap.android.app.widget.EcoMapSlidingLayer;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
 
 import java.util.ArrayList;
