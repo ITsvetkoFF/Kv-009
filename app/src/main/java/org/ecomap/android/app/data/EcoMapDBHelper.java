@@ -36,7 +36,8 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
 
         // Create a table to hold problems.
         final String SQL_CREATE_PROBLEMS_TABLE = "CREATE TABLE " + ProblemsEntry.TABLE_NAME + " (" +
-                ProblemsEntry._ID + " INTEGER PRIMARY KEY," +
+                ProblemsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                ProblemsEntry.COLUMN_PROBLEM_ID + " INTEGER PRIMARY KEY," +
                 ProblemsEntry.COLUMN_STATUS + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                 ProblemsEntry.COLUMN_USER_FIRST_NAME + " TEXT NOT NULL, " +

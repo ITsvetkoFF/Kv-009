@@ -214,7 +214,8 @@ public class EcoMapService extends IntentService {
 
                     ContentValues mapValues = new ContentValues();
 
-                    mapValues.put(EcoMapContract.ProblemsEntry._ID, problem_id);
+                    //mapValues.put(EcoMapContract.ProblemsEntry._ID, problem_id);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID, problem_id);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_TITLE, title);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE, latitude);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE, longitude);

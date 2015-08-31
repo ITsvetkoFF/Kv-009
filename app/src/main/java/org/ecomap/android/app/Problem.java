@@ -49,7 +49,7 @@ public class Problem implements ClusterItem, Parcelable {
 
         this.liked = false;
 
-        this.id = cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry._ID));
+        this.id = cursor.getInt(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID));
 
         double latitude = cursor.getDouble(cursor
                 .getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE));

@@ -35,6 +35,8 @@ public class EcoMapContract {
         // Table name
         public static final String TABLE_NAME = "problems";
 
+        public static final String COLUMN_PROBLEM_ID = "problem_id";
+
         //status of a problem, String
         public static final String COLUMN_STATUS = "status";
         //title, String

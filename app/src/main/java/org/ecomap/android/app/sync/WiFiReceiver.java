@@ -23,7 +23,8 @@ public class WiFiReceiver extends BroadcastReceiver {
             //android.net.NetworkInfo mobile = conMngr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if(wifi.isConnected()){
 
-
+                Intent serviceIntent = new Intent(context, SendPendingProblemService.class);
+                context.startService(serviceIntent);
 
             }
         }

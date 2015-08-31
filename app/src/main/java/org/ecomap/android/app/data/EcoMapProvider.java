@@ -207,8 +207,8 @@ public class EcoMapProvider extends ContentProvider {
                 int returnCount = 0;
                 try {
                     for (ContentValues value : values) {
-                        String str = String.valueOf(value.get(EcoMapContract.ProblemsEntry._ID));
-                        long _id = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, value, "_id = ?", new String[]{str});
+                        String str = String.valueOf(value.get(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID));
+                        long _id = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, value, "problem_id = ?", new String[]{str});
                         //long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, value);
 
                         if (_id != -1 && _id != 0) {
