@@ -376,6 +376,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 }
                 EcoMapFragment.disableAddProblemMode();
                 finish();
+
                 SnackBarHelper.showInfoSnackBar(this, R.string.check_internet, Snackbar.LENGTH_LONG);
             }
         } else {

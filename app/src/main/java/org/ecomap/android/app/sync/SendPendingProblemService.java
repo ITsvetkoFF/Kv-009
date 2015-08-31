@@ -114,7 +114,7 @@ public class SendPendingProblemService extends IntentService {
                 params[9] = cursor.getString(cursor.getColumnIndex(EcoMapContract.PendingProblemsEntry.COLUMN_PHOTOS));
 
                 //upload problem
-                RESTRequestsHelper.Response resp = RESTRequestsHelper.sendProblem(params);
+                final RESTRequestsHelper.Response resp = RESTRequestsHelper.sendProblem(params);
                 if (resp.responseCode == HttpURLConnection.HTTP_OK) {
 
                     if (resp.problemID > 0) {
@@ -126,18 +126,21 @@ public class SendPendingProblemService extends IntentService {
                         int num = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, cv, EcoMapContract.ProblemsEntry._ID + " = ?", new String[]{s});
                         Log.d(LOG_TAG, "updated: " + num);
 
+                        //problem inner _id
+                        String _id = cursor.getString(cursor.getColumnIndex("_id"));
+
                         //upload photos
                         try {
                             JSONArray jArr = new JSONArray(params[9]);
                             for (int i = 0; i < jArr.length(); i++) {
                                 JSONObject obj = jArr.getJSONObject(i);
-                                String photo_path = obj.getString("path");
+                                final String photo_path = obj.getString("path");
                                 String photo_comment = obj.getString("comment");
 
                                 new UploadPhotoTask(getApplicationContext(), resp.problemID, photo_path, photo_comment){
                                     @Override
                                     protected void onPostExecute(Void o) {
-
+                                        Log.d(LOG_TAG, "uploading finished: " + photo_path);
                                     }
                                 }.execute();
                             }
@@ -147,8 +150,8 @@ public class SendPendingProblemService extends IntentService {
 
 
                         //all task done - delete pending
-                        num = db.delete(EcoMapContract.PendingProblemsEntry.TABLE_NAME, EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID + " = ?", new String[]{String.valueOf(resp.problemID)});
-                        Log.d(LOG_TAG, "deleted: " + num);
+                        num = db.delete(EcoMapContract.PendingProblemsEntry.TABLE_NAME, EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID + " = ?", new String[]{_id});
+                        Log.d(LOG_TAG, "deleted: " + num + ", has to: " + resp.problemID);
                     }
                 }else{
                     Log.d(LOG_TAG, "responseCode: " + resp.responseCode);
@@ -161,6 +164,14 @@ public class SendPendingProblemService extends IntentService {
                 SharedPreferencesHelper.setFlagPendingProblemsOff();
                 cur.close();
             }else if(cur != null){
+                while (cur.moveToNext()) {
+                    Log.d(LOG_TAG, "pending _id|problem_id: "
+                                    + cur.getString(cur.getColumnIndex(EcoMapContract.PendingProblemsEntry._ID)) + " | "
+                                    + cur.getString(cur.getColumnIndex(EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID)) + " | "
+                    );
+
+                }
+
                 cur.close();
             }
 
