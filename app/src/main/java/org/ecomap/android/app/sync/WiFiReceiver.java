@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.util.Log;
 
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
@@ -17,6 +18,8 @@ public class WiFiReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        Log.d("EcomapWiFiReceiver", "intent: " + intent.getAction());
+        //waitForDebugger();
         if(SharedPreferencesHelper.getFlagPendingProblems()){
             ConnectivityManager conMngr = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
             android.net.NetworkInfo wifi = conMngr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

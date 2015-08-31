@@ -13,6 +13,7 @@ import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.EcoMapDBHelper;
 import org.ecomap.android.app.tasks.UploadPhotoTask;
 import org.ecomap.android.app.utils.RESTRequestsHelper;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -88,6 +89,8 @@ public class SendPendingProblemService extends IntentService {
 
     private void uploadPendingProblems() {
 
+        Log.d(LOG_TAG, "Start uploading pending problems");
+
         EcoMapDBHelper mOpenHelper = new EcoMapDBHelper(getApplicationContext());
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final String MY_QUERY = "SELECT * FROM pending a LEFT JOIN problems b ON a.problem_id = b._id ORDER BY b._id";
@@ -145,15 +148,19 @@ public class SendPendingProblemService extends IntentService {
                         //all task done - delete pending
                         num = db.delete(EcoMapContract.PendingProblemsEntry.TABLE_NAME, EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID + " = ?", new String[]{String.valueOf(resp.problemID)});
                         Log.d(LOG_TAG, "deleted: " + num);
-
-                        num = db.query(EcoMapContract.PendingProblemsEntry.TABLE_NAME);
-
                     }
                 }else{
                     Log.d(LOG_TAG, "responseCode: " + resp.responseCode);
                 }
 
             }
+
+            Cursor cur  = db.rawQuery("SELECT * FROM " + EcoMapContract.PendingProblemsEntry.TABLE_NAME, new String[]{});
+            if (cur != null && cur.getCount() == 0){
+                SharedPreferencesHelper.setFlagPendingProblemsOff();
+                cur.close();
+            }
+
         }
 
         if (cursor != null) {
