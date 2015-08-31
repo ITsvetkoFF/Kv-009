@@ -1,15 +1,25 @@
 package org.ecomap.android.app.sync;
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.EcoMapDBHelper;
+import org.ecomap.android.app.tasks.UploadPhotoTask;
 import org.ecomap.android.app.utils.RESTRequestsHelper;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 
 /**
@@ -20,7 +30,7 @@ import java.net.HttpURLConnection;
 public class SendPendingProblemService extends IntentService {
     private static final String ACTION_UPLOAD_PROBLEM = "org.ecomap.android.app.sync.action.UploadProblem";
 
-    private static final String ACTION_BAZ = "org.ecomap.android.app.sync.action.UploadPhotos";
+    private static final String LOG_TAG = SendPendingProblemService.class.getSimpleName();
     private static final String EXTRA_PARAM1 = "org.ecomap.android.app.sync.extra.PARAM1";
     private static final String EXTRA_PARAM2 = "org.ecomap.android.app.sync.extra.PARAM2";
 
@@ -42,10 +52,21 @@ public class SendPendingProblemService extends IntentService {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        /**
+         * If service runs in dedicated process it needs to load cookies from shared preferences
+         */
+        CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+        CookieHandler.setDefault(cookieManager);
+    }
+
+    @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_UPLOAD_PROBLEM.equals(action)) {
+
                 uploadPendingProblems();
             }
         }
@@ -64,17 +85,6 @@ public class SendPendingProblemService extends IntentService {
      * request.put("latitude", params[7]);
      * request.put("longitude", params[8]);
      */
-    //private void handleActionUploadingProblem(String title, String problem_type_id, String content, String proposal, String latitude, String longitude) {
-    private boolean handleActionUploadingProblem(String[] params) {
-
-        RESTRequestsHelper.Response resp = RESTRequestsHelper.sendProblem(params);
-        if (resp.responseCode == HttpURLConnection.HTTP_OK) {
-            return true;
-        }
-
-        return false;
-    }
-
 
     private void uploadPendingProblems() {
 
@@ -100,10 +110,47 @@ public class SendPendingProblemService extends IntentService {
                 params[8] = cursor.getString(cursor.getColumnIndex(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE));
                 params[9] = cursor.getString(cursor.getColumnIndex(EcoMapContract.PendingProblemsEntry.COLUMN_PHOTOS));
 
-                if(handleActionUploadingProblem(params)){
+                //upload problem
+                RESTRequestsHelper.Response resp = RESTRequestsHelper.sendProblem(params);
+                if (resp.responseCode == HttpURLConnection.HTTP_OK) {
 
-                    //TODO: delete record from pending problems
+                    if (resp.problemID > 0) {
 
+                        //update problem_id in table problems
+                        ContentValues cv = new ContentValues();
+                        cv.put(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID, resp.problemID);
+                        int num = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, cv, EcoMapContract.ProblemsEntry._ID + " = ?", new String[]{cursor.getString(cursor.getColumnIndex(EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID))});
+                        Log.d(LOG_TAG, "updated: " + num);
+
+                        //upload photos
+                        try {
+                            JSONArray jArr = new JSONArray(params[9]);
+                            for (int i = 0; i < jArr.length(); i++) {
+                                JSONObject obj = jArr.getJSONObject(i);
+                                String photo_path = obj.getString("path");
+                                String photo_comment = obj.getString("comment");
+
+                                new UploadPhotoTask(getApplicationContext(), resp.problemID, photo_path, photo_comment){
+                                    @Override
+                                    protected void onPostExecute(Void o) {
+
+                                    }
+                                }.execute();
+                            }
+                        } catch (JSONException e) {
+                            Log.e(LOG_TAG, e.getMessage());
+                        }
+
+
+                        //all task done - delete pending
+                        num = db.delete(EcoMapContract.PendingProblemsEntry.TABLE_NAME, EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID + " = ?", new String[]{String.valueOf(resp.problemID)});
+                        Log.d(LOG_TAG, "deleted: " + num);
+
+                        num = db.query(EcoMapContract.PendingProblemsEntry.TABLE_NAME);
+
+                    }
+                }else{
+                    Log.d(LOG_TAG, "responseCode: " + resp.responseCode);
                 }
 
             }
