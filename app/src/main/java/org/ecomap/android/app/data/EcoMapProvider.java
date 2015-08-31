@@ -21,6 +21,7 @@ public class EcoMapProvider extends ContentProvider {
 
     private static final int PROBLEMS = 100;
     private static final int RESOURCES = 103;
+    private static final int PENDING_PROBLEMS = 102;
 
     private static UriMatcher buildUriMatcher() {
 
@@ -30,6 +31,7 @@ public class EcoMapProvider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, EcoMapContract.PATH_PROBLEMS, PROBLEMS);
         matcher.addURI(authority, EcoMapContract.PATH_RESOURCES, RESOURCES);
+        matcher.addURI(authority, EcoMapContract.PATH_PENDING_PROBLEMS, PENDING_PROBLEMS);
         return matcher;
     }
 
@@ -90,6 +92,8 @@ public class EcoMapProvider extends ContentProvider {
         switch (match) {
             case PROBLEMS:
                 return EcoMapContract.ProblemsEntry.CONTENT_TYPE;
+            case PENDING_PROBLEMS:
+                return EcoMapContract.PendingProblemsEntry.CONTENT_TYPE;
             case RESOURCES:
                 return EcoMapContract.ResourcesEntry.CONTENT_TYPE;
             default:
@@ -109,6 +113,14 @@ public class EcoMapProvider extends ContentProvider {
                 long _id = db.insert(EcoMapContract.ProblemsEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = EcoMapContract.ProblemsEntry.buildProblemsUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case PENDING_PROBLEMS: {
+                long _id = db.insert(EcoMapContract.PendingProblemsEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = EcoMapContract.PendingProblemsEntry.buildPendingProblemsUri(_id);
                 else
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
@@ -145,6 +157,10 @@ public class EcoMapProvider extends ContentProvider {
             case PROBLEMS:
                 rowsDeleted = db.delete(
                         EcoMapContract.ProblemsEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case PENDING_PROBLEMS:
+                rowsDeleted = db.delete(
+                        EcoMapContract.PendingProblemsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case RESOURCES:
                 rowsDeleted = db.delete(

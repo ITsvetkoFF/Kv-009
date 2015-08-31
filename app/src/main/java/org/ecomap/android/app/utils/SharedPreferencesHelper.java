@@ -206,9 +206,9 @@ public class SharedPreferencesHelper {
 
     }
 
-    public static boolean getFlagPendingProblems() {
+    public static boolean getFlagPendingProblems(Context context) {
 
-        Context context = EcomapApplication.getAppContext();
+        //Context context = EcomapApplication.getAppContext();
         sPref = context.getSharedPreferences(context.getResources().getString(R.string.fileNamePreferences), Context.MODE_PRIVATE);
 
         return sPref.getBoolean("FlagPendingProblems", false);

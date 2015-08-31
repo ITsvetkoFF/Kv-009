@@ -93,7 +93,7 @@ public class SendPendingProblemService extends IntentService {
 
         EcoMapDBHelper mOpenHelper = new EcoMapDBHelper(getApplicationContext());
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        final String MY_QUERY = "SELECT * FROM pending a LEFT JOIN problems b ON a.problem_id = b._id ORDER BY b._id";
+        final String MY_QUERY = "SELECT a.problem_id p_id, a.photos, b.* FROM pending a LEFT JOIN problems b ON a.problem_id = b._id ORDER BY b._id";
 
         Cursor cursor = db.rawQuery(MY_QUERY, new String[]{});
 
@@ -122,7 +122,8 @@ public class SendPendingProblemService extends IntentService {
                         //update problem_id in table problems
                         ContentValues cv = new ContentValues();
                         cv.put(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID, resp.problemID);
-                        int num = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, cv, EcoMapContract.ProblemsEntry._ID + " = ?", new String[]{cursor.getString(cursor.getColumnIndex(EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID))});
+                        String s = cursor.getString(cursor.getColumnIndex("p_id"));
+                        int num = db.update(EcoMapContract.ProblemsEntry.TABLE_NAME, cv, EcoMapContract.ProblemsEntry._ID + " = ?", new String[]{s});
                         Log.d(LOG_TAG, "updated: " + num);
 
                         //upload photos
@@ -158,6 +159,8 @@ public class SendPendingProblemService extends IntentService {
             Cursor cur  = db.rawQuery("SELECT * FROM " + EcoMapContract.PendingProblemsEntry.TABLE_NAME, new String[]{});
             if (cur != null && cur.getCount() == 0){
                 SharedPreferencesHelper.setFlagPendingProblemsOff();
+                cur.close();
+            }else if(cur != null){
                 cur.close();
             }
 

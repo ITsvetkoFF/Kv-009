@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
 
         setContentView(R.layout.activity_main);
 
-        SharedPreferencesHelper.setFlagPendingProblemsOn();
 
         mContext = this;
 

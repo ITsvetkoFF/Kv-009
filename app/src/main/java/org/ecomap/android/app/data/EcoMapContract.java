@@ -111,7 +111,7 @@ public class EcoMapContract {
         public static final String COLUMN_PROBLEM_ID = "problem_id";
         public static final String COLUMN_PHOTOS = "photos";
 
-        public static Uri buildResourcesUri(long id) {
+        public static Uri buildPendingProblemsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 

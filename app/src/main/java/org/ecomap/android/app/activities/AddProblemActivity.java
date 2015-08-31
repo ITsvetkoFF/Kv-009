@@ -1,8 +1,11 @@
 package org.ecomap.android.app.activities;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -10,6 +13,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,13 +39,17 @@ import org.ecomap.android.app.tasks.AddProblemTask;
 import org.ecomap.android.app.utils.AddPhotoImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.NonScrollableListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
@@ -304,6 +312,9 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 }
 
             } else {
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+
                 ContentValues contentValuesProblems = new ContentValues();
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_STATUS, params[0]);
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY, params[1]);
@@ -316,6 +327,8 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE, params[8]);
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_USER_FIRST_NAME, User.getFirstName());
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_USER_LAST_NAME, User.getLastName());
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_DATE, format.format(new Date()));
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_USER_ID, User.getUserId());
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER, 0);
                 contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES, 0);
 
@@ -341,10 +354,28 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                         }
                     }
                 }
-                ContentValues contentValuesPendingIDs = new ContentValues();
-                contentValuesPendingIDs.put(EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID, getContentResolver().insert(EcoMapContract.ProblemsEntry.CONTENT_URI, contentValuesProblems).toString());
-                contentValuesPendingIDs.put(EcoMapContract.PendingProblemsEntry.COLUMN_PHOTOS, pendingIDsArray.toString());
 
+                try {
+
+                    ContentValues contentValuesPendingIDs = new ContentValues();
+                    Uri uri_id = getContentResolver().insert(EcoMapContract.ProblemsEntry.CONTENT_URI, contentValuesProblems);
+
+                    long res_id = ContentUris.parseId(uri_id);
+                    contentValuesPendingIDs.put(EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID, String.valueOf(res_id));
+                    contentValuesPendingIDs.put(EcoMapContract.PendingProblemsEntry.COLUMN_PHOTOS, pendingIDsArray.toString());
+
+                    Uri res = getContentResolver().insert(EcoMapContract.PendingProblemsEntry.CONTENT_URI, contentValuesPendingIDs);
+                    res_id = ContentUris.parseId(res);
+
+                    if (res_id > 0)
+                        SharedPreferencesHelper.setFlagPendingProblemsOn();
+
+                }catch (SQLiteException e){
+                    String LOG_TAG = AddProblemActivity.class.getSimpleName();
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                }
+                EcoMapFragment.disableAddProblemMode();
+                finish();
                 SnackBarHelper.showInfoSnackBar(this, R.string.check_internet, Snackbar.LENGTH_LONG);
             }
         } else {
