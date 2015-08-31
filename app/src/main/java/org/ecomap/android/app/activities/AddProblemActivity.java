@@ -1,5 +1,6 @@
 package org.ecomap.android.app.activities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.User;
+import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.UploadingServiceSession;
 import org.ecomap.android.app.tasks.AddProblemTask;
@@ -34,6 +37,9 @@ import org.ecomap.android.app.utils.MapClustering;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.NonScrollableListView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -286,7 +292,6 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             params[2] = problemTitle.getText().toString();
             params[3] = String.valueOf(problemType);
             params[4] = problemDescription.getText().toString();
-
             params[5] = problemSolution.getText().toString();
             params[6] = "1";
             params[7] = String.valueOf(markerPosition.latitude);
@@ -299,7 +304,47 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 }
 
             } else {
-                //TODO: If network is unavailable add problem in pending tasks
+                ContentValues contentValuesProblems = new ContentValues();
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_STATUS, params[0]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_SEVERITY, params[1]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_TITLE, params[2]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_TYPE_ID, params[3]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_CONTENT, params[4]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_PROPOSAL, params[5]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_REGION_ID, params[6]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE, params[7]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE, params[8]);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_USER_FIRST_NAME, User.getFirstName());
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_USER_LAST_NAME, User.getLastName());
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_COMMENTS_NUMBER, 0);
+                contentValuesProblems.put(EcoMapContract.ProblemsEntry.COLUMN_NUMBER_OF_VOTES, 0);
+
+                JSONArray pendingIDsArray = new JSONArray();
+                //Checking selected photos
+                if (!selectedPhotos.isEmpty()) {
+                    for (int i = 0; i < selectedPhotos.size(); i++) {
+                        //Get each ListView item
+                        getNonScrollableListView().getChildAt(i);
+                        EditText editText = (EditText) findViewById(R.id.add_photo_edit_text);
+                        //Get comment
+                        String comment = editText.getText().toString();
+                        //Get path for each photo
+                        String path = selectedPhotos.get(i);
+                        //Start new AsyncTask for each photo and comment (test problem ID is 361)
+                        try {
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("path", path);
+                            jsonObject.put("comment", comment);
+                            pendingIDsArray.put(jsonObject);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                ContentValues contentValuesPendingIDs = new ContentValues();
+                contentValuesPendingIDs.put(EcoMapContract.PendingProblemsEntry.COLUMN_PROBLEM_ID, getContentResolver().insert(EcoMapContract.ProblemsEntry.CONTENT_URI, contentValuesProblems).toString());
+                contentValuesPendingIDs.put(EcoMapContract.PendingProblemsEntry.COLUMN_PHOTOS, pendingIDsArray.toString());
+
                 SnackBarHelper.showInfoSnackBar(this, R.string.check_internet, Snackbar.LENGTH_LONG);
             }
         } else {
