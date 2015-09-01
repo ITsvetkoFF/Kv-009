@@ -3,13 +3,12 @@ package org.ecomap.android.app.sync;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
-import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,10 +44,14 @@ public class EcoMapService extends IntentService {
 
             try {
 
-                numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(), getString(R.string.fileNamePreferences), getString(R.string.prefNumRevision), 0);
-                if (numCurrentRevision == 0) {
+                Cursor revCursor = getContentResolver().query(EcoMapContract.RevisionsEntry.CONTENT_URI, null, null, null, null);
+                if(revCursor.getCount() == 0){
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("revision", numCurrentRevision);
+                    getContentResolver().insert(EcoMapContract.RevisionsEntry.CONTENT_URI, contentValues);
                     startService(new Intent(this, GetResourcesService.class));
                 }
+
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
                 final String REVISION_PARAM = "rev";
@@ -243,7 +246,9 @@ public class EcoMapService extends IntentService {
                 this.getContentResolver().bulkInsert(EcoMapContract.ProblemsEntry.CONTENT_URI, cvArray);
             }
             //update pnumCurrentRevisionreferences
-            SharedPreferencesHelper.updateNumRevision(getApplicationContext(), numNewRevision);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("revision", numNewRevision);
+            numCurrentRevision = getContentResolver().update(EcoMapContract.RevisionsEntry.CONTENT_URI, contentValues, null, null);
 
             Log.i(LOG_TAG, "revision was updated!");
 

@@ -22,6 +22,7 @@ public class EcoMapProvider extends ContentProvider {
     private static final int PROBLEMS = 100;
     private static final int RESOURCES = 103;
     private static final int PENDING_PROBLEMS = 102;
+    private static final int REVISIONS = 104;
 
     private static UriMatcher buildUriMatcher() {
 
@@ -32,6 +33,7 @@ public class EcoMapProvider extends ContentProvider {
         matcher.addURI(authority, EcoMapContract.PATH_PROBLEMS, PROBLEMS);
         matcher.addURI(authority, EcoMapContract.PATH_RESOURCES, RESOURCES);
         matcher.addURI(authority, EcoMapContract.PATH_PENDING_PROBLEMS, PENDING_PROBLEMS);
+        matcher.addURI(authority, EcoMapContract.PATH_REVISIONS, REVISIONS);
         return matcher;
     }
 
@@ -70,6 +72,18 @@ public class EcoMapProvider extends ContentProvider {
                 );
                 break;
             }
+            case REVISIONS: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        EcoMapContract.RevisionsEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -96,6 +110,8 @@ public class EcoMapProvider extends ContentProvider {
                 return EcoMapContract.PendingProblemsEntry.CONTENT_TYPE;
             case RESOURCES:
                 return EcoMapContract.ResourcesEntry.CONTENT_TYPE;
+            case REVISIONS:
+                return EcoMapContract.RevisionsEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -127,6 +143,14 @@ public class EcoMapProvider extends ContentProvider {
             }
             case RESOURCES: {
                 long _id = db.insert(EcoMapContract.ResourcesEntry.TABLE_NAME, null, values);
+                if (_id > 0)
+                    returnUri = EcoMapContract.ResourcesEntry.buildResourcesUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
+            case REVISIONS: {
+                long _id = db.insert(EcoMapContract.RevisionsEntry.TABLE_NAME, null, values);
                 if (_id > 0)
                     returnUri = EcoMapContract.ResourcesEntry.buildResourcesUri(_id);
                 else
@@ -198,6 +222,12 @@ public class EcoMapProvider extends ContentProvider {
                 rowsUpdated = db.update(EcoMapContract.ResourcesEntry.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
+
+            case REVISIONS:
+                rowsUpdated = db.update(EcoMapContract.RevisionsEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }

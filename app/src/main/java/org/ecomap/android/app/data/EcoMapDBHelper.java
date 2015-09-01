@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.ecomap.android.app.data.EcoMapContract.PendingProblemsEntry;
 import org.ecomap.android.app.data.EcoMapContract.ProblemsEntry;
 import org.ecomap.android.app.data.EcoMapContract.ResourcesEntry;
+import org.ecomap.android.app.data.EcoMapContract.RevisionsEntry;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 /**
@@ -68,10 +69,14 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
                 PendingProblemsEntry.COLUMN_PROBLEM_ID + " INTEGER NOT NULL, " +
                 PendingProblemsEntry.COLUMN_PHOTOS + " TEXT" +
                 " );";
+        final String SQL_CREATE_REVISIONS_TABLE = "CREATE TABLE " + RevisionsEntry.TABLE_NAME + " (" +
+                RevisionsEntry.COLUMN_REVISION + " INTEGER DEFAULT 0" +
+                " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_PROBLEMS_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_RESOURCES_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_PENDING_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_REVISIONS_TABLE);
     }
 
     @Override
@@ -79,6 +84,7 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ProblemsEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ResourcesEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PendingProblemsEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RevisionsEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
         SharedPreferencesHelper.updateNumRevision(mContext, 0);
     }
@@ -88,6 +94,7 @@ public class EcoMapDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ProblemsEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + ResourcesEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PendingProblemsEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + RevisionsEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
         SharedPreferencesHelper.updateNumRevision(mContext, 0);
     }
