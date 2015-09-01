@@ -107,4 +107,5 @@
     <string name="top_discussed">Обсуждаемые</string>
     <string name="top_important">Важные</string>
     <string name="top_popular">Популярные</string>
+    <string name="password_doesnt_match">Пароли не совпадают</string>
 </resources>
