@@ -19,6 +19,7 @@ public class EcoMapContract {
     public static final String PATH_PROBLEMS = "problems";
     public static final String PATH_RESOURCES = "resources";
     public static final String PATH_PENDING_PROBLEMS = "pending";
+    public static final String PATH_REVISIONS = "revisions";
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
@@ -115,5 +116,19 @@ public class EcoMapContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
+    }
+    public static final class RevisionsEntry {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_REVISIONS).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_REVISIONS;
+
+        //TABLE NAME
+        public static final String TABLE_NAME = "revisions";
+
+        //title of revision, String
+        public static final String COLUMN_REVISION = "revision";
     }
 }
