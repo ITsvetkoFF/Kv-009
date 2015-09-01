@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -45,8 +46,8 @@ import org.ecomap.android.app.activities.CommentPhotoActivity;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.data.EcoMapContract;
 import org.ecomap.android.app.data.model.ProblemPhotoEntry;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
-import org.ecomap.android.app.tasks.AddVoteTask;
 import org.ecomap.android.app.tasks.GetPhotosTask;
 import org.ecomap.android.app.utils.ImageAdapter;
 import org.ecomap.android.app.utils.MapClustering;
@@ -54,7 +55,10 @@ import org.ecomap.android.app.utils.NetworkAvailability;
 import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.widget.EcoMapSlidingLayer;
 import org.ecomap.android.app.widget.ExpandableHeightGridView;
+import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 import me.iwf.photopicker.PhotoPickerActivity;
@@ -79,6 +83,8 @@ public class EcoMapFragment extends Fragment {
     private ScrollView detailedScrollView;
     private static CameraPosition cameraPosition;
     private RatingBar problemRating;
+    private Problem problemForSlidingLayer;
+    private boolean problemLikedElsewhere;
 
     private static FloatingActionButton fabAddProblem;
 
@@ -416,31 +422,33 @@ public class EcoMapFragment extends Fragment {
 
     public void fillSlidingPanel(final Problem problem) {
 
+        problemForSlidingLayer=problem;
+
         if (mMap.getCameraPosition().zoom < 13.0f) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problem.getPosition(), 13.0f));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problemForSlidingLayer.getPosition(), 13.0f));
         }
-        cameraPosition = new CameraPosition(problem.getPosition(), 11.0f, 0.0f, 0.0f);
+        cameraPosition = new CameraPosition(problemForSlidingLayer.getPosition(), 11.0f, 0.0f, 0.0f);
 
         //Set Problem object parameters to a view at show problem fragment
-        showTypeImage.setImageResource(problem.getResBigImage());
-        showTitle.setText(problem.getTitle());
-        showByTime.setText(problem.getRelativeTime());
-        showContent.setText(problem.getContent());
-        showProposal.setText(problem.getProposal());
-        showNumOfLikes.setText(problem.getNumberOfLikes());
+        showTypeImage.setImageResource(problemForSlidingLayer.getResBigImage());
+        showTitle.setText(problemForSlidingLayer.getTitle());
+        showByTime.setText(problemForSlidingLayer.getRelativeTime());
+        showContent.setText(problemForSlidingLayer.getContent());
+        showProposal.setText(problemForSlidingLayer.getProposal());
+        showNumOfLikes.setText(problemForSlidingLayer.getNumberOfLikes());
 
-        problemRating.setRating(Float.valueOf(problem.getSeverity()));
+        problemRating.setRating(Float.valueOf(problemForSlidingLayer.getSeverity()));
         LayerDrawable stars = (LayerDrawable) problemRating.getProgressDrawable();
         stars.getDrawable(2).setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
 
-        if (problem.isLiked()) {
+        if (problemForSlidingLayer.isLiked()) {
             showLike.setImageResource(R.drawable.heart_icon);
         } else {
             showLike.setImageResource(R.drawable.heart_empty);
         }
 
         //Check problem status and choose color fo text
-        if (problem.getStatus().equalsIgnoreCase("UNSOLVED")) {
+        if (problemForSlidingLayer.getStatus().equalsIgnoreCase("UNSOLVED")) {
             showStatus.setText(getString(R.string.solved_problem));
             showStatus.setTextColor(Color.GREEN);
         } else {
@@ -453,29 +461,28 @@ public class EcoMapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (MainActivity.isUserIsAuthorized()) {
-                    if (!problem.isLiked()) {
-                        problem.addLike();
-                        problem.setLiked();
+                    if (!problemForSlidingLayer.isLiked()) {
 
-                        new AddVoteTask().execute(problem.getId());
 
-                        showLike.setImageResource(R.drawable.heart_icon);
+                        new AddVoteTask().execute(problemForSlidingLayer);
 
-                        Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
 
-                    } else if (problem.isLiked()) {
+
+
+
+                    } else if (problemForSlidingLayer.isLiked()) {
                         //problem.setNumberOfLikes(-1);
                         //problem.setLiked(false);
                         Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
                     }
-                    showNumOfLikes.setText(problem.getNumberOfLikes());
+                    showNumOfLikes.setText(problemForSlidingLayer.getNumberOfLikes());
                 } else {
                     SnackBarHelper.showInfoSnackBar(getActivity(), getActivity().getWindow().getDecorView(), R.string.message_log_in_to_vote, Snackbar.LENGTH_SHORT);
                 }
             }
         });
 
-        MainActivity.currentProblem = problem;
+        MainActivity.currentProblem = problemForSlidingLayer;
         cameraPosition = mMap.getCameraPosition();
         getActivity().invalidateOptionsMenu();
 
@@ -519,12 +526,12 @@ public class EcoMapFragment extends Fragment {
         FragmentManager chFm = getChildFragmentManager();
         Fragment f;
         //if (f == null) {
-        f = CommentsFragment.newInstance(problem);
+        f = CommentsFragment.newInstance(problemForSlidingLayer);
         //}
         chFm.beginTransaction().replace(R.id.fragment_comments, f, CommentsFragment.LOG_TAG).commit();
 
         //photos
-        new GetPhotosTask(this).execute(problem.getId());
+        new GetPhotosTask(this).execute(problemForSlidingLayer.getId());
     }
 
     private void signInAlertDialog() {
@@ -603,6 +610,100 @@ public class EcoMapFragment extends Fragment {
     public static Problem getLastOpenProblem() {
         return lastOpenProblem;
     }
+
+    public class AddVoteTask extends AsyncTask<Problem, Void, Boolean> {
+
+        private final String LOG_TAG = AddVoteTask.class.getSimpleName();
+        private Integer problem_id;
+        private Problem problem;
+
+        @Override
+        protected Boolean doInBackground(Problem... params) {
+            URL url;
+            Boolean result = Boolean.FALSE;
+            problem=params[0];
+            problem_id = problem.getId();
+
+            //validation
+            if (MainActivity.isUserIsAuthorized()) {
+                if (params.length > 0 && params[0] != null) {
+
+                    HttpURLConnection connection = null;
+
+                    try {
+
+                        //creating JSONObject for request
+                        JSONObject request = new JSONObject();
+                        request.put("content", params[0]);
+
+                        url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problem_id + "/vote");
+
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("POST");
+                        connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        connection.setDoOutput(true);
+                        connection.connect();
+
+                        /**
+                         * sending request
+                         * request.toString() - translate our object into appropriate JSON text
+                         * {
+                         *      "content": "your comment"
+                         * }
+                         */
+                        //OutputStream outputStream = connection.getOutputStream();
+                        //outputStream.write(request.toString().getBytes("UTF-8"));
+
+                        //handling result from server
+                        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            result = Boolean.TRUE;
+                        } else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                            result = Boolean.FALSE;
+                        }
+
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                    } finally {
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
+                    }
+                }
+            }
+            problemLikedElsewhere = !(result);
+
+            return result;
+
+        }
+        @Override
+        public void onPostExecute(Boolean bool){
+            problemForSlidingLayer.setLiked();
+
+
+
+            if(problemLikedElsewhere){
+                Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
+            }
+
+            else {
+
+                Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
+                problemForSlidingLayer.addLike();
+                showNumOfLikes.setText(problemForSlidingLayer.getNumberOfLikes());
+
+
+            }
+
+
+
+            showLike.setImageResource(R.drawable.heart_icon);
+
+        }
+
+
+
+    }
+
 
 }
 
