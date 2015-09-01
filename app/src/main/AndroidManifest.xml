@@ -101,17 +101,17 @@
         <receiver
             android:name=".sync.WiFiReceiver"
             android:enabled="true"
-            android:exported="true"
-            android:process=":sendPendingProblemService" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.net.wifi.STATE_CHANGE" />
             </intent-filter>
         </receiver>
 
+        <!--android:process=":sendPendingProblemService"-->
+
         <service
             android:name=".sync.SendPendingProblemService"
-            android:process=":sendPendingProblemService"
             android:exported="false" >
         </service>
     </application>

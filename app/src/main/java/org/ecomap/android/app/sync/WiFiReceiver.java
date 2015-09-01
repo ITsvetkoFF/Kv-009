@@ -10,8 +10,6 @@ import org.ecomap.android.app.utils.SharedPreferencesHelper;
 
 public class WiFiReceiver extends BroadcastReceiver {
 
-
-
     public WiFiReceiver() {
     }
 
@@ -25,7 +23,6 @@ public class WiFiReceiver extends BroadcastReceiver {
             android.net.NetworkInfo wifi = conMngr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             //android.net.NetworkInfo mobile = conMngr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if(wifi.isConnected()){
-
                 SendPendingProblemService.startUploadingProblems(context);
             }
         }

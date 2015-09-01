@@ -160,7 +160,7 @@ public class EcoMapService extends IntentService {
                     if (EcoMapAPIContract.ACTION_DELETE.equals(action)) {
                         //ACTION DELETE
                         problem_id = obj.getInt(EcoMapAPIContract.ID);
-                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, "_id = " + problem_id, null);
+                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID + " = " + problem_id, null);
 
                     } else if (EcoMapAPIContract.ACTION_VOTE.equals(action)) {
                         //ACTION VOTE
@@ -168,7 +168,7 @@ public class EcoMapService extends IntentService {
                         number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES_UPDATE);
                         ContentValues cv = new ContentValues();
                         cv.put(EcoMapAPIContract.NUMBER_OF_VOTES, number_of_votes);
-                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI, cv, "_id = " + problem_id, null);
+                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI, cv, EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID + " = " + problem_id, null);
                     }
 
                 } else {

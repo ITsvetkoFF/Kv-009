@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.ecomap.android.app.PersistentCookieStore;
@@ -163,6 +164,7 @@ public class SendPendingProblemService extends IntentService {
             if (cur != null && cur.getCount() == 0){
                 SharedPreferencesHelper.setFlagPendingProblemsOff();
                 cur.close();
+                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("Data"));
             }else if(cur != null){
                 while (cur.moveToNext()) {
                     Log.d(LOG_TAG, "pending _id|problem_id: "
