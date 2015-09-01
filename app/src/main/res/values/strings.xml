@@ -127,6 +127,7 @@
     <string name="top_discussed">Discussed</string>
     <string name="top_important">Important</string>
     <string name="top_popular">Popular</string>
+    <string name="password_doesnt_match">Passwords dont match</string>
     <!---->
 </resources>
 
