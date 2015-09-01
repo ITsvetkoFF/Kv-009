@@ -45,11 +45,16 @@ public class EcoMapService extends IntentService {
             try {
 
                 Cursor revCursor = getContentResolver().query(EcoMapContract.RevisionsEntry.CONTENT_URI, null, null, null, null);
-                if(revCursor.getCount() == 0){
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("revision", numCurrentRevision);
-                    getContentResolver().insert(EcoMapContract.RevisionsEntry.CONTENT_URI, contentValues);
-                    startService(new Intent(this, GetResourcesService.class));
+                if (revCursor != null) {
+                    if (revCursor.getCount() == 0) {
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("revision", numCurrentRevision);
+                        getContentResolver().insert(EcoMapContract.RevisionsEntry.CONTENT_URI, contentValues);
+                        startService(new Intent(this, GetResourcesService.class));
+                    } else {
+                        revCursor.moveToNext();
+                        numCurrentRevision = revCursor.getInt(revCursor.getColumnIndex(EcoMapContract.RevisionsEntry.COLUMN_REVISION));
+                    }
                 }
 
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
