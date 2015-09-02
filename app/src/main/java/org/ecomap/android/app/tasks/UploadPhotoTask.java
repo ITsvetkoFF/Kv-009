@@ -2,16 +2,19 @@ package org.ecomap.android.app.tasks;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Debug;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,27 +52,50 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
         int maxBufferSize = 1024 * 1024;
-        File sourceFile = new File(imagePath);
 
-//        Bitmap b = BitmapFactory.decodeFile(imagePath);
-//
-//        int width, height;
-//
-//        if (b.getHeight() > b.getWidth() && b.getHeight() > 1600 && b.getWidth() > 1200){
-//            height = 1600;
-//            width = 1200;
-//        } else if (b.getHeight() > 1200 && b.getWidth() > 1600) {
-//            height = 1200;
-//            width = 1600;
-//        } else {
-//            width = b.getWidth();
-//            height = b.getHeight();
-//        }
-//
-//        Bitmap sb = Bitmap.createScaledBitmap(b, width, height, true);
+        Debug.waitForDebugger();
+
+        //File sourceFile = new File(imagePath);
+
+        BitmapFactory.Options bm = new BitmapFactory.Options();
+        bm.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, bm);
+
+        int srcW = bm.outWidth;
+        int srcH = bm.outHeight;
+
+        BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
+        bitmapOptions.inScaled = true;
+
+        if(srcH > srcW){
+            double scC = srcH / 1600.0d;
+
+            bitmapOptions.inSampleSize = (int) scC;
+            bitmapOptions.inDensity = srcH;
+            bitmapOptions.inTargetDensity = 1600 * bitmapOptions.inSampleSize;
+        } else {
+            double scC = srcW / 1600.0d;
+
+            bitmapOptions.inSampleSize = (int) scC;
+            bitmapOptions.inDensity = srcW;
+            bitmapOptions.inTargetDensity = 1600 * bitmapOptions.inSampleSize;
+        }
+
+        Bitmap b = BitmapFactory.decodeFile(imagePath, bitmapOptions);
+
+        //Bitmap in = BitmapFactory.decodeFile(imagePath);
+        //Bitmap b = Bitmap.createScaledBitmap(in, 1200, 1600, true);
+
+        int i = 0;
 
         try {
-            FileInputStream fileInputStream = new FileInputStream(sourceFile);
+            //FileInputStream fileInputStream = new FileInputStream(sourceFile);
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            b.compress(Bitmap.CompressFormat.JPEG, 75, bos);
+            byte[] bitmapData = bos.toByteArray();
+            ByteArrayInputStream bs = new ByteArrayInputStream(bitmapData);
+
             URL url = new URL(EcoMapAPIContract.ECOMAP_API_URL + "/problems/" + problemID + "/photos");
             conn = (HttpURLConnection) url.openConnection();
             conn.setDoInput(true); // Allow Inputs
@@ -95,13 +121,13 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
             dos.writeBytes(lineEnd);
 
             // create a buffer of maximum size
-            bytesAvailable = fileInputStream.available();
+            bytesAvailable = bs.available();
             bufferSize = Math.min(bytesAvailable, maxBufferSize);
             buffer = new byte[bufferSize];
 
             // read file and write it into form...
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            long fileSize = sourceFile.length();
+            bytesRead = bs.read(buffer, 0, bufferSize);
+            long fileSize = bitmapData.length;
             long bytesWritten = 0;
             while (bytesRead > 0) {
                 dos.write(buffer, 0, bufferSize);
@@ -110,9 +136,9 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
                 double percentage = bytesWritten / fileSize * 100;
                 publishProgress((int) percentage);
 
-                bytesAvailable = fileInputStream.available();
+                bytesAvailable = bs.available();
                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                bytesRead = bs.read(buffer, 0, bufferSize);
 
             }
 
@@ -133,7 +159,7 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
                 resMessage = mContext.getString(R.string.uploading_error);
             }
             // close the streams //
-            fileInputStream.close();
+            bs.close();
             dos.flush();
             dos.close();
 
