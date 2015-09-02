@@ -308,7 +308,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             if (new NetworkAvailability(mContext.getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
 
                 if (mServiceSession.isBound()) {
-                    new AddProblemTask(mContext, mServiceSession).execute(params);
+                    new AddProblemTask(mContext, mServiceSession, this).execute(params);
                 }
 
             } else {
