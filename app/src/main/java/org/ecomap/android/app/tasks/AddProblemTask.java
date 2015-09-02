@@ -31,13 +31,15 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
     private int problemID;
     private String resultMessage;
     private UploadingServiceSession mServiceSession;
+    private AddProblemActivity addProblemActivity;
 
-    public AddProblemTask(Context context, UploadingServiceSession serviceSession) {
+    public AddProblemTask(Context context, UploadingServiceSession serviceSession, AddProblemActivity mActivity) {
         this.mContext = new WeakReference<>(context);
         this.progressBar = null;
         this.responseCode = 0;
         this.problemID = 0;
         this.mServiceSession = serviceSession;
+        this.addProblemActivity = mActivity;
     }
 
     @Override
@@ -139,7 +141,7 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 sendPhoto(problemID);
                 EcoMapFragment.disableAddProblemMode();
-                context.startActivity(new Intent(context, MainActivity.class));
+                addProblemActivity.finish();
             }
         }
     }
