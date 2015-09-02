@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -40,6 +39,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.ecomap.android.app.EcomapApplication;
 import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.CommentPhotoActivity;
@@ -376,7 +376,7 @@ public class EcoMapFragment extends Fragment {
 
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                Problem p = new Problem(cursor, getActivity());
+                Problem p = new Problem(cursor, EcomapApplication.getAppContext());
                 values.add(p);
             }
         }

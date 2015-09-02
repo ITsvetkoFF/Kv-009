@@ -19,24 +19,24 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class AddProblemTask extends AsyncTask<String, Void, Void> {
 
     private ProgressDialog progressBar;
-    private final Context mContext;
+    private final WeakReference<Context> mContext;
     private int responseCode;
     private int problemID;
-    private String resultMessage = null;
+    private String resultMessage;
     private UploadingServiceSession mServiceSession;
 
     public AddProblemTask(Context context, UploadingServiceSession serviceSession) {
-        this.mContext = context;
+        this.mContext = new WeakReference<>(context);
         this.progressBar = null;
         this.responseCode = 0;
         this.problemID = 0;
-        this.resultMessage = null;
         this.mServiceSession = serviceSession;
     }
 
@@ -44,11 +44,14 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        progressBar = new ProgressDialog(mContext);
-        progressBar.setMessage("Connecting to Ecomap server");
-        progressBar.setIndeterminate(true);
-        progressBar.setCancelable(true);
-        progressBar.show();
+        Context context = mContext.get();
+        if (context != null) {
+            progressBar = new ProgressDialog(context);
+            progressBar.setMessage("Connecting to Ecomap server");
+            progressBar.setIndeterminate(true);
+            progressBar.setCancelable(true);
+            progressBar.show();
+        }
     }
 
     @Override
@@ -93,7 +96,10 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 JSONObject data = new JSONObject(responseBody.toString());
 
                 problemID = data.getInt("id");
-                resultMessage = mContext.getString(R.string.problem_added);
+                Context context = mContext.get();
+                if (context != null) {
+                    resultMessage = context.getString(R.string.problem_added);
+                }
 
             } else {
                 StringBuilder responseBody = new StringBuilder();
@@ -123,15 +129,18 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
         progressBar.dismiss();
         EcoMapService.firstStart = true;
 
-        Intent intent = new Intent(mContext, EcoMapService.class);
-        mContext.startService(intent);
+        Context context = mContext.get();
+        if (context != null) {
+            Intent intent = new Intent(context, EcoMapService.class);
+            context.startService(intent);
 
-        Toast.makeText(mContext, resultMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, resultMessage, Toast.LENGTH_LONG).show();
 
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            sendPhoto(problemID);
-            EcoMapFragment.disableAddProblemMode();
-            mContext.startActivity(new Intent(mContext, MainActivity.class));
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                sendPhoto(problemID);
+                EcoMapFragment.disableAddProblemMode();
+                context.startActivity(new Intent(context, MainActivity.class));
+            }
         }
     }
 

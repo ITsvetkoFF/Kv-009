@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
@@ -36,6 +37,7 @@ import org.ecomap.android.app.Problem;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.tasks.EditProblemTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.utils.SnackBarHelper;
 
 public class EditProblem extends AppCompatActivity {
     private EditText problemTitle, problemDescription, problemSolution;
@@ -195,6 +197,8 @@ public class EditProblem extends AppCompatActivity {
 
                     ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
                             hideSoftInputFromWindow(getWindow().getDecorView().findViewById(android.R.id.content).getWindowToken(), 0);
+                }else {
+                    SnackBarHelper.showWarningSnackBar(this, R.string.check_internet, Snackbar.LENGTH_SHORT);
                 }
 
                 break;

@@ -3,13 +3,12 @@ package org.ecomap.android.app.sync;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.ecomap.android.app.R;
 import org.ecomap.android.app.data.EcoMapContract;
-import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,10 +44,19 @@ public class EcoMapService extends IntentService {
 
             try {
 
-                numCurrentRevision = SharedPreferencesHelper.getIntegerPref(getApplicationContext(), getString(R.string.fileNamePreferences), getString(R.string.prefNumRevision), 0);
-                if (numCurrentRevision == 0) {
-                    startService(new Intent(this, GetResourcesService.class));
+                Cursor revCursor = getContentResolver().query(EcoMapContract.RevisionsEntry.CONTENT_URI, null, null, null, null);
+                if (revCursor != null) {
+                    if (revCursor.getCount() == 0) {
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("revision", numCurrentRevision);
+                        getContentResolver().insert(EcoMapContract.RevisionsEntry.CONTENT_URI, contentValues);
+                        startService(new Intent(this, GetResourcesService.class));
+                    } else {
+                        revCursor.moveToNext();
+                        numCurrentRevision = revCursor.getInt(revCursor.getColumnIndex(EcoMapContract.RevisionsEntry.COLUMN_REVISION));
+                    }
                 }
+
                 Log.i(LOG_TAG, "numCurrentRevision is " + numCurrentRevision);
 
                 final String REVISION_PARAM = "rev";
@@ -160,7 +168,7 @@ public class EcoMapService extends IntentService {
                     if (EcoMapAPIContract.ACTION_DELETE.equals(action)) {
                         //ACTION DELETE
                         problem_id = obj.getInt(EcoMapAPIContract.ID);
-                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, "_id = " + problem_id, null);
+                        this.getContentResolver().delete(EcoMapContract.ProblemsEntry.CONTENT_URI, EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID + " = " + problem_id, null);
 
                     } else if (EcoMapAPIContract.ACTION_VOTE.equals(action)) {
                         //ACTION VOTE
@@ -168,7 +176,7 @@ public class EcoMapService extends IntentService {
                         number_of_votes = obj.getInt(EcoMapAPIContract.NUMBER_OF_VOTES_UPDATE);
                         ContentValues cv = new ContentValues();
                         cv.put(EcoMapAPIContract.NUMBER_OF_VOTES, number_of_votes);
-                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI, cv, "_id = " + problem_id, null);
+                        this.getContentResolver().update(EcoMapContract.ProblemsEntry.CONTENT_URI, cv, EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID + " = " + problem_id, null);
                     }
 
                 } else {
@@ -214,7 +222,8 @@ public class EcoMapService extends IntentService {
 
                     ContentValues mapValues = new ContentValues();
 
-                    mapValues.put(EcoMapContract.ProblemsEntry._ID, problem_id);
+                    //mapValues.put(EcoMapContract.ProblemsEntry._ID, problem_id);
+                    mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_PROBLEM_ID, problem_id);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_TITLE, title);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LATITUDE, latitude);
                     mapValues.put(EcoMapContract.ProblemsEntry.COLUMN_LONGTITUDE, longitude);
@@ -242,7 +251,9 @@ public class EcoMapService extends IntentService {
                 this.getContentResolver().bulkInsert(EcoMapContract.ProblemsEntry.CONTENT_URI, cvArray);
             }
             //update pnumCurrentRevisionreferences
-            SharedPreferencesHelper.updateNumRevision(getApplicationContext(), numNewRevision);
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("revision", numNewRevision);
+            numCurrentRevision = getContentResolver().update(EcoMapContract.RevisionsEntry.CONTENT_URI, contentValues, null, null);
 
             Log.i(LOG_TAG, "revision was updated!");
 

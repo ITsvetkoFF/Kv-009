@@ -2,43 +2,50 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'ecomap'
+            keyPassword '123456'
+            storeFile file('C:/Users/yridktc/ecomap.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     lintOptions {
         abortOnError false
     }
-
     defaultConfig {
         applicationId "org.ecomap.android.app"
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
+        versionCode 3
         versionName "1.0"
     }
     buildTypes {
         release {
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            minifyEnabled false
         }
+    }
+    productFlavors {
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
-
     compile 'com.google.maps.android:android-maps-utils:0.4'
     //compile 'com.androidmapsextensions:android-maps-extensions:2.2.0'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:+'
     //compile 'com.wunderlist:sliding-layer:1.2.5'
     compile project(':LibrarySlidingLayer')
-
     /**
      * Animations libraries
      * https://github.com/daimajia/AndroidViewAnimations
@@ -51,7 +58,6 @@ dependencies {
         mavenCentral()
         maven { url "https://jitpack.io" }
     }
-
     compile 'me.iwf.photopicker:PhotoPicker:0.2.7@aar'
     /**
      * PhotoPicker relies on these:
@@ -66,9 +72,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.6.0'
     compile 'com.android.support:recyclerview-v7:22.2.1'
     /**/
-
     //pie chart
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.1'
     compile 'com.facebook.android:facebook-android-sdk:4.0.0'
-
 }
