@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'ecomap'
             keyPassword '123456'
-            storeFile file('C:/Users/yridktc/ecomap.jks')
+            storeFile file('E:/Android/Projects/Kv-009/ecomap.jks')
             storePassword '123456'
         }
     }
@@ -27,6 +27,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
             minifyEnabled false
+            debuggable true
         }
     }
     productFlavors {

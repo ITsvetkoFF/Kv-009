@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Debug;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,7 +32,6 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
         this.problemID = problemID;
         this.imagePath = imagePath;
         this.comment = comment;
-        //this.notification = notification;
         resMessage = null;
     }
 
@@ -50,10 +48,6 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
         int maxBufferSize = 1024 * 1024;
-
-        Debug.waitForDebugger();
-
-        //File sourceFile = new File(imagePath);
 
         BitmapFactory.Options bm = new BitmapFactory.Options();
         bm.inJustDecodeBounds = true;
@@ -81,14 +75,7 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
 
         Bitmap b = BitmapFactory.decodeFile(imagePath, bitmapOptions);
 
-        //Bitmap in = BitmapFactory.decodeFile(imagePath);
-        //Bitmap b = Bitmap.createScaledBitmap(in, 1200, 1600, true);
-
-        int i = 0;
-
         try {
-            //FileInputStream fileInputStream = new FileInputStream(sourceFile);
-
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             b.compress(Bitmap.CompressFormat.JPEG, 75, bos);
             byte[] bitmapData = bos.toByteArray();

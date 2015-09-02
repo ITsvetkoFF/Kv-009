@@ -128,6 +128,8 @@
     <string name="top_important">Important</string>
     <string name="top_popular">Popular</string>
     <string name="password_doesnt_match">Passwords dont match</string>
+    <string name="delete_menu_item_string">Delete</string>
+    <string name="edit_menu_item_string">Edit</string>
     <!---->
 </resources>
 

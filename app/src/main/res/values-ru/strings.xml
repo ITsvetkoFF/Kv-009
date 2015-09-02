@@ -108,4 +108,6 @@
     <string name="top_important">Важные</string>
     <string name="top_popular">Популярные</string>
     <string name="password_doesnt_match">Пароли не совпадают</string>
+    <string name="delete_menu_item_string">Удалить</string>
+    <string name="edit_menu_item_string">Редактировать</string>
 </resources>
