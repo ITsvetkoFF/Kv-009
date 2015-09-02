@@ -42,6 +42,7 @@ import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.tasks.LoginTask;
 import org.ecomap.android.app.tasks.SocialLoginTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
+import org.ecomap.android.app.utils.SnackBarHelper;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -197,6 +198,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             password = (EditText) v.findViewById(R.id.password);
 
             signIn = (Button) v.findViewById(R.id.email_sign_in_button);
+            signIn.setClickable(false);
+
             signUpLink = (TextView) v.findViewById(R.id.link_to_register);
 
             tilEmail = (TextInputLayout) v.findViewById(R.id.til_email);
@@ -215,7 +218,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                         if (!MainActivity.isEmailValid(email.getText().toString())) {
                             tilEmail.setError(getString(R.string.incorrect_email));
                             signIn.setClickable(false);
-                            Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
+                            //Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
+                            SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.fill_all_fields, Snackbar.LENGTH_LONG);
                         } else {
                             tilEmail.setErrorEnabled(false);
                             signIn.setClickable(true);
@@ -223,7 +227,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                     } else if (email.getText().toString().isEmpty()) {
                         tilEmail.setError(getString(R.string.email_blank));
                         signIn.setClickable(false);
-                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
+                        SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.fill_all_fields, Snackbar.LENGTH_LONG);
                     } else {
                         tilEmail.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -240,7 +245,8 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                     if (password.getText().toString().isEmpty()) {
                         tilPass.setError(getString(R.string.password_blank));
                         signIn.setClickable(false);
-                        Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
+                        //Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
+                        SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.fill_all_fields, Snackbar.LENGTH_LONG);
                     } else {
                         tilPass.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -265,7 +271,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             }
         });
 
-        signIn.setClickable(false);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -274,10 +279,12 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                     new LoginTask(LoginFragment.this, getActivity()).execute(email.getText().toString()
                             , password.getText().toString());
                 } else {
-                    Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                    //Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
+                    SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.check_internet, Snackbar.LENGTH_LONG);
                 }
             }
         });
+        signIn.setClickable(false);
 
         signUpLink.setOnClickListener(new View.OnClickListener() {
             @Override
