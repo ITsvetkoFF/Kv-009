@@ -56,10 +56,10 @@ import org.ecomap.android.app.fragments.StaticPagesFragment;
 import org.ecomap.android.app.fragments.StatisticsFragment;
 import org.ecomap.android.app.fragments.Top10TabFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
-import org.ecomap.android.app.widget.EcoMapSlidingLayer;
 import org.ecomap.android.app.utils.SharedPreferencesHelper;
 import org.ecomap.android.app.utils.SnackBarHelper;
 import org.ecomap.android.app.utils.YesNoAlertDialog;
+import org.ecomap.android.app.widget.EcoMapSlidingLayer;
 
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -129,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements FiltersFragment.F
         }
 
         setContentView(R.layout.activity_main);
+
 
         mContext = this;
 

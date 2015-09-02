@@ -26,7 +26,6 @@ import java.net.CookiePolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//import org.ecomap.android.app.IRemoteServiceCallback;
 
 /**
  * Created by y.ridkous@gmail.com on 03.07.2015.
@@ -35,7 +34,7 @@ import java.util.HashMap;
  */
 public class UploadingService extends Service {
 
-    private boolean DEBUG = true;
+    private static boolean DEBUG = true;
 
     private static final String LOG = UploadingService.class.getSimpleName();
 
@@ -54,10 +53,11 @@ public class UploadingService extends Service {
     /**
      * Target we publish for clients to send messages to IncomingHandler.
      */
-    private final Messenger mMessenger = new Messenger(new IncomingHandler());
+
     private static final int UPLOADING_NOTIFICATION_ID = 1;
 
     private final ServiceClientManager scManager = new ServiceClientManager();
+    private final Messenger mMessenger = new Messenger(new IncomingHandler(scManager));
 
     /**
      * For showing and hiding our notification.
@@ -115,9 +115,9 @@ public class UploadingService extends Service {
 
         foregroundNotificationBuilder = getNotification();
 
-        /*
-      If service runs in dedicated process it needs to load cookies from shared preferences
-     */
+     /**
+      * If service runs in dedicated process it needs to load cookies from shared preferences
+      */
         CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 
@@ -156,7 +156,7 @@ public class UploadingService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentTitle(getString(R.string.notify_photos_loading));
         builder.setWhen(System.currentTimeMillis());
-        builder.setSmallIcon(R.drawable.ic_clear_white_24dp);
+        builder.setSmallIcon(R.drawable.ic_action_file_upload);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -338,7 +338,13 @@ public class UploadingService extends Service {
     /**
      * Handler of incoming messages from clients.
      */
-    private class IncomingHandler extends Handler {
+    private static class IncomingHandler extends Handler {
+        private ServiceClientManager scManager;
+
+        public IncomingHandler(ServiceClientManager scManager) {
+            this.scManager = scManager;
+        }
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

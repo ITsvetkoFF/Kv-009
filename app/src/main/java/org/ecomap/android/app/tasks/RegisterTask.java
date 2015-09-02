@@ -117,6 +117,9 @@ public class RegisterTask extends AsyncTask<String, Void, Void> {
                     resMessage = data.get("message").toString();
                 }
             }
+            if(!params[3].equals(params[4])){
+                resMessage=mContext.getApplicationContext().getResources().getString(R.string.password_doesnt_match);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

@@ -1,6 +1,5 @@
 package org.ecomap.android.app.tasks;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,7 +35,6 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
         this.comment = comment;
         //this.notification = notification;
         resMessage = null;
-        NotificationManager mNM = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     @Override

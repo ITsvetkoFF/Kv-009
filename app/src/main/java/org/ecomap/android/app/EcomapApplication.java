@@ -26,11 +26,15 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class EcomapApplication extends Application {
+    private static Context applicationContext;
+
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @SuppressWarnings("unused")
     @Override
     public void onCreate() {
         super.onCreate();
+
+        applicationContext = getApplicationContext();
 
         initImageLoader(getApplicationContext());
     }
@@ -56,6 +60,10 @@ public class EcomapApplication extends Application {
 		ImageLoader.getInstance().clearMemoryCache();
 		*/
 
+    }
+
+    public static Context getAppContext(){
+        return applicationContext;
     }
 
 }

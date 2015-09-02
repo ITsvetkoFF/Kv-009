@@ -17,7 +17,7 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:background="@drawable/photo_bg"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitXY" />
 
         <ImageView
             android:id="@+id/iv_error"
