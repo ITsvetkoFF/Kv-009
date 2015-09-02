@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import org.ecomap.android.app.EcomapApplication;
 import org.ecomap.android.app.PersistentCookieStore;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
@@ -174,6 +175,43 @@ public class SharedPreferencesHelper {
         SharedPreferences.Editor ed = sPref.edit();
         ed.putInt(mContext.getString(R.string.prefNumRevision), numNewRevision);
         ed.apply();
+
+    }
+
+    public static void setFlagPendingProblemsOn() {
+
+        Context context = EcomapApplication.getAppContext();
+        sPref = context.getSharedPreferences(context.getResources().getString(R.string.fileNamePreferences), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor prefsWriter = sPref.edit();
+
+        prefsWriter.putBoolean("FlagPendingProblems", true);
+        prefsWriter.apply();
+
+        Log.d(LOG_TAG, "setFlagPendingProblemsOn preferences was added");
+
+    }
+
+    public static void setFlagPendingProblemsOff() {
+
+        Context context = EcomapApplication.getAppContext();
+        sPref = context.getSharedPreferences(context.getResources().getString(R.string.fileNamePreferences), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor prefsWriter = sPref.edit();
+
+        prefsWriter.putBoolean("FlagPendingProblems", false);
+        prefsWriter.apply();
+
+        Log.d(LOG_TAG, "setFlagPendingProblemsOff preferences was added");
+
+    }
+
+    public static boolean getFlagPendingProblems(Context context) {
+
+        //Context context = EcomapApplication.getAppContext();
+        sPref = context.getSharedPreferences(context.getResources().getString(R.string.fileNamePreferences), Context.MODE_PRIVATE);
+
+        return sPref.getBoolean("FlagPendingProblems", false);
 
     }
 

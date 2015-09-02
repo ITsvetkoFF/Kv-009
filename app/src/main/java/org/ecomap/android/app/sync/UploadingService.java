@@ -115,9 +115,9 @@ public class UploadingService extends Service {
 
         foregroundNotificationBuilder = getNotification();
 
-        /*
-      If service runs in dedicated process it needs to load cookies from shared preferences
-     */
+     /**
+      * If service runs in dedicated process it needs to load cookies from shared preferences
+      */
         CookieManager cookieManager = new CookieManager(new PersistentCookieStore(this), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
         CookieHandler.setDefault(cookieManager);
 

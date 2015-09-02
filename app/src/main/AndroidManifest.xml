@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.ecomap.android.app">
+    package="org.ecomap.android.app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -16,12 +16,12 @@
         android:required="true" />
 
     <application
-        android:supportsRtl="true"
         android:name=".EcomapApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -32,10 +32,9 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-
         <activity
             android:name=".activities.MainActivity"
-            android:label="Ecomap">
+            android:label="Ecomap" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,42 +43,40 @@
         </activity>
         <activity
             android:name=".activities.Profile"
-            android:label="@string/profile">
+            android:label="@string/profile" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.EditProblem"
-            android:label="@string/profile">
+            android:label="@string/profile" >
         </activity>
-
         <activity
             android:name=".activities.ViewPhotosActivity"
             android:label="@string/title_activity_view_photos"
-            android:theme="@style/AppThemeTransparentActionBar"/>
+            android:theme="@style/AppThemeTransparentActionBar" />
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <activity
             android:name="me.iwf.photopicker.PhotoPagerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".activities.StaticPagesActivity"
-            android:theme="@style/AppThemeTransparentActionBar">
+            android:theme="@style/AppThemeTransparentActionBar" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
-        <activity android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
-
-        <activity android:name=".activities.CommentPhotoActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".activities.CommentPhotoActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" >
         </activity>
 
         <provider
@@ -88,18 +85,35 @@
 
         <service android:name=".sync.EcoMapService" />
         <service android:name=".sync.GetResourcesService" />
-        <service android:name=".sync.UploadingService"
-            android:process=":uploadService"/>
+        <service
+            android:name=".sync.UploadingService"
+            android:process=":uploadService" />
 
         <activity
             android:name=".activities.AddProblemActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/title_activity_add_problem" >
+            android:label="@string/title_activity_add_problem"
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
 
+        <receiver
+            android:name=".sync.WiFiReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <!--android:process=":sendPendingProblemService"-->
+
+        <service
+            android:name=".sync.SendPendingProblemService"
+            android:exported="false" >
+        </service>
     </application>
 
 </manifest>
