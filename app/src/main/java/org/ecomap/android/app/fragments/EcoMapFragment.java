@@ -450,11 +450,11 @@ public class EcoMapFragment extends Fragment {
 
         //Check problem status and choose color fo text
         if (problemForSlidingLayer.getStatus().equalsIgnoreCase("UNSOLVED")) {
-            showStatus.setText(getString(R.string.solved_problem));
-            showStatus.setTextColor(Color.GREEN);
-        } else {
             showStatus.setText(getString(R.string.unsolved_problem));
             showStatus.setTextColor(Color.RED);
+        } else {
+            showStatus.setText(getString(R.string.solved_problem));
+            showStatus.setTextColor(Color.GREEN);
         }
 
         //Mechanism for likes ++ when click on heart

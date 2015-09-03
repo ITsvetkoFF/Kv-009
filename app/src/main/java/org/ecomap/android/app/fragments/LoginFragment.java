@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -42,7 +43,6 @@ import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.tasks.LoginTask;
 import org.ecomap.android.app.tasks.SocialLoginTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
-import org.ecomap.android.app.utils.SnackBarHelper;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -208,7 +208,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
 
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-
         tilEmail.setErrorEnabled(true);
         email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -218,8 +217,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                         if (!MainActivity.isEmailValid(email.getText().toString())) {
                             tilEmail.setError(getString(R.string.incorrect_email));
                             signIn.setClickable(false);
-                            //Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
-                            SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.fill_all_fields, Snackbar.LENGTH_LONG);
                         } else {
                             tilEmail.setErrorEnabled(false);
                             signIn.setClickable(true);
@@ -227,8 +224,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                     } else if (email.getText().toString().isEmpty()) {
                         tilEmail.setError(getString(R.string.email_blank));
                         signIn.setClickable(false);
-                        //Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
-                        SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.fill_all_fields, Snackbar.LENGTH_LONG);
                     } else {
                         tilEmail.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -245,8 +240,6 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                     if (password.getText().toString().isEmpty()) {
                         tilPass.setError(getString(R.string.password_blank));
                         signIn.setClickable(false);
-                        //Snackbar.make(v, getString(R.string.fill_all_fields), Snackbar.LENGTH_LONG).show();
-                        SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.fill_all_fields, Snackbar.LENGTH_LONG);
                     } else {
                         tilPass.setErrorEnabled(false);
                         signIn.setClickable(true);
@@ -280,7 +273,16 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
                             , password.getText().toString());
                 } else {
                     //Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
-                    SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.check_internet, Snackbar.LENGTH_LONG);
+
+                    //SnackBarHelper.showWarningSnackBar(getActivity(), v, R.string.check_internet, Snackbar.LENGTH_LONG);
+
+                    Snackbar snackbar = Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG);
+                    View snackBarView = snackbar.getView();
+                    snackBarView.setBackgroundColor(getResources().getColor(R.color.snackBarWarning));
+                    TextView textView = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.WHITE);
+                    snackbar.show();
+
                 }
             }
         });
