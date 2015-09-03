@@ -61,7 +61,11 @@ public class SnackBarHelper {
     }
 
     private static void showWarningSnackBar(Context context, View view, String message, int duration) {
-        showSnackBar(context, view, message, duration, R.color.snackBarWarning);
+        try {
+            showSnackBar(context, view, message, duration, R.color.snackBarWarning);
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
 
