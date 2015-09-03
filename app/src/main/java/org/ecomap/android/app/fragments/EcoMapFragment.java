@@ -267,6 +267,8 @@ public class EcoMapFragment extends Fragment {
         receiver = new EcoMapReceiver();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(receiver, filter);
 
+        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, this);
+
         setUpMap();
 
         addProblemSnackbar = Snackbar.make(rootLayout, getString(R.string.choose_location), Snackbar.LENGTH_INDEFINITE);
@@ -309,6 +311,14 @@ public class EcoMapFragment extends Fragment {
         cameraPosition = mMap.getCameraPosition();
         // unregistering receiver after pausing fragment
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(receiver);
+
+        mapClusterer = null;
+
+        try {
+            finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
 
         //mSlidingLayer.closeLayer(true);
 
@@ -385,7 +395,8 @@ public class EcoMapFragment extends Fragment {
         if (cursor != null) {
             cursor.close();
         }
-        mapClusterer = new MapClustering(cameraPosition, mMap, mContext, values, this);
+
+        mapClusterer.updateEntryParameters(values);
         mapClusterer.setUpClusterer();
 
         //for displaying marker and enableAddProblemMode() after screen rotation
@@ -423,7 +434,7 @@ public class EcoMapFragment extends Fragment {
 
     public void fillSlidingPanel(final Problem problem) {
 
-        problemForSlidingLayer=problem;
+        problemForSlidingLayer = problem;
 
         if (mMap.getCameraPosition().zoom < 13.0f) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(problemForSlidingLayer.getPosition(), 13.0f));
@@ -466,9 +477,6 @@ public class EcoMapFragment extends Fragment {
 
 
                         new AddVoteTask().execute(problemForSlidingLayer);
-
-
-
 
 
                     } else if (problemForSlidingLayer.isLiked()) {
@@ -594,7 +602,11 @@ public class EcoMapFragment extends Fragment {
         addproblemModeIsEnabled = false;
         setMarkerClickType(0);
 
-        mapClusterer.deleteMarker();
+        setMarkerPosition(null);
+
+        if (mapClusterer != null) {
+            mapClusterer.deleteMarker();
+        }
 
         addProblemSnackbar.dismiss();
         fabAddProblem.setImageResource(R.drawable.ic_location_on_white_24dp);
@@ -602,10 +614,6 @@ public class EcoMapFragment extends Fragment {
 
     public boolean isAddproblemModeIsEnabled() {
         return addproblemModeIsEnabled;
-    }
-
-    public static MapClustering getMapClusterer() {
-        return mapClusterer;
     }
 
     public static Problem getLastOpenProblem() {
@@ -622,7 +630,7 @@ public class EcoMapFragment extends Fragment {
         protected Boolean doInBackground(Problem... params) {
             URL url;
             Boolean result = Boolean.FALSE;
-            problem=params[0];
+            problem = params[0];
             problem_id = problem.getId();
 
             //validation
@@ -676,17 +684,15 @@ public class EcoMapFragment extends Fragment {
             return result;
 
         }
+
         @Override
-        public void onPostExecute(Boolean bool){
+        public void onPostExecute(Boolean bool) {
             problemForSlidingLayer.setLiked();
 
 
-
-            if(problemLikedElsewhere){
+            if (problemLikedElsewhere) {
                 Toast.makeText(mContext, mContext.getString(R.string.message_isAlreadyLiked), Toast.LENGTH_SHORT).show();
-            }
-
-            else {
+            } else {
 
                 Toast.makeText(mContext, mContext.getString(R.string.message_isLiked), Toast.LENGTH_SHORT).show();
                 problemForSlidingLayer.addLike();
@@ -696,15 +702,13 @@ public class EcoMapFragment extends Fragment {
             }
 
 
-
             showLike.setImageResource(R.drawable.heart_icon);
 
         }
-
-
-
     }
 
-
+    public static MapClustering getMapClusterer(){
+        return mapClusterer;
+    }
 }
 
