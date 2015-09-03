@@ -6,7 +6,7 @@ android {
         config {
             keyAlias 'ecomap'
             keyPassword '123456'
-            storeFile file('E:/Android/Projects/Kv-009/ecomap.jks')
+            storeFile file('/Users/Tatiana/Documents/ecomap.jks')
             storePassword '123456'
         }
     }
