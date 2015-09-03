@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
@@ -44,6 +45,7 @@ public class ImageAdapter extends BaseAdapter {
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
+                .imageScaleType(ImageScaleType.EXACTLY)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
     }
@@ -151,5 +153,6 @@ public class ImageAdapter extends BaseAdapter {
         ImageView imageView;
         ProgressBar progressBar;
     }
+
 
 }

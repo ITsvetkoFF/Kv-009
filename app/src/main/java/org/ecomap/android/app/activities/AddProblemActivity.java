@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.User;
 import org.ecomap.android.app.data.EcoMapContract;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.UploadingServiceSession;
 import org.ecomap.android.app.tasks.AddProblemTask;
@@ -64,7 +66,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
     private TextInputLayout tilProblemTitle;
 
     private static NonScrollableListView nonScrollableListView;
-    public static final ArrayList<String> selectedPhotos = new ArrayList<>();
+    public static final ArrayList<ProblemPhotoEntry> selectedPhotos = new ArrayList<>();
     private AddPhotoImageAdapter imgAdapter;
 
     private final int REQUEST_CODE = 1;
@@ -78,6 +80,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
 
     private static Context mContext;
     private UploadingServiceSession mServiceSession;
+
 
     @Override
     protected void onResume() {
@@ -206,7 +209,10 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             if (data != null) {
                 selectedPhotos.clear();
-                selectedPhotos.addAll(data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS));
+                final ArrayList<String> list = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
+                for (String imgURL : list) {
+                    selectedPhotos.add(new ProblemPhotoEntry("", imgURL));
+                }
                 imgAdapter.updateDataSet(selectedPhotos);
             }
         }
@@ -305,6 +311,7 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             params[7] = String.valueOf(markerPosition.latitude);
             params[8] = String.valueOf(markerPosition.longitude);
 
+
             if (new NetworkAvailability(mContext.getSystemService(Context.CONNECTIVITY_SERVICE)).isNetworkAvailable()) {
 
                 if (mServiceSession.isBound()) {
@@ -336,13 +343,11 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
                 //Checking selected photos
                 if (!selectedPhotos.isEmpty()) {
                     for (int i = 0; i < selectedPhotos.size(); i++) {
-                        //Get each ListView item
-                        getNonScrollableListView().getChildAt(i);
-                        EditText editText = (EditText) findViewById(R.id.add_photo_edit_text);
-                        //Get comment
-                        String comment = editText.getText().toString();
                         //Get path for each photo
-                        String path = selectedPhotos.get(i);
+                        final ProblemPhotoEntry photoEntry = selectedPhotos.get(i);
+                        final String path = photoEntry.getImgURL();
+                        final String comment = photoEntry.getCaption();
+
                         //Start new AsyncTask for each photo and comment (test problem ID is 361)
                         try {
                             JSONObject jsonObject = new JSONObject();

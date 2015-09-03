@@ -1,6 +1,8 @@
 package org.ecomap.android.app.utils;
 
 import android.graphics.Bitmap;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +19,16 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListe
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.ecomap.android.app.R;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 
 import java.util.List;
 
 public class AddPhotoImageAdapter extends BaseAdapter {
 
-    private List<String> mImagesURLArray;
+    private List<ProblemPhotoEntry> mImagesURLArray;
     private final DisplayImageOptions options;
-
-    public AddPhotoImageAdapter(List<String> titledPhotos) {
+    private int totalHeight;
+    public AddPhotoImageAdapter(List<ProblemPhotoEntry> titledPhotos) {
 
         this.mImagesURLArray = titledPhotos;
 
@@ -44,7 +47,7 @@ public class AddPhotoImageAdapter extends BaseAdapter {
     /**
      * Update adapter data set
      */
-    public void updateDataSet(List<String> data) {
+    public void updateDataSet(List<ProblemPhotoEntry> data) {
         mImagesURLArray = data;
         notifyDataSetChanged();
     }
@@ -98,9 +101,34 @@ public class AddPhotoImageAdapter extends BaseAdapter {
             }
         });
 
+        // Remove previous TextWatcher if any
+        if (holder.txtWatcher != null) {
+            holder.comment.removeTextChangedListener(holder.txtWatcher);
+        }
+
+        holder.txtWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
+                    ProblemPhotoEntry photoEntry = mImagesURLArray.get(position);
+                    photoEntry.setTitle(s.toString());
+                }
+
+            }
+        };
+
+        holder.comment.addTextChangedListener(holder.txtWatcher);
+
         if (mImagesURLArray != null && mImagesURLArray.size() > 0) {
 
-            final String imgURL = "file://"+mImagesURLArray.get(position);
+            final ProblemPhotoEntry photoEntry = mImagesURLArray.get(position);
+            final String imgURL = "file://"+ photoEntry.getImgURL();
 
 
             ImageLoader imageLoader = ImageLoader.getInstance();
@@ -133,7 +161,7 @@ public class AddPhotoImageAdapter extends BaseAdapter {
                     });
         }
         //We're need to clear each edittext after changing photos
-        holder.comment.setText("");
+        //holder.comment.setText("");
 
         return view;
     }
@@ -143,6 +171,10 @@ public class AddPhotoImageAdapter extends BaseAdapter {
         ImageView closeButton;
         ProgressBar progressBar;
         EditText comment;
+        TextWatcher txtWatcher;
     }
+
+
+
 
 }
