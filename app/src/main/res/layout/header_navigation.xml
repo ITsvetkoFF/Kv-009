@@ -4,7 +4,6 @@
 <ImageView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:src="@drawable/panda"
-    android:background="@drawable/navi_back"
+    android:background="@drawable/blue_yellow"
     />
 </RelativeLayout>
