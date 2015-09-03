@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class CommentPhotoActivity extends AppCompatActivity {
 
-    private ArrayList<String> selectedPhotos = new ArrayList<>();
+    private ArrayList<ProblemPhotoEntry> selectedPhotos = new ArrayList<>();
     private int problem_id;
 
     private UploadingServiceSession uploadingSession;
@@ -62,16 +62,17 @@ public class CommentPhotoActivity extends AppCompatActivity {
         }
 
         Bundle extras = getIntent().getExtras();
-
+        ArrayList<String> list = new ArrayList<>();
         if (extras != null) {
             problem_id = extras.getInt("problem_id");
-            selectedPhotos = extras.getStringArrayList("selectedPhotos");
+            list = extras.getStringArrayList("selectedPhotos");
+            for (String imgURL : list) {
+                selectedPhotos.add(new ProblemPhotoEntry("", imgURL));
+            }
         }
 
-//        NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
-//        nestedScrollView.setFillViewport(true);
-//        nestedScrollView.setMeasureAllChildren(true);
         NonScrollableListView nonScrollableListView = (NonScrollableListView) findViewById(R.id.nonScrollableListView);
+
         AddPhotoImageAdapter imgAdapter = new AddPhotoImageAdapter(selectedPhotos);
         nonScrollableListView.setAdapter(imgAdapter);
 
@@ -139,13 +140,10 @@ public class CommentPhotoActivity extends AppCompatActivity {
 
         //Checking selected photos
         for (int i = 0; i < selectedPhotos.size(); i++) {
-            //Get each ListView item
-            view = nonScrollableListView.getChildAt(i);
-            editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
-            //Get comment
-            comment = editText.getText().toString();
             //Get path for each photo
-            path = selectedPhotos.get(i);
+            ProblemPhotoEntry photoEntry = selectedPhotos.get(i);
+            path = photoEntry.getImgURL();
+            comment = photoEntry.getCaption();
 
             photos.add(new ProblemPhotoEntry(comment, path));
 

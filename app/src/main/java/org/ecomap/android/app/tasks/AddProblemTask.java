@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.AddProblemActivity;
-import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.data.model.ProblemPhotoEntry;
 import org.ecomap.android.app.fragments.EcoMapFragment;
 import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.sync.EcoMapService;
@@ -158,13 +158,10 @@ public class AddProblemTask extends AsyncTask<String, Void, Void> {
                 mServiceSession.doStartService();
             }
             for (int i = 0; i < AddProblemActivity.selectedPhotos.size(); i++) {
-                //Get each ListView item
-                view = AddProblemActivity.getNonScrollableListView().getChildAt(i);
-                editText = (EditText) view.findViewById(R.id.add_photo_edit_text);
-                //Get comment
-                comment = editText.getText().toString();
                 //Get path for each photo
-                path = AddProblemActivity.selectedPhotos.get(i);
+                final ProblemPhotoEntry photoEntry = AddProblemActivity.selectedPhotos.get(i);
+                path = photoEntry.getImgURL();
+                comment = photoEntry.getCaption();
                 //Start new AsyncTask for each photo and comment (test problem ID is 361)
                 if (mServiceSession.isBound()) {
                     mServiceSession.sendUploadRequest(problemId, path, comment);
