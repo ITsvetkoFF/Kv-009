@@ -232,8 +232,8 @@ public class AddProblemActivity extends AppCompatActivity implements UploadingSe
             case android.R.id.home:
 
                 EcoMapFragment.disableAddProblemMode();
-                startActivity(new Intent(mContext, MainActivity.class));
                 selectedPhotos.clear();
+                this.finish();
 
                 return true;
 
