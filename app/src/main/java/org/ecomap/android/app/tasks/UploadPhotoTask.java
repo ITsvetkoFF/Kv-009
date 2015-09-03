@@ -96,7 +96,8 @@ public class UploadPhotoTask extends AsyncTask<Void, Integer, Void> {
             dos.writeBytes(twoHyphens + boundary + lineEnd);
             dos.writeBytes("Content-Disposition: form-data; name=\"comments\"" + lineEnd);
             dos.writeBytes(lineEnd);
-            dos.writeBytes(comment); // mobile_no is String variable
+            Log.d(LOG_TAG, "doInBackground " + comment);
+            dos.writeUTF(comment); // mobile_no is String variable
             dos.writeBytes(lineEnd);
             dos.writeBytes(twoHyphens + boundary + lineEnd);
 

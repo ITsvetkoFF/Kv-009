@@ -20,6 +20,7 @@ import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
 import org.ecomap.android.app.tasks.UploadPhotoTask;
 
+import java.io.UnsupportedEncodingException;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -364,7 +365,14 @@ public class UploadingService extends Service {
                     String className = data.getString("CLASS_NAME");
                     int problemId = data.getInt("PROBLEM_ID");
                     String photoURL = data.getString("PHOTO_URL");
-                    String comment = data.getString("COMMENT");
+                    byte[] b = data.getByteArray("COMMENT");
+                    String comment = null;
+                    try {
+                        comment = new String(b, "UTF-8");
+                        Log.d(LOG, "handleMessage " + comment);
+                    } catch (UnsupportedEncodingException e) {
+                        Log.e(LOG, "handleMessage " + e.getMessage());
+                    }
 
                     scManager.addAndStartUploadingTask(className, msg.replyTo, problemId, photoURL, comment);
 

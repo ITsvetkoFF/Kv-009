@@ -17,6 +17,7 @@ import android.util.Log;
 
 import org.ecomap.android.app.utils.SnackBarHelper;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 
 public class UploadingServiceSession {
@@ -190,7 +191,11 @@ public class UploadingServiceSession {
         params.putString("CLASS_NAME", mHostToken);
         params.putInt("PROBLEM_ID", problemId);
         params.putString("PHOTO_URL", photoURL);
-        params.putString("COMMENT", comment);
+        try {
+            params.putByteArray("COMMENT", comment.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            Log.e(LOG, "sendUploadRequest " + e.getMessage());
+        }
         Message msg = Message.obtain(null, UploadingService.MSG_UPLOAD_PHOTO);
         msg.setData(params);
         msg.replyTo = mMessenger;
