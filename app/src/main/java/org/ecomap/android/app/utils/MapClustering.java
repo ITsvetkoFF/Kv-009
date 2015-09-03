@@ -33,16 +33,17 @@ public class MapClustering {
     private ArrayList<Marker> markers;
     private ClusterManager<Problem> mClusterManager;
 
-    public MapClustering(CameraPosition cameraPosition, GoogleMap mMap, Context mContext
-            , ArrayList<Problem> values, EcoMapFragment ecoMapFragment){
+    public MapClustering(CameraPosition cameraPosition, GoogleMap mMap, Context mContext, EcoMapFragment ecoMapFragment){
         points = new ArrayList<>();
         markers = new ArrayList<>();
 
         this.cameraPosition = cameraPosition;
         this.mMap = mMap;
         this.mContext = mContext;
-        this.values = values;
         this.ecoMapFragment = ecoMapFragment;
+
+        //Initialize the manager with the mContext and the map.
+        mClusterManager = new ClusterManager<>(mContext, mMap);
     }
 
     public MapClustering (GoogleMap mMap, Context mContext) {
@@ -57,9 +58,6 @@ public class MapClustering {
         else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(50.461166, 30.417397), 5));
         }
-
-        //Initialize the manager with the mContext and the map.
-        mClusterManager = new ClusterManager<>(mContext, mMap);
 
         //Point the map's listeners at the listeners implemented by the cluster.
         mMap.setOnCameraChangeListener(mClusterManager);
@@ -171,5 +169,12 @@ public class MapClustering {
         marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
         EcoMapFragment.setMarkerPosition(marker.getPosition());
+    }
+
+    public void updateEntryParameters(ArrayList<Problem> values){
+        this.values = values;
+
+        mClusterManager.clearItems();
+        mClusterManager.addItems(values);
     }
 }

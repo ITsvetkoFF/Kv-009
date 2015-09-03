@@ -25,8 +25,7 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp"
-            >
+            app:expandedTitleMarginEnd="64dp" >
 
             <fragment
                 android:id="@+id/add_problem_map"
@@ -150,6 +149,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
+                android:layout_marginStart="4dp"
                 android:background="@drawable/dotted_border" >
 
                 <Button

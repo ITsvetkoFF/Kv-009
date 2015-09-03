@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -346,6 +347,7 @@ public class CommentsFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
+                Toast.makeText(getActivity(), getResources().getString(R.string.check_internet), Toast.LENGTH_LONG).show();
             } finally {
 
                 if (urlConnection != null) {
