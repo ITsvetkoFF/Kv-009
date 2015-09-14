@@ -172,9 +172,14 @@ public class RegistrationFragment extends DialogFragment {
             public void onClick(View v) {
                 if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
                         .isNetworkAvailable()) {
-                    new RegisterTask(RegistrationFragment.this, getActivity()).execute(firstName.getText().toString()
-                            , secondName.getText().toString(), email.getText().toString()
-                            , password.getText().toString(), confirmPassword.getText().toString());
+                    if (password.getText().equals(confirmPassword.getText())) {
+                        new RegisterTask(RegistrationFragment.this, getActivity()).execute(firstName.getText().toString()
+                                , secondName.getText().toString(), email.getText().toString()
+                                , password.getText().toString(), confirmPassword.getText().toString());
+                    } else {
+                        Snackbar.make(v, getString(R.string.password_doesnt_match), Snackbar.LENGTH_LONG).show();
+                    }
+
                 } else {
                     Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
                 }

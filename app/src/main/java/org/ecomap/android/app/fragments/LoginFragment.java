@@ -40,12 +40,20 @@ import com.google.android.gms.plus.model.people.Person;
 
 import org.ecomap.android.app.R;
 import org.ecomap.android.app.activities.MainActivity;
+import org.ecomap.android.app.retrofit.API.LoginAPI;
+import org.ecomap.android.app.retrofit.model.LoginModel;
+import org.ecomap.android.app.sync.EcoMapAPIContract;
 import org.ecomap.android.app.tasks.LoginTask;
 import org.ecomap.android.app.tasks.SocialLoginTask;
 import org.ecomap.android.app.utils.NetworkAvailability;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class LoginFragment extends DialogFragment implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
@@ -68,6 +76,32 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
     private boolean mIntentInProgress;
     private boolean mSignInClicked;
     private ConnectionResult mConnectionResult;
+
+    private void retrofitRequest (String email, String password) {
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                                .setEndpoint(EcoMapAPIContract.ECOMAP_API_URL)
+                                .build();
+
+        LoginAPI loginAPI = restAdapter.create(LoginAPI.class);
+
+        loginAPI.getUser(email, password, new Callback<LoginModel>() {
+            @Override
+            public void success(LoginModel loginModel, Response response) {
+                String result = loginModel.getUserID();
+                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                String result = error.toString();
+
+                Toast.makeText(mContext, result, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -269,8 +303,11 @@ public class LoginFragment extends DialogFragment implements GoogleApiClient.OnC
             public void onClick(View v) {
                 if (new NetworkAvailability(getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
                         .isNetworkAvailable()) {
-                    new LoginTask(LoginFragment.this, getActivity()).execute(email.getText().toString()
-                            , password.getText().toString());
+                    // new LoginTask(LoginFragment.this, getActivity()).execute(email.getText().toString()
+                    //        , password.getText().toString());
+
+                    retrofitRequest(email.getText().toString(), password.getText().toString());
+
                 } else {
                     //Snackbar.make(v, getString(R.string.check_internet), Snackbar.LENGTH_LONG).show();
 
