@@ -382,8 +382,13 @@ public class EcoMapFragment extends Fragment {
         values.clear();
         mMap.clear();
 
-        Cursor cursor = getActivity().getContentResolver()
-                .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null);
+
+        Cursor cursor = null;
+        if(getActivity() != null) {
+            cursor = getActivity()
+                    .getContentResolver()
+                    .query(EcoMapContract.ProblemsEntry.CONTENT_URI, null, filterCondition, null, null);
+        }
 
         if (cursor != null) {
             while (cursor.moveToNext()) {

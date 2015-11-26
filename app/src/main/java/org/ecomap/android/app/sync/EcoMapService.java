@@ -119,6 +119,38 @@ public class EcoMapService extends IntentService {
     }
 
 
+    private int setIntIfNotNull(JSONObject obj, String fieldName, int defaultValue) {
+
+        try {
+            if (obj.isNull(fieldName)) {
+                return defaultValue;
+            } else {
+                return obj.getInt(fieldName);
+            }
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "setIntIfNotNull: " + e.getMessage(), e);
+        }
+
+        return defaultValue;
+    }
+
+    private String setStringIfNotNull(JSONObject obj, String fieldName, String defaultValue) {
+
+        try {
+            if (obj.isNull(fieldName)) {
+                return defaultValue;
+            } else {
+                return obj.getString(fieldName);
+            }
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "setStringIfNotNull: " + e.getMessage(), e);
+        }
+
+        return defaultValue;
+    }
+
+
+
     // parsing data from JSON and writing them to database
     //return true, if data was added
     //false, if no data updated
@@ -181,11 +213,11 @@ public class EcoMapService extends IntentService {
 
                 } else {
                     //NEW PROBLEM
-                    problem_id = obj.getInt(EcoMapAPIContract.ID);
+                    problem_id = setIntIfNotNull(obj, EcoMapAPIContract.ID, 0);
                     title = obj.getString(EcoMapAPIContract.TITLE);
                     latitude = obj.getDouble(EcoMapAPIContract.LATITUDE);
                     longitude = obj.getDouble(EcoMapAPIContract.LONGITUDE);
-                    type_id = obj.getInt(EcoMapAPIContract.PROBLEMS_TYPES_ID);
+                    type_id = setIntIfNotNull(obj, EcoMapAPIContract.PROBLEMS_TYPES_ID, 0);
                     status = obj.getString(EcoMapAPIContract.STATUS);
 
                     if (obj.isNull(EcoMapAPIContract.FIRST_NAME)) {
@@ -217,8 +249,8 @@ public class EcoMapService extends IntentService {
                     date = obj.getString(EcoMapAPIContract.DATE);
                     content = obj.getString(EcoMapAPIContract.CONTENT);
                     proposal = obj.getString(EcoMapAPIContract.PROPOSAL);
-                    region_id = obj.getInt(EcoMapAPIContract.REGION_ID);
-                    number_of_comments = obj.getInt(EcoMapAPIContract.NUMBER_OF_COMMENTS);
+                    region_id = setIntIfNotNull(obj, EcoMapAPIContract.REGION_ID, 0);
+                    number_of_comments = setIntIfNotNull(obj, EcoMapAPIContract.NUMBER_OF_COMMENTS, 0);
 
                     ContentValues mapValues = new ContentValues();
 
@@ -258,7 +290,7 @@ public class EcoMapService extends IntentService {
             Log.i(LOG_TAG, "revision was updated!");
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(LOG_TAG, "getProblemsFromJSON: " + e.getMessage(), e);
         }
 
         return true;
