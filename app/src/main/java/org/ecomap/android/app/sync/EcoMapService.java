@@ -119,6 +119,21 @@ public class EcoMapService extends IntentService {
     }
 
 
+    private double setDoubleIfNotNull(JSONObject obj, String fieldName, double defaultValue) {
+
+        try {
+            if (obj.isNull(fieldName)) {
+                return defaultValue;
+            } else {
+                return obj.getDouble(fieldName);
+            }
+        } catch (JSONException e) {
+            Log.w(LOG_TAG, "setDoubleIfNotNull: " + e.getMessage(), e);
+        }
+
+        return defaultValue;
+    }
+
     private int setIntIfNotNull(JSONObject obj, String fieldName, int defaultValue) {
 
         try {
@@ -214,11 +229,11 @@ public class EcoMapService extends IntentService {
                 } else {
                     //NEW PROBLEM
                     problem_id = setIntIfNotNull(obj, EcoMapAPIContract.ID, 0);
-                    title = obj.getString(EcoMapAPIContract.TITLE);
-                    latitude = obj.getDouble(EcoMapAPIContract.LATITUDE);
-                    longitude = obj.getDouble(EcoMapAPIContract.LONGITUDE);
+                    title = setStringIfNotNull(obj, EcoMapAPIContract.TITLE, "");
+                    latitude = setDoubleIfNotNull(obj, EcoMapAPIContract.LATITUDE, 0.0);
+                    longitude = setDoubleIfNotNull(obj, EcoMapAPIContract.LONGITUDE, 0.0);
                     type_id = setIntIfNotNull(obj, EcoMapAPIContract.PROBLEMS_TYPES_ID, 0);
-                    status = obj.getString(EcoMapAPIContract.STATUS);
+                    status = setStringIfNotNull(obj, EcoMapAPIContract.STATUS, "");
 
                     if (obj.isNull(EcoMapAPIContract.FIRST_NAME)) {
                         first_name = "";
