@@ -10,7 +10,7 @@ android {
             storePassword '123456'
         }
     }
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion '23.0.2'
     lintOptions {
         abortOnError false
